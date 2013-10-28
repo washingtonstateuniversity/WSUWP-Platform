@@ -28,22 +28,7 @@ define( 'WP_MEMORY_LIMIT', '128M' );
 if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
 	include( dirname( __FILE__ ) . '/local-config.php' );
 } else {
-	define( 'DB_NAME',     ''   );
-	define( 'DB_USER',     ''   );
-	define( 'DB_PASSWORD', ''   );
-	define( 'DB_HOST',     ''   );
-
-	// Caching
-	define( 'WP_CACHE',          true    );
-	define( 'WP_CACHE_KEY_SALT', 'wpwsu' );
-
-	// URLs
-	define( 'WP_HOME',        'http://wp.wsu.edu'           );
-	define( 'WP_SITEURL',     'http://wp.wsu.edu/wordpress' );
-	define( 'WP_CONTENT_URL', 'http://content.wp.wsu.edu'   );
-
-	// Load wp-content from parent directory
-	define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
+	include( dirname( __FILE__ ) . '/remote-config.php' );
 }
 
 /** Database Charset to use in creating database tables. */

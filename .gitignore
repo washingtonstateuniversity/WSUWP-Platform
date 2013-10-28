@@ -6,3 +6,5 @@
 
 # Ignore PHPStorm project files.
 /.idea
+
+/remote-config.php
