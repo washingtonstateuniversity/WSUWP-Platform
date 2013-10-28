@@ -7,4 +7,5 @@
 # Ignore PHPStorm project files.
 /.idea
 
+# Likely contains configuration intended for production
 /remote-config.php
