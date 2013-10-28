@@ -4,7 +4,7 @@
 define( 'DB_NAME',     'wsuwp'     );
 define( 'DB_USER',     'wp'        );
 define( 'DB_PASSWORD', 'wp'        );
-define( 'DB_HOST',     'localhost' );
+define( 'DB_HOST',     '127.0.0.1' );
 
 // Development environment specific
 define( 'WP_DEBUG',    true );
