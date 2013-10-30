@@ -35,3 +35,6 @@ define( 'SITE_ID_CURRENT_SITE', 1            );
 define( 'BLOG_ID_CURRENT_SITE', 1            );
 
 $batcache = false;
+
+if ( isset( $_SERVER['WP_CLI_PHP_USED'] ) && ! isset( $_SERVER['HTTP_HOST'] ) )
+	$_SERVER['HTTP_HOST'] = 'wp.wsu.edu';
