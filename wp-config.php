@@ -37,8 +37,8 @@ define('DB_CHARSET', 'utf8');
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
 
-/* Sunruse */
-#define( 'SUNRISE', 'on' );
+/* Sunrise */
+define( 'SUNRISE', 'on' );
 
 /**#@+
  * Authentication Unique Keys and Salts.
