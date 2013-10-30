@@ -25,4 +25,13 @@ define( 'WP_CONTENT_URL', 'http://content.wp.wsu.edu'   );
 // Load wp-content from parent direc
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
 
+/* Multisite */
+define( 'WP_ALLOW_MULTISITE',   true         );
+define( 'MULTISITE',            true         );
+define( 'SUBDOMAIN_INSTALL',    true         );
+define( 'DOMAIN_CURRENT_SITE',  'wp.wsu.edu' );
+define( 'PATH_CURRENT_SITE',    '/'          );
+define( 'SITE_ID_CURRENT_SITE', 1            );
+define( 'BLOG_ID_CURRENT_SITE', 1            );
+
 $batcache = false;
