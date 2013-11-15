@@ -9,3 +9,8 @@
 
 # Likely contains configuration intended for production
 /remote-config.php
+
+/content/plugins/*
+!/content/plugins/index.php
+!/content/plugins/akismet
+!/content/plugins/wsu-*
