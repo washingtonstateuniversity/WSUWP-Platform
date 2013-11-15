@@ -63,9 +63,6 @@ function wsu_new_site() {
 					<th scope="row"><?php _e( 'Admin Email' ) ?></th>
 					<td><input name="site[email]" type="text" class="regular-text" style="width: 470px;" title="<?php esc_attr_e( 'Email' ) ?>"/></td>
 				</tr>
-				<tr class="form-field">
-					<td colspan="2"><?php _e( 'A new user will be created if the above email address is not in the database.' ) ?><br /><?php _e( 'The username and password will be mailed to this email address.' ) ?></td>
-				</tr>
 			</table>
 			<?php submit_button( __('Add Site'), 'primary', 'add-site' ); ?>
 		</form>
