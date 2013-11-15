@@ -10,12 +10,22 @@
 * Network: true
 */
 
+function wsu_create_new_site( $site ) {
+	// Create a site with posted data.
+}
+
 add_action( 'network_admin_notices', 'wsu_new_site' );
 function wsu_new_site() {
 
 	// Take over the new site screen in WordPress
 	if ( '/wp-admin/network/site-new.php' !== $_SERVER['DOCUMENT_URI'] )
 		return;
+
+	if ( isset( $_REQUEST['action'] ) && 'add-network-site' === $_REQUEST['action'] ) {
+		check_admin_referer( 'add-network-site', '_wpnonce_add-network-site' );
+
+		wsu_create_new_site( $_POST['site'] );
+	}
 
 	if ( isset($_GET['update']) ) {
 		$messages = array();
@@ -32,8 +42,8 @@ function wsu_new_site() {
 			foreach ( $messages as $msg )
 				echo '<div id="message" class="updated"><p>' . $msg . '</p></div>';
 		} ?>
-		<form method="post" action="<?php echo network_admin_url('site-new.php?action=add-site'); ?>">
-			<?php wp_nonce_field( 'add-blog', '_wpnonce_add-blog' ) ?>
+		<form method="post" action="<?php echo network_admin_url('site-new.php?action=add-network-site'); ?>">
+			<?php wp_nonce_field( 'add-network-site', '_wpnonce_add-network-site' ) ?>
 			<table class="form-table" style="max-width: 720px;">
 				<tr class="form-field form-required">
 					<th scope="row"><?php _e( 'Site Address' ) ?></th>
@@ -64,7 +74,7 @@ function wsu_new_site() {
 					<td><input name="site[email]" type="text" class="regular-text" style="width: 470px;" title="<?php esc_attr_e( 'Email' ) ?>"/></td>
 				</tr>
 			</table>
-			<?php submit_button( __('Add Site'), 'primary', 'add-site' ); ?>
+			<?php submit_button( __('Add Site'), 'primary', 'add-network-site' ); ?>
 		</form>
 	</div>
 	<?php
