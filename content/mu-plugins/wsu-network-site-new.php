@@ -14,7 +14,7 @@ add_action( 'network_admin_notices', 'wsu_new_site' );
 function wsu_new_site() {
 
 	// Take over the new site screen in WordPress
-	if ( '/wp-admin/network/site-new.php' !== $_SERVER['REQUEST_URI'] )
+	if ( '/wp-admin/network/site-new.php' !== $_SERVER['DOCUMENT_URI'] )
 		return;
 
 	if ( isset($_GET['update']) ) {
