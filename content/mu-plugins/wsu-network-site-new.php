@@ -24,6 +24,9 @@ function wsu_new_site() {
 	if ( isset( $_REQUEST['action'] ) && 'add-network-site' === $_REQUEST['action'] ) {
 		check_admin_referer( 'add-network-site', '_wpnonce_add-network-site' );
 
+		if ( ! is_array( $_POST['site'] ) )
+			wp_die( __( 'Can&#8217;t create an empty site.' ) );
+
 		wsu_create_new_site( $_POST['site'] );
 	}
 
