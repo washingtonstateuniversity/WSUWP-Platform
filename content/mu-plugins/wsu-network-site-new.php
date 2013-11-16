@@ -13,7 +13,7 @@
 function wsu_create_new_site( $site  ) {
 	global $wpdb;
 
-	if ( empty( $site['domain'] ) || empty( $site['path'] ) ) {
+	if ( empty( $site['domain'] ) && empty( $site['path'] ) ) {
 		wp_die( __( 'Missing site domain or path.' ) );
 	}
 
