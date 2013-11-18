@@ -76,7 +76,7 @@ function wsu_create_new_site( $site  ) {
 	if ( '' === $path ) {
 		$new_path = get_current_site()->path;
 	} else {
-		$new_path = get_current_site()->path . '/' . $path . '/';
+		$new_path = get_current_site()->path . $path . '/';
 	}
 
 	$password = 'N/A';
