@@ -114,7 +114,7 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 	exit;
 }
 
-add_action( 'network_admin_notices', 'wsu_new_site' );
+add_action( 'load-site-new.php', 'wsu_new_site' );
 function wsu_new_site() {
 
 	// Take over the new site screen in WordPress
@@ -135,6 +135,12 @@ function wsu_new_site() {
 		if ( 'added' == $_GET['update'] )
 			$messages[] = sprintf( __( 'Site added. <a href="%1$s">Visit Dashboard</a> or <a href="%2$s">Edit Site</a>' ), esc_url( get_admin_url( absint( $_GET['id'] ) ) ), network_admin_url( 'site-info.php?id=' . absint( $_GET['id'] ) ) );
 	}
+
+	$title = __('Add New Site');
+	$parent_file = 'sites.php';
+
+	require( ABSPATH . 'wp-admin/admin-header.php' );
+
 	?>
 
 	<div class="wrap">
