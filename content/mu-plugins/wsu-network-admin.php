@@ -18,6 +18,9 @@ class WSU_Network_Admin {
 	 * Add the filters and actions used
 	 */
 	public function __construct() {
+		add_action( 'load-sites.php',                    array( $this, 'networks_php'               ), 10, 1 );
+		// Load at 9 for now until we sort our conflict with wsu-network-site-new.php
+		add_action( 'load-site-new.php',                 array( $this, 'network_new_php'            ),  9, 1 );
 		add_filter( 'parent_file',                       array( $this, 'add_master_network_menu'    ), 10, 1 );
 		add_action( 'admin_menu',                        array( $this, 'my_networks_dashboard'      ),  1    );
 		add_filter( 'wpmu_validate_user_signup',         array( $this, 'validate_user_signup'       ), 10, 1 );
@@ -284,6 +287,22 @@ class WSU_Network_Admin {
 		<div class="wrap">
 			<?php screen_icon( 'ms-admin' ); ?>
 		<h2>My Networks<?php
+	}
+
+	public function networks_php() {
+		if ( '/wp-admin/network/sites.php?display=network' !== $_SERVER['REQUEST_URI'] )
+			return;
+
+		echo 'My Networks';
+		die();
+	}
+
+	public function network_new_php() {
+		if ( '/wp-admin/network/site-new.php?display=network' !== $_SERVER['REQUEST_URI'] )
+			return;
+
+		echo 'Add New Network';
+		die();
 	}
 
 }
