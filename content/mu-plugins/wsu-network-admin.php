@@ -234,15 +234,25 @@ class WSU_Network_Admin {
 		}
 	}
 
+	/**
+	 * Make modifications necessary to displaying the correct styling in the
+	 * admin menu bar when the All Networks or Add New network sites are displayed.
+	 *
+	 * @param string $parent_file Current file being accessed.
+	 *
+	 * @return string Possible modification of the current file being accessed.
+	 */
 	public function parent_file( $parent_file ) {
 		global $self;
 
+		// The All Networks page.
 		if ( '/wp-admin/network/sites.php?display=network' === $_SERVER['REQUEST_URI'] ) {
 			$self = 'sites.php?display=network';
 			$parent_file = 'sites.php?display=network';
 		}
 
 
+		// The New Network page.
 		if ( '/wp-admin/network/site-new.php?display=network' === $_SERVER['REQUEST_URI'] ) {
 			$self = 'sites.php?display=network';
 			$parent_file = 'sites.php?display=network';
