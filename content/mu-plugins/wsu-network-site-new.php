@@ -1,5 +1,4 @@
 <?php
-
 /*
 * Plugin Name: WSUWP New Site Administration
 * Plugin URI: http://web.wsu.edu
@@ -12,6 +11,9 @@
 
 class WSUWP_New_Site_Administration {
 
+	/**
+	 * Fire up our hooks.
+	 */
 	public function __construct() {
 		add_action( 'load-site-new.php',        array( $this, 'site_new_php' ) );
 
@@ -21,6 +23,11 @@ class WSUWP_New_Site_Administration {
 		add_filter( 'wsuwp_first_page_title',   array( $this, 'first_page_title'   ), 10, 1 );
 	}
 
+	/**
+	 * Create a new site on the network based on the information passed.
+	 *
+	 * @param array $site POST site information. Contains domain, path, email, title.
+	 */
 	private function _create_new_site( $site  ) {
 		global $wpdb;
 
@@ -125,7 +132,13 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 		exit;
 	}
 
-
+	/**
+	 * A direct replacement for /wp-admin/network/site-new.php.
+	 *
+	 * By hooking in early enough, we are able to provide a complete replacement for the
+	 * existing site-new.php. This allows us to modify the new site entry form to allow
+	 * for both subdomain and subdirectory configuration for new sites.
+	 */
 	public function site_new_php() {
 
 		// Take over the new site screen in WordPress
@@ -202,6 +215,11 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 		die();
 	}
 
+	/**
+	 * Filter the content as a new site's first post is created.
+	 *
+	 * @return string Content to appear in site's first post.
+	 */
 	public function first_post_content() {
 		$post_content = <<<HTML
 This is the content for this site's first post.
@@ -210,10 +228,22 @@ HTML;
 		return $post_content;
 	}
 
+	/**
+	 * Filter the title of a new site's first post as it is created.
+	 *
+	 * @return string Title to appear on site's first post.
+	 */
 	public function first_post_title() {
 		return 'First News Item';
 	}
 
+	/**
+	 * Filter the content as a new site's first page is created.
+	 *
+	 * This page will be set as the static home page for the new site.
+	 *
+	 * @return string Content to appear on site's home page.
+	 */
 	public function first_page_content() {
 		$page_content = <<<HTML
 This is the content for this site's first page, which should become the home page.
@@ -222,9 +252,13 @@ HTML;
 		return $page_content;
 	}
 
+	/**
+	 * Filter the title of a new site's first page as it is created.
+	 *
+	 * @return string Title to appear on site's first page.
+	 */
 	public function first_page_title() {
 		return 'Home Page';
 	}
-
 }
 $wsuwp_new_site_administration = new WSUWP_New_Site_Administration();
