@@ -88,6 +88,9 @@ function wp_install_defaults( $user_id ) {
 	));
 	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 2, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
 
+	// Set the new first page as the page on front.
+	update_option( 'page_on_front', 2 );
+
 	// Set up default widgets for default theme.
 	update_option( 'widget_search',          array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
 	update_option( 'widget_recent-posts',    array ( 2 => array ( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
