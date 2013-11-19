@@ -80,9 +80,11 @@ function wp_install_defaults( $user_id ) {
 		'post_modified_gmt'     => $now_gmt,
 		'guid'                  => $first_post_guid,
 		'post_type'             => 'page',
+		'comment_status'        => 'closed',
+		'ping_status'           => 'closed',
 		'to_ping'               => '',
 		'pinged'                => '',
-		'post_content_filtered' => ''
+		'post_content_filtered' => '',
 	));
 	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 2, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
 
