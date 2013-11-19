@@ -205,7 +205,7 @@ class WSU_Network_Admin {
 	 */
 	function add_master_network_menu() {
 		if ( is_network_admin() && is_main_network() ) {
-			global $menu;
+			global $menu, $submenu;
 			$menu[6] = $menu[5];
 			unset( $menu[5] );
 			$menu[6][4] = 'menu-top menu-icon-site';
@@ -217,6 +217,17 @@ class WSU_Network_Admin {
 				'menu-top menu-icon-site menu-top-first',
 				'menu-site',
 				'div',
+			);
+
+			$submenu['sites.php?display=network'][5] = array(
+				'All Networks',
+				'manage_sites', // @todo not correct, though is_network_admin may be good enough.
+				'sites.php?display=network',
+			);
+			$submenu['sites.php?display=network'][10] = array(
+				'Add Network',
+				'manage_sites', // @todo also likely not correct ^
+				'site-new.php?display=network',
 			);
 			ksort( $menu );
 		}
