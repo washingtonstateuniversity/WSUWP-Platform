@@ -88,9 +88,6 @@ function wp_install_defaults( $user_id ) {
 	));
 	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 2, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
 
-	// Set the new first page as the page on front.
-	update_option( 'page_on_front', 2 );
-
 	// Insert a placeholder page with a slug to be used as the posts view.
 	$wpdb->insert( $wpdb->posts, array(
 		'post_author'       => $user_id,
@@ -107,7 +104,14 @@ function wp_install_defaults( $user_id ) {
 	));
 	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 3, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
 
-	update_option( 'page_for_posts', 3 );
+	/**
+	 * Set the page on front to be static by default and use
+	 * the pages we created in this script for the home page
+	 * and for the news view.
+	 */
+	update_option( 'show_on_front', 'page' );
+	update_option( 'page_on_front',  2     );
+	update_option( 'page_for_posts', 3     );
 
 	// Set up default widgets for default theme.
 	update_option( 'widget_search',          array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
