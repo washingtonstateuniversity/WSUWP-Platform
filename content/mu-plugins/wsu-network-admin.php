@@ -212,7 +212,7 @@ class WSU_Network_Admin {
 			$menu[5] = array(
 				'Networks',
 				'manage_networks',
-				'networks.php',
+				'sites.php?display=network',
 				'',
 				'menu-top menu-icon-site menu-top-first',
 				'menu-site',
