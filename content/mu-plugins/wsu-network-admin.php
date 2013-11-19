@@ -225,7 +225,7 @@ class WSU_Network_Admin {
 				'sites.php?display=network',
 			);
 			$submenu['sites.php?display=network'][10] = array(
-				'Add Network',
+				'Add New',
 				'manage_sites', // @todo also likely not correct ^
 				'site-new.php?display=network',
 			);
