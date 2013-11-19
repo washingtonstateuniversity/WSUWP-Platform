@@ -190,3 +190,31 @@ function wsu_new_site() {
 	require( ABSPATH . 'wp-admin/admin-footer.php' );
 	die();
 }
+
+add_filter( 'wsuwp_first_post_content', 'wsuwp_first_post_content', 10, 1 );
+function wsuwp_first_post_content() {
+	$post_content = <<<HTML
+This is the content for this site's first post.
+HTML;
+
+	return $post_content;
+}
+
+add_filter( 'wsuwp_first_post_title', 'wsuwp_first_post_title', 10, 1 );
+function wsuwp_first_post_title() {
+	return 'First News Item';
+}
+
+add_filter( 'wsuwp_first_page_content', 'wsuwp_first_page_content', 10, 1 );
+function wsuwp_first_page_content() {
+	$page_content = <<<HTML
+This is the content for this site's first page, which should become the home page.
+HTML;
+
+	return $page_content;
+}
+
+add_filter( 'wsuwp_first_page_title', 'wsuwp_first_page_title', 10, 1 );
+function wsuwp_first_page_title() {
+	return 'Home Page';
+}
