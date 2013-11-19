@@ -259,6 +259,13 @@ class WSU_Network_Admin {
 			$submenu_file = 'site-new.php?display=network';
 		}
 
+		// Add a submenu style to Add New site.
+		if ( '/wp-admin/network/site-new.php' === $_SERVER['REQUEST_URI'] ) {
+			$self = 'site-new.php';
+			$parent_file = 'sites.php';
+			$submenu_file = 'site-new.php';
+		}
+
 		return $parent_file;
 	}
 
