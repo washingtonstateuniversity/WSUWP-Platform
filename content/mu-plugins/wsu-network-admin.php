@@ -27,6 +27,7 @@ class WSU_Network_Admin {
 		add_action( 'activate_plugin',                   array( $this, 'activate_global_plugin'     ), 10, 1 );
 		add_filter( 'views_plugins-network',             array( $this, 'add_plugin_table_views',    ), 10, 1 );
 		add_filter( 'all_plugins',                       array( $this, 'all_plugins',               ), 10, 1 );
+		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
 	}
 
 	/**
@@ -231,6 +232,23 @@ class WSU_Network_Admin {
 			);
 			ksort( $menu );
 		}
+	}
+
+	public function parent_file( $parent_file ) {
+		global $self;
+
+		if ( '/wp-admin/network/sites.php?display=network' === $_SERVER['REQUEST_URI'] ) {
+			$self = 'sites.php?display=network';
+			$parent_file = 'sites.php?display=network';
+		}
+
+
+		if ( '/wp-admin/network/site-new.php?display=network' === $_SERVER['REQUEST_URI'] ) {
+			$self = 'sites.php?display=network';
+			$parent_file = 'sites.php?display=network';
+		}
+
+		return $parent_file;
 	}
 
 	/**
