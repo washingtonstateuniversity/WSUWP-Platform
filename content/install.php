@@ -91,6 +91,24 @@ function wp_install_defaults( $user_id ) {
 	// Set the new first page as the page on front.
 	update_option( 'page_on_front', 2 );
 
+	// Insert a placeholder page with a slug to be used as the posts view.
+	$wpdb->insert( $wpdb->posts, array(
+		'post_author'       => $user_id,
+		'post_date'         => $now,
+		'post_date_gmt'     => $now_gmt,
+		'post_content'      => 'This is a placeholder page for news items. Editing is not recommended.',
+		'post_title'        => 'News',
+		'post_name'         => 'news',
+		'post_modified'     => $now,
+		'post_modified_gmt' => $now_gmt,
+		'post_type'         => 'page',
+		'comment_status'    => 'closed',
+		'ping_status'       => 'closed',
+	));
+	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 3, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
+
+	update_option( 'page_for_posts', 3 );
+
 	// Set up default widgets for default theme.
 	update_option( 'widget_search',          array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
 	update_option( 'widget_recent-posts',    array ( 2 => array ( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
