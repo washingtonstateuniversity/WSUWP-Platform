@@ -92,8 +92,8 @@ class WSU_Admin_Header {
 		 */
 		$wp_admin_bar->add_menu( array(
 			'id'    => 'my-networks',
-			'title' => apply_filters( 'wsu_my_networks_title', 'My WSU Networks' ),
-			'href'  => admin_url( 'index.php?page=my-wsu-networks' ),
+			'title' => apply_filters( 'wsu_my_networks_title', 'My Networks' ),
+			'href'  => admin_url( 'index.php?page=my-networks' ),
 		) );
 
 		/**

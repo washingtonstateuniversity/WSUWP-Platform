@@ -276,7 +276,7 @@ class WSU_Network_Admin {
 	 * Add a dashboard page to manage all WSU Networks that a user has access to
 	 */
 	function my_networks_dashboard() {
-		add_dashboard_page( 'My Networks Dashboard', 'My WSU Networks', 'read', 'my-wsu-networks', array( $this, 'display_my_networks' ) );
+		add_dashboard_page( 'My Networks Dashboard', 'My Networks', 'read', 'my-networks', array( $this, 'display_my_networks' ) );
 	}
 
 	/**
