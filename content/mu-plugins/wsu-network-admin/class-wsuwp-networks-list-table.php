@@ -70,9 +70,13 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 						<?php
 						break;
 
-					case 'network_name': ?>
+					case 'network_name':
+						switch_to_network( $network['id'] );
+						$network_name = get_site_option( 'site_name' );
+						restore_current_network();
+						?>
 						<th valign="top" scope="row">
-							<?php echo $network['domain']; ?>
+							<?php echo esc_html( $network_name ); ?>
 						</th>
 						<?php
 						break;
