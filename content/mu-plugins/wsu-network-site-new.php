@@ -172,7 +172,6 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 		?>
 
 		<div class="wrap">
-			<?php screen_icon('ms-admin'); ?>
 			<h2 id="add-new-site"><?php _e('Add New Site') ?></h2>
 			<?php
 			if ( ! empty( $messages ) ) {

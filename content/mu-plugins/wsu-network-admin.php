@@ -286,8 +286,7 @@ class WSU_Network_Admin {
 	function display_my_networks() {
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'ms-admin' ); ?>
-		<h2>My Networks<?php
+			<h2>My Networks<?php
 	}
 
 	/**
@@ -314,7 +313,6 @@ class WSU_Network_Admin {
 		$wsuwp_networks->prepare_items();
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'ms-admin' ); ?>
 			<h2><?php
 
 				echo $title;
@@ -395,7 +393,6 @@ class WSU_Network_Admin {
 
 		?>
 		<div class="wrap">
-			<?php screen_icon('ms-admin'); ?>
 			<h2 id="add-new-site"><?php _e('Add New Network') ?></h2>
 			<form method="post" action="<?php echo network_admin_url('site-new.php?display=network&action=add-network'); ?>">
 				<?php wp_nonce_field( 'add-network', '_wpnonce_add-network' ) ?>
