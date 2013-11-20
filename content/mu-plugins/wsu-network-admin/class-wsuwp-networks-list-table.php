@@ -15,12 +15,78 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		return current_user_can( 'manage_sites' );
 	}
 
+	/**
+	 * Sort network results ascending by ID.
+	 *
+	 * @see prepare_items()
+	 *
+	 * @param array $network_a Array of network data.
+	 * @param array $network_b Array of network data.
+	 *
+	 * @return int Comparison status for usort.
+	 */
+	private function _sort_network_id_asc( $network_a, $network_b ) {
+		if ( $network_a['id'] === $network_b['id'] ) {
+			return 0;
+		}
+
+		return ( $network_a['id'] < $network_b['id'] ) ? -1 : 1;
+	}
+
+	/**
+	 * Sort network results descending by ID.
+	 *
+	 * @see prepare_items()
+	 *
+	 * @param array $network_a Array of network data.
+	 * @param array $network_b Array of network data.
+	 *
+	 * @return int Comparison status for usort.
+	 */
+	private function _sort_network_id_desc( $network_a, $network_b ) {
+		if ( $network_a['id'] === $network_b['id'] ) {
+			return 0;
+		}
+
+		return ( $network_a['id'] > $network_b['id'] ) ? -1 : 1;
+	}
+
+	/**
+	 * Sort network results ascending by domain.
+	 *
+	 * @see prepare_items()
+	 *
+	 * @param array $network_a Array of network data.
+	 * @param array $network_b Array of network data.
+	 *
+	 * @return int Comparison status for usort.
+	 */
+	private function _sort_network_domain_asc( $network_a, $network_b ) {
+		return strcasecmp( $network_a['domain'], $network_b['domain'] );
+	}
+
+	/**
+	 * Sort network results ascending by domain.
+	 *
+	 * @see prepare_items()
+	 *
+	 * @param array $network_a Array of network data.
+	 * @param array $network_b Array of network data.
+	 *
+	 * @return int Comparison status for usort.
+	 */
+	private function _sort_network_domain_desc( $network_a, $network_b ) {
+		return strcasecmp( $network_b['domain'], $network_a['domain'] );
+	}
+
 	function prepare_items() {
 		global $wpdb;
 
 		$query = "SELECT * FROM {$wpdb->site} WHERE 1=1";
 
 		$this->items = $wpdb->get_results( $query, ARRAY_A );
+
+		usort( $this->items, array( $this, '_sort_network_id_asc' ) );
 
 		$columns = $this->get_columns();
 		$hidden = array();
