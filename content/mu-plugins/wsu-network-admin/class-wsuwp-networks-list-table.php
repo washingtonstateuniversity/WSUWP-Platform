@@ -79,6 +79,34 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		return strcasecmp( $network_b['domain'], $network_a['domain'] );
 	}
 
+	/**
+	 * Sort network results ascending by network name.
+	 *
+	 * @see prepare_items()
+	 *
+	 * @param array $network_a Array of network data.
+	 * @param array $network_b Array of network data.
+	 *
+	 * @return int Comparison status for usort.
+	 */
+	private function _sort_network_name_asc( $network_a, $network_b ) {
+		return strcasecmp( $network_a['network_name'], $network_b['network_name'] );
+	}
+
+	/**
+	 * Sort network results ascending by network name.
+	 *
+	 * @see prepare_items()
+	 *
+	 * @param array $network_a Array of network data.
+	 * @param array $network_b Array of network data.
+	 *
+	 * @return int Comparison status for usort.
+	 */
+	private function _sort_network_name_desc( $network_a, $network_b ) {
+		return strcasecmp( $network_b['network_name'], $network_a['network_name'] );
+	}
+
 	function prepare_items() {
 		global $wpdb;
 
@@ -131,7 +159,7 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 	function get_sortable_columns() {
 		$sortable_columns = array(
 			'network_id'     => array( 'network_id', false ),
-			//'network_name'   => array( 'network_name', false ),
+			'network_name'   => array( 'network_name', false ),
 			'network_domain' => array( 'network_domain', false ),
 		);
 		return $sortable_columns;
