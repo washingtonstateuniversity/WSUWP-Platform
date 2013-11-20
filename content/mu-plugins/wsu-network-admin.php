@@ -319,11 +319,45 @@ class WSU_Network_Admin {
 		die();
 	}
 
+	/**
+	 * Display Add New Network in the admin dashboard.
+	 */
 	public function network_new_php() {
+		global $title, $parent_file;
+
 		if ( '/wp-admin/network/site-new.php?display=network' !== $_SERVER['REQUEST_URI'] )
 			return;
 
-		echo 'Add New Network';
+		$title = __('Add New Network');
+		$parent_file = 'sites.php?display=network';
+
+		require( ABSPATH . 'wp-admin/admin-header.php' );
+
+		?>
+		<div class="wrap">
+			<?php screen_icon('ms-admin'); ?>
+			<h2 id="add-new-site"><?php _e('Add New Network') ?></h2>
+			<form method="post" action="<?php echo network_admin_url('site-new.php?display=network&action=add-site'); ?>">
+				<?php wp_nonce_field( 'add-network', '_wpnonce_add-network' ) ?>
+				<table class="form-table">
+					<tr class="form-field form-required">
+						<th scope="row"><?php _e( 'Network Domain' ) ?></th>
+						<td><input name="network[domain]" type="text" class="regular-text" title="<?php esc_attr_e( 'Domain' ); ?>" /></td>
+					</tr>
+					<tr class="form-field form-required">
+						<th scope="row"><?php _e( 'Network Title' ) ?></th>
+						<td><input name="network[title]" type="text" class="regular-text" title="<?php esc_attr_e( 'Title' ) ?>"/></td>
+					</tr>
+					<tr class="form-field form-required">
+						<th scope="row"><?php _e( 'Admin Email' ) ?></th>
+						<td><input name="network[email]" type="text" class="regular-text" title="<?php esc_attr_e( 'Email' ) ?>"/></td>
+					</tr>
+				</table>
+				<?php submit_button( __('Add Network'), 'primary', 'add-network' ); ?>
+			</form>
+		</div>
+		<?php
+		require( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
 	}
 
