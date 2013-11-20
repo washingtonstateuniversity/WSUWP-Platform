@@ -187,7 +187,7 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		foreach ( $this->items as $network ) {
 			$class = ( 'alternate' == $class ) ? '' : 'alternate';
 
-			echo "<tr class='$class'>";
+			echo '<tr class="' . $class . '">';
 
 			list( $columns ) = $this->get_column_info();
 
