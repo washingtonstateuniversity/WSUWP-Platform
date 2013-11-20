@@ -327,7 +327,7 @@ class WSU_Network_Admin {
 				<input type="hidden" name="action" value="search-networks" />
 			</form>
 
-			<form id="form-site-list" action="sites.php?action=allblogs" method="post">
+			<form id="form-site-list" action="sites.php?display=network&action=all-networks" method="post">
 				<?php $wsuwp_networks->display(); ?>
 			</form>
 		</div>
