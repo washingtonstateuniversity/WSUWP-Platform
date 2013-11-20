@@ -322,7 +322,10 @@ class WSU_Network_Admin {
 					?> <a href="<?php echo network_admin_url( 'site-new.php?display=network' ); ?>" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'network' ); ?></a><?php
 				}
 			?></h2>
-
+			<form action="" method="get" id="ms-search">
+				<?php $wsuwp_networks->search_box( __( 'Search Networks' ), 'network' ); ?>
+				<input type="hidden" name="action" value="blogs" />
+			</form>
 			<form id="form-site-list" action="sites.php?action=allblogs" method="post">
 				<?php $wsuwp_networks->display(); ?>
 			</form>
