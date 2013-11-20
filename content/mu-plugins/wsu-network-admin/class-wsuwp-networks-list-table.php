@@ -171,8 +171,8 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 	 */
 	function get_sortable_columns() {
 		$sortable_columns = array(
-			'network_id'     => array( 'network_id', false ),
-			'network_name'   => array( 'network_name', false ),
+			'network_id'     => array( 'network_id',     true  ),
+			'network_name'   => array( 'network_name',   false ),
 			'network_domain' => array( 'network_domain', false ),
 		);
 		return $sortable_columns;
