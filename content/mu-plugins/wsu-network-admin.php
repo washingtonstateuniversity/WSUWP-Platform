@@ -248,25 +248,26 @@ class WSU_Network_Admin {
 	public function parent_file( $parent_file ) {
 		global $self, $submenu_file;
 
-		// The All Networks page.
-		if ( 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-admin/network/sites.php?display=network' ) ) {
-			$self = 'sites.php?display=network';
-			$parent_file = 'sites.php?display=network';
+		if ( '/wp-admin/network/sites.php' === $_SERVER['DOCUMENT_URI'] ) {
+			// The All Networks page.
+			if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] ) {
+				$self = 'sites.php?display=network';
+				$parent_file = 'sites.php?display=network';
+			}
 		}
 
-
-		// The New Network page.
-		if ( 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-admin/network/site-new.php?display=network' ) ) {
-			$self = 'sites.php?display=network';
-			$parent_file = 'sites.php?display=network';
-			$submenu_file = 'site-new.php?display=network';
-		}
-
-		// Add a submenu style to Add New site.
-		if ( 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-admin/network/site-new.php' ) ) {
-			$self = 'site-new.php';
-			$parent_file = 'sites.php';
-			$submenu_file = 'site-new.php';
+		if ( '/wp-admin/network/site-new.php' === $_SERVER['DOCUMENT_URI'] ) {
+			// The New Network page.
+			if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] ) {
+				$self = 'sites.php?display=network';
+				$parent_file = 'sites.php?display=network';
+				$submenu_file = 'site-new.php?display=network';
+			} else {
+				// One of our other changes conflicts with the standard new site. Set this as well.
+				$self = 'site-new.php';
+				$parent_file = 'sites.php';
+				$submenu_file = 'site-new.php';
+			}
 		}
 
 		return $parent_file;
