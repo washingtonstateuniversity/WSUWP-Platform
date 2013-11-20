@@ -1,6 +1,9 @@
 <?php
 /**
  * WSUWP Networks List Table class.
+ *
+ * Provides a list of all networks in this WordPress installation and some common
+ * management options for each.
  */
 class WSUWP_Networks_List_Table extends WP_List_Table {
 
@@ -108,6 +111,9 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		return strcasecmp( $network_b['network_name'], $network_a['network_name'] );
 	}
 
+	/**
+	 * Prepare items for display in the networks list table.
+	 */
 	function prepare_items() {
 		global $wpdb;
 
@@ -142,6 +148,11 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		$this->_column_headers = array($columns, $hidden, $sortable);
 	}
 
+	/**
+	 * Provide a list of columns that should be displayed in the networks list table.
+	 *
+	 * @return array List of column ids and their names.
+	 */
 	function get_columns() {
 		$networks_columns = array(
 			'cb'             => '<input type="checkbox" />',
@@ -153,6 +164,11 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		return $networks_columns;
 	}
 
+	/**
+	 * Provide a list of columns that should be sortable.
+	 *
+	 * @return array List of column keys and their sortable options.
+	 */
 	function get_sortable_columns() {
 		$sortable_columns = array(
 			'network_id'     => array( 'network_id', false ),
@@ -162,6 +178,9 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		return $sortable_columns;
 	}
 
+	/**
+	 * Display the rows for the networks list table.
+	 */
 	function display_rows() {
 
 		$class = '';
