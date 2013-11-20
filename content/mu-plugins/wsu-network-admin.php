@@ -249,21 +249,21 @@ class WSU_Network_Admin {
 		global $self, $submenu_file;
 
 		// The All Networks page.
-		if ( '/wp-admin/network/sites.php?display=network' === $_SERVER['REQUEST_URI'] ) {
+		if ( 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-admin/network/sites.php?display=network' ) ) {
 			$self = 'sites.php?display=network';
 			$parent_file = 'sites.php?display=network';
 		}
 
 
 		// The New Network page.
-		if ( '/wp-admin/network/site-new.php?display=network' === $_SERVER['REQUEST_URI'] ) {
+		if ( 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-admin/network/site-new.php?display=network' ) ) {
 			$self = 'sites.php?display=network';
 			$parent_file = 'sites.php?display=network';
 			$submenu_file = 'site-new.php?display=network';
 		}
 
 		// Add a submenu style to Add New site.
-		if ( '/wp-admin/network/site-new.php' === $_SERVER['REQUEST_URI'] ) {
+		if ( 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-admin/network/site-new.php' ) ) {
 			$self = 'site-new.php';
 			$parent_file = 'sites.php';
 			$submenu_file = 'site-new.php';
