@@ -321,9 +321,14 @@ class WSU_Network_Admin {
 				if ( current_user_can( 'create_sites') ) {
 					?> <a href="<?php echo network_admin_url( 'site-new.php?display=network' ); ?>" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'network' ); ?></a><?php
 				}
+
+				if ( isset( $_REQUEST['s'] ) && $_REQUEST['s'] ) {
+					printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;' ) . '</span>', esc_html( $_REQUEST['s'] ) );
+				}
 			?></h2>
 			<form action="" method="get" id="ms-search">
 				<?php $wsuwp_networks->search_box( __( 'Search Networks' ), 'network' ); ?>
+				<input type="hidden" name="display" value="network" />
 				<input type="hidden" name="action" value="search-networks" />
 			</form>
 
