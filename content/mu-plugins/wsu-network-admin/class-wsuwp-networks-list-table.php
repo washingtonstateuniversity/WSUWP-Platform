@@ -24,7 +24,7 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 
 		$columns = $this->get_columns();
 		$hidden = array();
-		$sortable = array();
+		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array($columns, $hidden, $sortable);
 	}
 
@@ -41,6 +41,15 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		);
 
 		return $networks_columns;
+	}
+
+	function get_sortable_columns() {
+		$sortable_columns = array(
+			'network_id'     => array( 'network_id', false ),
+			'network_name'   => array( 'network_name', false ),
+			'network_domain' => array( 'network_domain', false ),
+		);
+		return $sortable_columns;
 	}
 
 	function display_rows() {
