@@ -289,11 +289,33 @@ class WSU_Network_Admin {
 		<h2>My Networks<?php
 	}
 
+	/**
+	 * Display All Networks in the admin dashboard.
+	 */
 	public function networks_php() {
+		global $title, $parent_file;
+
 		if ( '/wp-admin/network/sites.php?display=network' !== $_SERVER['REQUEST_URI'] )
 			return;
 
-		echo 'My Networks';
+		$title = __('Networks');
+		$parent_file = 'sites.php?display=network';
+
+		require( ABSPATH . 'wp-admin/admin-header.php' );
+		?>
+		<div class="wrap">
+			<?php screen_icon( 'ms-admin' ); ?>
+			<h2><?php
+
+				echo $title;
+
+				if ( current_user_can( 'create_sites') ) {
+					?> <a href="<?php echo network_admin_url( 'site-new.php?display=network' ); ?>" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'network' ); ?></a><?php
+				}
+			?></h2>
+		</div>
+		<?php
+		require( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
 	}
 
