@@ -4,10 +4,15 @@
  */
 class WSUWP_Networks_List_Table extends WP_List_Table {
 
-	function __construct( $args = array() ) {
+	/**
+	 * Fire up the parent methods from WP_List_Table.
+	 */
+	function __construct() {
 		parent::__construct( array(
-			'plural' => 'networks',
-			'screen' => isset( $args['screen'] ) ? $args['screen'] : null,
+			'plural'   => 'networks',
+			'singular' => 'network',
+			'ajax'     => false,
+			'screen'   => 'network',
 		) );
 	}
 
