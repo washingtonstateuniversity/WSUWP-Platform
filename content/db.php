@@ -1,1 +1,0 @@
-/var/www/wsuwp-platform/content/plugins/query-monitor/wp-content/db.php
