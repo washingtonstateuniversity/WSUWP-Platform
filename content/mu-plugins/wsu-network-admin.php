@@ -331,6 +331,159 @@ class WSU_Network_Admin {
 	 */
 	private function _create_new_network( $network ) {
 		// Create network, redirect, die.
+		global $wpdb, $current_site, $wp_db_version, $wp_rewrite;
+
+		$errors = new WP_Error();
+		if ( '' == $domain )
+			$errors->add( 'empty_domain', __( 'You must provide a domain name.' ) );
+		if ( '' == $site_name )
+			$errors->add( 'empty_sitename', __( 'You must provide a name for your network of sites.' ) );
+
+		// check for network collision
+		if ( $network_id == $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $wpdb->site WHERE id = %d", $network_id ) ) )
+			$errors->add( 'siteid_exists', __( 'The network already exists.' ) );
+
+		$site_user = get_user_by( 'email', $email );
+		if ( ! is_email( $email ) )
+			$errors->add( 'invalid_email', __( 'You must provide a valid e-mail address.' ) );
+
+		if ( $errors->get_error_code() )
+			return $errors;
+
+		// set up site tables
+		$template = get_option( 'template' );
+		$stylesheet = get_option( 'stylesheet' );
+		$allowed_themes = array( $stylesheet => true );
+		if ( $template != $stylesheet )
+			$allowed_themes[ $template ] = true;
+		if ( WP_DEFAULT_THEME != $stylesheet && WP_DEFAULT_THEME != $template )
+			$allowed_themes[ WP_DEFAULT_THEME ] = true;
+
+		if ( 1 == $network_id ) {
+			$wpdb->insert( $wpdb->site, array( 'domain' => $domain, 'path' => $path ) );
+			$network_id = $wpdb->insert_id;
+		} else {
+			$wpdb->insert( $wpdb->site, array( 'domain' => $domain, 'path' => $path, 'id' => $network_id ) );
+		}
+
+		if ( !is_multisite() ) {
+			$site_admins = array( $site_user->user_login );
+			$users = get_users( array( 'fields' => array( 'ID', 'user_login' ) ) );
+			if ( $users ) {
+				foreach ( $users as $user ) {
+					if ( is_super_admin( $user->ID ) && !in_array( $user->user_login, $site_admins ) )
+						$site_admins[] = $user->user_login;
+				}
+			}
+		} else {
+			$site_admins = get_site_option( 'site_admins' );
+		}
+
+		$welcome_email = __( 'Dear User,
+
+Your new SITE_NAME site has been successfully set up at:
+BLOG_URL
+
+You can log in to the administrator account with the following information:
+Username: USERNAME
+Password: PASSWORD
+Log in here: BLOG_URLwp-login.php
+
+We hope you enjoy your new site. Thanks!
+
+--The Team @ SITE_NAME' );
+
+		$sitemeta = array(
+			'site_name' => $site_name,
+			'admin_email' => $site_user->user_email,
+			'admin_user_id' => $site_user->ID,
+			'registration' => 'none',
+			'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv midi mid pdf',
+			'blog_upload_space' => 100,
+			'fileupload_maxk' => 1500,
+			'site_admins' => $site_admins,
+			'allowedthemes' => $allowed_themes,
+			'illegal_names' => array( 'www', 'web', 'root', 'admin', 'main', 'invite', 'administrator', 'files' ),
+			'wpmu_upgrade_site' => $wp_db_version,
+			'welcome_email' => $welcome_email,
+			'first_post' => __( 'Welcome to <a href="SITE_URL">SITE_NAME</a>. This is your first post. Edit or delete it, then start blogging!' ),
+			// @todo - network admins should have a method of editing the network siteurl (used for cookie hash)
+			'siteurl' => get_option( 'siteurl' ) . '/',
+			'add_new_users' => '0',
+			'upload_space_check_disabled' => is_multisite() ? get_site_option( 'upload_space_check_disabled' ) : '1',
+			'subdomain_install' => intval( $subdomain_install ),
+			'global_terms_enabled' => global_terms_enabled() ? '1' : '0',
+			'ms_files_rewriting' => is_multisite() ? get_site_option( 'ms_files_rewriting' ) : '0',
+			'initial_db_version' => get_option( 'initial_db_version' ),
+			'active_sitewide_plugins' => array(),
+			'WPLANG' => get_locale(),
+		);
+		if ( ! $subdomain_install )
+			$sitemeta['illegal_names'][] = 'blog';
+
+		/**
+		 * Filter meta for a network on creation.
+		 *
+		 * @since 3.7.0
+		 *
+		 * @param array $sitemeta   Associative array of network meta keys and values to be inserted.
+		 * @param int   $network_id ID of network to populate.
+		 */
+		$sitemeta = apply_filters( 'populate_network_meta', $sitemeta, $network_id );
+
+		$insert = '';
+		foreach ( $sitemeta as $meta_key => $meta_value ) {
+			if ( is_array( $meta_value ) )
+				$meta_value = serialize( $meta_value );
+			if ( !empty( $insert ) )
+				$insert .= ', ';
+			$insert .= $wpdb->prepare( "( %d, %s, %s)", $network_id, $meta_key, $meta_value );
+		}
+		$wpdb->query( "INSERT INTO $wpdb->sitemeta ( site_id, meta_key, meta_value ) VALUES " . $insert );
+
+		// When upgrading from single to multisite, assume the current site will become the main site of the network.
+		// When using populate_network() to create another network in an existing multisite environment,
+		// skip these steps since the main site of the new network has not yet been created.
+		if ( ! is_multisite() ) {
+			$current_site = new stdClass;
+			$current_site->domain = $domain;
+			$current_site->path = $path;
+			$current_site->site_name = ucfirst( $domain );
+			$wpdb->insert( $wpdb->blogs, array( 'site_id' => $network_id, 'blog_id' => 1, 'domain' => $domain, 'path' => $path, 'registered' => current_time( 'mysql' ) ) );
+			$current_site->blog_id = $blog_id = $wpdb->insert_id;
+			update_user_meta( $site_user->ID, 'source_domain', $domain );
+			update_user_meta( $site_user->ID, 'primary_blog', $blog_id );
+
+			if ( $subdomain_install )
+				$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
+			else
+				$wp_rewrite->set_permalink_structure( '/blog/%year%/%monthnum%/%day%/%postname%/' );
+
+			flush_rewrite_rules();
+
+			if ( ! $subdomain_install )
+				return true;
+
+			$vhost_ok = false;
+			$errstr = '';
+			$hostname = substr( md5( time() ), 0, 6 ) . '.' . $domain; // Very random hostname!
+			$page = wp_remote_get( 'http://' . $hostname, array( 'timeout' => 5, 'httpversion' => '1.1' ) );
+			if ( is_wp_error( $page ) )
+				$errstr = $page->get_error_message();
+			elseif ( 200 == wp_remote_retrieve_response_code( $page ) )
+				$vhost_ok = true;
+
+			if ( ! $vhost_ok ) {
+				$msg = '<p><strong>' . __( 'Warning! Wildcard DNS may not be configured correctly!' ) . '</strong></p>';
+				$msg .= '<p>' . sprintf( __( 'The installer attempted to contact a random hostname (<code>%1$s</code>) on your domain.' ), $hostname );
+				if ( ! empty ( $errstr ) )
+					$msg .= ' ' . sprintf( __( 'This resulted in an error message: %s' ), '<code>' . $errstr . '</code>' );
+				$msg .= '</p>';
+				$msg .= '<p>' . __( 'To use a subdomain configuration, you must have a wildcard entry in your DNS. This usually means adding a <code>*</code> hostname record pointing at your web server in your DNS configuration tool.' ) . '</p>';
+				$msg .= '<p>' . __( 'You can still use your site but any subdomain you create may not be accessible. If you know your DNS is correct, ignore this message.' ) . '</p>';
+				return new WP_Error( 'no_wildcard_dns', $msg );
+			}
+		}
 	}
 
 	/**
