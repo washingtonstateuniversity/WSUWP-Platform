@@ -16,10 +16,6 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		) );
 	}
 
-	function ajax_user_can() {
-		return current_user_can( 'manage_sites' );
-	}
-
 	/**
 	 * Sort network results ascending by ID.
 	 *
