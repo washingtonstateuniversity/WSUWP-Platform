@@ -295,8 +295,13 @@ class WSU_Network_Admin {
 	public function networks_php() {
 		global $title, $parent_file;
 
-		if ( '/wp-admin/network/sites.php?display=network' !== $_SERVER['REQUEST_URI'] )
+		if ( '/wp-admin/network/sites.php' !== $_SERVER['DOCUMENT_URI'] ) {
 			return;
+		}
+
+		if ( ! isset( $_GET['display'] ) || 'network' !== $_GET['display'] ) {
+			return;
+		}
 
 		$title = __('Networks');
 		$parent_file = 'sites.php?display=network';
@@ -325,8 +330,13 @@ class WSU_Network_Admin {
 	public function network_new_php() {
 		global $title, $parent_file;
 
-		if ( '/wp-admin/network/site-new.php?display=network' !== $_SERVER['REQUEST_URI'] )
+		if ( '/wp-admin/network/site-new.php' !== $_SERVER['DOCUMENT_URI'] ) {
 			return;
+		}
+
+		if ( ! isset( $_GET['display'] ) || 'network' !== $_GET['display'] ) {
+			return;
+		}
 
 		$title = __('Add New Network');
 		$parent_file = 'sites.php?display=network';

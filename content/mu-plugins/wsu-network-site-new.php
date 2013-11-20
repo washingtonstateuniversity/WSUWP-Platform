@@ -146,6 +146,9 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 		if ( '/wp-admin/network/site-new.php' !== $_SERVER['DOCUMENT_URI'] )
 			return;
 
+		if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] )
+			return;
+
 		if ( isset( $_REQUEST['action'] ) && 'add-network-site' === $_REQUEST['action'] ) {
 			check_admin_referer( 'add-network-site', '_wpnonce_add-network-site' );
 
