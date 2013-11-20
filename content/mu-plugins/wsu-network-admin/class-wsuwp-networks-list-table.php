@@ -86,7 +86,19 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 
 		$this->items = $wpdb->get_results( $query, ARRAY_A );
 
-		usort( $this->items, array( $this, '_sort_network_id_asc' ) );
+		if ( isset( $_GET['orderby'] ) && array_key_exists( $_GET['orderby'], $this->get_sortable_columns() ) ) {
+			$orderby = $_GET['orderby'];
+		} else {
+			$orderby = 'network_id';
+		}
+
+		if ( isset( $_GET['order'] ) && in_array( $_GET['order'], array( 'asc', 'desc' ) ) ) {
+			$order = $_GET['order'];
+		} else {
+			$order = 'asc';
+		}
+
+		usort( $this->items, array( $this, '_sort_' . $orderby . '_' . $order ) );
 
 		$columns = $this->get_columns();
 		$hidden = array();
