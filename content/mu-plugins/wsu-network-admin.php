@@ -325,6 +325,15 @@ class WSU_Network_Admin {
 	}
 
 	/**
+	 * Create a new network via the Networks dashboard screen.
+	 *
+	 * @param array $network Contains array of POST information for new network.
+	 */
+	private function _create_new_network( $network ) {
+		// Create network, redirect, die.
+	}
+
+	/**
 	 * Display Add New Network in the admin dashboard.
 	 */
 	public function network_new_php() {
@@ -338,6 +347,15 @@ class WSU_Network_Admin {
 			return;
 		}
 
+		if ( isset( $_GET['action'] ) && 'add-network' === $_GET['action'] ) {
+			check_admin_referer( 'add-network', '_wpnonce_add-network' );
+
+			if ( ! is_array( $_POST['network'] ) )
+				wp_die( __( 'Can&#8217;t create an empty network.' ) );
+
+			$this->_create_new_network( $_POST['network'] );
+		}
+
 		$title = __('Add New Network');
 		$parent_file = 'sites.php?display=network';
 
@@ -347,7 +365,7 @@ class WSU_Network_Admin {
 		<div class="wrap">
 			<?php screen_icon('ms-admin'); ?>
 			<h2 id="add-new-site"><?php _e('Add New Network') ?></h2>
-			<form method="post" action="<?php echo network_admin_url('site-new.php?display=network&action=add-site'); ?>">
+			<form method="post" action="<?php echo network_admin_url('site-new.php?display=network&action=add-network'); ?>">
 				<?php wp_nonce_field( 'add-network', '_wpnonce_add-network' ) ?>
 				<table class="form-table">
 					<tr class="form-field form-required">
