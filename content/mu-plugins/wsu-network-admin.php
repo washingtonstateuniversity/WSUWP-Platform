@@ -330,7 +330,7 @@ class WSU_Network_Admin {
 	 * @param array $network Contains array of POST information for new network.
 	 */
 	private function _create_new_network( $network ) {
-		$network_id = wp_create_network( $network );
+		$network_id = wsuwp_create_network( $network );
 
 		if ( is_wp_error( $network_id ) ) {
 			wp_die( $network_id );

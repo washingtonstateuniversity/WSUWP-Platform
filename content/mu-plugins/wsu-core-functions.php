@@ -187,7 +187,7 @@ function wp_get_networks( $args = array() ) {
 	return array_values( $network_results );
 }
 
-function wp_create_network( $args ) {
+function wsuwp_create_network( $args ) {
 	/** @type WPDB $wpdb */
 	global $wpdb;
 
