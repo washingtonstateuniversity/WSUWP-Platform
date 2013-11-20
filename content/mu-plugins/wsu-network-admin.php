@@ -336,7 +336,7 @@ class WSU_Network_Admin {
 			wp_die( $network_id );
 		}
 
-		wpmu_create_blog( $network['domain'], '/', $network['title'], get_current_user_id(), '', $network_id );
+		wpmu_create_blog( $network['domain'], '/', $network['site_name'], get_current_user_id(), '', $network_id );
 
 		wp_redirect( network_admin_url( 'sites.php?display=network' ) );
 		exit;
