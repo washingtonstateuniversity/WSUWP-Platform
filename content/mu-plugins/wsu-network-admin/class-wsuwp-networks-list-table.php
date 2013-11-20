@@ -141,10 +141,6 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		$this->_column_headers = array($columns, $hidden, $sortable);
 	}
 
-	function no_items() {
-		_e( 'No networks found.' );
-	}
-
 	function get_columns() {
 		$networks_columns = array(
 			'cb'             => '<input type="checkbox" />',
