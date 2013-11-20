@@ -383,7 +383,7 @@ class WSU_Network_Admin {
 					</tr>
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Network Title' ) ?></th>
-						<td><input name="network[site_name]" type="text" class="regular-text" title="<?php esc_attr_e( 'Title' ) ?>"/></td>
+						<td><input name="network[network_name]" type="text" class="regular-text" title="<?php esc_attr_e( 'Title' ) ?>"/></td>
 					</tr>
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Admin Email' ) ?></th>
