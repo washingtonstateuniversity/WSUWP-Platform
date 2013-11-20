@@ -307,6 +307,10 @@ class WSU_Network_Admin {
 		$parent_file = 'sites.php?display=network';
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
+
+		require_once( dirname( __FILE__ ) . '/wsu-network-admin/class-wsuwp-networks-list-table.php' );
+		$wsuwp_networks = new WSUWP_Networks_List_Table();
+		$wsuwp_networks->prepare_items();
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'ms-admin' ); ?>
@@ -318,6 +322,10 @@ class WSU_Network_Admin {
 					?> <a href="<?php echo network_admin_url( 'site-new.php?display=network' ); ?>" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'network' ); ?></a><?php
 				}
 			?></h2>
+
+			<form id="form-site-list" action="sites.php?action=allblogs" method="post">
+				<?php $wsuwp_networks->display(); ?>
+			</form>
 		</div>
 		<?php
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
