@@ -324,8 +324,9 @@ class WSU_Network_Admin {
 			?></h2>
 			<form action="" method="get" id="ms-search">
 				<?php $wsuwp_networks->search_box( __( 'Search Networks' ), 'network' ); ?>
-				<input type="hidden" name="action" value="blogs" />
+				<input type="hidden" name="action" value="search-networks" />
 			</form>
+
 			<form id="form-site-list" action="sites.php?action=allblogs" method="post">
 				<?php $wsuwp_networks->display(); ?>
 			</form>
