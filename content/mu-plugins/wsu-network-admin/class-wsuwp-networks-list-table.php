@@ -86,6 +86,13 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 
 		$this->items = $wpdb->get_results( $query, ARRAY_A );
 
+		// Parse through the network results and add the network name to the final array.
+		foreach ( $this->items as $key => $network ) {
+			switch_to_network( $network['id'] );
+			$this->items[ $key ]['network_name'] = get_site_option( 'site_name' );
+			restore_current_network();
+		}
+
 		if ( isset( $_GET['orderby'] ) && array_key_exists( $_GET['orderby'], $this->get_sortable_columns() ) ) {
 			$orderby = $_GET['orderby'];
 		} else {
@@ -158,12 +165,9 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 						break;
 
 					case 'network_name':
-						switch_to_network( $network['id'] );
-						$network_name = get_site_option( 'site_name' );
-						restore_current_network();
 						?>
 						<th valign="top" scope="row">
-							<?php echo esc_html( $network_name ); ?>
+							<?php echo esc_html( $network['network_name'] ); ?>
 						</th>
 						<?php
 						break;
