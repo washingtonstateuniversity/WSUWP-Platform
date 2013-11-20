@@ -336,6 +336,11 @@ class WSU_Network_Admin {
 			wp_die( $network_id );
 		}
 
+		// If a primary site name was not provided, inherit the network name.
+		if ( ! isset( $network['site_name'] ) || '' === trim( $network['site_name'] ) ) {
+			$network['site_name'] = $network['network_name'];
+		}
+
 		wpmu_create_blog( $network['domain'], '/', $network['site_name'], get_current_user_id(), '', $network_id );
 
 		wp_redirect( network_admin_url( 'sites.php?display=network' ) );
