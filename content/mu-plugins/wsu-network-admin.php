@@ -494,7 +494,7 @@ class WSU_Network_Admin {
 					}
 				}
 				if ( in_array( $item['meta_key'], $network_display_fields ) ) {
-					$display_output .= '<tr><td>' . esc_html( $item['meta_key'] ) . '</td><td>' . esc_html( $item['meta_value'] ) . '</td></tr>';
+					$display_output .= '<tr><td style="padding: 5px 10px;">' . esc_html( $item['meta_key'] ) . '</td><td style="padding: 5px 10px;">' . esc_html( $item['meta_value'] ) . '</td></tr>';
 				}
 			}
 			?>
