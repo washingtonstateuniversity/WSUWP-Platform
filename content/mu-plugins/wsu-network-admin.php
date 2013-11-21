@@ -21,17 +21,20 @@ class WSU_Network_Admin {
 	 */
 	private $network_meta_edit = array(
 		'site_name' => array(
-			'label' => 'Network Name:',
-			'input' => 'text',
+			'label'    => 'Network Name:',
+			'input'    => 'text',
+			'validate' => 'sanitize_text_field',
 		),
 		'welcome_email' => array(
-			'label' => 'Welcome Email:',
-			'input' => 'textarea',
-			'rows'  => 15,
+			'label'    => 'Welcome Email:',
+			'input'    => 'textarea',
+			'rows'     => 15,
+			'validate' => 'wp_kses_data',
 		),
 		'siteurl' => array(
-			'label' => 'Site URL:',
-			'input' => 'text',
+			'label'    => 'Site URL:',
+			'input'    => 'text',
+			'validate' => 'esc_url_raw',
 		),
 	);
 
@@ -446,8 +449,7 @@ class WSU_Network_Admin {
 		switch_to_network( $network_id );
 		foreach ( $network_meta as $key => $value ) {
 			if ( array_key_exists( $key, $this->network_meta_edit ) ) {
-				// @todo MORE VALIDATION
-				$value = sanitize_option( $key, $value );
+				$value = $this->network_meta_edit[ $key ]['validate']( $value );
 				update_site_option( $key, $value );
 			}
 		}
