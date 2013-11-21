@@ -443,7 +443,25 @@ class WSU_Network_Admin {
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->sitemeta} WHERE site_id = %d", $network_id );
 		$network_data = $wpdb->get_results( $query, ARRAY_A );
 
-		$network_display_fields = array( 'blog_count', 'user_count', 'initial_db_version', 'wpmu_upgrade_site', 'blog_upload_space', 'fileupload_max', 'upload_file_types' );
+		$network_display_fields = array(
+			'blog_count',
+			'user_count',
+			'initial_db_version',
+			'wpmu_upgrade_site',
+			'blog_upload_space',
+			'fileupload_max',
+			'upload_file_types',
+			'admin_user_id',
+			'registration',
+			'add_new_users',
+			'upload_space_check_disabled',
+			'subdomain_install',
+			'global_terms_enabled',
+			'ms_files_rewriting',
+			'WPLANG',
+			'admin_email',
+			'can_compress_scripts',
+		);
 
 		$network_edit_fields = array(
 			'site_name' => array(
