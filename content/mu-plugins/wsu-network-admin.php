@@ -415,6 +415,16 @@ class WSU_Network_Admin {
 		die();
 	}
 
+	private function _update_network( $network_id, $network_meta ) {
+		switch_to_network( $network_id );
+		foreach ( $network_meta as $key => $value ) {
+			$key = sanitize_key( $key );
+			$value = sanitize_option( $key, $value );
+			update_site_option( $key, $value );
+		}
+		restore_current_network();
+	}
+
 	/**
 	 * Display an Edit Network screen in the admin dashboard.
 	 */
@@ -431,6 +441,15 @@ class WSU_Network_Admin {
 		}
 
 		$network_id = absint( $_GET['network_id'] );
+
+		if ( isset( $_GET['action'] ) && 'update-network' === $_GET['action'] ) {
+			check_admin_referer( 'update-network', '_wpnonce_update-network' );
+
+			if ( ! is_array( $_POST['network'] ) )
+				wp_die( __( 'Can&#8217;t edit a network without information.' ) );
+
+			$this->_update_network( $network_id, $_POST['network'] );
+		}
 
 		$title = __('Edit Network');
 		$parent_file = 'sites.php?display=network';
@@ -498,8 +517,8 @@ class WSU_Network_Admin {
 				}
 			}
 			?>
-			<form method="post" action="<?php echo network_admin_url( 'site-info.php?display=network&action=update-network' ); ?>">
-				<?php wp_nonce_field( 'update-network', '_wpnonce_update_network' ) ?>
+			<form method="post" action="<?php echo network_admin_url( 'site-info.php?display=network&action=update-network&network_id=' . $network_id ); ?>">
+				<?php wp_nonce_field( 'update-network', '_wpnonce_update-network' ) ?>
 				<table class="form-table">
 					<tbody>
 					<?php echo $edit_output; ?>
