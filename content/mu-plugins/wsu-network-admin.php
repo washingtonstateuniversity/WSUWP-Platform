@@ -486,11 +486,11 @@ class WSU_Network_Admin {
 			$edit_output = '';
 			foreach( $network_data as $item ) {
 				if ( array_key_exists( $item['meta_key'], $network_edit_fields ) ) {
-					$edit_output .= '<tr class="form-field"><th scope="row"><label for="' . esc_attr( $item['meta_key'] ) . '">' . esc_html( $network_edit_fields[ $item['meta_key'] ]['label'] ) . '</label></th>';
+					$edit_output .= '<tr class="form-field"><th scope="row"><label for="network[' . esc_attr( $item['meta_key'] ) . ']">' . esc_html( $network_edit_fields[ $item['meta_key'] ]['label'] ) . '</label></th>';
 					if ( 'text' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
-						$edit_output .= '<td><input class="wide-text" type="text" name="' . esc_attr( $item['meta_key'] ) . '" value="' . esc_attr( $item['meta_value'] ) . '" /></td></tr>';
+						$edit_output .= '<td><input class="wide-text" type="text" name="network[' . esc_attr( $item['meta_key'] ) . ']" value="' . esc_attr( $item['meta_value'] ) . '" /></td></tr>';
 					} else if ( 'textarea' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
-						$edit_output .= '<td><textarea name="' . esc_attr( $item['meta_key'] ) . '" rows="' . esc_attr( $network_edit_fields[ $item['meta_key'] ]['rows'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea></td></tr>';
+						$edit_output .= '<td><textarea name="network[' . esc_attr( $item['meta_key'] ) . ']" rows="' . esc_attr( $network_edit_fields[ $item['meta_key'] ]['rows'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea></td></tr>';
 					}
 				}
 				if ( in_array( $item['meta_key'], $network_display_fields ) ) {
