@@ -442,14 +442,47 @@ class WSU_Network_Admin {
 
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->sitemeta} WHERE site_id = %d", $network_id );
 		$network_data = $wpdb->get_results( $query, ARRAY_A );
+
+		$network_display_fields = array( 'blog_count', 'user_count', 'initial_db_version', 'wpmu_upgrade_site', 'blog_upload_space', 'fileupload_max', 'upload_file_types' );
+
+		$network_edit_fields = array(
+			'site_name' => array(
+				'label' => 'Network Name:',
+				'input' => 'text',
+			),
+			'welcome_email' => array(
+				'label' => 'Welcome Email:',
+				'input' => 'textarea',
+			),
+			'siteurl' => array(
+				'label' => 'Site URL:',
+				'input' => 'text',
+			),
+		);
 		?>
 		<div class="wrap">
 			<h2 id="edit-network"><?php _e( 'Edit Network' ); ?>: <?php echo $network[0]->domain; ?></h2>
-			<ul><?php
+			<?php
+			$display_output = '';
+			$edit_output = '';
 			foreach( $network_data as $item ) {
-				echo '<li>' . esc_html( $item['meta_key'] ) . ' : ' . esc_html( $item['meta_value'] ) . '</li>';
+				if ( array_key_exists( $item['meta_key'], $network_edit_fields ) ) {
+					$edit_output .= '<label for="' . esc_attr( $item['meta_key'] ) . '">' . esc_html( $network_edit_fields[ $item['meta_key'] ]['label'] ) . '</label>';
+					if ( 'text' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
+						$edit_output .= '<input class="regular-text" type="text" name="' . esc_attr( $item['meta_key'] ) . '" value="' . esc_attr( $item['meta_value'] ) . '" />';
+					} else if ( 'textarea' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
+						$edit_output .= '<textarea name="' . esc_attr( $item['meta_key'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea>';
+					}
+				}
+				if ( in_array( $item['meta_key'], $network_display_fields ) ) {
+					$display_output .= '<li>' . esc_html( $item['meta_key'] ) . ' : ' . esc_html( $item['meta_value'] ) . '</li>';
+				}
 			}
-			?></ul>
+			?>
+			<form method="post" action="" >
+				<?php echo $edit_output; ?>
+			</form>
+			<ul><?php echo $display_output; ?></ul>
 		</div>
 		<?php
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
