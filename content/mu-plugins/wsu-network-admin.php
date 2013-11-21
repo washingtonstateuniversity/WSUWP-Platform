@@ -494,7 +494,7 @@ class WSU_Network_Admin {
 					}
 				}
 				if ( in_array( $item['meta_key'], $network_display_fields ) ) {
-					$display_output .= '<li>' . esc_html( $item['meta_key'] ) . ' : ' . esc_html( $item['meta_value'] ) . '</li>';
+					$display_output .= '<tr><td>' . esc_html( $item['meta_key'] ) . '</td><td>' . esc_html( $item['meta_value'] ) . '</td></tr>';
 				}
 			}
 			?>
@@ -502,10 +502,12 @@ class WSU_Network_Admin {
 				<table class="form-table">
 					<tbody>
 					<?php echo $edit_output; ?>
+					<tr class="form-field">
+						<th scope="row">Additional Network Information:</th>
+						<td><table><?php echo $display_output; ?></table></td></tr>
 					</tbody>
 				</table>
 			</form>
-			<ul><?php echo $display_output; ?></ul>
 		</div>
 		<?php
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
