@@ -453,6 +453,7 @@ class WSU_Network_Admin {
 			'welcome_email' => array(
 				'label' => 'Welcome Email:',
 				'input' => 'textarea',
+				'rows'  => 15,
 			),
 			'siteurl' => array(
 				'label' => 'Site URL:',
@@ -467,11 +468,11 @@ class WSU_Network_Admin {
 			$edit_output = '';
 			foreach( $network_data as $item ) {
 				if ( array_key_exists( $item['meta_key'], $network_edit_fields ) ) {
-					$edit_output .= '<label for="' . esc_attr( $item['meta_key'] ) . '">' . esc_html( $network_edit_fields[ $item['meta_key'] ]['label'] ) . '</label>';
+					$edit_output .= '<tr class="form-field"><th scope="row"><label for="' . esc_attr( $item['meta_key'] ) . '">' . esc_html( $network_edit_fields[ $item['meta_key'] ]['label'] ) . '</label></th>';
 					if ( 'text' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
-						$edit_output .= '<input class="regular-text" type="text" name="' . esc_attr( $item['meta_key'] ) . '" value="' . esc_attr( $item['meta_value'] ) . '" />';
+						$edit_output .= '<td><input class="wide-text" type="text" name="' . esc_attr( $item['meta_key'] ) . '" value="' . esc_attr( $item['meta_value'] ) . '" /></td></tr>';
 					} else if ( 'textarea' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
-						$edit_output .= '<textarea name="' . esc_attr( $item['meta_key'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea>';
+						$edit_output .= '<td><textarea name="' . esc_attr( $item['meta_key'] ) . '" rows="' . esc_attr( $network_edit_fields[ $item['meta_key'] ]['rows'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea></td></tr>';
 					}
 				}
 				if ( in_array( $item['meta_key'], $network_display_fields ) ) {
@@ -480,7 +481,11 @@ class WSU_Network_Admin {
 			}
 			?>
 			<form method="post" action="" >
-				<?php echo $edit_output; ?>
+				<table class="form-table">
+					<tbody>
+					<?php echo $edit_output; ?>
+					</tbody>
+				</table>
 			</form>
 			<ul><?php echo $display_output; ?></ul>
 		</div>
