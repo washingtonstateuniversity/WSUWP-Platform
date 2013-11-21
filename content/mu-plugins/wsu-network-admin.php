@@ -445,10 +445,11 @@ class WSU_Network_Admin {
 	private function _update_network( $network_id, $network_meta ) {
 		switch_to_network( $network_id );
 		foreach ( $network_meta as $key => $value ) {
-			// @todo MORE VALIDATION
-			$key = sanitize_key( $key );
-			$value = sanitize_option( $key, $value );
-			update_site_option( $key, $value );
+			if ( array_key_exists( $key, $this->network_meta_edit ) ) {
+				// @todo MORE VALIDATION
+				$value = sanitize_option( $key, $value );
+				update_site_option( $key, $value );
+			}
 		}
 		restore_current_network();
 	}
