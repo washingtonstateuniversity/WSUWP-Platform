@@ -503,8 +503,12 @@ class WSU_Network_Admin {
 					<tbody>
 					<?php echo $edit_output; ?>
 					<tr class="form-field">
+						<th scope="row"></th>
+						<td><span style="display: block;width: 125px;"><?php submit_button( __('Update Network'), 'primary', 'update-network' ); ?></span></td>
+					<tr class="form-field">
 						<th scope="row">Additional Network Information:</th>
-						<td><table><?php echo $display_output; ?></table></td></tr>
+						<td><table><?php echo $display_output; ?></table></td>
+					</tr>
 					</tbody>
 				</table>
 			</form>
