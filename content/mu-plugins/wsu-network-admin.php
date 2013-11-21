@@ -19,7 +19,7 @@ class WSU_Network_Admin {
 	 *
 	 * @var array Network meta fields and properties.
 	 */
-	var $network_meta_edit = array(
+	private $network_meta_edit = array(
 		'site_name' => array(
 			'label' => 'Network Name:',
 			'input' => 'text',
