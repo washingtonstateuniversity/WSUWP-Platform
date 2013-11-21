@@ -15,6 +15,27 @@ Version: 0.1
 class WSU_Network_Admin {
 
 	/**
+	 * Network meta fields to allow editing access too in Edit Network.
+	 *
+	 * @var array Network meta fields and properties.
+	 */
+	var $network_meta_edit = array(
+		'site_name' => array(
+			'label' => 'Network Name:',
+			'input' => 'text',
+		),
+		'welcome_email' => array(
+			'label' => 'Welcome Email:',
+			'input' => 'textarea',
+			'rows'  => 15,
+		),
+		'siteurl' => array(
+			'label' => 'Site URL:',
+			'input' => 'text',
+		),
+	);
+
+	/**
 	 * Add the filters and actions used
 	 */
 	public function __construct() {
@@ -488,22 +509,6 @@ class WSU_Network_Admin {
 			'admin_email',
 			'can_compress_scripts',
 		);
-
-		$network_edit_fields = array(
-			'site_name' => array(
-				'label' => 'Network Name:',
-				'input' => 'text',
-			),
-			'welcome_email' => array(
-				'label' => 'Welcome Email:',
-				'input' => 'textarea',
-				'rows'  => 15,
-			),
-			'siteurl' => array(
-				'label' => 'Site URL:',
-				'input' => 'text',
-			),
-		);
 		?>
 		<div class="wrap">
 			<h2 id="edit-network"><?php _e( 'Edit Network' ); ?>: <?php echo $network[0]->domain; ?></h2>
@@ -511,12 +516,12 @@ class WSU_Network_Admin {
 			$display_output = '';
 			$edit_output = '';
 			foreach( $network_data as $item ) {
-				if ( array_key_exists( $item['meta_key'], $network_edit_fields ) ) {
-					$edit_output .= '<tr class="form-field"><th scope="row"><label for="network[' . esc_attr( $item['meta_key'] ) . ']">' . esc_html( $network_edit_fields[ $item['meta_key'] ]['label'] ) . '</label></th>';
-					if ( 'text' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
+				if ( array_key_exists( $item['meta_key'], $this->network_meta_edit ) ) {
+					$edit_output .= '<tr class="form-field"><th scope="row"><label for="network[' . esc_attr( $item['meta_key'] ) . ']">' . esc_html( $this->network_meta_edit[ $item['meta_key'] ]['label'] ) . '</label></th>';
+					if ( 'text' === $this->network_meta_edit[ $item['meta_key'] ]['input'] ) {
 						$edit_output .= '<td><input class="wide-text" type="text" name="network[' . esc_attr( $item['meta_key'] ) . ']" value="' . esc_attr( $item['meta_value'] ) . '" /></td></tr>';
-					} else if ( 'textarea' === $network_edit_fields[ $item['meta_key'] ]['input'] ) {
-						$edit_output .= '<td><textarea name="network[' . esc_attr( $item['meta_key'] ) . ']" rows="' . esc_attr( $network_edit_fields[ $item['meta_key'] ]['rows'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea></td></tr>';
+					} else if ( 'textarea' === $this->network_meta_edit[ $item['meta_key'] ]['input'] ) {
+						$edit_output .= '<td><textarea name="network[' . esc_attr( $item['meta_key'] ) . ']" rows="' . esc_attr( $this->network_meta_edit[ $item['meta_key'] ]['rows'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea></td></tr>';
 					}
 				}
 				if ( in_array( $item['meta_key'], $network_display_fields ) ) {
