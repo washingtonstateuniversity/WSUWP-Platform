@@ -419,7 +419,7 @@ class WSU_Network_Admin {
 	 * Display an Edit Network screen in the admin dashboard.
 	 */
 	public function network_info_php() {
-		global $title, $parent_file, $submenu_file;
+		global $title, $parent_file, $submenu_file, $wpdb;
 
 		if ( ! isset( $_GET['display'] ) || 'network' !== $_GET['display'] ) {
 			return;
@@ -438,12 +438,20 @@ class WSU_Network_Admin {
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
 
+		$network = wp_get_networks( array( 'network_id' => $network_id ) );
+
+		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->sitemeta} WHERE site_id = %d", $network_id );
+		$network_data = $wpdb->get_results( $query, ARRAY_A );
 		?>
 		<div class="wrap">
-			<h2 id="edit-network"><?php _e( 'Edit Network' ); ?>: ...</h2>
+			<h2 id="edit-network"><?php _e( 'Edit Network' ); ?>: <?php echo $network[0]->domain; ?></h2>
+			<ul><?php
+			foreach( $network_data as $item ) {
+				echo '<li>' . esc_html( $item['meta_key'] ) . ' : ' . esc_html( $item['meta_value'] ) . '</li>';
+			}
+			?></ul>
 		</div>
 		<?php
-
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
 	}
