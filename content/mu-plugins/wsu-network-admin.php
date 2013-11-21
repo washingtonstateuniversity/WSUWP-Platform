@@ -415,9 +415,16 @@ class WSU_Network_Admin {
 		die();
 	}
 
+	/**
+	 * Update a network's meta data with information passed from the Edit Network screen.
+	 *
+	 * @param int   $network_id   ID of the network to update.
+	 * @param array $network_meta Meta information to update for the network.
+	 */
 	private function _update_network( $network_id, $network_meta ) {
 		switch_to_network( $network_id );
 		foreach ( $network_meta as $key => $value ) {
+			// @todo MORE VALIDATION
 			$key = sanitize_key( $key );
 			$value = sanitize_option( $key, $value );
 			update_site_option( $key, $value );
