@@ -296,10 +296,6 @@ class WSU_Network_Admin {
 	public function networks_php() {
 		global $title, $parent_file;
 
-		if ( '/wp-admin/network/sites.php' !== $_SERVER['DOCUMENT_URI'] ) {
-			return;
-		}
-
 		if ( ! isset( $_GET['display'] ) || 'network' !== $_GET['display'] ) {
 			return;
 		}
@@ -369,10 +365,6 @@ class WSU_Network_Admin {
 	 */
 	public function network_new_php() {
 		global $title, $parent_file;
-
-		if ( '/wp-admin/network/site-new.php' !== $_SERVER['DOCUMENT_URI'] ) {
-			return;
-		}
 
 		if ( ! isset( $_GET['display'] ) || 'network' !== $_GET['display'] ) {
 			return;

@@ -142,10 +142,6 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 	public function site_new_php() {
 		global $title, $parent_file;
 
-		// Take over the new site screen in WordPress
-		if ( '/wp-admin/network/site-new.php' !== $_SERVER['DOCUMENT_URI'] )
-			return;
-
 		if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] )
 			return;
 
