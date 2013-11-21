@@ -188,14 +188,12 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 			'edit'      => '',
 			'dashboard' => '',
 			'visit'     => '',
-			'delete'    => '',
 		);
 
 		switch_to_network( $network_id );
 		$actions['edit']      = '<span class="edit"><a href="">' . __( 'Edit' ) . '</a></span>';
 		$actions['dashboard'] = '<span class="backend"><a href="' . esc_url( network_admin_url() ) . '">' . __( 'Dashboard' ) . '</a></span>';
 		$actions['visit']     = '<span class="view"><a href="'    . esc_url( network_home_url()  ) . '">' . __( 'Visit' )     . '</a></span>';
-		$actions['delete']    = '<span class="delete"><a href="">' . __( 'Delete' ) . '</a></span>';
 		restore_current_network();
 
 		$actions = apply_filters( 'manage_networks_action_links', array_filter( $actions ), $network_id );
