@@ -190,8 +190,11 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 			'visit'     => '',
 		);
 
+		// This URL should be generated in relation to the current (primary) network.
+		$actions['edit']      = '<span class="edit"><a href="' . esc_url( network_admin_url( 'site-info.php?display=network&network_id=' . $network_id ) ) . '">' . __( 'Edit' ) . '</a></span>';
+
+		// These URLs should be generated for the individual networks.
 		switch_to_network( $network_id );
-		$actions['edit']      = '<span class="edit"><a href="">' . __( 'Edit' ) . '</a></span>';
 		$actions['dashboard'] = '<span class="backend"><a href="' . esc_url( network_admin_url() ) . '">' . __( 'Dashboard' ) . '</a></span>';
 		$actions['visit']     = '<span class="view"><a href="'    . esc_url( network_home_url()  ) . '">' . __( 'Visit' )     . '</a></span>';
 		restore_current_network();
