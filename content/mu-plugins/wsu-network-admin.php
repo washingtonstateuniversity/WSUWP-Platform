@@ -498,7 +498,8 @@ class WSU_Network_Admin {
 				}
 			}
 			?>
-			<form method="post" action="" >
+			<form method="post" action="<?php echo network_admin_url( 'site-info.php?display=network&action=update-network' ); ?>">
+				<?php wp_nonce_field( 'update-network', '_wpnonce_update_network' ) ?>
 				<table class="form-table">
 					<tbody>
 					<?php echo $edit_output; ?>
