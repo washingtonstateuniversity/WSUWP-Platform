@@ -21,6 +21,7 @@ class WSU_Network_Admin {
 		add_action( 'load-sites.php',                    array( $this, 'networks_php'               ), 10, 1 );
 		// Load at 9 for now until we sort our conflict with wsu-network-site-new.php
 		add_action( 'load-site-new.php',                 array( $this, 'network_new_php'            ),  9, 1 );
+		add_action( 'load-site-info.php',                array( $this, 'network_info_php'           ), 10, 1 );
 		add_filter( 'parent_file',                       array( $this, 'add_master_network_menu'    ), 10, 1 );
 		add_action( 'admin_menu',                        array( $this, 'my_networks_dashboard'      ),  1    );
 		add_filter( 'wpmu_validate_user_signup',         array( $this, 'validate_user_signup'       ), 10, 1 );
@@ -418,6 +419,39 @@ class WSU_Network_Admin {
 			</form>
 		</div>
 		<?php
+		require( ABSPATH . 'wp-admin/admin-footer.php' );
+		die();
+	}
+
+	/**
+	 * Display an Edit Network screen in the admin dashboard.
+	 */
+	public function network_info_php() {
+		global $title, $parent_file, $submenu_file;
+
+		if ( ! isset( $_GET['display'] ) || 'network' !== $_GET['display'] ) {
+			return;
+		}
+
+		if ( ! isset( $_GET['network_id'] ) || 0 === absint( $_GET['network_id'] ) ) {
+			wp_safe_redirect( network_admin_url( 'sites.php?display=network' ) );
+			exit;
+		}
+
+		$network_id = absint( $_GET['network_id'] );
+
+		$title = __('Edit Network');
+		$parent_file = 'sites.php?display=network';
+		$submenu_file = 'sites.php?display=network';
+
+		require( ABSPATH . 'wp-admin/admin-header.php' );
+
+		?>
+		<div class="wrap">
+			<h2 id="edit-network"><?php _e( 'Edit Network' ); ?>: ...</h2>
+		</div>
+		<?php
+
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
 	}
