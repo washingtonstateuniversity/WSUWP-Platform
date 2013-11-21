@@ -179,6 +179,29 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Add row actions to each network's row as it is output on the screen.
+	 *
+	 * @param int $network_id Network ID of the current row being output.
+	 */
+	private function _output_row_actions( $network_id ) {
+		$actions = array(
+			'edit'      => '',
+			'dashboard' => '',
+			'visit'     => '',
+			'delete'    => '',
+		);
+
+		$actions['edit']      = '<span class="edit"><a href="">' . __( 'Edit' ) . '</a></span>';
+		$actions['dashboard'] = '<span class="backend"><a href="">' . __( 'Dashboard' ) . '</a></span>';
+		$actions['visit']     = '<span class="view"><a href="">' . __( 'Visit' ) . '</a></span>';
+		$actions['delete']    = '<span class="delete"><a href="">' . __( 'Delete' ) . '</a></span>';
+
+		$actions = apply_filters( 'manage_networks_action_links', array_filter( $actions ), $network_id );
+
+		echo $this->row_actions( $actions );
+	}
+
+	/**
 	 * Display the rows for the networks list table.
 	 */
 	function display_rows() {
@@ -211,7 +234,10 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 					case 'network_name':
 						?>
 						<th valign="top" scope="row">
-							<?php echo esc_html( $network['network_name'] ); ?>
+							<?php
+								echo esc_html( $network['network_name'] );
+								$this->_output_row_actions( $network['id'] );
+							?>
 						</th>
 						<?php
 						break;
