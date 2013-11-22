@@ -187,7 +187,7 @@ function wp_get_networks( $args = array() ) {
 	return array_values( $network_results );
 }
 
-function wp_create_network( $args ) {
+function wsuwp_create_network( $args ) {
 	/** @type WPDB $wpdb */
 	global $wpdb;
 
@@ -195,7 +195,7 @@ function wp_create_network( $args ) {
 
 	$default = array(
 		'site_id'           => null,
-		'site_name'         => '',
+		'network_name'      => '',
 		'user_id'           => get_current_user_id(),
 		'domain'            => '',
 		'path'              => '/',
@@ -207,7 +207,7 @@ function wp_create_network( $args ) {
 	if ( '' === trim( $args['domain'] ) )
 		$errors->add( 'empty_domain', __( 'You must provide a domain name.' ) );
 
-	if ( '' === trim( $args['site_name'] ) )
+	if ( '' === trim( $args['network_name'] ) )
 		$errors->add( 'empty_sitename', __( 'You must provide a name for your network of sites.' ) );
 
 	if ( ! $site_user = get_user_by( 'id', $args['user_id'] ) )
@@ -239,7 +239,7 @@ function wp_create_network( $args ) {
 	$network_admins = get_site_option( 'site_admins' );
 
 	$network_meta = array(
-		'site_name'         => $args['site_name'],
+		'site_name'         => $args['network_name'],
 		'admin_email'       => $site_user->user_email,
 		'admin_user_id'     => $site_user->ID,
 		'site_admins'       => $network_admins,

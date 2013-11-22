@@ -10,6 +10,7 @@
 # Likely contains configuration intended for production
 /remote-config.php
 
+/content/db.php
 /content/plugins/*
 !/content/plugins/index.php
 !/content/plugins/akismet
