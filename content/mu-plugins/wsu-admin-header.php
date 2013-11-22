@@ -97,6 +97,12 @@ class WSU_Admin_Header {
 		) );
 
 		/**
+		 * Overwrite the previously set network name to remove the 'Network Admin:' text.
+		 */
+		if ( is_network_admin() ) {
+			$node_site_name->title = get_current_site()->site_name;
+		}
+		/**
 		 * Add the original menu items back to the admin bar now that we have our my-networks
 		 * item in place.
 		 */
