@@ -6,8 +6,9 @@ class WSU_Admin_Header {
 	 * Add required hooks.
 	 */
 	public function __construct() {
-		add_action( 'admin_bar_init', array( $this, 'set_user_networks' ),  10 );
-		add_action( 'admin_bar_menu', array( $this, 'my_networks_menu'  ), 210 );
+		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'     ),  10 );
+		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'      ), 210 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 	}
 
 	/**
@@ -198,6 +199,10 @@ class WSU_Admin_Header {
 
 			restore_current_network();
 		}
+	}
+
+	public function admin_enqueue_scripts() {
+		wp_enqueue_style( 'wsu-admin-bar', WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-bar.css' );
 	}
 }
 new WSU_Admin_Header();
