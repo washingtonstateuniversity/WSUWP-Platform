@@ -15,7 +15,7 @@ class WSU_Admin_Header {
 	public function register_admin_color_schemes() {
 		wp_admin_css_color( 'coug', 'Cougars',
 			WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-colors-cougars.css',
-			array( '#222', '#333', '#0074a2', '#2ea2cc' )
+			array( '#262b2d', '#981e32', '#0074a2', '#2ea2cc' )
 		);
 	}
 	/**
