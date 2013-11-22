@@ -6,11 +6,18 @@ class WSU_Admin_Header {
 	 * Add required hooks.
 	 */
 	public function __construct() {
-		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'     ),  10 );
-		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'      ), 210 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
+		add_action( 'admin_init',            array( $this, 'register_admin_color_schemes' ),  10 );
+		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
+		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts'        ),  10 );
 	}
 
+	public function register_admin_color_schemes() {
+		wp_admin_css_color( 'coug', 'Cougars',
+			WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-colors-cougars.css',
+			array( '#222', '#333', '#0074a2', '#2ea2cc' )
+		);
+	}
 	/**
 	 * Add my networks menu to admin bar.
 	 *
