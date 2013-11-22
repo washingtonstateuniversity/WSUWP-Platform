@@ -262,6 +262,7 @@ class WSU_Network_Admin {
 			ksort( $menu );
 		}
 
+		// Remove the submenu items for 'Settings' in the Network Admin dashboard.
 		if ( is_network_admin() ) {
 			unset ( $submenu['settings.php'] );
 		}
