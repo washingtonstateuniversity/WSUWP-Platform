@@ -233,8 +233,9 @@ class WSU_Network_Admin {
 	 * Add a top level menu item for 'Networks' to the network administration sidebar
 	 */
 	function add_master_network_menu() {
+		global $menu, $submenu;
+
 		if ( is_network_admin() && is_main_network() ) {
-			global $menu, $submenu;
 			$menu[6] = $menu[5];
 			unset( $menu[5] );
 			$menu[6][4] = 'menu-top menu-icon-site';
@@ -259,6 +260,10 @@ class WSU_Network_Admin {
 				'site-new.php?display=network',
 			);
 			ksort( $menu );
+		}
+
+		if ( is_network_admin() ) {
+			unset ( $submenu['settings.php'] );
 		}
 	}
 
