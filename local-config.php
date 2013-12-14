@@ -23,7 +23,7 @@ define( 'WP_SITEURL',     'http://wp.wsu.edu/wordpress' );
 define( 'WP_CONTENT_URL', 'http://content.wp.wsu.edu'   );
 
 // Load wp-content from parent direc
-define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
+define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 
 // Force a default theme.
 define( 'WP_DEFAULT_THEME', 'twentythirteen' );
