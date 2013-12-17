@@ -19,7 +19,7 @@ define( 'WP_CACHE_KEY_SALT', 'wpwsu' );
 
 // URLs
 define( 'WP_HOME',        'http://wp.wsu.edu'           );
-define( 'WP_SITEURL',     'http://wp.wsu.edu/wordpress' );
+define( 'WP_SITEURL',     'http://wp.wsu.edu' );
 define( 'WP_CONTENT_URL', 'http://content.wp.wsu.edu'   );
 
 // Load wp-content from parent direc
