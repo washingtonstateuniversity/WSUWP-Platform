@@ -13,5 +13,8 @@
 # The Query Monitor plugin adds a db.php drop in that we should ignore.
 /wp-content/db.php
 
+# Ignore all plugins in the wp-content directory. Ours are included in content/ first.
+/wp-content/plugins
+
 # Ignore the WSUWP Spine Parent theme
 wp-content/themes/wsuwp-spine-parent
