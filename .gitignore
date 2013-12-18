@@ -16,6 +16,7 @@
 # Ignore all plugins in the wp-content directory. Ours are included in content/ first.
 /wp-content/plugins
 /wp-content/mu-plugins
+/wp-content/uploads
 
 # Ignore the WSUWP Spine Parent theme
 wp-content/themes/wsuwp-spine-parent
