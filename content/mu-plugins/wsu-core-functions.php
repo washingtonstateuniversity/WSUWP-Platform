@@ -168,7 +168,7 @@ function is_multi_network() {
  * @return array containing network data
  */
 function wp_get_networks( $args = array() ) {
-	if ( ! is_multisite() || ! is_multi_network() )
+	if ( ! is_multisite() )
 		return array();
 
 	global $wpdb;
