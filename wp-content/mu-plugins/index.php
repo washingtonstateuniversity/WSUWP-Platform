@@ -8,3 +8,5 @@
  * Version: 0.1
  * Network: true
  */
+
+include dirname( __FILE__ ) . '/wsu-co-authors-plus-skin/wsu-co-authors-plus-skin.php';
