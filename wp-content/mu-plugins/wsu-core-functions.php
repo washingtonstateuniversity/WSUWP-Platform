@@ -29,7 +29,7 @@ function wsuwp_get_user_sites( $user_id, $all = false ) {
  *
  * @return array containing list of user's networks
  */
-function wp_get_user_networks( $user_id = null ) {
+function wsuwp_get_user_networks( $user_id = null ) {
 
 	if ( ! $user_id )
 		$user_id = get_current_user_id();
