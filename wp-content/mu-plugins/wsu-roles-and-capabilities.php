@@ -45,8 +45,11 @@ class WSU_Roles_And_Capabilities {
 	 */
 	function modify_editor_capabilities() {
 		$editor = get_role( 'editor' );
-		$editor->add_cap( 'create_users' );
-		$editor->add_cap( 'promote_users' );
+
+		if ( null !== $editor ) {
+			$editor->add_cap( 'create_users' );
+			$editor->add_cap( 'promote_users' );
+		}
 	}
 
 	/**
