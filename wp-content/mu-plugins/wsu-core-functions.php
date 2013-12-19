@@ -46,7 +46,7 @@ function wsuwp_get_user_networks( $user_id = null ) {
  *
  * @return object with current network information
  */
-function wp_get_current_network() {
+function wsuwp_get_current_network() {
 	return get_current_site();
 }
 
