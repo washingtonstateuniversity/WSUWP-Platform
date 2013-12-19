@@ -46,7 +46,7 @@ class WSU_Admin_Header {
 		if ( ! is_multi_network() )
 			return;
 
-		$user_sites = wp_get_user_sites( get_current_user_id() );
+		$user_sites = wsuwp_get_user_sites( get_current_user_id() );
 
 		/**
 		 * The user is not a super admin and they only belong to one network. At this point

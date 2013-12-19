@@ -17,7 +17,7 @@
  *
  * @return array A list of user's sites. An empty array of the user does not have any capabilities to any sites
  */
-function wp_get_user_sites( $user_id, $all = false ) {
+function wsuwp_get_user_sites( $user_id, $all = false ) {
 	return get_blogs_of_user( $user_id, $all );
 }
 
@@ -34,7 +34,7 @@ function wp_get_user_networks( $user_id = null ) {
 	if ( ! $user_id )
 		$user_id = get_current_user_id();
 
-	$user_sites = wp_get_user_sites( $user_id );
+	$user_sites = wsuwp_get_user_sites( $user_id );
 	$user_network_ids = array_values( array_unique( wp_list_pluck( $user_sites, 'site_id' ) ) );
 
 	return wp_get_networks( array( 'network_id' => $user_network_ids ) );
