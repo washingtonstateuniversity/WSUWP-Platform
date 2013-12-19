@@ -57,7 +57,7 @@ function wsuwp_get_current_network() {
  *
  * @return object with current site information
  */
-function wp_get_current_site() {
+function wsuwp_get_current_site() {
 	return get_blog_details();
 }
 
