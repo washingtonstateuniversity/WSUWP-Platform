@@ -148,6 +148,10 @@ function is_multi_network() {
 	if ( ! is_multisite() )
 		return false;
 
+	if ( defined( 'WP_MULTI_NETWORK' ) && true === WP_MULTI_NETWORK ) {
+		return true;
+	}
+
 	global $wpdb;
 
 	if ( false === ( $is_multi_network = get_transient( 'is_multi_network' ) ) ) {
