@@ -135,7 +135,7 @@ function wsuwp_switch_to_site( $site_id ) {
  *
  * @return bool True on success, false if we're already on the current blog
  */
-function restore_current_site() {
+function wsuwp_restore_current_site() {
 	return restore_current_blog();
 }
 
