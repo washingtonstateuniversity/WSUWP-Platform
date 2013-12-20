@@ -344,7 +344,7 @@ function wsuwp_activate_global_plugin( $plugin ) {
 	wsuwp_restore_current_network();
 }
 
-function is_plugin_active_for_global( $plugin ) {
+function wsuwp_is_plugin_active_for_global( $plugin ) {
 	if ( ! wsuwp_is_multi_network() )
 		return false;
 

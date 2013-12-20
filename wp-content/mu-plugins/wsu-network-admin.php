@@ -124,18 +124,18 @@ class WSU_Network_Admin {
 		// If this is not the main network, our requirements differ slightly.
 		if ( ! is_main_network() && wsuwp_is_multi_network() ) {
 			// If the plugin is globally activated, remove standard options at the network level.
-			if ( is_plugin_active_for_global( $plugin_file ) ) {
+			if ( wsuwp_is_plugin_active_for_global( $plugin_file ) ) {
 				unset( $actions['deactivate'] );
 				unset( $actions['activate'] );
 				$actions['global'] = 'Activated Globally';
 			}
 			return $actions;
-		} elseif( is_main_network() && is_plugin_active_for_global( $plugin_file ) ) {
+		} elseif( is_main_network() && wsuwp_is_plugin_active_for_global( $plugin_file ) ) {
 			unset( $actions['deactivate'] );
 			unset( $actions['activate'] );
 		}
 
-		if ( ! is_plugin_active_for_global( $plugin_file ) )
+		if ( ! wsuwp_is_plugin_active_for_global( $plugin_file ) )
 			$actions['global'] = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;wsu-activate-global=1&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) . '" title="Activate this plugin for all sites on all networks" class="edit">Activate Globally</a>';
 		else
 			$actions['global'] = '<a href="">Deactivate Globally</a>';
