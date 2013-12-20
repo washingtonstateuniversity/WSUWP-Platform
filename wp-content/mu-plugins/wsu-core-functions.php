@@ -125,12 +125,12 @@ function wsuwp_restore_current_network() {
  *
  * @return bool True on success, false if the validation failed
  */
-function switch_to_site( $site_id ) {
+function wsuwp_switch_to_site( $site_id ) {
 	return switch_to_blog( $site_id );
 }
 
 /**
- * Used after switch_to_site(), this is a wrapper for restore_current_blog() that gets
+ * Used after wsuwp_switch_to_site(), this is a wrapper for restore_current_blog() that gets
  * us back to the current site
  *
  * @return bool True on success, false if we're already on the current blog
