@@ -337,7 +337,7 @@ function wsuwp_activate_global_plugin( $plugin ) {
 		wsuwp_restore_current_network();
 	}
 
-	wsuwp_switch_to_network( get_primary_network_id() );
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	$current_global[ $plugin ] = time();
 	update_site_option( 'active_global_plugins', $current_global );
@@ -365,7 +365,7 @@ function wsuwp_get_active_global_plugins() {
 	if ( ! wsuwp_is_multi_network() )
 		return false;
 
-	wsuwp_switch_to_network( get_primary_network_id() );
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	wsuwp_restore_current_network();
 
@@ -380,7 +380,7 @@ function wsuwp_get_active_global_plugins() {
  *
  * @return int The primary network id.
  */
-function get_primary_network_id() {
+function wsuwp_get_primary_network_id() {
 	global $current_site, $wpdb;
 
 	$current_network_id = (int) $current_site->id;
