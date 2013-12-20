@@ -459,7 +459,7 @@ class WSU_Network_Admin {
 				update_site_option( $key, $value );
 			}
 		}
-		restore_current_network();
+		wsuwp_restore_current_network();
 	}
 
 	/**

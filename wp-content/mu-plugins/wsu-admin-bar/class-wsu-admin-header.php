@@ -204,7 +204,7 @@ class WSU_Admin_Header {
 				restore_current_blog();
 			}
 
-			restore_current_network();
+			wsuwp_restore_current_network();
 		}
 	}
 
