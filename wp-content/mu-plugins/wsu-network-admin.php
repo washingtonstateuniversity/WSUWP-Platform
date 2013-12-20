@@ -69,7 +69,7 @@ class WSU_Network_Admin {
 		if ( ! wsuwp_is_multi_network() || is_main_network() )
 			return $plugins;
 
-		$global_plugins = wp_get_active_global_plugins();
+		$global_plugins = wsuwp_get_active_global_plugins();
 		foreach( $plugins as $k => $v ) {
 			if ( isset( $global_plugins[ $k ] ) )
 				unset( $plugins[ $k ] );
@@ -88,7 +88,7 @@ class WSU_Network_Admin {
 		if ( ! is_main_network() )
 			return $views;
 
-		$global_plugins = wp_get_active_global_plugins();
+		$global_plugins = wsuwp_get_active_global_plugins();
 
 		$count = count( $global_plugins );
 		$url = add_query_arg('plugin_status', 'global', 'plugins.php');

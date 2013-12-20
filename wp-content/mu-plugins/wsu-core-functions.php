@@ -348,7 +348,7 @@ function wsuwp_is_plugin_active_for_global( $plugin ) {
 	if ( ! wsuwp_is_multi_network() )
 		return false;
 
-	$current_global = wp_get_active_global_plugins();
+	$current_global = wsuwp_get_active_global_plugins();
 
 	if ( isset( $current_global[ $plugin ] ) )
 		return true;
@@ -361,7 +361,7 @@ function wsuwp_is_plugin_active_for_global( $plugin ) {
  *
  * @return bool|array Current globally activated plugins.
  */
-function wp_get_active_global_plugins() {
+function wsuwp_get_active_global_plugins() {
 	if ( ! wsuwp_is_multi_network() )
 		return false;
 
