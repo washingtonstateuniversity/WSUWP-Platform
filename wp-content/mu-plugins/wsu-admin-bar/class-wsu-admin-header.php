@@ -28,7 +28,7 @@ class WSU_Admin_Header {
 		global $wp_admin_bar;
 
 		if ( ! isset( $wp_admin_bar->user->networks ) )
-			$wp_admin_bar->user->networks = wp_get_user_networks();
+			$wp_admin_bar->user->networks = wsuwp_get_user_networks();
 	}
 
 	/**
@@ -43,10 +43,10 @@ class WSU_Admin_Header {
 		 * This is really only useful to installations with multiple networks. If it is not
 		 * a multi network setup, then we should leave the admin bar alone.
 		 */
-		if ( ! is_multi_network() )
+		if ( ! wsuwp_is_multi_network() )
 			return;
 
-		$user_sites = wp_get_user_sites( get_current_user_id() );
+		$user_sites = wsuwp_get_user_sites( get_current_user_id() );
 
 		/**
 		 * The user is not a super admin and they only belong to one network. At this point
@@ -125,7 +125,7 @@ class WSU_Admin_Header {
 
 		// Add each of the user's networks as a menu item
 		foreach( (array) $wp_admin_bar->user->networks as $network ) {
-			switch_to_network( $network->id );
+			wsuwp_switch_to_network( $network->id );
 
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'my-networks-list',
@@ -204,7 +204,7 @@ class WSU_Admin_Header {
 				restore_current_blog();
 			}
 
-			restore_current_network();
+			wsuwp_restore_current_network();
 		}
 	}
 

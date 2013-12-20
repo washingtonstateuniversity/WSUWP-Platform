@@ -66,10 +66,10 @@ class WSU_Network_Admin {
 	 * @return array Modified list of installed plugins.
 	 */
 	public function all_plugins( $plugins ) {
-		if ( ! is_multi_network() || is_main_network() )
+		if ( ! wsuwp_is_multi_network() || is_main_network() )
 			return $plugins;
 
-		$global_plugins = wp_get_active_global_plugins();
+		$global_plugins = wsuwp_get_active_global_plugins();
 		foreach( $plugins as $k => $v ) {
 			if ( isset( $global_plugins[ $k ] ) )
 				unset( $plugins[ $k ] );
@@ -88,7 +88,7 @@ class WSU_Network_Admin {
 		if ( ! is_main_network() )
 			return $views;
 
-		$global_plugins = wp_get_active_global_plugins();
+		$global_plugins = wsuwp_get_active_global_plugins();
 
 		$count = count( $global_plugins );
 		$url = add_query_arg('plugin_status', 'global', 'plugins.php');
@@ -122,20 +122,20 @@ class WSU_Network_Admin {
 	 */
 	public function plugin_action_links( $actions, $plugin_file ) {
 		// If this is not the main network, our requirements differ slightly.
-		if ( ! is_main_network() && is_multi_network() ) {
+		if ( ! is_main_network() && wsuwp_is_multi_network() ) {
 			// If the plugin is globally activated, remove standard options at the network level.
-			if ( is_plugin_active_for_global( $plugin_file ) ) {
+			if ( wsuwp_is_plugin_active_for_global( $plugin_file ) ) {
 				unset( $actions['deactivate'] );
 				unset( $actions['activate'] );
 				$actions['global'] = 'Activated Globally';
 			}
 			return $actions;
-		} elseif( is_main_network() && is_plugin_active_for_global( $plugin_file ) ) {
+		} elseif( is_main_network() && wsuwp_is_plugin_active_for_global( $plugin_file ) ) {
 			unset( $actions['deactivate'] );
 			unset( $actions['activate'] );
 		}
 
-		if ( ! is_plugin_active_for_global( $plugin_file ) )
+		if ( ! wsuwp_is_plugin_active_for_global( $plugin_file ) )
 			$actions['global'] = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;wsu-activate-global=1&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) . '" title="Activate this plugin for all sites on all networks" class="edit">Activate Globally</a>';
 		else
 			$actions['global'] = '<a href="">Deactivate Globally</a>';
@@ -155,7 +155,7 @@ class WSU_Network_Admin {
 		if ( ! isset( $_GET['wsu-activate-global'] ) || ! is_main_network() )
 			return null;
 
-		activate_global_plugin( $plugin );
+		wsuwp_activate_global_plugin( $plugin );
 	}
 
 	/**
@@ -452,14 +452,14 @@ class WSU_Network_Admin {
 	 * @param array $network_meta Meta information to update for the network.
 	 */
 	private function _update_network( $network_id, $network_meta ) {
-		switch_to_network( $network_id );
+		wsuwp_switch_to_network( $network_id );
 		foreach ( $network_meta as $key => $value ) {
 			if ( array_key_exists( $key, $this->network_meta_edit ) ) {
 				$value = $this->network_meta_edit[ $key ]['validate']( $value );
 				update_site_option( $key, $value );
 			}
 		}
-		restore_current_network();
+		wsuwp_restore_current_network();
 	}
 
 	/**
@@ -494,7 +494,7 @@ class WSU_Network_Admin {
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
 
-		$network = wp_get_networks( array( 'network_id' => $network_id ) );
+		$network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
 
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->sitemeta} WHERE site_id = %d", $network_id );
 		$network_data = $wpdb->get_results( $query, ARRAY_A );

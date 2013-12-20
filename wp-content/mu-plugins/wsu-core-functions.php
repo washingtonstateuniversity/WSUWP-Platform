@@ -17,27 +17,27 @@
  *
  * @return array A list of user's sites. An empty array of the user does not have any capabilities to any sites
  */
-function wp_get_user_sites( $user_id, $all = false ) {
+function wsuwp_get_user_sites( $user_id, $all = false ) {
 	return get_blogs_of_user( $user_id, $all );
 }
 
 /**
  * Return a list of networks that the user is a member of.
  *
- * @uses wp_get_networks
+ * @uses wsuwp_get_networks
  * @param null $user_id Optional. Defaults to the current user.
  *
  * @return array containing list of user's networks
  */
-function wp_get_user_networks( $user_id = null ) {
+function wsuwp_get_user_networks( $user_id = null ) {
 
 	if ( ! $user_id )
 		$user_id = get_current_user_id();
 
-	$user_sites = wp_get_user_sites( $user_id );
+	$user_sites = wsuwp_get_user_sites( $user_id );
 	$user_network_ids = array_values( array_unique( wp_list_pluck( $user_sites, 'site_id' ) ) );
 
-	return wp_get_networks( array( 'network_id' => $user_network_ids ) );
+	return wsuwp_get_networks( array( 'network_id' => $user_network_ids ) );
 }
 
 /**
@@ -46,7 +46,7 @@ function wp_get_user_networks( $user_id = null ) {
  *
  * @return object with current network information
  */
-function wp_get_current_network() {
+function wsuwp_get_current_network() {
 	return get_current_site();
 }
 
@@ -57,7 +57,7 @@ function wp_get_current_network() {
  *
  * @return object with current site information
  */
-function wp_get_current_site() {
+function wsuwp_get_current_site() {
 	return get_blog_details();
 }
 
@@ -77,7 +77,7 @@ function wp_get_current_site() {
  *
  * @return bool
  */
-function switch_to_network( $network_id ) {
+function wsuwp_switch_to_network( $network_id ) {
 	if ( ! $network_id )
 		return false;
 
@@ -89,7 +89,7 @@ function switch_to_network( $network_id ) {
 	$GLOBALS['_wp_switched_stack']['blog_id'] = $wpdb->blogid;
 	$GLOBALS['_wp_switched_stack']['site_id'] = $wpdb->siteid;
 
-	$new_network = wp_get_networks( array( 'network_id' => $network_id ) );
+	$new_network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
 	$current_site = array_shift( $new_network );
 	$current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s", $current_site->domain, $current_site->path ) );
 	$current_site = get_current_site_name( $current_site );
@@ -102,9 +102,9 @@ function switch_to_network( $network_id ) {
  * Restore the network we are currently viewing to the $current_site global. If $current_site
  * already contains the current network, then there is no need to modify anything. If we do
  * restore from the _wp_switched_network global, then unset to require another use of
- * switch_to_network().
+ * wsuwp_switch_to_network().
  */
-function restore_current_network() {
+function wsuwp_restore_current_network() {
 	/** @type WPDB $wpdb */
 	global $current_site, $wpdb;
 	if ( isset( $GLOBALS['_wp_switched_stack']['network'] ) ) {
@@ -125,17 +125,17 @@ function restore_current_network() {
  *
  * @return bool True on success, false if the validation failed
  */
-function switch_to_site( $site_id ) {
+function wsuwp_switch_to_site( $site_id ) {
 	return switch_to_blog( $site_id );
 }
 
 /**
- * Used after switch_to_site(), this is a wrapper for restore_current_blog() that gets
+ * Used after wsuwp_switch_to_site(), this is a wrapper for restore_current_blog() that gets
  * us back to the current site
  *
  * @return bool True on success, false if we're already on the current blog
  */
-function restore_current_site() {
+function wsuwp_restore_current_site() {
 	return restore_current_blog();
 }
 
@@ -144,7 +144,7 @@ function restore_current_site() {
  *
  * @return bool
  */
-function is_multi_network() {
+function wsuwp_is_multi_network() {
 	if ( ! is_multisite() )
 		return false;
 
@@ -154,13 +154,13 @@ function is_multi_network() {
 
 	global $wpdb;
 
-	if ( false === ( $is_multi_network = get_transient( 'is_multi_network' ) ) ) {
+	if ( false === ( $is_multi_network = get_transient( 'wsuwp_is_multi_network' ) ) ) {
 		$rows = (array) $wpdb->get_col("SELECT DISTINCT id FROM $wpdb->site LIMIT 2");
 		$is_multi_network = 1 < count( $rows ) ? 1 : 0;
-		set_transient( 'is_multi_network', $is_multi_network );
+		set_transient( 'wsuwp_is_multi_network', $is_multi_network );
 	}
 
-	return apply_filters( 'is_multi_network', (bool) $is_multi_network );
+	return apply_filters( 'wsuwp_is_multi_network', (bool) $is_multi_network );
 }
 
 /**
@@ -171,7 +171,7 @@ function is_multi_network() {
  *
  * @return array containing network data
  */
-function wp_get_networks( $args = array() ) {
+function wsuwp_get_networks( $args = array() ) {
 	if ( ! is_multisite() )
 		return array();
 
@@ -250,12 +250,12 @@ function wsuwp_create_network( $args ) {
 		'allowedthemes'     => $allowed_themes,
 		'subdomain_install' => intval( $args['subdomain_install'] ),
 	);
-	populate_network_meta( $network_id, $network_meta );
+	wsuwp_populate_network_meta( $network_id, $network_meta );
 
 	return $network_id; // maybe even a network object
 }
 
-function populate_network_meta( $network_id, $network_meta ) {
+function wsuwp_populate_network_meta( $network_id, $network_meta ) {
 	/** @type WPDB $wpdb */
 	global $wpdb, $wp_db_version;
 
@@ -327,28 +327,28 @@ We hope you enjoy your new site. Thanks!
  *
  * @param string $plugin Slug of the plugin to be activated.
  */
-function activate_global_plugin( $plugin ) {
-	$networks = wp_get_networks();
+function wsuwp_activate_global_plugin( $plugin ) {
+	$networks = wsuwp_get_networks();
 	foreach ( $networks as $network ) {
-		switch_to_network( $network->id );
+		wsuwp_switch_to_network( $network->id );
 		$current = get_site_option( 'active_sitewide_plugins', array() );
 		$current[ $plugin ] = time();
 		update_site_option( 'active_sitewide_plugins', $current );
-		restore_current_network();
+		wsuwp_restore_current_network();
 	}
 
-	switch_to_network( get_primary_network_id() );
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	$current_global[ $plugin ] = time();
 	update_site_option( 'active_global_plugins', $current_global );
-	restore_current_network();
+	wsuwp_restore_current_network();
 }
 
-function is_plugin_active_for_global( $plugin ) {
-	if ( ! is_multi_network() )
+function wsuwp_is_plugin_active_for_global( $plugin ) {
+	if ( ! wsuwp_is_multi_network() )
 		return false;
 
-	$current_global = wp_get_active_global_plugins();
+	$current_global = wsuwp_get_active_global_plugins();
 
 	if ( isset( $current_global[ $plugin ] ) )
 		return true;
@@ -361,13 +361,13 @@ function is_plugin_active_for_global( $plugin ) {
  *
  * @return bool|array Current globally activated plugins.
  */
-function wp_get_active_global_plugins() {
-	if ( ! is_multi_network() )
+function wsuwp_get_active_global_plugins() {
+	if ( ! wsuwp_is_multi_network() )
 		return false;
 
-	switch_to_network( get_primary_network_id() );
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
-	restore_current_network();
+	wsuwp_restore_current_network();
 
 	return $current_global;
 }
@@ -380,12 +380,12 @@ function wp_get_active_global_plugins() {
  *
  * @return int The primary network id.
  */
-function get_primary_network_id() {
+function wsuwp_get_primary_network_id() {
 	global $current_site, $wpdb;
 
 	$current_network_id = (int) $current_site->id;
 
-	if ( ! is_multisite() || ! is_multi_network() )
+	if ( ! is_multisite() || ! wsuwp_is_multi_network() )
 		return 1;
 
 	if ( defined( 'PRIMARY_NETWORK_ID' ) )
