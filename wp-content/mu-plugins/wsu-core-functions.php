@@ -327,7 +327,7 @@ We hope you enjoy your new site. Thanks!
  *
  * @param string $plugin Slug of the plugin to be activated.
  */
-function activate_global_plugin( $plugin ) {
+function wsuwp_activate_global_plugin( $plugin ) {
 	$networks = wsuwp_get_networks();
 	foreach ( $networks as $network ) {
 		wsuwp_switch_to_network( $network->id );

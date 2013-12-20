@@ -155,7 +155,7 @@ class WSU_Network_Admin {
 		if ( ! isset( $_GET['wsu-activate-global'] ) || ! is_main_network() )
 			return null;
 
-		activate_global_plugin( $plugin );
+		wsuwp_activate_global_plugin( $plugin );
 	}
 
 	/**
