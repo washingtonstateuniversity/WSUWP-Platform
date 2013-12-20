@@ -452,7 +452,7 @@ class WSU_Network_Admin {
 	 * @param array $network_meta Meta information to update for the network.
 	 */
 	private function _update_network( $network_id, $network_meta ) {
-		switch_to_network( $network_id );
+		wsuwp_switch_to_network( $network_id );
 		foreach ( $network_meta as $key => $value ) {
 			if ( array_key_exists( $key, $this->network_meta_edit ) ) {
 				$value = $this->network_meta_edit[ $key ]['validate']( $value );

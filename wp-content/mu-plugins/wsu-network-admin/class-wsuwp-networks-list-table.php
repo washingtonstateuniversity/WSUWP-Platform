@@ -123,7 +123,7 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 
 		// Parse through the network results and add the network name to the final array.
 		foreach ( $this->items as $key => $network ) {
-			switch_to_network( $network['id'] );
+			wsuwp_switch_to_network( $network['id'] );
 			$this->items[ $key ]['network_name'] = get_site_option( 'site_name' );
 			restore_current_network();
 		}
@@ -194,7 +194,7 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 		$actions['edit']      = '<span class="edit"><a href="' . esc_url( network_admin_url( 'site-info.php?display=network&network_id=' . $network_id ) ) . '">' . __( 'Edit' ) . '</a></span>';
 
 		// These URLs should be generated for the individual networks.
-		switch_to_network( $network_id );
+		wsuwp_switch_to_network( $network_id );
 		$actions['dashboard'] = '<span class="backend"><a href="' . esc_url( network_admin_url() ) . '">' . __( 'Dashboard' ) . '</a></span>';
 		$actions['visit']     = '<span class="view"><a href="'    . esc_url( network_home_url()  ) . '">' . __( 'Visit' )     . '</a></span>';
 		restore_current_network();

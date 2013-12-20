@@ -125,7 +125,7 @@ class WSU_Admin_Header {
 
 		// Add each of the user's networks as a menu item
 		foreach( (array) $wp_admin_bar->user->networks as $network ) {
-			switch_to_network( $network->id );
+			wsuwp_switch_to_network( $network->id );
 
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'my-networks-list',

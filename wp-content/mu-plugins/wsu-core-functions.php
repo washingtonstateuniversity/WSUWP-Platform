@@ -77,7 +77,7 @@ function wsuwp_get_current_site() {
  *
  * @return bool
  */
-function switch_to_network( $network_id ) {
+function wsuwp_switch_to_network( $network_id ) {
 	if ( ! $network_id )
 		return false;
 
@@ -102,7 +102,7 @@ function switch_to_network( $network_id ) {
  * Restore the network we are currently viewing to the $current_site global. If $current_site
  * already contains the current network, then there is no need to modify anything. If we do
  * restore from the _wp_switched_network global, then unset to require another use of
- * switch_to_network().
+ * wsuwp_switch_to_network().
  */
 function restore_current_network() {
 	/** @type WPDB $wpdb */
@@ -330,14 +330,14 @@ We hope you enjoy your new site. Thanks!
 function activate_global_plugin( $plugin ) {
 	$networks = wp_get_networks();
 	foreach ( $networks as $network ) {
-		switch_to_network( $network->id );
+		wsuwp_switch_to_network( $network->id );
 		$current = get_site_option( 'active_sitewide_plugins', array() );
 		$current[ $plugin ] = time();
 		update_site_option( 'active_sitewide_plugins', $current );
 		restore_current_network();
 	}
 
-	switch_to_network( get_primary_network_id() );
+	wsuwp_switch_to_network( get_primary_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	$current_global[ $plugin ] = time();
 	update_site_option( 'active_global_plugins', $current_global );
@@ -365,7 +365,7 @@ function wp_get_active_global_plugins() {
 	if ( ! is_multi_network() )
 		return false;
 
-	switch_to_network( get_primary_network_id() );
+	wsuwp_switch_to_network( get_primary_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	restore_current_network();
 
