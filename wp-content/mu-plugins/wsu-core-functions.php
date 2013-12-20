@@ -250,12 +250,12 @@ function wsuwp_create_network( $args ) {
 		'allowedthemes'     => $allowed_themes,
 		'subdomain_install' => intval( $args['subdomain_install'] ),
 	);
-	populate_network_meta( $network_id, $network_meta );
+	wsuwp_populate_network_meta( $network_id, $network_meta );
 
 	return $network_id; // maybe even a network object
 }
 
-function populate_network_meta( $network_id, $network_meta ) {
+function wsuwp_populate_network_meta( $network_id, $network_meta ) {
 	/** @type WPDB $wpdb */
 	global $wpdb, $wp_db_version;
 
