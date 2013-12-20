@@ -144,7 +144,7 @@ function wsuwp_restore_current_site() {
  *
  * @return bool
  */
-function is_multi_network() {
+function wsuwp_is_multi_network() {
 	if ( ! is_multisite() )
 		return false;
 
@@ -154,13 +154,13 @@ function is_multi_network() {
 
 	global $wpdb;
 
-	if ( false === ( $is_multi_network = get_transient( 'is_multi_network' ) ) ) {
+	if ( false === ( $is_multi_network = get_transient( 'wsuwp_is_multi_network' ) ) ) {
 		$rows = (array) $wpdb->get_col("SELECT DISTINCT id FROM $wpdb->site LIMIT 2");
 		$is_multi_network = 1 < count( $rows ) ? 1 : 0;
-		set_transient( 'is_multi_network', $is_multi_network );
+		set_transient( 'wsuwp_is_multi_network', $is_multi_network );
 	}
 
-	return apply_filters( 'is_multi_network', (bool) $is_multi_network );
+	return apply_filters( 'wsuwp_is_multi_network', (bool) $is_multi_network );
 }
 
 /**
@@ -345,7 +345,7 @@ function activate_global_plugin( $plugin ) {
 }
 
 function is_plugin_active_for_global( $plugin ) {
-	if ( ! is_multi_network() )
+	if ( ! wsuwp_is_multi_network() )
 		return false;
 
 	$current_global = wp_get_active_global_plugins();
@@ -362,7 +362,7 @@ function is_plugin_active_for_global( $plugin ) {
  * @return bool|array Current globally activated plugins.
  */
 function wp_get_active_global_plugins() {
-	if ( ! is_multi_network() )
+	if ( ! wsuwp_is_multi_network() )
 		return false;
 
 	wsuwp_switch_to_network( get_primary_network_id() );
@@ -385,7 +385,7 @@ function get_primary_network_id() {
 
 	$current_network_id = (int) $current_site->id;
 
-	if ( ! is_multisite() || ! is_multi_network() )
+	if ( ! is_multisite() || ! wsuwp_is_multi_network() )
 		return 1;
 
 	if ( defined( 'PRIMARY_NETWORK_ID' ) )

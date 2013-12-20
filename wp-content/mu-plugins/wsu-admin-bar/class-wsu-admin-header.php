@@ -43,7 +43,7 @@ class WSU_Admin_Header {
 		 * This is really only useful to installations with multiple networks. If it is not
 		 * a multi network setup, then we should leave the admin bar alone.
 		 */
-		if ( ! is_multi_network() )
+		if ( ! wsuwp_is_multi_network() )
 			return;
 
 		$user_sites = wsuwp_get_user_sites( get_current_user_id() );

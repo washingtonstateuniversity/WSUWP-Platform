@@ -66,7 +66,7 @@ class WSU_Network_Admin {
 	 * @return array Modified list of installed plugins.
 	 */
 	public function all_plugins( $plugins ) {
-		if ( ! is_multi_network() || is_main_network() )
+		if ( ! wsuwp_is_multi_network() || is_main_network() )
 			return $plugins;
 
 		$global_plugins = wp_get_active_global_plugins();
@@ -122,7 +122,7 @@ class WSU_Network_Admin {
 	 */
 	public function plugin_action_links( $actions, $plugin_file ) {
 		// If this is not the main network, our requirements differ slightly.
-		if ( ! is_main_network() && is_multi_network() ) {
+		if ( ! is_main_network() && wsuwp_is_multi_network() ) {
 			// If the plugin is globally activated, remove standard options at the network level.
 			if ( is_plugin_active_for_global( $plugin_file ) ) {
 				unset( $actions['deactivate'] );
