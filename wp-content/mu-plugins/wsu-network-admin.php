@@ -494,7 +494,7 @@ class WSU_Network_Admin {
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
 
-		$network = wp_get_networks( array( 'network_id' => $network_id ) );
+		$network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
 
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->sitemeta} WHERE site_id = %d", $network_id );
 		$network_data = $wpdb->get_results( $query, ARRAY_A );

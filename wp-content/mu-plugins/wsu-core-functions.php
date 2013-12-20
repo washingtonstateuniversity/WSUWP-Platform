@@ -24,7 +24,7 @@ function wsuwp_get_user_sites( $user_id, $all = false ) {
 /**
  * Return a list of networks that the user is a member of.
  *
- * @uses wp_get_networks
+ * @uses wsuwp_get_networks
  * @param null $user_id Optional. Defaults to the current user.
  *
  * @return array containing list of user's networks
@@ -37,7 +37,7 @@ function wsuwp_get_user_networks( $user_id = null ) {
 	$user_sites = wsuwp_get_user_sites( $user_id );
 	$user_network_ids = array_values( array_unique( wp_list_pluck( $user_sites, 'site_id' ) ) );
 
-	return wp_get_networks( array( 'network_id' => $user_network_ids ) );
+	return wsuwp_get_networks( array( 'network_id' => $user_network_ids ) );
 }
 
 /**
@@ -89,7 +89,7 @@ function wsuwp_switch_to_network( $network_id ) {
 	$GLOBALS['_wp_switched_stack']['blog_id'] = $wpdb->blogid;
 	$GLOBALS['_wp_switched_stack']['site_id'] = $wpdb->siteid;
 
-	$new_network = wp_get_networks( array( 'network_id' => $network_id ) );
+	$new_network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
 	$current_site = array_shift( $new_network );
 	$current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s", $current_site->domain, $current_site->path ) );
 	$current_site = get_current_site_name( $current_site );
@@ -171,7 +171,7 @@ function wsuwp_is_multi_network() {
  *
  * @return array containing network data
  */
-function wp_get_networks( $args = array() ) {
+function wsuwp_get_networks( $args = array() ) {
 	if ( ! is_multisite() )
 		return array();
 
@@ -328,7 +328,7 @@ We hope you enjoy your new site. Thanks!
  * @param string $plugin Slug of the plugin to be activated.
  */
 function activate_global_plugin( $plugin ) {
-	$networks = wp_get_networks();
+	$networks = wsuwp_get_networks();
 	foreach ( $networks as $network ) {
 		wsuwp_switch_to_network( $network->id );
 		$current = get_site_option( 'active_sitewide_plugins', array() );
