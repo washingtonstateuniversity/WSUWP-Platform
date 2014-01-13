@@ -15,12 +15,12 @@ define( 'WSU_LOCAL_CONFIG'  , true );
 
 // Caching
 define( 'WP_CACHE',          false    );
-define( 'WP_CACHE_KEY_SALT', 'wpwsu' );
+define( 'WP_CACHE_KEY_SALT', 'wpwsu'  );
 
 // URLs
 define( 'WP_HOME',        'http://wp.wsu.edu'           );
-define( 'WP_SITEURL',     'http://wp.wsu.edu' );
-define( 'WP_CONTENT_URL', 'http://content.wp.wsu.edu'   );
+define( 'WP_SITEURL',     'http://wp.wsu.edu'           );
+define( 'WP_CONTENT_URL', 'http://wp.wsu.edu/wp-content'           );
 
 // Load wp-content from parent direc
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
