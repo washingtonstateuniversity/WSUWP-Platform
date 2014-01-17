@@ -12,9 +12,13 @@
 vagrant_dir = File.expand_path(File.dirname(__FILE__))
 
 Vagrant.configure("2") do |config|
-  # Virtualbox specific setting to allocate 512MB of memory to the virtual machine.
+  # Set a name for the VM to show when vagrant commands are issued.
+  config.vm.define "wsuwp-dev"
+
+  # Settings specific to VirtualBox
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--memory", 512]
+    v.name = "wsuwp_dev_vm"
   end
 
   # CentOS 6.4, 64 bit release
