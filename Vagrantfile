@@ -92,6 +92,7 @@ Vagrant.configure("2") do |config|
     yum -y install git
     cd /srv && git clone https://github.com/washingtonstateuniversity/WSU-Web-Serverbase.git salt
     cd /srv/salt && git pull --rebase origin master
+    sh /srv/salt/provision/bootstrap_salt.sh
 SCRIPT
 
   config.vm.provision "shell", inline: $script
