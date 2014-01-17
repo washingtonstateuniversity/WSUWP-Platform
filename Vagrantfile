@@ -88,7 +88,7 @@ Vagrant.configure("2") do |config|
     provisioner.add_host '10.0.50.50', hosts
   end
 
-  $script = <<
+  $script =<<SCRIPT
     cd /srv && rm -fr serverbase
     cd /srv && curl -o serverbase.zip -L https://github.com/washingtonstateuniversity/WSU-Web-Serverbase/archive/master.zip
     cd /srv && unzip serverbase.zip
