@@ -9,9 +9,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Look for the machine ID file. This should indicate if the VM state is suspended, halted, or up.
-machines_file = File.expand_path(File.dirname(__FILE__) + '/.vagrant/machines/default/virtualbox/id')
-machine_exists = File.file?(machines_file)
 vagrant_dir = File.expand_path(File.dirname(__FILE__))
 
 Vagrant.configure("2") do |config|
