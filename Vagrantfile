@@ -88,8 +88,23 @@ Vagrant.configure("2") do |config|
   # vagrant-hosts https://github.com/adrienthebo/vagrant-hosts
   #
   # This will only run during provisioning.
-  config.vm.provision :hosts do |provisioner|
-    provisioner.add_host '10.0.50.50', hosts
+  if Vagrant.has_plugin?("vagrant-hosts")
+    config.vm.provision :hosts do |provisioner|
+      provisioner.add_host '10.0.50.50', hosts
+    end
+  else
+    $error_msg = <<ERRORSS
+
+    WARNING
+
+    The vagrant-hosts plugin is recommended to ensure proper functionality with the WSUWP Platform. Use the
+    following command to install this plugin before continuing:
+
+    vagrant plugin install vagrant-hosts
+
+ERRORSS
+    puts $error_msg
+    abort()
   end
 
   $script =<<SCRIPT
