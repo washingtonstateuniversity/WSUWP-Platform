@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
   # Set the default hostname and IP address for the virtual machine. If you have any other
   # Vagrant environments on the 10.10.30.x subnet, you may want to consider modifying this.
   config.vm.hostname = "wsuwp"
-  config.vm.network :private_network, ip: "10.10.30.30"
+  config.vm.network :private_network, ip: "10.10.50.50"
 
   # Mount the local project's www/ directory as /var/www inside the virtual machine.
   config.vm.synced_folder "www", "/var/www", :mount_options => [ "uid=510,gid=510", "dmode=775", "fmode=774" ]
