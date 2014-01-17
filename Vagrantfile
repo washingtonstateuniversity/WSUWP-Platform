@@ -94,12 +94,12 @@ Vagrant.configure("2") do |config|
 
   $script =<<SCRIPT
     cd /srv && rm -fr serverbase
-    cd /srv && curl -o serverbase.zip -L https://github.com/washingtonstateuniversity/WSU-Web-Serverbase/archive/master.zip
+    cd /srv && curl -o serverbase.zip -L https://github.com/washingtonstateuniversity/wsu-web-provisioner/archive/master.zip
     cd /srv && unzip serverbase.zip
-    cd /srv && mv WSU-Web-Serverbase-master serverbase
-    cp /srv/serverbase/provision/salt/config/yum.conf /etc/yum.conf
-    sh /srv/serverbase/provision/bootstrap_salt.sh
-    cp /srv/serverbase/provision/salt/minions/wsuwp-vagrant.conf /etc/salt/minion.d/
+    cd /srv && mv WSU-Web-Provisioner-master wsu-web
+    cp /srv/wsu-web/provision/salt/config/yum.conf /etc/yum.conf
+    sh /srv/wsu-web/provision/bootstrap_salt.sh
+    cp /srv/wsu-web/provision/salt/minions/wsuwp-vagrant.conf /etc/salt/minion.d/
     salt-call --local --log-level=debug --config-dir=/etc/salt state.highstate
 SCRIPT
 
