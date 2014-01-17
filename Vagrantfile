@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
   #
   # This will only run during provisioning.
   config.vm.provision :hosts do |provisioner|
-    provisioner.add_host '10.0.30.30', hosts
+    provisioner.add_host '10.0.50.50', hosts
   end
 
   # Salt Provisioning
