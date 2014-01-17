@@ -88,10 +88,11 @@ Vagrant.configure("2") do |config|
     provisioner.add_host '10.0.50.50', hosts
   end
 
-  $script = <<SCRIPT
-    yum -y install git
-    cd /srv && git clone https://github.com/washingtonstateuniversity/WSU-Web-Serverbase.git serverbase
-    cd /srv/serverbase && git pull --rebase origin master
+  $script = <<
+    cd /srv && rm -fr serverbase
+    cd /srv && curl -o serverbase.zip -L https://github.com/washingtonstateuniversity/WSU-Web-Serverbase/archive/master.zip
+    cd /srv && unzip serverbase.zip
+    cd /srv && mv WSU-Web-Serverbase-master serverbase
     cp /srv/serverbase/provision/salt/config/yum.conf /etc/yum.conf
     sh /srv/serverbase/provision/bootstrap_salt.sh
     cp /srv/serverbase/provision/salt/minions/wsuwp-vagrant.conf /etc/salt/minion.d/
