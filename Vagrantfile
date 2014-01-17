@@ -94,7 +94,7 @@ Vagrant.configure("2") do |config|
     cd /srv/serverbase && git pull --rebase origin master
     sh /srv/serverbase/provision/bootstrap_salt.sh
     cp /srv/serverbase/provision/salt/minions/wsuwp-vagrant.conf /etc/salt/minion.d/
-    salt-call --local --config-dir=/etc/salt state.highstate
+    salt-call --local --log-level=debug --config-dir=/etc/salt state.highstate
 SCRIPT
 
   config.vm.provision "shell", inline: $script
