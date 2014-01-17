@@ -88,14 +88,13 @@ Vagrant.configure("2") do |config|
     provisioner.add_host '10.0.50.50', hosts
   end
 
-  config.vm.provision "shell",
-    inline: "yum install git"
+  $script = <<SCRIPT
+    yum -y install git
+    cd /srv && git clone https://github.com/washingtonstateuniversity/WSU-Web-Serverbase.git salt
+    cd /srv/salt && git pull --rebase origin master
+SCRIPT
 
-  config.vm.provision "shell",
-    inline: "cd /srv && git clone https://github.com/washingtonstateuniversity/WSU-Web-Serverbase.git salt"
-
-  config.vm.provision "shell",
-    inline: "cd /srv/salt && git pull --rebase origin master"
+  config.vm.provision "shell", inline: $script
 
   # Salt Provisioning
   #
