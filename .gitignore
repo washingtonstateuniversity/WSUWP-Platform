@@ -4,6 +4,9 @@
 # Ignore Sublime project files.
 *.sublime*
 
+# Ignore Vagrant instance files.
+.vagrant
+
 # Ignore PHPStorm project files.
 /.idea
 
