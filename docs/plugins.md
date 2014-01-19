@@ -28,7 +28,7 @@ Must use plugins, installed in `wp-content/mu-plugins/`, are included globally b
 * WSU Co Authors Plus Skin
     * Loads a modified CSS file to better display Co-Authors Plus.
 
-### Available Plugins (plugins)
+### Available Global Plugins (plugins)
 
 Available plugins, installed in `wp-content/plugins/`, are not included globally, but are available on both network and site levels for activation.
 
