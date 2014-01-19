@@ -41,6 +41,19 @@ Plugins and features that need to be vetted before including them in a process t
 
 ### Open Source Plugins
 
+#### Development Plugins (plugins)
+
+* [Log Viewer](http://wordpress.org/plugins/log-viewer/)
+    * Provides an easy way to view *.log files directly in the admin panel.
+* [Monster Widget](http://wordpress.org/plugins/monster-widget/)
+    * Provides a quick and easy method of adding all core widgets to a sidebar for testing purposes.
+* [VIP Scanner](https://github.com/Automattic/vip-scanner)
+    * Enables you to scan all sorts of themes and files and things.
+* [Theme Check](http://wordpress.org/plugins/theme-check/)
+    * A simple and easy way to test your theme for all the latest WordPress standards and practices.
+* [Log Deprecated Notices](http://wordpress.org/plugins/log-deprecated-notices/)
+    * Logs the usage of deprecated files, functions, and function arguments, and identifies where the deprecated functionality is being used.
+
 ### General Feature Requests
 
 Features that may become plugins in progress.
