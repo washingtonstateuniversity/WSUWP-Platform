@@ -35,11 +35,24 @@ Plugins and features that have been vetted and determined to be useful for the W
 
 ### Open Source Plugins
 
+* [Co-Authors Plus](https://github.com/Automattic/Co-Authors-Plus/)
+    * Assign multiple bylines to posts, pages, and custom post types via a search-as-you-type input box.
+* [The Events Calendar](http://wordpress.org/plugins/the-events-calendar/)
+    * Create and manage events with ease.
+
 ## Plugins to Consider
 
 Plugins and features that need to be vetted before including them in a process to deploy into production.
 
 ### Open Source Plugins
+
+* [Edit Flow](https://github.com/Automattic/Edit-Flow)
+    * Empowers you to collaborate with your editorial team inside WordPress.
+* [MSM Sitemap](https://github.com/Automattic/msm-sitemap)
+    * Comprehensive sitemaps for your WordPress site.
+* [Jetpack](https://github.com/Automattic/jetpack)
+    * Supercharges your self‑hosted WordPress site with the awesome cloud power of WordPress.com.
+    * We'd likely want to avoid the 'cloud power' for most things. There should be an opportunity to use specific modules.
 
 #### Development Plugins (plugins)
 
