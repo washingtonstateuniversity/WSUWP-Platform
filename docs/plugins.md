@@ -8,6 +8,26 @@ Plugins and their features that are currently provided as part of the WSUWP Plat
 
 Must use plugins, installed in `wp-content/mu-plugins/`, are included globally by default and contain some of the required functionality for the WSUWP Platform. These plugins cannot be disabled on a site or network level.
 
+* WSU Roles and Capabilities
+    * Implements the roles and capabilities required by WSU.
+* WSUWP New Site Administration
+    * Replaces the standard WordPress `site-new.php`
+    * As temporary a solution as possible.
+* WSU Network Admin
+    * Modifications to handle multiple networks in WordPress.
+* WSU Fight Song
+    * A fork of [Hello Dolly](http://wordpress.org/plugins/hello-dolly/) containing the WSU Fight Song lyrics.
+* WSU Remove Dashboard Widgets
+    * Removes parts of the WordPress dashboard that WSU does not need.
+* WSU Core Functions
+    * Functions that perform some core functionality that we would love to live inside of WordPress one day.
+* WSU Admin Bar
+    * Modifies the WordPress admin bar.
+* Batcache Manager
+    * An optional plugin that ships with and improves [Batcache](http://wordpress.org/extend/plugins/batcache/), one of our drop-ins.
+* WSU Co Authors Plus Skin
+    * Loads a modified CSS file to better display Co-Authors Plus.
+
 ### Available Plugins (plugins)
 
 Available plugins, installed in `wp-content/plugins/`, are not included globally, but are available on both network and site levels for activation.
