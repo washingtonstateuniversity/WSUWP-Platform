@@ -1,6 +1,6 @@
 # Plugins and the WSUWP Platform
 
-## Current Plugins (wp-content/plugins/)
+## Current Plugins
 
 Plugins and their features that are currently provided as part of the WSUWP Platform in production.
 
