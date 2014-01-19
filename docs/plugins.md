@@ -1,10 +1,10 @@
 # Plugins and the WSUWP Platform
 
-## Current Plugins
+## Current Plugins (wp-content/plugins/)
 
 Plugins and their features that are currently provided as part of the WSUWP Platform in production.
 
-### Must Use Plugins (mu-plugins)
+### Must Use Plugins (wp-content/mu-plugins/)
 
 Must use plugins, installed in `wp-content/mu-plugins/`, are included globally by default and contain some of the required functionality for the WSUWP Platform. These plugins cannot be disabled on a site or network level.
 
@@ -28,11 +28,11 @@ Must use plugins, installed in `wp-content/mu-plugins/`, are included globally b
 * WSU Co Authors Plus Skin
     * Loads a modified CSS file to better display Co-Authors Plus.
 
-### Available Global Plugins (plugins)
+### Available Global Plugins (wp-content/plugins/)
 
 Available plugins, installed in `wp-content/plugins/`, are not included globally, but are available on both network and site levels for activation.
 
-### Development Plugins (plugins)
+### Development Plugins (wp-content/plugins/)
 
 Plugins that are useful in a local development area, but that will not necessarily be available in production.
 
@@ -74,7 +74,7 @@ Plugins and features that need to be vetted before including them in a process t
     * Supercharges your self‑hosted WordPress site with the awesome cloud power of WordPress.com.
     * We'd likely want to avoid the 'cloud power' for most things. There should be an opportunity to use specific modules.
 
-#### Development Plugins (plugins)
+#### Development Plugins
 
 * [Log Viewer](http://wordpress.org/plugins/log-viewer/)
     * Provides an easy way to view *.log files directly in the admin panel.
