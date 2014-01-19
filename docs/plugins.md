@@ -32,6 +32,15 @@ Must use plugins, installed in `wp-content/mu-plugins/`, are included globally b
 
 Drop-Ins (or DropIns) allow for the replacement of certain WordPress functionality by *dropping* a specific file into the `wp-content/` directory.
 
+* `advanced-cache.php`
+    * Our current use case is primarily for [Batcache](http://wordpress.org/plugins/batcache), which adds an additional page caching layer to the object caching provided in our `object-cache.php` drop-in.
+* `install.php`
+    * Our current implementation is more of a test than anything. The intent is to provide replacement functions for various install and upgrade features. This may not be necessary for production.
+* `object-cache.php`
+    * Our current object cache drop in is [WordPress Memcached Backend](https://github.com/tollmanz/wordpress-memcached-backend), which allows us to use the PECL memcached backend rather than PECL memcache.
+* `sunrise.php`
+    * Allows for the routing of requested domains and URLs to the proper network and site. This is currently all custom functionality developed at WSU.
+
 ### Available Global Plugins (wp-content/plugins/)
 
 Available plugins, installed in `wp-content/plugins/`, are not included globally, but are available on both network and site levels for activation.
