@@ -28,6 +28,10 @@ Must use plugins, installed in `wp-content/mu-plugins/`, are included globally b
 * WSU Co Authors Plus Skin
     * Loads a modified CSS file to better display Co-Authors Plus.
 
+#### Drop-Ins (wp-content/)
+
+Drop-Ins (or DropIns) allow for the replacement of certain WordPress functionality by *dropping* a specific file into the `wp-content/` directory.
+
 ### Available Global Plugins (wp-content/plugins/)
 
 Available plugins, installed in `wp-content/plugins/`, are not included globally, but are available on both network and site levels for activation.
