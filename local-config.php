@@ -28,16 +28,6 @@ define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 // Force a default theme.
 define( 'WP_DEFAULT_THEME', 'twentythirteen' );
 
-/* Multisite */
-define( 'WP_ALLOW_MULTISITE',   true         );
-define( 'MULTISITE',            true         );
-define( 'SUBDOMAIN_INSTALL',    true         );
-define( 'DOMAIN_CURRENT_SITE',  'wp.wsu.edu' );
-define( 'PATH_CURRENT_SITE',    '/'          );
-define( 'SITE_ID_CURRENT_SITE', 1            );
-define( 'BLOG_ID_CURRENT_SITE', 1            );
-define( 'WP_MULTI_NETWORK',     true         );
-
 $batcache = false;
 
 if ( isset( $_SERVER['WP_CLI_PHP_USED'] ) && ! isset( $_SERVER['HTTP_HOST'] ) )

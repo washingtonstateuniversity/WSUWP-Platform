@@ -37,9 +37,6 @@ define('DB_CHARSET', 'utf8');
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
 
-/* Sunrise */
-define( 'SUNRISE', 'on' );
-
 /**#@+
  * Authentication Unique Keys and Salts.
  *
@@ -92,6 +89,15 @@ if ( !defined( 'SAVEQUERIES' ) )
 	define('SAVEQUERIES', false);
 
 /* That's all, stop editing! Happy blogging. */
+
+/**
+ * If multisite has been defined, we can load sunrise.php and tell everyone that
+ * we're multi-network ready.
+ */
+if ( defined( 'MULTISITE' ) ) {
+	define( 'SUNRISE',          'on' );
+	define( 'WP_MULTI_NETWORK', true );
+}
 
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
