@@ -1,4 +1,6 @@
-# WSUWP Platform: WordPress @ Washington State University
+# WSUWP Platform
+
+A central publishing platform built on WordPress at Washington State University.
 
 ## Overview
 
@@ -6,7 +8,7 @@
 
 A `Vagrantfile` is provided with this repository to allow for a provisioned development environment using [Vagrant](http://vagrantup.com).
 
-The server configuration provisioned on the virtual machine is provided by the [WSU Web Serverbase](https://github.com/washingtonstateuniversity/wsu-web-serverbase) project. This server configuration is a close or exact match to what runs in production at Washington State University.
+The server configuration provisioned on the virtual machine is provided by the [WSU Web Provisioner](https://github.com/washingtonstateuniversity/wsu-web-provisioner) project. This server configuration is a close or exact match to what runs in production at Washington State University.
 
 ### Basic Requirements
 
@@ -22,36 +24,13 @@ The server configuration provisioned on the virtual machine is provided by the [
 1. Navigate to the directory where this repository was cloned or downloaded.
 1. Type `vagrant up`
 
-## Ignore all this for now...
+## Details
 
 ### WordPress filters
 
-* wsu_my_network_title
+Filters added by the WSUWP Platform project.
+
+* `wsu_my_network_title`
 	* Used in WordPress admin bar to display 'My WSU Networks' by default.
 
-### WordPress Admin Bar Structure
-
-* WP Logo
-	* About WSU WP
-* WSU Networks
-	* Network 1
-	* Network 2
-		* (Network Admin)
-			* Dashboard
-			* Theme
-			* Plugins
-			* Users
-			* Sites
-		* Site 1
-		* Site 2
-	* Network 3
-* Current Site
-	* Dashboard
-	* Themes
-	* etc...
-* Comment Logo
-* New
-	* Post
-	* Page
-* -----
-* Howdy, User []
+### Global, Network, and Site Structure
