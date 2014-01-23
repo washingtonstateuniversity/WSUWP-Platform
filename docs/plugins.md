@@ -1,5 +1,9 @@
 # Plugins and the WSUWP Platform
 
+Plugins play a major role in the WSUWP project. Through drop-ins, `mu-plugins`, and standard plugins, we're able to extend the default functionality of WordPress to fit the needs of a large, multi-network publishing platform.
+
+The following will introduce the plugins that are in use throughout the system as well as the role each level plays. Some plugins will be managed completely at a global level, while others can be added for individual sites to add specific functionality when needed.
+
 ## Current Plugins
 
 Plugins and their features that are currently provided as part of the WSUWP Platform in production.
