@@ -24,7 +24,12 @@ The server configuration provisioned on the virtual machine is provided by the [
 1. Navigate to the directory where this repository was cloned or downloaded.
 1. Type `vagrant up`
 
-## Details
+## Documentation
+
+Additional documentation on specific pieces of the WSUWP Platform can be found in our `docs/` directory.
+
+* [Plugins and the WSUWP Platform](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/plugins.md)
+* [Themes and the WSUWP Platform](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/themes.md)
 
 ### WordPress filters
 
