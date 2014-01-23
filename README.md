@@ -24,13 +24,11 @@ The server configuration provisioned on the virtual machine is provided by the [
 1. Navigate to the directory where this repository was cloned or downloaded.
 1. Type `vagrant up`
 
-## Details
+## Documentation
 
-### WordPress filters
+Additional documentation on specific pieces of the WSUWP Platform can be found in our `docs/` directory.
 
-Filters added by the WSUWP Platform project.
-
-* `wsu_my_network_title`
-	* Used in WordPress admin bar to display 'My WSU Networks' by default.
-
-### Global, Network, and Site Structure
+* [WSUWP Platform Structure](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/platform-structure.md)
+* [Plugins and the WSUWP Platform](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/plugins.md)
+* [Themes and the WSUWP Platform](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/themes.md)
+* [Hooks added in WSUWP](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/hooks.md)
