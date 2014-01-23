@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :private_network, ip: "10.10.50.50"
 
   # Mount this project's working directory as /var/www inside the virtual machine.
-  config.vm.synced_folder "./", "/var/www", :mount_options => [ "uid=510,gid=510", "dmode=775", "fmode=774" ]
+  config.vm.synced_folder "./www", "/var/www", :mount_options => [ "uid=510,gid=510", "dmode=775", "fmode=774" ]
 
   #############################################################################
   # Automatic Hosts Entries

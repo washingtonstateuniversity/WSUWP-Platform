@@ -11,21 +11,21 @@
 /.idea
 
 # Likely contains configuration intended for production and should be ignored.
-/remote-config.php
+/www/remote-config.php
 
 # The Query Monitor plugin adds a db.php drop in that we should ignore.
-/wp-content/db.php
+/www/wp-content/db.php
 
 # Ignore all plugins in the wp-content directory by default. We'll explicitly allow those we track here.
-/wp-content/plugins
+/www/wp-content/plugins
 
-!/wp-content/plugins/index.php
+!/www/wp-content/plugins/index.php
 
 # Ignore all uploads in the wp-content directory by default.
-/wp-content/uploads
+/www/wp-content/uploads
 
 # Ignore all themes in the wp-content directory by default. We'll explicitly allow those we track here.
-wp-content/themes
+www/wp-content/themes
 
-!wp-content/themes/twentythirteen
-!wp-content/themes/index.php
+!www/wp-content/themes/twentythirteen
+!www/wp-content/themes/index.php
