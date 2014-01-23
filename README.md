@@ -30,12 +30,6 @@ Additional documentation on specific pieces of the WSUWP Platform can be found i
 
 * [Plugins and the WSUWP Platform](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/plugins.md)
 * [Themes and the WSUWP Platform](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/themes.md)
-
-### WordPress filters
-
-Filters added by the WSUWP Platform project.
-
-* `wsu_my_network_title`
-	* Used in WordPress admin bar to display 'My WSU Networks' by default.
+* [Hooks added in WSUWP](https://github.com/washingtonstateuniversity/WSUWP-Platform/blob/master/docs/hooks.md)
 
 ### Global, Network, and Site Structure
