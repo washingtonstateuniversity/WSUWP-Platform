@@ -108,14 +108,16 @@ ERRORSS
   end
 
   $script =<<SCRIPT
-    cd /srv && rm -fr serverbase
-    cd /srv && curl -o serverbase.zip -L https://github.com/washingtonstateuniversity/wsu-web-provisioner/archive/master.zip
-    cd /srv && unzip serverbase.zip
-    cd /srv && mv WSU-Web-Provisioner-master wsu-web
-    cp /srv/wsu-web/provision/salt/config/yum.conf /etc/yum.conf
-    sh /srv/wsu-web/provision/bootstrap_salt.sh
-    cp /srv/wsu-web/provision/salt/minions/wsuwp-vagrant.conf /etc/salt/minion.d/
-    salt-call --local --log-level=debug --config-dir=/etc/salt state.highstate
+    cd /tmp && rm -fr wsu-web* && rm -fr /srv/salt
+    cd /tmp && curl -o wsu-web.zip -L https://github.com/washingtonstateuniversity/WSU-Web-Provisioner/archive/master.zip
+    cd /tmp && unzip wsu-web.zip
+    cd /tmp && mv WSU-Web-Provisioner-master wsu-web
+    cp -fr /tmp/wsu-web/provision/salt /srv/salt
+    cp /tmp/wsu-web/provision/salt/config/yum.conf /etc/yum.conf
+    sh /tmp/wsu-web/provision/bootstrap_salt.sh -- git develop
+    rm /etc/salt/minion.d/*.conf
+    cp /srv/salt/minions/wsuwp.conf /etc/salt/minion.d/
+    salt-call --local --log-level=info --config-dir=/etc/salt state.highstate
 SCRIPT
 
   config.vm.provision "shell", inline: $script
