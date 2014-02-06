@@ -10,8 +10,8 @@
 # Ignore PHPStorm project files.
 /.idea
 
-# Likely contains configuration intended for production and should be ignored.
-/www/remote-config.php
+# The wp-config.php file is automatically generated
+/www/wp-config.php
 
 # The Query Monitor plugin adds a db.php drop in that we should ignore.
 /www/wp-content/db.php

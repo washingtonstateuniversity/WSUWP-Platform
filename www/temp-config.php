@@ -16,20 +16,24 @@
 
 define( 'WP_MEMORY_LIMIT', '128M' );
 
-/**
- * Having a local configuration file allows us to specify some constants that
- * are specific to our development environment and should never make their way
- * to production.
- *
- * In the same vein, production information should never make its way into the
- * repository. The process of filling in the required information will occur
- * during deployment.
- */
-if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
-	include( dirname( __FILE__ ) . '/local-config.php' );
-} else {
-	include( dirname( __FILE__ ) . '/remote-config.php' );
-}
+// Database
+define( 'DB_NAME',     'wsuwp'     );
+define( 'DB_USER',     'wp'        );
+define( 'DB_PASSWORD', 'wp'        );
+define( 'DB_HOST',     '127.0.0.1' );
+
+// URLs
+define( 'WP_HOME',        'http://wp.wsu.edu'           );
+define( 'WP_SITEURL',     'http://wp.wsu.edu'           );
+define( 'WP_CONTENT_URL', 'http://wp.wsu.edu/wp-content'           );
+
+// Load wp-content from parent direc
+define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
+
+$batcache = false;
+
+if ( isset( $_SERVER['WP_CLI_PHP_USED'] ) && ! isset( $_SERVER['HTTP_HOST'] ) )
+	$_SERVER['HTTP_HOST'] = 'wp.wsu.edu';
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -46,14 +50,14 @@ define('DB_COLLATE', '');
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         'H-r?_c%0|#4 Off9FKnWyyKo3|/7ui+TzzBjw21|Kn[VD@lx7AITmfN/:~I^AEi/');
-define('SECURE_AUTH_KEY',  '3eYsq@HF!W-U?ETQS@TLz1];|y%H}!`]<.$xD:O,h4f-kghnJ0O2([>lI?=%P.7+');
-define('LOGGED_IN_KEY',    'k99.yH(wxIs-W%/$/<|a`J| Gw/ktV2tL|f8dNu[xBf/gM;>Lfq!Od$7+-nqdA+N');
-define('NONCE_KEY',        'v9+m]AtF$)8NibA/UDW&%FnN r&9PIeZ~%OJcl-5>}|o$gOoco&iw.jF?~#z4)>s');
-define('AUTH_SALT',        's`NZa/|+ec$_s&+[-hV0r>m`hsjH<[nDkM+E{YRA~bF4R-sf]FBJFVvokq=@^cU`');
-define('SECURE_AUTH_SALT', '3?v3@_69S_@<5xs?Q,XdxUdUfHeabID-24N~6xW=59:A6Xi0{w:Oca rS1qIX>xV');
-define('LOGGED_IN_SALT',   ')|?8xhLTO1XVMkA1TwE%^n5ZH&F?R;Rh 6~[5-&-*&95~/K(Q<EZC+q_Ix~!lhzP');
-define('NONCE_SALT',       '+1!jXxpop{7wm&Plh9|8>@eE3~V<XkxxT7Fsb-Gs6y2MPe]<}mGOXmu]y_)&>!Pn');
+define('AUTH_KEY',         'w');
+define('SECURE_AUTH_KEY',  'w');
+define('LOGGED_IN_KEY',    'w');
+define('NONCE_KEY',        'w');
+define('AUTH_SALT',        'w');
+define('SECURE_AUTH_SALT', 'w');
+define('LOGGED_IN_SALT',   'w');
+define('NONCE_SALT',       'w');
 
 /**#@-*/
 
@@ -89,19 +93,6 @@ if ( !defined( 'SAVEQUERIES' ) )
 	define('SAVEQUERIES', false);
 
 /* That's all, stop editing! Happy blogging. */
-
-/**
- * If multisite has been defined, we can load sunrise.php and tell everyone that
- * we're multi-network ready.
- */
-if ( defined( 'MULTISITE' ) ) {
-	define( 'SUNRISE',          'on' );
-	define( 'WP_MULTI_NETWORK', true );
-}
-
-/** Absolute path to the WordPress directory. */
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/wordpress/');
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
