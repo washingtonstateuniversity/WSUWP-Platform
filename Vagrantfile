@@ -35,6 +35,10 @@ Vagrant.configure("2") do |config|
   # Mount this project's working directory as /var/www inside the virtual machine.
   config.vm.synced_folder "./www", "/var/www", :mount_options => [ "uid=510,gid=510", "dmode=775", "fmode=774" ]
 
+  # Mount the local project's pillar/ directory as /srv/pillar inside the virtual machine. This allows
+  # us to pass arbitrary data to Salt during provisioning.
+  config.vm.synced_folder "pillar", "/srv/pillar", :mount_options => [ "dmode=775", "fmode=664" ]
+
   #############################################################################
   # Automatic Hosts Entries
   #
