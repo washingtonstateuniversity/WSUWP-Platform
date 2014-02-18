@@ -21,8 +21,28 @@ The server configuration provisioned on the virtual machine is provided by the [
 
 ### Starting the Environment
 
-1. Navigate to the directory where this repository was cloned or downloaded.
+#### Git
+
+1. Clone this repository into a local directory. (`git clone ...`)
+1. Navigate to the local directory in a terminal.
+1. Initialize submodules with `git submodule init`
+1. Initiate first sync of submodules with `git submodule update`
+	* This will checkout the version of WordPress we're using for the platform.
 1. Type `vagrant up`
+
+#### Zip
+
+1. Download the zip file for the [latest stable release](https://github.com/washingtonstateuniversity/WSUWP-Platform/releases) and extract to a local directory.
+1. Navigate to the local directory in a terminal.
+1. Type `vagrant up`.
+
+### Ongoing Environment Use
+
+1. Use `vagrant suspend` to save the current state of the virtual machine to be brought back with `vagrant resume`.
+1. Use `vagrant halt` to power off the virtual machine. Data will persist through another `vagrant up` to turn it back on.
+1. Only use `vagrant destroy` to destroy the virtual machine and start from scratch.
+1. `vagrant provision` will process provisioning again and ensure the proper services are started.
+1. `vagrant reload` will act as a system reboot for the virtual machine. Data will persist.
 
 ## Documentation
 
