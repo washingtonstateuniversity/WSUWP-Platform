@@ -15,7 +15,7 @@ wsuwp-config:
   db_host: 127.0.0.1
   cache_key: wsuwp
   batcache: true
-  default_theme: wsuwp-spine-parent-theme
+  default_theme: wsuwp-spine-parent
   nonces: |
     define('AUTH_KEY',         '$Aj=$}MK[fb=!aw:|K*^?1DU#?P|;nPC8w7W+lk-th$4].W-]K)p-A8:vbjR?:Ux');
     define('SECURE_AUTH_KEY',  'UhQf+zI;4IYmv9rcm>. _Z^GXXDT56nKPqv$/+x6,Ckse}&g1e$~_YtezqAhj-ZD');
