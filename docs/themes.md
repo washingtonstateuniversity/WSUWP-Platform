@@ -9,3 +9,5 @@ As with plugins, some themes will be available Globally, some will be network wi
 ## Current Themes
 
 * [WSU Spine Parent](https://github.com/washingtonstateuniversity/WSUWP-spine-parent-theme)
+	* Set as the default theme.
+* Twentythirteen
