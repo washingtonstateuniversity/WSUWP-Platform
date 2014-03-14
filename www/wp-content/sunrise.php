@@ -121,7 +121,7 @@ if( $current_blog ) {
 		$current_site->blog_id = $blog_id;
 
 		// Attach the site name to our current_site object. This uses cache already.
-		$current_site = get_current_site_name( $current_site );
+		//$current_site = get_current_site_name( $current_site );
 
 		wp_cache_set( 'wsuwp:network:' . $site_id, $current_site, '', 60 * 60 * 12 );
 	}
