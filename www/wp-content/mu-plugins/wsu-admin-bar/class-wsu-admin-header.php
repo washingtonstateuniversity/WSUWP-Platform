@@ -130,7 +130,7 @@ class WSU_Admin_Header {
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'my-networks-list',
 				'id'     => 'network-' . $network->id,
-				'title'  => $current_site->site_name,
+				'title'  => get_site_option( 'site_name' ),
 				'href'   => network_admin_url(),
 			));
 
