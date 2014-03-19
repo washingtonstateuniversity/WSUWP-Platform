@@ -1,0 +1,305 @@
+/*
+Theme Name: WSU Spine
+Theme URI: http://web.wsu.edu/spine
+Author: WSU University Communications
+Author URI: http://web.wsu.edu
+Description: Binding together the story of Washington State University.
+Version: 0.5
+License: Copyright Washington State University
+License URI: http://copyright.wsu.edu
+Tags: light
+*/
+
+body {
+	background: #f9f9f9;
+	}
+#jacket {
+	overflow: hidden;
+	}
+main {
+	background-repeat: no-repeat;
+	background-position: left top;
+	}
+/* Main Header Defaults (previously siteID) */
+
+main > header.spine-bookmark div:last-of-type,
+body.single main > header.spine-bookmark div.category {
+	font-size: 2em;
+	color: white;
+	display: block;
+	}
+main > header.spine-bookmark div,
+main > header.spine-bookmark div a,
+main > header.spine-bookmark div a:hover {
+	color: white;
+	}
+main > header div:first-of-type {
+	text-transform: uppercase;
+	font-size: .9em;
+	color: #e6e8e9;
+	}
+main > header.spine-bookmark div:first-of-type a {
+	color: #e6e8e9;
+	}
+main > header div {
+	display: none;
+	}
+main > header div:first-of-type,
+main > header div:last-of-type {
+	display: block;
+	}
+main > header.spine-bookmark {
+	background: #981e32;
+	position: relative;
+	top: 0px;
+	left: 330px;
+	width: 2000px;
+	border: 0px;
+	height: 132px;
+	width: 200%;
+	}
+main > header.spine-bookmark hgroup {
+	position: absolute;
+	bottom: 1em;
+	left: 1.5em;
+	width: 396px;
+	}
+main > header.spine-bookmark div {
+	padding: 0px;
+	line-height: 1.1em;
+	margin: 0px;
+	}
+.size-lt-medium main > header.spine-bookmark {
+	left: 0px;
+	}
+.size-lt-medium main > header.spine-bookmark hgroup {
+	left: 2em;
+	}
+
+body.single main > header div.post {
+	display: none;
+	}
+body.single main > header div.category {
+	display: block;
+	}
+
+
+xx.margin article div.alignright {
+	margin-right: -198px;
+	margin-left: 10px;
+	padding: 10px 0px 0px 10px;
+	border-left: 1px rgba(93,105,112,0.2) solid;
+	color: #a6adb0;
+	}
+xx.small aside.rightward,
+xx.small .margin article div.alignright {
+	display: block;
+	float: none;
+	clear: both;
+	margin: 10px 0px 10px 0px;
+	padding: 10px 0px 5px 0px;
+	border-left: none;
+	border-width: 1px 0px;
+	border-style: solid;
+	border-color: #e6e8e9;
+	}
+
+figure {
+	position: relative;
+	}
+xxfigure .liner {
+	position: absolute;
+	width: 1000px;
+	background: white;
+	}
+figcaption {
+	padding: 5px 0px;
+	}
+
+section.pager {
+	xxborder-top: 1px solid gray;
+	padding-top: 10px;
+	padding-bottom: 30px;
+	xxbackground: gray;
+	}
+section.pager .column.one {
+	padding-left: 30px;
+	box-sizing: border-box;
+	}
+section.pager .column.two {
+	text-align: right;
+	padding-right: 30px;
+	box-sizing: border-box;
+	}
+
+/* Articles
+------------------------------------------------------- */
+main article header h2 {
+	margin-bottom: 0px;
+	}
+header hgroup.source {
+	text-transform: uppercase;
+	padding: 0px 0px 5px 0px;
+	font-size: .9em;
+	color: rgba(0,0,0,0.5);
+	}
+figure.article-thumbnail {
+	float: right;
+	margin: 0px 0px 5px 10px;
+	xbackground: white;
+	}
+dl dt {
+	font-weight: bold;
+	}
+dl dt,
+dl dd {
+	display: inline-block;
+	padding-right: .3em;
+	}
+time .day, time .month, time .year {
+	font-weight: bold;
+	}
+article header time::before {
+	content: "Published on ";
+	}
+article header time .day::before {
+	content: " ";
+	}
+article header time .day::after {
+	content: ", ";
+	}
+article header cite a {
+	color: rgba(0,0,0,0.5);
+	font-weight: bold;
+	}
+article header cite::before {
+	content: " by ";
+	}
+article footer dl dt::after {
+	content: ": ";
+	}
+article footer dl dd::after {
+	content: ", ";
+	}
+article footer dl dd:nth-last-of-type(1)::after {
+	content: "";
+	}
+article footer {
+	color: rgba(128,128,128,0.6);
+	margin-top: 5px;
+	padding-top: 5px;
+	border-top: 1px rgba(127,127,127,0.2) solid;
+	}
+article footer a {
+	color: rgba(128,128,128,0.5);
+	}
+article footer a:hover {
+	color: rgba(128,128,128,1);
+	}
+
+	
+/* Wordpress */
+.alignright {
+	float: right;
+	}
+.margin article figure.alignright {
+	margin: 10px -198px 10px 15px;
+	padding: 2px 0px 2px 10px;
+	color: rgba(166,173,176,0.85);
+	xxborder: 10px white solid;
+	xxbox-shadow: 0px 0px 1px gray;
+	border-left: 1px rgba(166,173,176,0.5) solid;
+	xxbackground: white;
+	xwidth: 1000px;
+	}
+.size-lt-medium .margin article figure.alignright {
+	padding: 0px;
+	border-left: none;
+	margin-left: 0px;
+	}
+.sidebar article figure.alignright {
+	margin: 10px -264px 10px 10px;
+	padding: 10px;
+	}
+.size-lt-medium .margin article .alignright,
+.size-lt-medium .sidebar article .alignright {
+	clear: both;
+	float: none;
+	}
+.alignleft {
+	float: left;
+	margin: 1em 1em 0 0;
+	}
+.wp-edit-link {
+	position: fixed;
+	right: 0px;
+	bottom: 0px;
+	color: white;
+	background: #5e6a71;
+	display: block;
+	padding: 2px 12px;
+	font-size: .8em;
+	}
+.wp-edit-link:hover {
+	color: white;
+	background: #981e32;
+	}
+
+/* Admin Bar */
+@media (min-width: 989px) {
+body.admin-bar {
+    xpadding-top: 32px !important;
+    xpadding-bottom: 32px !important;
+}
+.admin-bar #spine #glue {
+	margin-top: 32px;
+	}
+}
+
+@media (max-width: 989px) {
+body.admin-bar {
+    margin-top: -32px !important;
+    padding-bottom: 32px !important;
+}
+#wpadminbar {
+    top: auto !important;
+    bottom: 0 !important;
+    position: fixed !important;
+}
+#wpadminbar .quicklinks>ul>li {
+    position:relative;
+}
+#wpadminbar .ab-top-menu>.menupop>.ab-sub-wrapper {
+    bottom:32px;
+    box-shadow: none;
+}   
+
+body.admin-bar {
+    margin-top: -32px !important;
+    padding-bottom: 32px !important;
+}
+#wpadminbar {
+    top: auto !important;
+    bottom: 0 !important;
+    position: fixed;
+}
+#wpadminbar .quicklinks>ul>li {
+    position:relative;
+}
+#wpadminbar .ab-top-menu>.menupop>.ab-sub-wrapper {
+    bottom:32px;
+    box-shadow: none;
+}
+}
+@media (max-width: 780px) {
+
+body.admin-bar {
+    margin-top: -46px !important;
+    padding-bottom: 46px !important;
+}
+#wpadminbar .ab-top-menu>.menupop>.ab-sub-wrapper {
+    bottom:46px;
+}
+
+}
+
