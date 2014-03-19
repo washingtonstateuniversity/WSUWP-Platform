@@ -32,7 +32,7 @@ define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 
 $batcache = false;
 
-if ( isset( $_SERVER['WP_CLI_PHP_USED'] ) && ! isset( $_SERVER['HTTP_HOST'] ) )
+if ( ! isset( $_SERVER['HTTP_HOST'] ) )
 	$_SERVER['HTTP_HOST'] = 'wp.wsu.dev';
 
 /** Database Charset to use in creating database tables. */
