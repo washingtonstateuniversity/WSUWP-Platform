@@ -10,6 +10,9 @@ network:
 
 wsuwp-config:
   primary_host: wp.wsu.dev
+  primary_email: admin@wp.wsu.dev
+  primary_user: admin
+  primary_pass: password
   database: wsuwp
   db_user: wp
   db_pass: wp
