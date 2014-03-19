@@ -9,6 +9,7 @@ network:
     nameserver 8.8.4.4
 
 wsuwp-config:
+  primary_host: wp.wsu.dev
   database: wsuwp
   db_user: wp
   db_pass: wp
