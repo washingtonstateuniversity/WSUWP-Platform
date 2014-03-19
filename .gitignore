@@ -17,9 +17,7 @@
 /www/wp-content/db.php
 
 # Ignore all plugins in the wp-content directory by default. We'll explicitly allow those we track here.
-/www/wp-content/plugins
-
-!/www/wp-content/plugins/index.php
+/www/wp-content/plugins/**/
 
 # Ignore all uploads in the wp-content directory by default.
 /www/wp-content/uploads
