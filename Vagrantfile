@@ -118,9 +118,9 @@ ERRORSS
     cd /tmp && mv WSU-Web-Provisioner-master wsu-web
     cp -fr /tmp/wsu-web/provision/salt /srv/
     cp /tmp/wsu-web/provision/salt/config/yum.conf /etc/yum.conf
-    sh /tmp/wsu-web/provision/bootstrap_salt.sh -K -g https://github.com/saltstack/salt.git git v2014.1.0rc3
+    sh /tmp/wsu-web/provision/bootstrap_salt.sh -K stable
     cp /tmp/wsu-web/provision/salt/minions/wsuwp.conf /etc/salt/minion.d/
-    salt-call --local --log-level=debug --config-dir=/etc/salt state.highstate
+    salt-call --local --log-level=info --config-dir=/etc/salt state.highstate
 SCRIPT
 
   config.vm.provision "shell", inline: $script
