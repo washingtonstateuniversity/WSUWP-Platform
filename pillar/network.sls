@@ -9,13 +9,17 @@ network:
     nameserver 8.8.4.4
 
 wsuwp-config:
+  primary_host: wp.wsu.dev
+  primary_email: admin@wp.wsu.dev
+  primary_user: admin
+  primary_pass: password
   database: wsuwp
   db_user: wp
   db_pass: wp
   db_host: 127.0.0.1
   cache_key: wsuwp
   batcache: true
-  default_theme: wsuwp-spine-parent
+  default_theme: spine
   nonces: |
     define('AUTH_KEY',         '$Aj=$}MK[fb=!aw:|K*^?1DU#?P|;nPC8w7W+lk-th$4].W-]K)p-A8:vbjR?:Ux');
     define('SECURE_AUTH_KEY',  'UhQf+zI;4IYmv9rcm>. _Z^GXXDT56nKPqv$/+x6,Ckse}&g1e$~_YtezqAhj-ZD');
