@@ -1,0 +1,30 @@
+#accordion-section-section_spine_options .customize-control-radio label,
+#accordion-section-section_spine_advanced_options .customize-control-radio label {
+	padding-right: 10px;
+	vertical-align: middle;
+	}
+#accordion-section-section_spine_options .customize-control-radio label input[type="radio"],
+#accordion-section-section_spine_advanced_options .customize-control-radio label input[type="radio"] {
+	vertical-align: text-bottom;
+	line-height: 20px;
+	margin-right: 2px;
+	margin-top: 2px;
+	}
+#accordion-section-section_spine_options .customize-control-radio br,
+#accordion-section-section_spine_advanced_options .customize-control-radio br {
+	display: none;
+	}
+x#accordion-section-section_spine_social label.focused::after {
+	content: "Select \"None\" below to remove location";
+	display: block;
+	padding: 3px 0px;
+	opacity: .5;
+	z-index: 999631;
+	}
+.accordion-section.focused {
+	background: red;
+	}
+	
+select option[value="none"][selected="selected"] + li input {
+	display: none;
+	}
