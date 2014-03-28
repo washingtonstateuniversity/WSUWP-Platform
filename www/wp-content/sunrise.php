@@ -98,8 +98,9 @@ if ( ! $current_blog = wp_cache_get( 'wsuwp:site:' . $requested_domain . $reques
 		$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d LIMIT 1", $found_site_id ) );
 
 	// If a row was found, set it in cache for future lookups
-	if ( $current_blog )
-		wp_cache_set( 'wsuwp:site:' . $requested_domain . $requested_path, $current_blog, '', 60 * 60 * 12 );
+	if ( $current_blog ) {
+		wp_cache_add( 'wsuwp:site:' . $requested_domain . $requested_path, $current_blog, '', 60 * 60 * 12 );
+	}
 
 }
 
@@ -115,7 +116,7 @@ if( $current_blog ) {
 		// Add blog ID after the fact because it is required by both scenarios
 		$current_site->blog_id = $blog_id;
 
-		wp_cache_set( 'wsuwp:network:' . $site_id, $current_site, '', 60 * 60 * 12 );
+		wp_cache_add( 'wsuwp:network:' . $site_id, $current_site, '', 60 * 60 * 12 );
 	}
 
 	define( 'COOKIE_DOMAIN', $requested_domain );
