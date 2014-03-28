@@ -56,7 +56,7 @@ $requested_path = $requested_uri_parts[0] . '/';
 if ( '/' !== $requested_path )
 	$requested_path = '/' . $requested_path;
 
-if ( ! $current_blog = wp_cache_get( 'wsuwp:site:' . $requested_domain . $requested_path ) ) {
+if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp:site' ) ) {
 	// Treat www the same as the root URL
 	$alternate_domain = preg_replace( '|^www\.|', '', $requested_domain );
 
@@ -99,7 +99,7 @@ if ( ! $current_blog = wp_cache_get( 'wsuwp:site:' . $requested_domain . $reques
 
 	// If a row was found, set it in cache for future lookups
 	if ( $current_blog ) {
-		wp_cache_add( 'wsuwp:site:' . $requested_domain . $requested_path, $current_blog, '', 60 * 60 * 12 );
+		wp_cache_add( $requested_domain . $requested_path, $current_blog, 'wsuwp:site', 60 * 60 * 12 );
 	}
 
 }
@@ -110,13 +110,13 @@ if( $current_blog ) {
 	$site_id = $current_blog->site_id;
 
 	// setup the current_site global that WordPress expects
-	if ( ! $current_site = wp_cache_get( 'wsuwp:network:' . $site_id ) ) {
+	if ( ! $current_site = wp_cache_get( $site_id, 'wsuwp:network' ) ) {
 		$current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * from $wpdb->site WHERE id = %d LIMIT 0,1", $site_id ) );
 
 		// Add blog ID after the fact because it is required by both scenarios
 		$current_site->blog_id = $blog_id;
 
-		wp_cache_add( 'wsuwp:network:' . $site_id, $current_site, '', 60 * 60 * 12 );
+		wp_cache_add( $site_id, $current_site, 'wsuwp:network', 60 * 60 * 12 );
 	}
 
 	define( 'COOKIE_DOMAIN', $requested_domain );
