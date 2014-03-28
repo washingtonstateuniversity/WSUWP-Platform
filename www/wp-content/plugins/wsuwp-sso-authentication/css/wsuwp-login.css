@@ -1,0 +1,19 @@
+.login h1 a {
+	background-size: 140px 140px;
+	width: 140px;
+	height: 140px;
+	border-radius: 6px;
+}
+.wsu-login-choice .button-primary {
+	float: none;
+	margin: 0 auto 15px auto;
+	display: block;
+	width: 260px;
+	text-align: center;
+	font-size: 14px;
+	padding: 0;
+}
+#loginform,
+#nav {
+	display: none;
+}
