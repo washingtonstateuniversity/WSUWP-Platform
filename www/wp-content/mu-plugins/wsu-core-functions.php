@@ -92,7 +92,6 @@ function wsuwp_switch_to_network( $network_id ) {
 	$new_network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
 	$current_site = array_shift( $new_network );
 	$current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s", $current_site->domain, $current_site->path ) );
-	//$current_site = get_current_site_name( $current_site );
 	$wpdb->set_blog_id( $current_site->blog_id, $current_site->id );
 
 	return true;
