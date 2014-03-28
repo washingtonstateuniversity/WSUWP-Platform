@@ -17,6 +17,10 @@
 # The wp-config.php file is automatically generated
 /www/wp-config.php
 
+# We don't need to track default plugins and themes here.
+/www/wordpress/wp-content/plugins
+/www/wordpress/wp-content/themes
+
 # The Query Monitor plugin adds a db.php drop in that we should ignore.
 /www/wp-content/db.php
 
