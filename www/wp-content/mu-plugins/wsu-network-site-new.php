@@ -79,7 +79,7 @@ class WSUWP_New_Site_Administration {
 				wp_die( __( 'Invalid site address. There should be no more than 2 segments in a path.' ) );
 			}
 
-			$site_path = trailingslashit( implode( '/', $site_path ) );
+			$site_path = '/' . trailingslashit( implode( '/', $site_path ) );
 		}
 
 		// Domains can have a-z, A-Z, 0-9, -, and .
@@ -115,6 +115,11 @@ class WSUWP_New_Site_Administration {
 		$subdirectory_reserved_names = apply_filters( 'subdirectory_reserved_names', array( 'page', 'comments', 'blog', 'files', 'feed', 'wsu' ) );
 		if ( in_array( $path, $subdirectory_reserved_names ) ) {
 			wp_die( sprintf( __('The following words are reserved for use by WordPress functions and cannot be used as blog names: <code>%s</code>' ), implode( '</code>, <code>', $subdirectory_reserved_names ) ) );
+		}
+
+		$existing = get_site_by_path( $domain, $path );
+		if ( $existing && $domain === $existing->domain && $path === $existing->path ) {
+			wp_die( __( 'A site with this domain and path combination already exists.' ) );
 		}
 
 		$password = 'N/A';
