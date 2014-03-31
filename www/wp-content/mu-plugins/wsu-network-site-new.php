@@ -75,8 +75,8 @@ class WSUWP_New_Site_Administration {
 		} else {
 			$site_path = explode( '/', trim( $address['path'], '/' ) );
 
-			if ( 3 <= count( $site_path ) ) {
-				wp_die( __( 'Invalid site address. There should be no more than 2 segments in a path.' ) );
+			if ( 2 <= count( $site_path ) ) {
+				wp_die( __( 'Invalid site address. There should be no more than 1 segment in a path.' ) );
 			}
 
 			$site_path = '/' . trailingslashit( implode( '/', $site_path ) );
