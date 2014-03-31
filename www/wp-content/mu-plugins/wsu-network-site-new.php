@@ -184,21 +184,7 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Site Address' ) ?></th>
 						<td>
-							<table class="form-table">
-								<tr class="form-field form-required">
-									<th scope="row" style="width: 100px;"><?php _e( 'Site Domain' ); ?></th>
-									<td>
-										<input name="site[domain]" type="text" class="regular-text" style="width:200px;" title="<?php esc_attr_e( 'Domain' ) ?>" value="" />.<?php echo preg_replace( '|^www\.|', '', get_current_site()->domain ); ?>
-									</td>
-								</tr>
-								<tr class="form-field form-required">
-									<th scope="row" style="width: 100px;"><?php _e( 'Site Path' ); ?></th>
-									<td>
-										<?php
-										echo get_current_site()->domain . get_current_site()->path ?><input name="site[path]" class="regular-text" type="text" style="width:200px;" title="<?php esc_attr_e( 'Domain' ) ?>"/>
-									</td>
-								</tr>
-							</table>
+							<input name="site[domain]" type="text" class="regular-text" style="width:470px;" title="<?php esc_attr_e( 'Domain' ) ?>" value="" />
 						</td>
 					</tr>
 					<tr class="form-field form-required">
