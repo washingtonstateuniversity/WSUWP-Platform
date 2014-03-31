@@ -113,21 +113,8 @@ class WSUWP_New_Site_Administration {
 		 */
 
 		$subdirectory_reserved_names = apply_filters( 'subdirectory_reserved_names', array( 'page', 'comments', 'blog', 'files', 'feed', 'wsu' ) );
-		if ( in_array( $site_path, $subdirectory_reserved_names ) ) {
+		if ( in_array( $path, $subdirectory_reserved_names ) ) {
 			wp_die( sprintf( __('The following words are reserved for use by WordPress functions and cannot be used as blog names: <code>%s</code>' ), implode( '</code>, <code>', $subdirectory_reserved_names ) ) );
-		}
-
-		// Build the desired domain
-		if ( '' === $domain ) {
-			$new_domain = get_current_site()->domain;
-		} else {
-			$new_domain = $domain . '.' . preg_replace( '|^www\.|', '', get_current_site()->domain );
-		}
-
-		if ( '' === $path ) {
-			$new_path = get_current_site()->path;
-		} else {
-			$new_path = get_current_site()->path . $path . '/';
 		}
 
 		$password = 'N/A';
@@ -143,7 +130,7 @@ class WSUWP_New_Site_Administration {
 		}
 
 		$wpdb->hide_errors();
-		$id = wpmu_create_blog( $new_domain, $new_path, $site['title'], $user_id , array( 'public' => 1 ), get_current_site()->id );
+		$id = wpmu_create_blog( $domain, $path, $site['title'], $user_id , array( 'public' => 1 ), get_current_site()->id );
 		$wpdb->show_errors();
 
 		if ( is_wp_error( $id ) ) {
