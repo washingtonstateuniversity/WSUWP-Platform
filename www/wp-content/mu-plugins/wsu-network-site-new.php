@@ -112,8 +112,8 @@ class WSUWP_New_Site_Administration {
 		 * networks can determine what is supported.
 		 */
 
-		$subdirectory_reserved_names = apply_filters( 'subdirectory_reserved_names', array( 'page', 'comments', 'blog', 'files', 'feed' ) );
-		if ( in_array( $site['path'], $subdirectory_reserved_names ) ) {
+		$subdirectory_reserved_names = apply_filters( 'subdirectory_reserved_names', array( 'page', 'comments', 'blog', 'files', 'feed', 'wsu' ) );
+		if ( in_array( $site_path, $subdirectory_reserved_names ) ) {
 			wp_die( sprintf( __('The following words are reserved for use by WordPress functions and cannot be used as blog names: <code>%s</code>' ), implode( '</code>, <code>', $subdirectory_reserved_names ) ) );
 		}
 
