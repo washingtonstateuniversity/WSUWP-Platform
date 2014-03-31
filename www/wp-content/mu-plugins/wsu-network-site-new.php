@@ -49,25 +49,58 @@ class WSUWP_New_Site_Administration {
 			wp_die( __( 'Invalid email address.' ) );
 		}
 
-		// These use the standard preg_match from WordPress core as of 3.7.1
-		// @todo revisit this standard
-		$domain = '';
-		if ( preg_match( '|^([a-zA-Z0-9-])+$|', $site['domain'] ) ) {
-			$domain = strtolower( $site['domain'] );
+		$address = explode( '//', $site['address'] );
+
+		// Ensure a consistent scheme.
+		if ( 1 == count( $address ) ) {
+			$address = '//' . $address[0];
+		} elseif ( 2 == count( $address ) ) {
+			$address = '//' . $address[1];
+		} else {
+			wp_die( __( 'Invalid site address. More than one use of // was found' ) );
 		}
 
+		$address = parse_url( $address );
+
+		// Add basic validation to the host. Something like localhost is not allowed.
+		if ( 0 === substr_count( $address['host'], '.' ) ) {
+			wp_die( __( 'Invalid site address. A domain should have at least one . character.' ) );
+		} else {
+			$site_domain = $address['host'];
+		}
+
+		// Paths should have trailing slashes and up to 2 segments.
+		if ( empty( $address['path'] ) || '/' === $address['path'] ) {
+			$site_path = '/';
+		} else {
+			$site_path = explode( '/', trim( $address['path'], '/' ) );
+
+			if ( 3 <= count( $site_path ) ) {
+				wp_die( __( 'Invalid site address. There should be no more than 2 segments in a path.' ) );
+			}
+
+			$site_path = trailingslashit( implode( '/', $site_path ) );
+		}
+
+		// Domains can have a-z, A-Z, 0-9, -, and .
+		$domain = '';
+		if ( preg_match( '|^([a-zA-Z0-9-.])+$|', $site_domain ) ) {
+			$domain = strtolower( $site_domain );
+		}
+
+		// Paths can have a-z, A-Z, 0-9, -, and /
 		$path = '';
-		if ( preg_match( '|^([a-zA-Z0-9-])+$|', $site['path'] ) ) {
-			$path = strtolower( $site['path'] );
+		if ( preg_match( '|^([a-zA-Z0-9-/])+$|', $site_path ) ) {
+			$path = strtolower( $site_path );
 		}
 
 		// Once the preg_match has been applied, we should error if any changes were made.
-		if ( $domain !== $site['domain'] ) {
-			wp_die( __( 'Invalid site domain.' ) );
+		if ( $domain !== $site_domain ) {
+			wp_die( __( 'Invalid site address. Non standard characters were found in the domain name.' ) );
 		}
 
-		if ( $path !== $site['path'] ) {
-			wp_die( __( 'Invalid site path.' ) );
+		if ( $path !== $site_path ) {
+			wp_die( __( 'Invalid site path. Non standard characters were found in the path name.' ) );
 		}
 
 		/**
