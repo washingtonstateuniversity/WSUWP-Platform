@@ -31,8 +31,8 @@ class WSUWP_New_Site_Administration {
 	private function _create_new_site( $site  ) {
 		global $wpdb;
 
-		if ( empty( $site['domain'] ) && empty( $site['path'] ) ) {
-			wp_die( __( 'Missing site domain or path.' ) );
+		if ( empty( $site['address'] ) ) {
+			wp_die( __( 'Missing site address.' ) );
 		}
 
 		if ( empty( $site['email'] ) ) {
@@ -184,7 +184,7 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Site Address' ) ?></th>
 						<td>
-							<input name="site[domain]" type="text" class="regular-text" style="width:470px;" title="<?php esc_attr_e( 'Domain' ) ?>" value="" />
+							<input name="site[address]" type="text" class="regular-text" style="width:470px;" title="<?php esc_attr_e( 'Address' ) ?>" value="" />
 							<p class="description">This is some explanatory text about what can be put in the above area.</p>
 						</td>
 					</tr>
