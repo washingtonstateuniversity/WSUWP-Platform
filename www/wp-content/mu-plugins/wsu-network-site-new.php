@@ -26,13 +26,13 @@ class WSUWP_New_Site_Administration {
 	/**
 	 * Create a new site on the network based on the information passed.
 	 *
-	 * @param array $site POST site information. Contains domain, path, email, title.
+	 * @param array $site POST site information. Contains address, path, email, title.
 	 */
 	private function _create_new_site( $site  ) {
 		global $wpdb;
 
-		if ( empty( $site['domain'] ) && empty( $site['path'] ) ) {
-			wp_die( __( 'Missing site domain or path.' ) );
+		if ( empty( $site['address'] ) ) {
+			wp_die( __( 'Missing site address.' ) );
 		}
 
 		if ( empty( $site['email'] ) ) {
@@ -49,25 +49,58 @@ class WSUWP_New_Site_Administration {
 			wp_die( __( 'Invalid email address.' ) );
 		}
 
-		// These use the standard preg_match from WordPress core as of 3.7.1
-		// @todo revisit this standard
-		$domain = '';
-		if ( preg_match( '|^([a-zA-Z0-9-])+$|', $site['domain'] ) ) {
-			$domain = strtolower( $site['domain'] );
+		$address = explode( '//', $site['address'] );
+
+		// Ensure a consistent scheme.
+		if ( 1 == count( $address ) ) {
+			$address = '//' . $address[0];
+		} elseif ( 2 == count( $address ) ) {
+			$address = '//' . $address[1];
+		} else {
+			wp_die( __( 'Invalid site address. More than one use of // was found' ) );
 		}
 
+		$address = parse_url( $address );
+
+		// Add basic validation to the host. Something like localhost is not allowed.
+		if ( 0 === substr_count( $address['host'], '.' ) ) {
+			wp_die( __( 'Invalid site address. A domain should have at least one . character.' ) );
+		} else {
+			$site_domain = $address['host'];
+		}
+
+		// Paths should have trailing slashes and up to 2 segments.
+		if ( empty( $address['path'] ) || '/' === $address['path'] ) {
+			$site_path = '/';
+		} else {
+			$site_path = explode( '/', trim( $address['path'], '/' ) );
+
+			if ( 2 <= count( $site_path ) ) {
+				wp_die( __( 'Invalid site address. There should be no more than 1 segment in a path.' ) );
+			}
+
+			$site_path = '/' . trailingslashit( implode( '/', $site_path ) );
+		}
+
+		// Domains can have a-z, A-Z, 0-9, -, and .
+		$domain = '';
+		if ( preg_match( '|^([a-zA-Z0-9-.])+$|', $site_domain ) ) {
+			$domain = strtolower( $site_domain );
+		}
+
+		// Paths can have a-z, A-Z, 0-9, -, and /
 		$path = '';
-		if ( preg_match( '|^([a-zA-Z0-9-])+$|', $site['path'] ) ) {
-			$path = strtolower( $site['path'] );
+		if ( preg_match( '|^([a-zA-Z0-9-/])+$|', $site_path ) ) {
+			$path = strtolower( $site_path );
 		}
 
 		// Once the preg_match has been applied, we should error if any changes were made.
-		if ( $domain !== $site['domain'] ) {
-			wp_die( __( 'Invalid site domain.' ) );
+		if ( $domain !== $site_domain ) {
+			wp_die( __( 'Invalid site address. Non standard characters were found in the domain name.' ) );
 		}
 
-		if ( $path !== $site['path'] ) {
-			wp_die( __( 'Invalid site path.' ) );
+		if ( $path !== $site_path ) {
+			wp_die( __( 'Invalid site path. Non standard characters were found in the path name.' ) );
 		}
 
 		/**
@@ -79,22 +112,14 @@ class WSUWP_New_Site_Administration {
 		 * networks can determine what is supported.
 		 */
 
-		$subdirectory_reserved_names = apply_filters( 'subdirectory_reserved_names', array( 'page', 'comments', 'blog', 'files', 'feed' ) );
-		if ( in_array( $site['path'], $subdirectory_reserved_names ) ) {
+		$subdirectory_reserved_names = apply_filters( 'subdirectory_reserved_names', array( 'page', 'comments', 'blog', 'files', 'feed', 'wsu' ) );
+		if ( in_array( $path, $subdirectory_reserved_names ) ) {
 			wp_die( sprintf( __('The following words are reserved for use by WordPress functions and cannot be used as blog names: <code>%s</code>' ), implode( '</code>, <code>', $subdirectory_reserved_names ) ) );
 		}
 
-		// Build the desired domain
-		if ( '' === $domain ) {
-			$new_domain = get_current_site()->domain;
-		} else {
-			$new_domain = $domain . '.' . preg_replace( '|^www\.|', '', get_current_site()->domain );
-		}
-
-		if ( '' === $path ) {
-			$new_path = get_current_site()->path;
-		} else {
-			$new_path = get_current_site()->path . $path . '/';
+		$existing = get_site_by_path( $domain, $path );
+		if ( $existing && $domain === $existing->domain && $path === $existing->path ) {
+			wp_die( __( 'A site with this domain and path combination already exists.' ) );
 		}
 
 		$password = 'N/A';
@@ -110,7 +135,7 @@ class WSUWP_New_Site_Administration {
 		}
 
 		$wpdb->hide_errors();
-		$id = wpmu_create_blog( $new_domain, $new_path, $site['title'], $user_id , array( 'public' => 1 ), get_current_site()->id );
+		$id = wpmu_create_blog( $domain, $path, $site['title'], $user_id , array( 'public' => 1 ), get_current_site()->id );
 		$wpdb->show_errors();
 
 		if ( is_wp_error( $id ) ) {
@@ -142,22 +167,25 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 	public function site_new_php() {
 		global $title, $parent_file;
 
-		if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] )
+		if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] ) {
 			return;
+		}
 
 		if ( isset( $_REQUEST['action'] ) && 'add-network-site' === $_REQUEST['action'] ) {
 			check_admin_referer( 'add-network-site', '_wpnonce_add-network-site' );
 
-			if ( ! is_array( $_POST['site'] ) )
+			if ( ! is_array( $_POST['site'] ) ) {
 				wp_die( __( 'Can&#8217;t create an empty site.' ) );
+			}
 
 			$this->_create_new_site( $_POST['site'] );
 		}
 
 		if ( isset($_GET['update']) ) {
 			$messages = array();
-			if ( 'added' == $_GET['update'] )
+			if ( 'added' == $_GET['update'] ) {
 				$messages[] = sprintf( __( 'Site added. <a href="%1$s">Visit Dashboard</a> or <a href="%2$s">Edit Site</a>' ), esc_url( get_admin_url( absint( $_GET['id'] ) ) ), network_admin_url( 'site-info.php?id=' . absint( $_GET['id'] ) ) );
+			}
 		}
 
 		$title = __('Add New Site');
@@ -171,8 +199,9 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 			<h2 id="add-new-site"><?php _e('Add New Site') ?></h2>
 			<?php
 			if ( ! empty( $messages ) ) {
-				foreach ( $messages as $msg )
+				foreach ( $messages as $msg ) {
 					echo '<div id="message" class="updated"><p>' . $msg . '</p></div>';
+				}
 			} ?>
 			<form method="post" action="<?php echo network_admin_url('site-new.php?action=add-network-site'); ?>">
 				<?php wp_nonce_field( 'add-network-site', '_wpnonce_add-network-site' ) ?>
@@ -180,21 +209,8 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Site Address' ) ?></th>
 						<td>
-							<table class="form-table">
-								<tr class="form-field form-required">
-									<th scope="row" style="width: 100px;"><?php _e( 'Site Domain' ); ?></th>
-									<td>
-										<input name="site[domain]" type="text" class="regular-text" style="width:200px;" title="<?php esc_attr_e( 'Domain' ) ?>" value="" />.<?php echo preg_replace( '|^www\.|', '', get_current_site()->domain ); ?>
-									</td>
-								</tr>
-								<tr class="form-field form-required">
-									<th scope="row" style="width: 100px;"><?php _e( 'Site Path' ); ?></th>
-									<td>
-										<?php
-										echo get_current_site()->domain . get_current_site()->path ?><input name="site[path]" class="regular-text" type="text" style="width:200px;" title="<?php esc_attr_e( 'Domain' ) ?>"/>
-									</td>
-								</tr>
-							</table>
+							<input name="site[address]" type="text" class="regular-text" style="width:470px;" title="<?php esc_attr_e( 'Address' ) ?>" value="" />
+							<p class="description">This is some explanatory text about what can be put in the above area.</p>
 						</td>
 					</tr>
 					<tr class="form-field form-required">
