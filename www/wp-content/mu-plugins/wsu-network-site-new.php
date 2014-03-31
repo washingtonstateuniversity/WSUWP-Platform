@@ -185,6 +185,7 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 						<th scope="row"><?php _e( 'Site Address' ) ?></th>
 						<td>
 							<input name="site[domain]" type="text" class="regular-text" style="width:470px;" title="<?php esc_attr_e( 'Domain' ) ?>" value="" />
+							<p class="description">This is some explanatory text about what can be put in the above area.</p>
 						</td>
 					</tr>
 					<tr class="form-field form-required">
