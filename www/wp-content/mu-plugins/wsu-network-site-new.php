@@ -142,22 +142,25 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 	public function site_new_php() {
 		global $title, $parent_file;
 
-		if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] )
+		if ( isset( $_GET['display'] ) && 'network' === $_GET['display'] ) {
 			return;
+		}
 
 		if ( isset( $_REQUEST['action'] ) && 'add-network-site' === $_REQUEST['action'] ) {
 			check_admin_referer( 'add-network-site', '_wpnonce_add-network-site' );
 
-			if ( ! is_array( $_POST['site'] ) )
+			if ( ! is_array( $_POST['site'] ) ) {
 				wp_die( __( 'Can&#8217;t create an empty site.' ) );
+			}
 
 			$this->_create_new_site( $_POST['site'] );
 		}
 
 		if ( isset($_GET['update']) ) {
 			$messages = array();
-			if ( 'added' == $_GET['update'] )
+			if ( 'added' == $_GET['update'] ) {
 				$messages[] = sprintf( __( 'Site added. <a href="%1$s">Visit Dashboard</a> or <a href="%2$s">Edit Site</a>' ), esc_url( get_admin_url( absint( $_GET['id'] ) ) ), network_admin_url( 'site-info.php?id=' . absint( $_GET['id'] ) ) );
+			}
 		}
 
 		$title = __('Add New Site');
@@ -171,8 +174,9 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 			<h2 id="add-new-site"><?php _e('Add New Site') ?></h2>
 			<?php
 			if ( ! empty( $messages ) ) {
-				foreach ( $messages as $msg )
+				foreach ( $messages as $msg ) {
 					echo '<div id="message" class="updated"><p>' . $msg . '</p></div>';
+				}
 			} ?>
 			<form method="post" action="<?php echo network_admin_url('site-new.php?action=add-network-site'); ?>">
 				<?php wp_nonce_field( 'add-network-site', '_wpnonce_add-network-site' ) ?>
