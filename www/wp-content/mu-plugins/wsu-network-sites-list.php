@@ -25,15 +25,15 @@ class WSU_Network_Sites_List {
 	 * @return array Modified list of columns.
 	 */
 	public function site_columns( $site_columns ) {
-		$site_columns['site_name'] = 'Site Name';
-		$site_columns['site_created'] = 'Created';
-
 		unset( $site_columns['blogname'] );
 		unset( $site_columns['lastupdated'] );
 		unset( $site_columns['registered'] );
 		unset( $site_columns['users'] );
 
+		$site_columns['site_name'] = 'Site Name';
+		$site_columns['site_created'] = 'Created';
 		$site_columns['users'] = 'Users';
+
 		return $site_columns;
 	}
 
