@@ -76,8 +76,9 @@ class WSU_Network_Sites_List {
 		$actions['backend']	= "<span class='backend'><a href='" . esc_url( get_admin_url( $site_id ) ) . "' class='edit'>" . __( 'Dashboard' ) . '</a></span>';
 
 		if ( get_current_site()->blog_id != $site_id ) {
-			if ( current_user_can( 'delete_site', $site_id ) )
+			if ( current_user_can( 'delete_site', $site_id ) ) {
 				$actions['delete']	= '<span class="delete"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=deleteblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to delete the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Delete' ) . '</a></span>';
+			}
 		}
 
 		$actions['visit']	= "<span class='view'><a href='" . esc_url( get_home_url( $site_id, '/' ) ) . "' rel='permalink'>" . __( 'Visit' ) . '</a></span>';
