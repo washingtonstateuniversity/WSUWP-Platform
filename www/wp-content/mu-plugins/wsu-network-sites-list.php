@@ -1,11 +1,29 @@
 <?php
 
+/**
+ * Maintains the customized layout for the MS Sites List Table in WordPress.
+ *
+ * Class WSU_Network_Sites_List
+ */
 class WSU_Network_Sites_List {
+
+	/**
+	 * Add our hooks.
+	 */
 	public function __construct() {
 		add_filter( 'wpmu_blogs_columns', array( $this, 'site_columns' ) );
 		add_action( 'manage_sites_custom_column', array( $this, 'manage_sites_custom_column' ), 10, 2 );
 	}
 
+	/**
+	 * Modify the default list of columns in the list table. We remove users
+	 * and add it again only because it's a cheap and easy way to reorder
+	 * the array as it is created.
+	 *
+	 * @param array $site_columns Columns used for displaying the table.
+	 *
+	 * @return array Modified list of columns.
+	 */
 	public function site_columns( $site_columns ) {
 		$site_columns['site_name'] = 'Site Name';
 		$site_columns['site_created'] = 'Created';
@@ -19,6 +37,12 @@ class WSU_Network_Sites_List {
 		return $site_columns;
 	}
 
+	/**
+	 * Display row data for our custom columns.
+	 *
+	 * @param string $column  The key of the column being displayed.
+	 * @param int    $site_id The ID of the row's site.
+	 */
 	public function manage_sites_custom_column( $column, $site_id ) {
 		if ( 'site_name' === $column ) {
 			$this->display_site_name_row( $site_id );
@@ -27,6 +51,14 @@ class WSU_Network_Sites_List {
 		}
 	}
 
+	/**
+	 * Display the site name column for the row.
+	 *
+	 * This is copied almost directly from WordPress core to repurpose for
+	 * our custom display.
+	 *
+	 * @param int $site_id ID of the row's site.
+	 */
 	private function display_site_name_row( $site_id ) {
 		$site_name = esc_html( get_blog_option( $site_id, 'blogname' ) );
 		?>
@@ -86,6 +118,11 @@ class WSU_Network_Sites_List {
 		echo $this->row_actions( $actions );
 	}
 
+	/**
+	 * Display the date the site was created.
+	 *
+	 * @param int $site_id ID of the row's site.
+	 */
 	private function display_site_created( $site_id ) {
 		switch_to_blog( $site_id );
 		$site_details = get_blog_details();
