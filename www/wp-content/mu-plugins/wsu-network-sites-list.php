@@ -64,8 +64,8 @@ class WSU_Network_Sites_List {
 		$site_name = esc_html( get_blog_option( $site_id, 'blogname' ) );
 		?>
 		<a href="<?php echo esc_url( network_admin_url( 'site-info.php?id=' . absint( $site_id ) ) ); ?>" class="edit"><?php echo $site_name; ?></a>
+		<br><span style="color: #5e6a71; "><?php echo esc_url( trailingslashit( get_home_url( $site_id ) ) ); ?></span>
 		<?php
-
 		// Preordered.
 		$actions = array(
 			'edit' => '', 'backend' => '',
