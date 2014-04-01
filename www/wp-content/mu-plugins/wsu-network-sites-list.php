@@ -32,6 +32,7 @@ class WSU_Network_Sites_List {
 		unset( $site_columns['users'] );
 
 		$site_columns['site_name'] = 'Site Name';
+		$site_columns['site_url'] = 'URL';
 		$site_columns['site_created'] = 'Created';
 		$site_columns['site_users'] = 'Users';
 
@@ -47,6 +48,8 @@ class WSU_Network_Sites_List {
 	public function manage_sites_custom_column( $column, $site_id ) {
 		if ( 'site_name' === $column ) {
 			$this->display_site_name( $site_id );
+		} elseif ( 'site_url' === $column ) {
+			$this->display_site_url( $site_id );
 		} elseif ( 'site_created' === $column ) {
 			$this->display_site_created( $site_id );
 		} elseif ( 'site_users' === $column ) {
@@ -66,7 +69,6 @@ class WSU_Network_Sites_List {
 		$site_name = esc_html( get_blog_option( $site_id, 'blogname' ) );
 		?>
 		<a href="<?php echo esc_url( network_admin_url( 'site-info.php?id=' . absint( $site_id ) ) ); ?>" class="edit"><?php echo $site_name; ?></a>
-		<br><span style="color: #5e6a71; "><?php echo esc_url( trailingslashit( get_home_url( $site_id ) ) ); ?></span>
 		<?php
 		// Preordered.
 		$actions = array(
@@ -137,6 +139,15 @@ class WSU_Network_Sites_List {
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Display the home URL of the site.
+	 *
+	 * @param int $site_id ID of the row's site.
+	 */
+	private function display_site_url( $site_id ) {
+		?><span style="color: #5e6a71; "><?php echo esc_url( trailingslashit( get_home_url( $site_id ) ) ); ?></span><?php
 	}
 
 	/**
