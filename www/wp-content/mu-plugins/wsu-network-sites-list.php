@@ -132,10 +132,10 @@ class WSU_Network_Sites_List {
 	 */
 	public function manage_sites_action_links( $actions, $site_id, $site_name ) {
 		if ( isset( $actions['spam'] ) ) {
-			$actions['spam'] = '';
+			unset( $actions['spam'] );
 		}
 		if ( isset( $actions['unspam'] ) ) {
-			$actions['unspam'] = '';
+			unset( $actions['unspam'] );
 		}
 
 		return $actions;
