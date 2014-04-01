@@ -137,6 +137,18 @@ class WSU_Network_Sites_List {
 		if ( isset( $actions['unspam'] ) ) {
 			unset( $actions['unspam'] );
 		}
+		if ( isset( $actions['activate'] ) ) {
+			unset( $actions['activate'] );
+		}
+		if ( isset( $actions['deactivate'] ) ) {
+			unset( $actions['deactivate'] );
+		}
+		if ( isset( $actions['archive'] ) ) {
+			unset( $actions['archive'] );
+		}
+		if ( isset( $actions['unarchive'] ) ) {
+			unset( $actions['unarchive'] );
+		}
 
 		return $actions;
 	}
