@@ -16,6 +16,8 @@ class WSUWP_WordPress_Dashboard {
 		add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
 		add_action( 'wp_network_dashboard_setup', array( $this, 'remove_network_dashboard_widgets' ) );
 		add_filter( 'update_footer', array( $this, 'update_footer_text' ), 11 );
+		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 11 );
+		add_action( 'in_admin_footer', array( $this, 'display_shield_in_footer' ) );
 	}
 
 	/**
@@ -68,6 +70,25 @@ class WSUWP_WordPress_Dashboard {
 		$text .= ' [<a target=_blank href="https://core.trac.wordpress.org/changeset/' . $wsuwp_wp_changeset . '">' . $wsuwp_wp_changeset . '</a>]';
 
 		return $text;
+	}
+
+	/**
+	 * Customize the general footer text in the admin.
+	 *
+	 * @return string
+	 */
+	public function admin_footer_text() {
+		$wp_text = sprintf( __( 'Thank you for creating with <a href="%s">WordPress</a> at <a href="%s">Washington State University</a>.' ), __( 'https://wordpress.org/' ), 'http://wsu.edu' );
+		$text = '<span id="footer-thankyou">' . $wp_text . '</span>';
+
+		return $text;
+	}
+
+	/**
+	 * Display the WSU shield in the footer.
+	 */
+	public function display_shield_in_footer() {
+		echo '<img style="float:left; margin-right:5px;" height="20" src="' . plugins_url( '/images/wsu-shield.png', WPMU_PLUGIN_DIR . '/wsu-dashboard-widgets.php' ) . '" />';
 	}
 }
 $wsuwp_wordpress_dashboard = new WSUWP_WordPress_Dashboard();
