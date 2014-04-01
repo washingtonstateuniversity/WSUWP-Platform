@@ -67,90 +67,22 @@ class WSU_Network_Sites_List {
 	 */
 	private function display_site_name( $site_id ) {
 		$site_name = esc_html( get_blog_option( $site_id, 'blogname' ) );
-		?>
-		<a href="<?php echo esc_url( network_admin_url( 'site-info.php?id=' . absint( $site_id ) ) ); ?>" class="edit"><?php echo $site_name; ?></a>
-		<?php
-		// Preordered.
-		$actions = array(
-			'edit' => '', 'backend' => '',
-			'activate' => '', 'deactivate' => '',
-			'archive' => '', 'unarchive' => '',
-			'spam' => '', 'unspam' => '',
-			'delete' => '',
-			'visit' => '',
-		);
+
+		?><a href="<?php echo esc_url( network_admin_url( 'site-info.php?id=' . absint( $site_id ) ) ); ?>" class="edit"><?php echo $site_name; ?></a><?php
+
+		$actions = array();
 
 		$actions['edit']	= '<span class="edit"><a href="' . esc_url( network_admin_url( 'site-info.php?id=' . $site_id ) ) . '">' . __( 'Edit' ) . '</a></span>';
 		$actions['backend']	= "<span class='backend'><a href='" . esc_url( get_admin_url( $site_id ) ) . "' class='edit'>" . __( 'Dashboard' ) . '</a></span>';
+
 		if ( get_current_site()->blog_id != $site_id ) {
-			if ( get_blog_status( $site_id, 'deleted' ) == '1' )
-				$actions['activate']	= '<span class="activate"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=activateblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to activate the site %s' ), $site_name ) ) ), 'confirm' ) ) . '">' . __( 'Activate' ) . '</a></span>';
-			else
-				$actions['deactivate']	= '<span class="activate"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=deactivateblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to deactivate the site %s' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Deactivate' ) . '</a></span>';
-
-			if ( get_blog_status( $site_id, 'archived' ) == '1' )
-				$actions['unarchive']	= '<span class="archive"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=unarchiveblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to unarchive the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Unarchive' ) . '</a></span>';
-			else
-				$actions['archive']	= '<span class="archive"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=archiveblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to archive the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Archive', 'verb; site' ) . '</a></span>';
-
-			if ( get_blog_status( $site_id, 'spam' ) == '1' )
-				$actions['unspam']	= '<span class="spam"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=unspamblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to unspam the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Not Spam', 'site' ) . '</a></span>';
-			else
-				$actions['spam']	= '<span class="spam"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=spamblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to mark the site %s as spam.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Spam', 'site' ) . '</a></span>';
-
 			if ( current_user_can( 'delete_site', $site_id ) )
 				$actions['delete']	= '<span class="delete"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=deleteblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to delete the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Delete' ) . '</a></span>';
 		}
 
 		$actions['visit']	= "<span class='view'><a href='" . esc_url( get_home_url( $site_id, '/' ) ) . "' rel='permalink'>" . __( 'Visit' ) . '</a></span>';
 
-		/**
-		 * Filter the action links displayed for each site in the Sites list table.
-		 *
-		 * The 'Edit', 'Dashboard', 'Delete', and 'Visit' links are displayed by
-		 * default for each site. The site's status determines whether to show the
-		 * 'Activate' or 'Deactivate' link, 'Unarchive' or 'Archive' links, and
-		 * 'Not Spam' or 'Spam' link for each site.
-		 *
-		 * @since 3.1.0
-		 *
-		 * @param array  $actions  An array of action links to be displayed.
-		 * @param int    $blog_id  The site ID.
-		 * @param string $blogname Site path, formatted depending on whether it is a sub-domain
-		 *                         or subdirectory multisite install.
-		 */
-		$actions = apply_filters( 'manage_sites_action_links', array_filter( $actions ), $site_id, $site_name );
 		echo $this->row_actions( $actions );
-	}
-
-	/**
-	 * Filter the action links displayed under the site name.
-	 *
-	 * @param array  $actions   List of action links to display.
-	 * @param int    $site_id   ID of the row's site.
-	 * @param string $site_name Name of the site.
-	 */
-	public function manage_sites_action_links( $actions, $site_id, $site_name ) {
-		if ( isset( $actions['spam'] ) ) {
-			unset( $actions['spam'] );
-		}
-		if ( isset( $actions['unspam'] ) ) {
-			unset( $actions['unspam'] );
-		}
-		if ( isset( $actions['activate'] ) ) {
-			unset( $actions['activate'] );
-		}
-		if ( isset( $actions['deactivate'] ) ) {
-			unset( $actions['deactivate'] );
-		}
-		if ( isset( $actions['archive'] ) ) {
-			unset( $actions['archive'] );
-		}
-		if ( isset( $actions['unarchive'] ) ) {
-			unset( $actions['unarchive'] );
-		}
-
-		return $actions;
 	}
 
 	/**
