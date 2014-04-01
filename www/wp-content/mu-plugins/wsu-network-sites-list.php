@@ -123,7 +123,7 @@ class WSU_Network_Sites_List {
 			$user_count = count( get_users() );
 			wp_cache_add( 'user_count_' . $site_id, $user_count, 'wsuwp:site', 43200 );
 		}
-		echo '<a href="site-users.php?id=' . $site_id . '">' . $user_count . '</a>';
+		echo '<a href="site-users.php?id=' . $site_id . '">' . absint( $user_count ) . '</a>';
 		restore_current_blog();
 	}
 
