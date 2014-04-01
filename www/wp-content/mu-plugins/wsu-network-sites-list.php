@@ -154,6 +154,14 @@ class WSU_Network_Sites_List {
 		}
 	}
 
+	/**
+	 * Display the count of site users.
+	 *
+	 * This count is cached for 12 hours in an attempt to avoid frequent large
+	 * queries.
+	 *
+	 * @param int $site_id ID of row's site.
+	 */
 	private function display_site_users( $site_id ) {
 		switch_to_blog( $site_id );
 		echo '<a href="site-users.php?id=' . $site_id . '">' . count( get_users() ) . '</a>';
