@@ -13,6 +13,7 @@ class WSU_Network_Sites_List {
 	public function __construct() {
 		add_filter( 'wpmu_blogs_columns', array( $this, 'site_columns' ) );
 		add_filter( 'manage_sites_action_links', array( $this, 'manage_sites_action_links' ), 10, 3 );
+		add_filter( 'bulk_actions-sites-network', array( $this, 'manage_bulk_actions' ), 10, 1 );
 		add_action( 'manage_sites_custom_column', array( $this, 'manage_sites_custom_column' ), 10, 2 );
 	}
 
@@ -26,6 +27,7 @@ class WSU_Network_Sites_List {
 	 * @return array Modified list of columns.
 	 */
 	public function site_columns( $site_columns ) {
+		unset( $site_columns['cb'] );
 		unset( $site_columns['blogname'] );
 		unset( $site_columns['lastupdated'] );
 		unset( $site_columns['registered'] );
@@ -55,6 +57,17 @@ class WSU_Network_Sites_List {
 		} elseif ( 'site_users' === $column ) {
 			$this->display_site_users( $site_id );
 		}
+	}
+
+	/**
+	 * Remove all of the bulk actions displayed on the MS Sites List Table.
+	 *
+	 * @param array $actions Current bulk actions.
+	 *
+	 * @return array Modified bulk actions.
+	 */
+	public function manage_bulk_actions( $actions ) {
+		return array();
 	}
 
 	/**
