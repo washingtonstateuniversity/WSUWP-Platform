@@ -155,7 +155,6 @@ class WSUWP_Networks_List_Table extends WP_List_Table {
 	 */
 	function get_columns() {
 		$networks_columns = array(
-			'cb'             => '<input type="checkbox" />',
 			'network_id'     => __( 'Network ID' ),
 			'network_name'   => __( 'Network Name' ),
 			'network_domain' => __( 'Network Domain' ),
