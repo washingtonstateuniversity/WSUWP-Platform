@@ -12,6 +12,7 @@ class WSU_Network_Sites_List {
 	 */
 	public function __construct() {
 		add_filter( 'wpmu_blogs_columns', array( $this, 'site_columns' ) );
+		add_filter( 'manage_sites_action_links', array( $this, 'manage_sites_action_links' ), 10, 3 );
 		add_action( 'manage_sites_custom_column', array( $this, 'manage_sites_custom_column' ), 10, 2 );
 	}
 
@@ -88,6 +89,11 @@ class WSU_Network_Sites_List {
 			else
 				$actions['archive']	= '<span class="archive"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=archiveblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to archive the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Archive', 'verb; site' ) . '</a></span>';
 
+			if ( get_blog_status( $site_id, 'spam' ) == '1' )
+				$actions['unspam']	= '<span class="spam"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=unspamblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to unspam the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Not Spam', 'site' ) . '</a></span>';
+			else
+				$actions['spam']	= '<span class="spam"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=spamblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to mark the site %s as spam.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Spam', 'site' ) . '</a></span>';
+
 			if ( current_user_can( 'delete_site', $site_id ) )
 				$actions['delete']	= '<span class="delete"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=deleteblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to delete the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Delete' ) . '</a></span>';
 		}
@@ -111,6 +117,24 @@ class WSU_Network_Sites_List {
 		 */
 		$actions = apply_filters( 'manage_sites_action_links', array_filter( $actions ), $site_id, $site_name );
 		echo $this->row_actions( $actions );
+	}
+
+	/**
+	 * Filter the action links displayed under the site name.
+	 *
+	 * @param array  $actions   List of action links to display.
+	 * @param int    $site_id   ID of the row's site.
+	 * @param string $site_name Name of the site.
+	 */
+	public function manage_sites_action_links( $actions, $site_id, $site_name ) {
+		if ( isset( $actions['spam'] ) ) {
+			unset( $actions['spam'] );
+		}
+		if ( isset( $actions['unspam'] ) ) {
+			unset( $actions['unspam'] );
+		}
+
+		return $actions;
 	}
 
 	/**
