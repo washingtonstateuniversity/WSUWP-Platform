@@ -88,11 +88,6 @@ class WSU_Network_Sites_List {
 			else
 				$actions['archive']	= '<span class="archive"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=archiveblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to archive the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Archive', 'verb; site' ) . '</a></span>';
 
-			if ( get_blog_status( $site_id, 'spam' ) == '1' )
-				$actions['unspam']	= '<span class="spam"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=unspamblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to unspam the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Not Spam', 'site' ) . '</a></span>';
-			else
-				$actions['spam']	= '<span class="spam"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=spamblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to mark the site %s as spam.' ), $site_name ) ) ), 'confirm') ) . '">' . _x( 'Spam', 'site' ) . '</a></span>';
-
 			if ( current_user_can( 'delete_site', $site_id ) )
 				$actions['delete']	= '<span class="delete"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=deleteblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to delete the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Delete' ) . '</a></span>';
 		}
