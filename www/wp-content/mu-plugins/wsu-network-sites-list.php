@@ -33,7 +33,7 @@ class WSU_Network_Sites_List {
 
 		$site_columns['site_name'] = 'Site Name';
 		$site_columns['site_created'] = 'Created';
-		$site_columns['users'] = 'Users';
+		$site_columns['site_users'] = 'Users';
 
 		return $site_columns;
 	}
@@ -49,6 +49,8 @@ class WSU_Network_Sites_List {
 			$this->display_site_name_row( $site_id );
 		} elseif ( 'site_created' === $column ) {
 			$this->display_site_created( $site_id );
+		} elseif ( 'site_users' === $column ) {
+			$this->display_site_users( $site_id );
 		}
 	}
 
@@ -150,6 +152,12 @@ class WSU_Network_Sites_List {
 		if ( isset( $site_details->registered ) ) {
 			echo $site_details->registered;
 		}
+	}
+
+	private function display_site_users( $site_id ) {
+		switch_to_blog( $site_id );
+		echo '<a href="site-users.php?id=' . $site_id . '">' . count( get_users() ) . '</a>';
+		restore_current_blog();
 	}
 
 	/**
