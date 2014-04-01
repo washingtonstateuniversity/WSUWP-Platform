@@ -164,7 +164,11 @@ class WSU_Network_Sites_List {
 	 */
 	private function display_site_users( $site_id ) {
 		switch_to_blog( $site_id );
-		echo '<a href="site-users.php?id=' . $site_id . '">' . count( get_users() ) . '</a>';
+		if ( ! $user_count = wp_cache_get( 'user_count_' . $site_id, 'wsuwp:site' ) ) {
+			$user_count = count( get_users() );
+			wp_cache_add( 'user_count_' . $site_id, $user_count, 'wsuwp:site', 43200 );
+		}
+		echo '<a href="site-users.php?id=' . $site_id . '">' . $user_count . '</a>';
 		restore_current_blog();
 	}
 
