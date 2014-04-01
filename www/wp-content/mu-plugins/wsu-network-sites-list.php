@@ -46,7 +46,7 @@ class WSU_Network_Sites_List {
 	 */
 	public function manage_sites_custom_column( $column, $site_id ) {
 		if ( 'site_name' === $column ) {
-			$this->display_site_name_row( $site_id );
+			$this->display_site_name( $site_id );
 		} elseif ( 'site_created' === $column ) {
 			$this->display_site_created( $site_id );
 		} elseif ( 'site_users' === $column ) {
@@ -62,7 +62,7 @@ class WSU_Network_Sites_List {
 	 *
 	 * @param int $site_id ID of the row's site.
 	 */
-	private function display_site_name_row( $site_id ) {
+	private function display_site_name( $site_id ) {
 		$site_name = esc_html( get_blog_option( $site_id, 'blogname' ) );
 		?>
 		<a href="<?php echo esc_url( network_admin_url( 'site-info.php?id=' . absint( $site_id ) ) ); ?>" class="edit"><?php echo $site_name; ?></a>
