@@ -84,7 +84,7 @@ class WSU_Deployment {
 			'labels'             => $instance_labels,
 			'public'             => false,
 			'publicly_queryable' => false,
-			'show_ui'            => false,
+			'show_ui'            => true,
 			'rewrite'            => array( 'slug' => 'deployment-instance' ),
 			'has_archive'        => false,
 			'hierarchical'       => false,
@@ -93,6 +93,7 @@ class WSU_Deployment {
 		register_post_type( $this->deploy_instance_slug, $instance_args );
 
 		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
 	}
 
 	/**
@@ -105,7 +106,40 @@ class WSU_Deployment {
 		}
 
 		// Capture actual deployment and then kill the page load.
+		$title = time();
+		$args = array(
+			'post_type' => $this->deploy_instance_slug,
+			'post_title' => $title,
+		);
+		$instance_id = wp_insert_post( $args );
+		$deployment_data = $_POST; // DONT DO THIS AT HOME
+		add_post_meta( $instance_id, '_deployment_data', $deployment_data );
 		die();
+	}
+
+	/**
+	 * Add the meta boxes used by our deployment post types.
+	 *
+	 * @param $post_type
+	 * @param $post
+	 */
+	public function add_meta_boxes( $post_type, $post ) {
+		if ( $this->deploy_instance_slug !== $post_type && $this->post_type_slug !== $post_type ) {
+			return;
+		}
+
+		add_meta_box( 'wsuwp_deploy_instance_data', 'Deploy Payload', array( $this, 'display_instance_payload' ), $this->deploy_instance_slug, 'normal' );
+	}
+
+	/**
+	 * Display the payload data from a deployment in the instance meta box.
+	 * @param $post
+	 */
+	public function display_instance_payload( $post ) {
+		$payload_data = get_post_meta( $post->ID, '_deployment_data', true );
+		echo '<pre>';
+		print_r( $payload_data );
+		echo '</pre>';
 	}
 }
 new WSU_Deployment();
