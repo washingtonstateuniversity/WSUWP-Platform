@@ -32,8 +32,9 @@ class WSU_Deployment {
 	 */
 	public function register_post_type() {
 		global $blog_id, $site_id;
+
 		// Only enable this on the network's primary site.
-		if ( 1 !== $blog_id || 1 !== $site_id ) {
+		if ( 1 != $blog_id || 1 != $site_id ) {
 			return;
 		}
 
