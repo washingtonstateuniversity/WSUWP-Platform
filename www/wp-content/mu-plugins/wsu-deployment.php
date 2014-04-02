@@ -59,6 +59,20 @@ class WSU_Deployment {
 			'supports'           => array( 'title', ),
 		);
 		register_post_type( $this->post_type_slug, $args );
+
+		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
+	}
+
+	/**
+	 * Capture the actual deployment information when notified from
+	 * version control. This avoids the complete load of the template.
+	 */
+	public function template_redirect() {
+		if ( ! is_singular( $this->post_type_slug ) ) {
+			return;
+		}
+
+		// Capture actual deployment
 	}
 }
 new WSU_Deployment();
