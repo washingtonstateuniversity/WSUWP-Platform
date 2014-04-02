@@ -112,8 +112,8 @@ class WSU_Deployment {
 			'post_title' => $title,
 		);
 		$instance_id = wp_insert_post( $args );
-		$deployment_data = $_POST; // DONT DO THIS AT HOME
-		add_post_meta( $instance_id, '_deployment_data', $deployment_data );
+		//$deployment_data = $_POST; // DONT DO THIS AT HOME
+		//add_post_meta( $instance_id, '_deployment_data', $deployment_data );
 		die();
 	}
 
