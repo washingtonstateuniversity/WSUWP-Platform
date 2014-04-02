@@ -127,7 +127,7 @@ class WSU_Deployment {
 			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
 		} else {
 			add_post_meta( $instance_id, '_deploy_commit_hash', 'Unexpected data structure' );
-			add_post_meta( $instance_id, '_deploy_data', $payload );
+			add_post_meta( $instance_id, '_deploy_data', $_POST['payload'] );
 		}
 
 		if ( isset( $payload->pusher->name ) ) {
