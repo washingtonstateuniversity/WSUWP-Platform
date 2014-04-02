@@ -149,7 +149,23 @@ class WSU_Deployment {
 			return;
 		}
 
+		add_meta_box( 'wsuwp_deploy_instances', 'Deploy Instances', array( $this, 'display_deploy_instances' ), $this->post_type_slug, 'normal' );
 		add_meta_box( 'wsuwp_deploy_instance_data', 'Deploy Payload', array( $this, 'display_instance_payload' ), $this->deploy_instance_slug, 'normal' );
+	}
+
+	public function display_deploy_instances( $post ) {
+		if ( $this->post_type_slug !== $post->post_type ) {
+			return;
+		}
+
+		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
+		if ( ! empty( $deployments ) ) {
+			echo '<ul>';
+			foreach ( $deployments as $time => $instance_id ) {
+				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | ' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '</li>';
+			}
+			echo '<ul>';
+		}
 	}
 
 	/**
