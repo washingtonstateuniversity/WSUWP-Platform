@@ -159,8 +159,9 @@ class WSU_Deployment {
 	public function display_instance_payload( $post ) {
 		$commit_hash = get_post_meta( $post->ID, '_deploy_commit_hash', true );
 		$commit_url = get_post_meta( $post->ID, '_deploy_commit_url', true );
-
+		$commit_author = get_post_meta( $post->ID, '_deploy_pusher', true );
 		echo 'Commit: <a href="' . esc_url( $commit_url ) . '">' . esc_html( $commit_hash ) . '</a>';
+		echo '<br>Author: ' . esc_html( $commit_author );
 	}
 }
 new WSU_Deployment();
