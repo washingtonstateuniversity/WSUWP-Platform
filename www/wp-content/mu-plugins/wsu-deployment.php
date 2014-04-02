@@ -109,7 +109,7 @@ class WSU_Deployment {
 
 		// Until we're certain, we should skip POST requests without a payload.
 		if ( empty( $_POST['payload'] ) ) {
-			return;
+			die();
 		}
 
 		$deployment = get_post( get_the_ID() );
