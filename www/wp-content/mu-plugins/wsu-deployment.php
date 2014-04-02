@@ -157,10 +157,10 @@ class WSU_Deployment {
 	 * @param $post
 	 */
 	public function display_instance_payload( $post ) {
-		$payload_data = get_post_meta( $post->ID, '_deployment_data', true );
-		echo '<pre>';
-		print_r( $payload_data );
-		echo '</pre>';
+		$commit_hash = get_post_meta( $post->ID, '_deploy_commit_hash', true );
+		$commit_url = get_post_meta( $post->ID, '_deploy_commit_url', true );
+
+		echo 'Commit: <a href="' . esc_url( $commit_url ) . '">' . esc_html( $commit_hash ) . '</a>';
 	}
 }
 new WSU_Deployment();
