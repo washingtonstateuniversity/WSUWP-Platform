@@ -73,6 +73,7 @@ class WSU_Admin_Header {
 		 * Cache each of the existing nodes that represent the current default admin
 		 * menu items so that we can use them when reordering.
 		 */
+		$node_edit        = $wp_admin_bar->get_node( 'edit' );
 		$node_site_name   = $wp_admin_bar->get_node( 'site-name'   );
 		$node_comments    = $wp_admin_bar->get_node( 'comments'    );
 		$node_new_content = $wp_admin_bar->get_node( 'new-content' );
@@ -80,6 +81,7 @@ class WSU_Admin_Header {
 		/**
 		 * Remove the default menu items that we will be reordering.
 		 */
+		$wp_admin_bar->remove_menu( 'edit' );
 		$wp_admin_bar->remove_menu( 'site-name'   );
 		$wp_admin_bar->remove_menu( 'comments'    );
 		$wp_admin_bar->remove_menu( 'new-content' );
@@ -110,6 +112,10 @@ class WSU_Admin_Header {
 		$wp_admin_bar->add_menu( $node_site_name   );
 		$wp_admin_bar->add_menu( $node_comments    );
 		$wp_admin_bar->add_menu( $node_new_content );
+
+		if ( $node_edit ) {
+			$wp_admin_bar->add_menu( $node_edit );
+		}
 
 		/**
 		 * Now that we have a My Networks menu, we should generate a list of networks to output
