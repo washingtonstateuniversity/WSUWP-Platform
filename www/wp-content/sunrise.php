@@ -138,7 +138,7 @@ if( $current_blog ) {
 	if ( $redirect_site_id )
 		header( "Location: http://" . $redirect_domain,    true, 301 );
 	else
-		header( "Location: http://" . DOMAIN_CURRENT_SITE, true, 301 );
+		header( "Location: http://wp.wsu.edu/", true, 301 );
 
 	die();
 }
