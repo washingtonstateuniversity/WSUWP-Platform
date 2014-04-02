@@ -15,6 +15,11 @@ class WSU_Deployment {
 	var $post_type_slug = 'wsuwp_deployment';
 
 	/**
+	 * @var string Slug to track deployment instances in a post type.
+	 */
+	var $deploy_instance_slug = 'wsuwp_depinstance';
+
+	/**
 	 * Add hooks.
 	 */
 	public function __construct() {
@@ -22,8 +27,8 @@ class WSU_Deployment {
 	}
 
 	/**
-	 * Register the deployment post type to track the deployments that
-	 * have been created.
+	 * Register the deployment and deployment instance post types to track
+	 * the deployments that have been created and then initiated.
 	 */
 	public function register_post_type() {
 		// Only enable this on the network's primary site.
@@ -59,6 +64,33 @@ class WSU_Deployment {
 			'supports'           => array( 'title', ),
 		);
 		register_post_type( $this->post_type_slug, $args );
+
+		$instance_labels = array(
+			'name' => 'Deployment Instances',
+			'singular_name' => 'Deployment Instance',
+			'add_new' => 'Add New',
+			'add_new_item' => 'Add New Deployment Instance',
+			'edit_item' => 'Edit Deployment Instance',
+			'new_item' => 'New Deployment Instance',
+			'all_items' => 'All Deployment Instances',
+			'view_item' => 'View Deployment Instances',
+			'search_items' => 'Search Deployment Instances',
+			'not_found' => 'No deployment instances found',
+			'not_found_in_trash' => 'No deployment instances found in Trash',
+			'menu_name' => 'Deployment Instances',
+		);
+
+		$instance_args = array(
+			'labels'             => $instance_labels,
+			'public'             => false,
+			'publicly_queryable' => false,
+			'show_ui'            => false,
+			'rewrite'            => array( 'slug' => 'deployment-instance' ),
+			'has_archive'        => false,
+			'hierarchical'       => false,
+			'supports'           => array( 'title', ),
+		);
+		register_post_type( $this->deploy_instance_slug, $instance_args );
 
 		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
 	}
