@@ -104,7 +104,8 @@ class WSU_Deployment {
 			return;
 		}
 
-		// Capture actual deployment
+		// Capture actual deployment and then kill the page load.
+		die();
 	}
 }
 new WSU_Deployment();
