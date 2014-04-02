@@ -158,6 +158,12 @@ class WSU_Deployment {
 		add_meta_box( 'wsuwp_deploy_instance_data', 'Deploy Payload', array( $this, 'display_instance_payload' ), $this->deploy_instance_slug, 'normal' );
 	}
 
+	/**
+	 * Display the deployment instances that have occured on this
+	 * deployment configuration.
+	 * 
+	 * @param $post
+	 */
 	public function display_deploy_instances( $post ) {
 		if ( $this->post_type_slug !== $post->post_type ) {
 			return;
