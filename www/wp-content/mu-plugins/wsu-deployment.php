@@ -105,15 +105,36 @@ class WSU_Deployment {
 			return;
 		}
 
+		// Until we're certain, we should skip POST requests without a payload.
+		if ( empty( $_POST['payload'] ) ) {
+			return;
+		}
+
+		$deployment = get_post( get_the_ID() );
 		// Capture actual deployment and then kill the page load.
-		$title = time();
+		$title = time() . ' | ' . esc_html( $deployment->post_title );
 		$args = array(
 			'post_type' => $this->deploy_instance_slug,
 			'post_title' => $title,
 		);
 		$instance_id = wp_insert_post( $args );
-		//$deployment_data = $_POST; // DONT DO THIS AT HOME
-		//add_post_meta( $instance_id, '_deployment_data', $deployment_data );
+		$payload = json_decode( $_POST['payload'] );
+
+		if ( isset( $payload->head_commit->id ) ) {
+			add_post_meta( $instance_id, '_deploy_commit_hash', sanitize_key( $payload->head_commit->id ) );
+			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
+		}
+
+		if ( isset( $payload->pusher->name ) ) {
+			add_post_meta( $instance_id, '_deploy_pusher', sanitize_text_field( $payload->pusher->name ) );
+		}
+
+		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
+		if ( ! is_array( $deployments ) ) {
+			$deployments = array();
+		}
+		$deployments[ time() ] = absint( $instance_id );
+		update_post_meta( get_the_ID(), '_deploy_instances', $deployments );
 		die();
 	}
 
@@ -128,7 +149,23 @@ class WSU_Deployment {
 			return;
 		}
 
+		add_meta_box( 'wsuwp_deploy_instances', 'Deploy Instances', array( $this, 'display_deploy_instances' ), $this->post_type_slug, 'normal' );
 		add_meta_box( 'wsuwp_deploy_instance_data', 'Deploy Payload', array( $this, 'display_instance_payload' ), $this->deploy_instance_slug, 'normal' );
+	}
+
+	public function display_deploy_instances( $post ) {
+		if ( $this->post_type_slug !== $post->post_type ) {
+			return;
+		}
+
+		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
+		if ( ! empty( $deployments ) ) {
+			echo '<ul>';
+			foreach ( $deployments as $time => $instance_id ) {
+				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | ' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '</li>';
+			}
+			echo '<ul>';
+		}
 	}
 
 	/**
@@ -136,10 +173,11 @@ class WSU_Deployment {
 	 * @param $post
 	 */
 	public function display_instance_payload( $post ) {
-		$payload_data = get_post_meta( $post->ID, '_deployment_data', true );
-		echo '<pre>';
-		print_r( $payload_data );
-		echo '</pre>';
+		$commit_hash = get_post_meta( $post->ID, '_deploy_commit_hash', true );
+		$commit_url = get_post_meta( $post->ID, '_deploy_commit_url', true );
+		$commit_author = get_post_meta( $post->ID, '_deploy_pusher', true );
+		echo 'Commit: <a href="' . esc_url( $commit_url ) . '">' . esc_html( $commit_hash ) . '</a>';
+		echo '<br>Author: ' . esc_html( $commit_author );
 	}
 }
 new WSU_Deployment();
