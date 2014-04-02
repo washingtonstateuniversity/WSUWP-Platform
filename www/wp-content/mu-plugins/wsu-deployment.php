@@ -105,15 +105,36 @@ class WSU_Deployment {
 			return;
 		}
 
+		// Until we're certain, we should skip POST requests without a payload.
+		if ( empty( $_POST['payload'] ) ) {
+			return;
+		}
+
+		$deployment = get_post( get_the_ID() );
 		// Capture actual deployment and then kill the page load.
-		$title = time();
+		$title = time() . ' | ' . esc_html( $deployment->post_title );
 		$args = array(
 			'post_type' => $this->deploy_instance_slug,
 			'post_title' => $title,
 		);
 		$instance_id = wp_insert_post( $args );
-		//$deployment_data = $_POST; // DONT DO THIS AT HOME
-		//add_post_meta( $instance_id, '_deployment_data', $deployment_data );
+		$payload = json_decode( $_POST['payload'] );
+
+		if ( isset( $payload->head_commit->id ) ) {
+			add_post_meta( $instance_id, '_deploy_commit_hash', sanitize_key( $payload->head_commit->id ) );
+			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
+		}
+
+		if ( isset( $payload->pusher->name ) ) {
+			add_post_meta( $instance_id, '_deploy_pusher', sanitize_text_field( $payload->pusher->name ) );
+		}
+
+		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
+		if ( ! is_array( $deployments ) ) {
+			$deployments = array();
+		}
+		$deployments[ time() ] = absint( $instance_id );
+		update_post_meta( get_the_ID(), '_deploy_instances', $deployments );
 		die();
 	}
 
