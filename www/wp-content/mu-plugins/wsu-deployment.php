@@ -125,6 +125,9 @@ class WSU_Deployment {
 		if ( isset( $payload->head_commit->id ) ) {
 			add_post_meta( $instance_id, '_deploy_commit_hash', sanitize_key( $payload->head_commit->id ) );
 			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
+		} else {
+			add_post_meta( $instance_id, '_deploy_commit_hash', 'Unexpected data structure' );
+			add_post_meta( $instance_id, '_deploy_data', $payload );
 		}
 
 		if ( isset( $payload->pusher->name ) ) {
@@ -164,7 +167,7 @@ class WSU_Deployment {
 		if ( ! empty( $deployments ) ) {
 			echo '<ul>';
 			foreach ( $deployments as $time => $instance_id ) {
-				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | ' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '</li>';
+				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | <a href="' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '">View</a></li>';
 			}
 			echo '<ul>';
 		}
@@ -178,8 +181,12 @@ class WSU_Deployment {
 		$commit_hash = get_post_meta( $post->ID, '_deploy_commit_hash', true );
 		$commit_url = get_post_meta( $post->ID, '_deploy_commit_url', true );
 		$commit_author = get_post_meta( $post->ID, '_deploy_pusher', true );
+		$commit_data = get_post_meta( $post->ID, '_deploy_data', true );
 		echo 'Commit: <a href="' . esc_url( $commit_url ) . '">' . esc_html( $commit_hash ) . '</a>';
 		echo '<br>Author: ' . esc_html( $commit_author );
+		echo '<pre>';
+		print_r( $commit_data );
+		echo '</pre>';
 	}
 }
 new WSU_Deployment();
