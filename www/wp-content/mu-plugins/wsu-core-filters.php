@@ -7,7 +7,9 @@ Author: washingtonstateuniversity, jeremyfelt
 Version: 0.1
 */
 
-add_filter( 'theme_root_uri', 'wsuwp_modify_theme_root_uri' );
+add_filter( 'theme_root_uri', 'wsuwp_modify_root_uri' );
+add_filter( 'content_url', 'wsuwp_modify_root_uri' );
+add_filter( 'wp_get_attachment_url', 'wsuwp_modify_root_uri' );
 /**
  * Load theme resources from the home URL rather than the network
  * URL. This can help group DNS requests a bit and avoid unnecessary
@@ -17,7 +19,7 @@ add_filter( 'theme_root_uri', 'wsuwp_modify_theme_root_uri' );
  *
  * @return string Modified root URI for the theme.
  */
-function wsuwp_modify_theme_root_uri( $theme_root_uri ) {
+function wsuwp_modify_root_uri( $theme_root_uri ) {
 	$theme_root = parse_url( $theme_root_uri );
 	$home_root = parse_url( get_home_url() );
 
