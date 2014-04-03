@@ -195,7 +195,11 @@ class WSU_Deployment {
 		echo '</pre>';
 		$more = json_decode( $commit_data );
 		print_r( $more );
+		echo '</pre>';
 		echo '<pre>';
+		print_r( $more->head_commit );
+		echo '</pre>';
+		echo $more->head_commit->id;
 	}
 }
 new WSU_Deployment();
