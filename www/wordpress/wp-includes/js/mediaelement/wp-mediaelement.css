@@ -74,6 +74,8 @@
 
 .wp-playlist audio {
 	display: none;
+	max-width: 100%;
+	width: 400px;
 }
 
 .wp-playlist .mejs-container {
@@ -96,7 +98,7 @@
 }
 
 .wp-playlist-caption {
-	max-width: 90%;
+	max-width: 88%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
