@@ -120,6 +120,8 @@ class WSU_Deployment {
 			'post_title' => $title,
 		);
 		$instance_id = wp_insert_post( $args );
+
+		// This is temporary until I can figure out the structure.
 		$payload = wp_unslash( $_POST['payload'] );
 		$payload = sanitize_meta( '_deploy_data', $payload, 'post' );
 		$payload = maybe_serialize( $payload );
@@ -131,7 +133,6 @@ class WSU_Deployment {
 			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
 		} else {
 			add_post_meta( $instance_id, '_deploy_commit_hash', 'Unexpected data structure' );
-			//add_post_meta( $instance_id, '_deploy_data', $_POST['payload'] );
 		}
 
 		if ( isset( $payload->pusher->name ) ) {
@@ -177,7 +178,11 @@ class WSU_Deployment {
 		if ( ! empty( $deployments ) ) {
 			echo '<ul>';
 			foreach ( $deployments as $time => $instance_id ) {
-				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | <a href="' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '">View</a></li>';
+				$hash = get_post_meta( $instance_id, '_deploy_commit_hash', true );
+				if ( ! $hash ) {
+					$hash = 'View';
+				}
+				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | <a href="' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '">' . esc_html( $hash ) . '</a></li>';
 			}
 			echo '<ul>';
 		}
