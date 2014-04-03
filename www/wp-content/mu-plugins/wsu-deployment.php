@@ -120,7 +120,11 @@ class WSU_Deployment {
 			'post_title' => $title,
 		);
 		$instance_id = wp_insert_post( $args );
-		$payload = json_decode( $_POST['payload'] );
+		$payload = wp_unslash( $_POST['payload'] );
+		$payload = sanitize_meta( '_deploy_data', $payload, 'post' );
+		$payload = maybe_serialize( $payload );
+		$payload = maybe_unserialize( $payload );
+		$payload = json_decode( $payload );
 
 		if ( isset( $payload->head_commit->id ) ) {
 			add_post_meta( $instance_id, '_deploy_commit_hash', sanitize_key( $payload->head_commit->id ) );
