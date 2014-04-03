@@ -24,6 +24,7 @@ final class _WP_Editors {
 	private static $has_quicktags = false;
 	private static $has_medialib = false;
 	private static $editor_buttons_css = true;
+	private static $drag_drop_upload = false;
 
 	private function __construct() {}
 
@@ -38,6 +39,8 @@ final class _WP_Editors {
 	 *     @type bool       $media_buttons     Whether to show the Add Media/other media buttons.
 	 *     @type string     $default_editor    When both TinyMCE and Quicktags are used, set which
 	 *                                         editor is shown on page load. Default empty.
+	 *     @type bool       $drag_drop_upload  Whether to enable drag & drop on the editor uploading. Default false.
+	 *                                         Requires the media modal.
 	 *     @type string     $textarea_name     Give the textarea a unique name here. Square brackets
 	 *                                         can be used here. Default $editor_id.
 	 *     @type int        $textarea_rows     Number rows in the editor textarea. Default 20.
@@ -63,6 +66,7 @@ final class _WP_Editors {
 			'wpautop'           => true,
 			'media_buttons'     => true,
 			'default_editor'    => '',
+			'drag_drop_upload'  => false,
 			'textarea_name'     => $editor_id,
 			'textarea_rows'     => 20,
 			'tabindex'          => '',
@@ -123,6 +127,10 @@ final class _WP_Editors {
 		$tabindex = $set['tabindex'] ? ' tabindex="' . (int) $set['tabindex'] . '"' : '';
 		$switch_class = 'html-active';
 		$toolbar = $buttons = $autocomplete = '';
+
+		if ( $set['drag_drop_upload'] ) {
+			self::$drag_drop_upload = true;
+		}
 
 		if ( ! empty( $set['editor_height'] ) )
 			$height = ' style="height: ' . $set['editor_height'] . 'px"';
@@ -262,13 +270,9 @@ final class _WP_Editors {
 
 			if ( empty( self::$first_init ) ) {
 				self::$baseurl = includes_url( 'js/tinymce' );
+
 				$mce_locale = get_locale();
-
-				if ( empty( $mce_locale ) || 'en' == substr( $mce_locale, 0, 2 ) ) {
-					$mce_locale = 'en';
-				}
-
-				self::$mce_locale = $mce_locale;
+				self::$mce_locale = $mce_locale = empty( $mce_locale ) ? 'en' : strtolower( substr( $mce_locale, 0, 2 ) ); // ISO 639-1
 
 				/** This filter is documented in wp-admin/includes/media.php */
 				$no_captions = (bool) apply_filters( 'disable_captions', '' );
@@ -384,10 +388,40 @@ final class _WP_Editors {
 							$url = set_url_scheme( $url );
 							$mce_external_plugins[ $name ] = $url;
 							$plugurl = dirname( $url );
+							$strings = $str1 = $str2 = '';
 
-							if ( in_array( $name, $loaded_langs ) ) {
-								$ext_plugins .= 'tinyMCEPreInit.load_ext("' . $plugurl . '", "' . $mce_locale . '");' . "\n";
+							// Try to load langs/[locale].js and langs/[locale]_dlg.js
+							if ( ! in_array( $name, $loaded_langs, true ) ) {
+								$path = str_replace( content_url(), '', $plugurl );
+								$path = WP_CONTENT_DIR . $path . '/langs/';
+
+								if ( function_exists('realpath') )
+									$path = trailingslashit( realpath($path) );
+
+								if ( @is_file( $path . $mce_locale . '.js' ) )
+									$strings .= @file_get_contents( $path . $mce_locale . '.js' ) . "\n";
+
+								if ( @is_file( $path . $mce_locale . '_dlg.js' ) )
+									$strings .= @file_get_contents( $path . $mce_locale . '_dlg.js' ) . "\n";
+
+								if ( 'en' != $mce_locale && empty( $strings ) ) {
+									if ( @is_file( $path . 'en.js' ) ) {
+										$str1 = @file_get_contents( $path . 'en.js' );
+										$strings .= preg_replace( '/([\'"])en\./', '$1' . $mce_locale . '.', $str1, 1 ) . "\n";
+									}
+
+									if ( @is_file( $path . 'en_dlg.js' ) ) {
+										$str2 = @file_get_contents( $path . 'en_dlg.js' );
+										$strings .= preg_replace( '/([\'"])en\./', '$1' . $mce_locale . '.', $str2, 1 ) . "\n";
+									}
+								}
+
+								if ( ! empty( $strings ) )
+									$ext_plugins .= "\n" . $strings . "\n";
 							}
+
+							$ext_plugins .= 'tinyMCEPreInit.load_ext("' . $plugurl . '", "' . $mce_locale . '");' . "\n";
+							$ext_plugins .= 'tinymce.PluginManager.load("' . $name . '", "' . $url . '");' . "\n";
 						}
 					}
 				}
@@ -427,7 +461,7 @@ final class _WP_Editors {
 					'entity_encoding' => 'raw',
 					'menubar' => false,
 					'keep_styles' => false,
-					'paste_remove_styles' => true,
+					'paste_webkit_styles' => 'font-weight font-style color',
 
 					// Limit the preview styles in the menu/toolbar
 					'preview_styles' => 'font-family font-size font-weight font-style text-decoration text-transform',
@@ -693,13 +727,21 @@ final class _WP_Editors {
 			// Default TinyMCE strings
 			'New document' => __( 'New document' ),
 			'Formats' => _x( 'Formats', 'TinyMCE' ),
-			'Headers' => _x( 'Headers', 'TinyMCE' ),
+			'Headers' => _x( 'Headings', 'TinyMCE' ),
 			'Header 1' => __( 'Heading 1' ),
 			'Header 2' => __( 'Heading 2' ),
 			'Header 3' => __( 'Heading 3' ),
 			'Header 4' => __( 'Heading 4' ),
 			'Header 5' => __( 'Heading 5' ),
 			'Header 6' => __( 'Heading 6' ),
+
+			'Headings' => _x( 'Headings', 'TinyMCE' ),
+			'Heading 1' => __( 'Heading 1' ),
+			'Heading 2' => __( 'Heading 2' ),
+			'Heading 3' => __( 'Heading 3' ),
+			'Heading 4' => __( 'Heading 4' ),
+			'Heading 5' => __( 'Heading 5' ),
+			'Heading 6' => __( 'Heading 6' ),
 
 			/* translators: block tags */
 			'Blocks' => _x( 'Blocks', 'TinyMCE' ),
@@ -718,6 +760,8 @@ final class _WP_Editors {
 			'Italic' => __( 'Italic' ),
 			'Code' => _x( 'Code', 'editor button' ),
 			'Source code' => __( 'Source code' ),
+			'Font Family' => __( 'Font Family' ),
+			'Font Sizes' => __( 'Font Sizes' ),
 
 			'Align center' => __( 'Align center' ),
 			'Align right' => __( 'Align right' ),
@@ -800,6 +844,7 @@ final class _WP_Editors {
 			'Horizontal space' => __( 'Horizontal space' ),
 			'Restore last draft' => __( 'Restore last draft' ),
 			'Insert/edit link' => __( 'Insert/edit link' ),
+			'Remove link' => __( 'Remove link' ),
 
 			// Spelling, search/replace plugins
 			'Could not find the specified string.' => __( 'Could not find the specified string.' ),
@@ -855,6 +900,7 @@ final class _WP_Editors {
 			'Left' => __( 'Left' ),
 			'Center' => __( 'Center' ),
 			'Right' => __( 'Right' ),
+			'None' => _x( 'None', 'table cell alignment attribute' ),
 
 			'Row group' => __( 'Row group' ),
 			'Column group' => __( 'Column group' ),
@@ -894,6 +940,17 @@ final class _WP_Editors {
 			'Insert Read More tag' => __( 'Insert Read More tag' ),
 			'Distraction Free Writing' => __( 'Distraction Free Writing' ),
 		);
+
+		/**
+		 * Link plugin (not included):
+		 *	Insert link
+		 *	Target
+		 *	New window
+		 *	Text to display
+		 *	The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?
+		 *	The URL you entered seems to be an external link. Do you want to add the required http:\/\/ prefix?
+		 *	Url
+		 */
 
 		$baseurl = self::$baseurl;
 		$mce_locale = self::$mce_locale;
@@ -980,6 +1037,13 @@ final class _WP_Editors {
 		tinyMCEPreInit = {
 			baseURL: "<?php echo self::$baseurl; ?>",
 			suffix: "<?php echo $suffix; ?>",
+			<?php
+
+			if ( self::$drag_drop_upload ) {
+				echo 'dragDropUpload: true,';
+			}
+
+			?>
 			mceInit: <?php echo $mceInit; ?>,
 			qtInit: <?php echo $qtInit; ?>,
 			ref: <?php echo self::_parse_init( $ref ); ?>,

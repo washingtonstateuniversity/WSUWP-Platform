@@ -8,6 +8,7 @@ var WidgetCustomizer = ( function ($) {
 		Sidebar,
 		SidebarCollection,
 		OldPreviewer,
+		builtin_form_sync_handlers,
 		customize = wp.customize, self = {
 		nonce: null,
 		i18n: {
@@ -34,10 +35,6 @@ var WidgetCustomizer = ( function ($) {
 	if ( typeof window.ajaxurl === 'undefined' ) {
 		window.ajaxurl = wp.ajax.settings.url;
 	}
-
-	// Unfortunately many widgets try to look for instances under div#widgets-right,
-	// so we have to add that ID to a container div in the customizer for compat
-	$( '#customize-theme-controls' ).closest( 'div:not([id])' ).attr( 'id', 'widgets-right' );
 
 	/**
 	 * Set up model
@@ -135,43 +132,47 @@ var WidgetCustomizer = ( function ($) {
 	self.registered_sidebars = new SidebarCollection( self.registered_sidebars );
 
 	/**
+	 * Handlers for the widget-synced event, organized by widget ID base.
+	 * Other widgets may provide their own update handlers by adding
+	 * listeners for the widget-synced event.
+	 */
+	builtin_form_sync_handlers = {
+
+		/**
+		 * @param {jQuery.Event} e
+		 * @param {jQuery} widget_el
+		 * @param {String} new_form
+		 */
+		rss: function ( e, widget_el, new_form ) {
+			var old_widget_error = widget_el.find( '.widget-error:first' ),
+				new_widget_error = $( '<div>' + new_form + '</div>' ).find( '.widget-error:first' );
+
+			if ( old_widget_error.length && new_widget_error.length ) {
+				old_widget_error.replaceWith( new_widget_error );
+			} else if ( old_widget_error.length ) {
+				old_widget_error.remove();
+			} else if ( new_widget_error.length ) {
+				widget_el.find( '.widget-content:first' ).prepend( new_widget_error );
+			}
+		}
+	};
+
+	/**
 	 * On DOM ready, initialize some meta functionality independent of specific
 	 * customizer controls.
 	 */
 	self.init = function () {
-		this.showFirstSidebarIfRequested();
 		this.availableWidgetsPanel.setup();
+
+		// Highlight widget control
+		this.previewer.bind( 'highlight-widget-control', self.highlightWidgetFormControl );
+
+		// Open and focus widget control
+		this.previewer.bind( 'focus-widget-control', self.focusWidgetFormControl );
 	};
 	wp.customize.bind( 'ready', function () {
 		self.init();
 	} );
-
-	/**
-	 * Listen for updates to which sidebars are rendered in the preview and toggle
-	 * the customizer sections accordingly.
-	 */
-	self.showFirstSidebarIfRequested = function () {
-		if ( ! /widget-customizer=open/.test( location.search ) ) {
-			return;
-		}
-
-		var show_first_visible_sidebar = function () {
-			self.registered_sidebars.off( 'change:is_rendered', show_first_visible_sidebar );
-			var section, first_rendered_sidebar = self.registered_sidebars.find( function ( sidebar ) {
-				return sidebar.get( 'is_rendered' );
-			} );
-			if ( ! first_rendered_sidebar ) {
-				return;
-			}
-			section = $( '#accordion-section-sidebar-widgets-' + first_rendered_sidebar.get( 'id' ) );
-			if ( ! section.hasClass( 'open' ) ) {
-				section.find( '.accordion-section-title' ).trigger( 'click' );
-			}
-			section[0].scrollIntoView();
-		};
-		show_first_visible_sidebar = _.debounce( show_first_visible_sidebar, 100 ); // so only fires when all updated at end
-		self.registered_sidebars.on( 'change:is_rendered', show_first_visible_sidebar );
-	};
 
 	/**
 	 * Sidebar Widgets control
@@ -259,7 +260,7 @@ var WidgetCustomizer = ( function ($) {
 
 						// Check if the widget is in another sidebar
 						wp.customize.each( function ( other_setting ) {
-							if ( other_setting.id === control.setting.id || 0 !== _.indexOf( other_setting.id, 'sidebars_widgets[' ) || other_setting.id === 'sidebars_widgets[wp_inactive_widgets]' ) {
+							if ( other_setting.id === control.setting.id || 0 !== other_setting.id.indexOf( 'sidebars_widgets[' ) || other_setting.id === 'sidebars_widgets[wp_inactive_widgets]' ) {
 								return;
 							}
 							var other_sidebar_widgets = other_setting(), i;
@@ -480,6 +481,7 @@ var WidgetCustomizer = ( function ($) {
 		addWidget: function ( widget_id ) {
 			var control = this,
 				control_html,
+				widget_el,
 				customize_control_type = 'widget_form',
 				customize_control,
 				parsed_widget_id = parse_widget_id( widget_id ),
@@ -514,11 +516,12 @@ var WidgetCustomizer = ( function ($) {
 			} else {
 				widget.set( 'is_disabled', true ); // Prevent single widget from being added again now
 			}
+			widget_el = $( control_html );
 
 			customize_control = $( '<li></li>' );
 			customize_control.addClass( 'customize-control' );
 			customize_control.addClass( 'customize-control-' + customize_control_type );
-			customize_control.append( $( control_html ) );
+			customize_control.append( widget_el );
 			customize_control.find( '> .widget-icon' ).remove();
 			if ( widget.get( 'is_multi' ) ) {
 				customize_control.find( 'input[name="widget_number"]' ).val( widget_number );
@@ -569,7 +572,7 @@ var WidgetCustomizer = ( function ($) {
 				if ( other_setting.id === control.setting.id ) {
 					return;
 				}
-				if ( 0 !== _.indexOf( other_setting.id, 'sidebars_widgets[' ) ) {
+				if ( 0 !== other_setting.id.indexOf( 'sidebars_widgets[' ) ) {
 					return;
 				}
 				var other_sidebar_widgets = other_setting().slice(), i;
@@ -604,6 +607,8 @@ var WidgetCustomizer = ( function ($) {
 				}
 			} );
 
+			$( document ).trigger( 'widget-added', [ widget_el ] );
+
 			return widget_form_control;
 		}
 
@@ -628,47 +633,6 @@ var WidgetCustomizer = ( function ($) {
 			control._setupHighlightEffects();
 			control._setupUpdateUI();
 			control._setupRemoveUI();
-			control.hook( 'init' );
-		},
-
-		/**
-		 * Hooks for widgets to support living in the customizer control
-		 */
-		hooks: {
-			_default: {},
-			rss: {
-				formUpdated: function ( serialized_form ) {
-					var control = this,
-						old_widget_error = control.container.find( '.widget-error:first' ),
-						new_widget_error = serialized_form.find( '.widget-error:first' );
-
-					if ( old_widget_error.length && new_widget_error.length ) {
-						old_widget_error.replaceWith( new_widget_error );
-					} else if ( old_widget_error.length ) {
-						old_widget_error.remove();
-					} else if ( new_widget_error.length ) {
-						control.container.find( '.widget-content' ).prepend( new_widget_error );
-					}
-				}
-			}
-		},
-
-		/**
-		 * Trigger an 'action' which a specific widget type can handle
-		 *
-		 * @param name
-		 */
-		hook: function ( name ) {
-			var args = Array.prototype.slice.call( arguments, 1 ), handler;
-
-			if ( this.hooks[this.params.widget_id_base] && this.hooks[this.params.widget_id_base][name] ) {
-				handler = this.hooks[this.params.widget_id_base][name];
-			} else if ( this.hooks._default[name] ) {
-				handler = this.hooks._default[name];
-			}
-			if ( handler ) {
-				handler.apply( this, args );
-			}
 		},
 
 		/**
@@ -686,6 +650,7 @@ var WidgetCustomizer = ( function ($) {
 
 			control._update_count = 0;
 			control.is_widget_updating = false;
+			control.live_update_mode = true;
 
 			// Update widget whenever model changes
 			control.setting.bind( function( to, from ) {
@@ -760,7 +725,7 @@ var WidgetCustomizer = ( function ($) {
 
 			// Reposition whenever a sidebar's widgets are changed
 			wp.customize.each( function ( setting ) {
-				if ( 0 === _.indexOf( setting.id, 'sidebars_widgets[' ) ) {
+				if ( 0 === setting.id.indexOf( 'sidebars_widgets[' ) ) {
 					setting.bind( function () {
 						if ( control.container.hasClass( 'expanded' ) ) {
 							position_widget();
@@ -952,13 +917,12 @@ var WidgetCustomizer = ( function ($) {
 
 			// Highlight whenever hovering or clicking over the form
 			control.container.on( 'mouseenter click', function () {
-				control.highlightPreviewWidget();
+				control.setting.previewer.send( 'highlight-widget', control.params.widget_id );
 			} );
 
 			// Highlight when the setting is updated
 			control.setting.bind( function () {
-				control.scrollPreviewWidgetIntoView();
-				control.highlightPreviewWidget();
+				control.setting.previewer.send( 'highlight-widget', control.params.widget_id );
 			} );
 
 			// Highlight when the widget form is expanded
@@ -972,11 +936,14 @@ var WidgetCustomizer = ( function ($) {
 		 */
 		_setupUpdateUI: function () {
 			var control = this,
+				widget_root,
 				widget_content,
 				save_btn,
-				update_widget_debounced;
+				update_widget_debounced,
+				form_update_event_handler;
 
-			widget_content = control.container.find( '.widget-content' );
+			widget_root = control.container.find( '.widget:first' );
+			widget_content = widget_root.find( '.widget-content:first' );
 
 			// Configure update button
 			save_btn = control.container.find( '.widget-control-save' );
@@ -985,7 +952,7 @@ var WidgetCustomizer = ( function ($) {
 			save_btn.removeClass( 'button-primary' ).addClass( 'button-secondary' );
 			save_btn.on( 'click', function ( e ) {
 				e.preventDefault();
-				control.updateWidget();
+				control.updateWidget( { disable_form: true } );
 			} );
 
 			update_widget_debounced = _.debounce( function () {
@@ -1003,10 +970,12 @@ var WidgetCustomizer = ( function ($) {
 
 			// Handle widgets that support live previews
 			widget_content.on( 'change input propertychange', ':input', function ( e ) {
-				if ( e.type === 'change' ) {
-					control.updateWidget();
-				} else if ( this.checkValidity && this.checkValidity() ) {
-					update_widget_debounced();
+				if ( control.live_update_mode ) {
+					if ( e.type === 'change' ) {
+						control.updateWidget();
+					} else if ( this.checkValidity && this.checkValidity() ) {
+						update_widget_debounced();
+					}
 				}
 			} );
 
@@ -1025,6 +994,15 @@ var WidgetCustomizer = ( function ($) {
 				var is_rendered = !! rendered_widgets[control.params.widget_id];
 				control.container.toggleClass( 'widget-rendered', is_rendered );
 			} );
+
+			form_update_event_handler = builtin_form_sync_handlers[ control.params.widget_id_base ];
+			if ( form_update_event_handler ) {
+				$( document ).on( 'widget-synced', function ( e, widget_el ) {
+					if ( widget_root.is( widget_el ) ) {
+						form_update_event_handler.apply( document, arguments );
+					}
+				} );
+			}
 		},
 
 		/**
@@ -1082,6 +1060,21 @@ var WidgetCustomizer = ( function ($) {
 		},
 
 		/**
+		 * Find all inputs in a widget container that should be considered when
+		 * comparing the loaded form with the sanitized form, whose fields will
+		 * be aligned to copy the sanitized over. The elements returned by this
+		 * are passed into this._getInputsSignature(), and they are iterated
+		 * over when copying sanitized values over to the the form loaded.
+		 *
+		 * @param {jQuery} container element in which to look for inputs
+		 * @returns {jQuery} inputs
+		 * @private
+		 */
+		_getInputs: function ( container ) {
+			return $( container ).find( ':input[name]' );
+		},
+
+		/**
 		 * Iterate over supplied inputs and create a signature string for all of them together.
 		 * This string can be used to compare whether or not the form has all of the same fields.
 		 *
@@ -1093,12 +1086,10 @@ var WidgetCustomizer = ( function ($) {
 			var inputs_signatures = _( inputs ).map( function ( input ) {
 				input = $( input );
 				var signature_parts;
-				if ( input.is( 'option' ) ) {
-					signature_parts = [ input.prop( 'nodeName' ), input.prop( 'value' ) ];
-				} else if ( input.is( ':checkbox, :radio' ) ) {
-					signature_parts = [ input.prop( 'type' ), input.attr( 'id' ), input.attr( 'name' ), input.prop( 'value' ) ];
+				if ( input.is( ':checkbox, :radio' ) ) {
+					signature_parts = [ input.attr( 'id' ), input.attr( 'name' ), input.prop( 'value' ) ];
 				} else {
-					signature_parts = [ input.prop( 'nodeName' ), input.attr( 'id' ), input.attr( 'name' ), input.attr( 'type' ) ];
+					signature_parts = [ input.attr( 'id' ), input.attr( 'name' ) ];
 				}
 				return signature_parts.join( ',' );
 			} );
@@ -1116,8 +1107,6 @@ var WidgetCustomizer = ( function ($) {
 			input = $( input );
 			if ( input.is( ':radio, :checkbox' ) ) {
 				return 'checked';
-			} else if ( input.is( 'option' ) ) {
-				return 'selected';
 			} else {
 				return 'value';
 			}
@@ -1154,16 +1143,15 @@ var WidgetCustomizer = ( function ($) {
 			var control = this,
 				instance_override,
 				complete_callback,
+				widget_root,
 				update_number,
 				widget_content,
-				element_id_to_refocus = null,
-				active_input_selection_start = null,
-				active_input_selection_end = null,
 				params,
 				data,
 				inputs,
 				processing,
-				jqxhr;
+				jqxhr,
+				is_changed;
 
 			args = $.extend( {
 				instance: null,
@@ -1177,26 +1165,20 @@ var WidgetCustomizer = ( function ($) {
 			control._update_count += 1;
 			update_number = control._update_count;
 
-			widget_content = control.container.find( '.widget-content' );
+			widget_root = control.container.find( '.widget:first' );
+			widget_content = widget_root.find( '.widget-content:first' );
 
 			// Remove a previous error message
 			widget_content.find( '.widget-error' ).remove();
-
-			// @todo Support more selectors than IDs?
-			if ( $.contains( control.container[0], document.activeElement ) && $( document.activeElement ).is( '[id]' ) ) {
-				element_id_to_refocus = $( document.activeElement ).prop( 'id' );
-				// @todo IE8 support: http://stackoverflow.com/a/4207763/93579
-				try {
-					active_input_selection_start = document.activeElement.selectionStart;
-					active_input_selection_end = document.activeElement.selectionEnd;
-				}
-				catch( e ) {} // catch InvalidStateError in case of checkboxes
-			}
 
 			control.container.addClass( 'widget-form-loading' );
 			control.container.addClass( 'previewer-loading' );
 			processing = wp.customize.state( 'processing' );
 			processing( processing() + 1 );
+
+			if ( ! control.live_update_mode ) {
+				control.container.addClass( 'widget-form-disabled' );
+			}
 
 			params = {};
 			params.action = 'update-widget';
@@ -1204,7 +1186,7 @@ var WidgetCustomizer = ( function ($) {
 			params.nonce = self.nonce;
 
 			data = $.param( params );
-			inputs = widget_content.find( ':input, option' );
+			inputs = control._getInputs( widget_content );
 
 			// Store the value we're submitting in data so that when the response comes back,
 			// we know if it got sanitized; if there is no difference in the sanitized value,
@@ -1227,7 +1209,7 @@ var WidgetCustomizer = ( function ($) {
 					sanitized_form,
 					sanitized_inputs,
 					has_same_inputs_in_response,
-					is_instance_identical;
+					is_live_update_aborted = false;
 
 				// Check if the user is logged out.
 				if ( '0' === r ) {
@@ -1247,51 +1229,50 @@ var WidgetCustomizer = ( function ($) {
 
 				if ( r.success ) {
 					sanitized_form = $( '<div>' + r.data.form + '</div>' );
-
-					control.hook( 'formUpdate', sanitized_form );
-
-					sanitized_inputs = sanitized_form.find( ':input, option' );
+					sanitized_inputs = control._getInputs( sanitized_form );
 					has_same_inputs_in_response = control._getInputsSignature( inputs ) === control._getInputsSignature( sanitized_inputs );
 
-					if ( has_same_inputs_in_response ) {
+					// Restore live update mode if sanitized fields are now aligned with the existing fields
+					if ( has_same_inputs_in_response && ! control.live_update_mode ) {
+						control.live_update_mode = true;
+						control.container.removeClass( 'widget-form-disabled' );
+						control.container.find( 'input[name="savewidget"]' ).hide();
+					}
+
+					// Sync sanitized field states to existing fields if they are aligned
+					if ( has_same_inputs_in_response && control.live_update_mode ) {
 						inputs.each( function ( i ) {
 							var input = $( this ),
 								sanitized_input = $( sanitized_inputs[i] ),
 								property = control._getInputStatePropertyName( this ),
-								state,
-								sanitized_state;
+								submitted_state,
+								sanitized_state,
+								can_update_state;
 
-							state = input.data( 'state' + update_number );
+							submitted_state = input.data( 'state' + update_number );
 							sanitized_state = sanitized_input.prop( property );
 							input.data( 'sanitized', sanitized_state );
 
-							if ( state !== sanitized_state ) {
-
-								// Only update now if not currently focused on it,
-								// so that we don't cause the cursor
-								// it will be updated upon the change event
-								if ( args.ignore_active_element || ! input.is( document.activeElement ) ) {
-									input.prop( property, sanitized_state );
-								}
-								control.hook( 'unsanitaryField', input, sanitized_state, state );
-
-							} else {
-								control.hook( 'sanitaryField', input, state );
+							can_update_state = (
+								submitted_state !== sanitized_state &&
+								( args.ignore_active_element || ! input.is( document.activeElement ) )
+							);
+							if ( can_update_state ) {
+								input.prop( property, sanitized_state );
 							}
 						} );
-						control.hook( 'formUpdated', sanitized_form );
+						$( document ).trigger( 'widget-synced', [ widget_root, r.data.form ] );
+
+					// Otherwise, if sanitized fields are not aligned with existing fields, disable live update mode if enabled
+					} else if ( control.live_update_mode ) {
+						control.live_update_mode = false;
+						control.container.find( 'input[name="savewidget"]' ).show();
+						is_live_update_aborted = true;
+					// Otherwise, replace existing form with the sanitized form
 					} else {
-						widget_content.html( sanitized_form.html() );
-						if ( element_id_to_refocus ) {
-							// not using jQuery selector so we don't have to worry about escaping IDs with brackets and other characters
-							$( document.getElementById( element_id_to_refocus ) )
-								.prop( {
-									selectionStart: active_input_selection_start,
-									selectionEnd: active_input_selection_end
-								} )
-								.focus();
-						}
-						control.hook( 'formRefreshed' );
+						widget_content.html( r.data.form );
+						control.container.removeClass( 'widget-form-disabled' );
+						$( document ).trigger( 'widget-updated', [ widget_root ] );
 					}
 
 					/**
@@ -1299,15 +1280,18 @@ var WidgetCustomizer = ( function ($) {
 					 * needing to be rendered, and so we can preempt the event for the
 					 * preview finishing loading.
 					 */
-					is_instance_identical = _( control.setting() ).isEqual( r.data.instance );
-					if ( ! is_instance_identical ) {
+					is_changed = ! is_live_update_aborted && ! _( control.setting() ).isEqual( r.data.instance );
+					if ( is_changed ) {
 						control.is_widget_updating = true; // suppress triggering another updateWidget
 						control.setting( r.data.instance );
 						control.is_widget_updating = false;
+					} else {
+						// no change was made, so stop the spinner now instead of when the preview would updates
+						control.container.removeClass( 'previewer-loading' );
 					}
 
 					if ( complete_callback ) {
-						complete_callback.call( control, null, { no_change: is_instance_identical, ajax_finished: true } );
+						complete_callback.call( control, null, { no_change: ! is_changed, ajax_finished: true } );
 					}
 				} else {
 					message = self.i18n.error;
@@ -1327,7 +1311,6 @@ var WidgetCustomizer = ( function ($) {
 				}
 			} );
 			jqxhr.always( function () {
-				control.container.removeClass( 'previewer-loading' );
 				control.container.removeClass( 'widget-form-loading' );
 				inputs.each( function () {
 					$( this ).removeData( 'state' + update_number );
@@ -1510,16 +1493,6 @@ var WidgetCustomizer = ( function ($) {
 		},
 
 		/**
-		 * Inverse of WidgetCustomizer.getControlInstanceForWidget
-		 * @return {jQuery}
-		 */
-		getPreviewWidgetElement: function () {
-			var control = this,
-				widget_customizer_preview = self.getPreviewWindow().wp.customize.WidgetCustomizerPreview;
-			return widget_customizer_preview.getWidgetElement( control.params.widget_id );
-		},
-
-		/**
 		 * Inside of the customizer preview, scroll the widget into view
 		 */
 		scrollPreviewWidgetIntoView: function () {
@@ -1543,21 +1516,6 @@ var WidgetCustomizer = ( function ($) {
 			setTimeout( function () {
 				target_element.removeClass( 'widget-customizer-highlighted' );
 			}, 500 );
-		},
-
-		/**
-		 * Add the widget-customizer-highlighted-widget class to the widget for 500ms
-		 */
-		highlightPreviewWidget: function () {
-			var control = this, widget_el, root_el;
-
-			widget_el = control.getPreviewWidgetElement();
-			root_el = widget_el.closest( 'html' );
-			root_el.find( '.widget-customizer-highlighted-widget' ).removeClass( 'widget-customizer-highlighted-widget' );
-			widget_el.addClass( 'widget-customizer-highlighted-widget' );
-			setTimeout( function () {
-				widget_el.removeClass( 'widget-customizer-highlighted-widget' );
-			}, 500 );
 		}
 
 	} );
@@ -1573,6 +1531,32 @@ var WidgetCustomizer = ( function ($) {
 			this.bind( 'refresh', this.refresh );
 		}
 	} );
+
+	/**
+	 * Highlight a widget control.
+	 *
+	 * @param {string} widgetId
+	 */
+	self.highlightWidgetFormControl = function( widgetId ) {
+		var control = self.getWidgetFormControlForWidget( widgetId );
+
+		if ( control ) {
+			control.highlightSectionAndControl();
+		}
+	},
+
+	/**
+	 * Focus a widget control.
+	 *
+	 * @param {string} widgetId
+	 */
+	self.focusWidgetFormControl = function( widgetId ) {
+		var control = self.getWidgetFormControlForWidget( widgetId );
+
+		if ( control ) {
+			control.focus();
+		}
+	},
 
 	/**
 	 * Given a widget control, find the sidebar widgets control that contains it.
