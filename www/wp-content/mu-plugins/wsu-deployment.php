@@ -127,7 +127,7 @@ class WSU_Deployment {
 			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
 		} else {
 			add_post_meta( $instance_id, '_deploy_commit_hash', 'Unexpected data structure' );
-			add_post_meta( $instance_id, '_deploy_data', $_POST['payload'] );
+			//add_post_meta( $instance_id, '_deploy_data', $_POST['payload'] );
 		}
 
 		if ( isset( $payload->pusher->name ) ) {
@@ -161,7 +161,7 @@ class WSU_Deployment {
 	/**
 	 * Display the deployment instances that have occured on this
 	 * deployment configuration.
-	 * 
+	 *
 	 * @param $post
 	 */
 	public function display_deploy_instances( $post ) {
@@ -193,6 +193,9 @@ class WSU_Deployment {
 		echo '<pre>';
 		print_r( $commit_data );
 		echo '</pre>';
+		$more = json_decode( $commit_data );
+		print_r( $more );
+		echo '<pre>';
 	}
 }
 new WSU_Deployment();
