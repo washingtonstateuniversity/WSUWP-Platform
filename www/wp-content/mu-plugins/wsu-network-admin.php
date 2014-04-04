@@ -546,7 +546,8 @@ class WSU_Network_Admin {
 						<th scope="row">
 							<label for="network_domain">Network Domain:</label>
 						</th>
-						<td><input class="wide-text" type="text" name="network_domain" value="<?php echo esc_attr( $network[0]->domain ); ?>"></td>
+						<td><input class="wide-text" type="text" name="network_domain" value="<?php echo esc_attr( $network[0]->domain ); ?>">
+						<p class="description">Changing the domain or path of an existing network may have severe consequences.</p></td>
 					</tr>
 					<tr class="form-field">
 						<th scope="row">
