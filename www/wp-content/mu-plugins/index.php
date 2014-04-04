@@ -10,6 +10,6 @@
  */
 
 $wsuwp_global_version = '0.5.6';
-$wsuwp_wp_changeset = '27935';
+$wsuwp_wp_changeset = '27947';
 
 include dirname( __FILE__ ) . '/wsu-co-authors-plus-skin/wsu-co-authors-plus-skin.php';
