@@ -542,6 +542,18 @@ class WSU_Network_Admin {
 				<?php wp_nonce_field( 'update-network', '_wpnonce_update-network' ) ?>
 				<table class="form-table">
 					<tbody>
+					<tr class="form-field">
+						<th scope="row">
+							<label for="network_domain">Network Domain:</label>
+						</th>
+						<td><input class="wide-text" type="text" name="network_domain" value="<?php echo esc_attr( $network[0]->domain ); ?>"></td>
+					</tr>
+					<tr class="form-field">
+						<th scope="row">
+							<label for="network_path">Network Path:</label>
+						</th>
+						<td><input class="wide-text" type="text" name="network_path" value="<?php echo esc_attr( $network[0]->path ); ?>"></td>
+					</tr>
 					<?php echo $edit_output; ?>
 					<tr class="form-field">
 						<th scope="row"></th>
