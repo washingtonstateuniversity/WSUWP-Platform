@@ -1344,6 +1344,8 @@
 							this.controller.state().doCrop( selection ).done( function( croppedImage ) {
 								self.controller.trigger('cropped', croppedImage );
 								self.controller.close();
+							}).fail( function() {
+								self.controller.trigger('content:error:crop');
 							});
 						}
 					}
@@ -6060,10 +6062,10 @@
 			'click .edit-attachment': 'editAttachment',
 			'click .replace-attachment': 'replaceAttachment',
 			'click .advanced-toggle': 'toggleAdvanced',
-			'change [data-setting="customWidth"]': 'syncCustomSize',
-			'change [data-setting="customHeight"]': 'syncCustomSize',
-			'keyup [data-setting="customWidth"]': 'syncCustomSize',
-			'keyup [data-setting="customHeight"]': 'syncCustomSize'
+			'change [data-setting="customWidth"]': 'onCustomSize',
+			'change [data-setting="customHeight"]': 'onCustomSize',
+			'keyup [data-setting="customWidth"]': 'onCustomSize',
+			'keyup [data-setting="customHeight"]': 'onCustomSize'
 		} ),
 		initialize: function() {
 			// used in AttachmentDisplay.prototype.updateLinkTo
@@ -6136,18 +6138,26 @@
 			}
 		},
 
-		syncCustomSize: function( event ) {
+		onCustomSize: function( event ) {
 			var dimension = $( event.target ).data('setting'),
+				num = $( event.target ).val(),
 				value;
 
+			// Ignore bogus input
+			if ( ! /^\d+/.test( num ) || parseInt( num, 10 ) < 1 ) {
+				event.preventDefault();
+				return;
+			}
+
 			if ( dimension === 'customWidth' ) {
-				value = Math.round( 1 / this.model.get( 'aspectRatio' ) * $( event.target ).val() );
+				value = Math.round( 1 / this.model.get( 'aspectRatio' ) * num );
 				this.model.set( 'customHeight', value, { silent: true } );
 				this.$( '[data-setting="customHeight"]' ).val( value );
 			} else {
-				value = Math.round( this.model.get( 'aspectRatio' ) * $( event.target ).val() );
+				value = Math.round( this.model.get( 'aspectRatio' ) * num );
+				this.model.set( 'customWidth', value, { silent: true  } );
 				this.$( '[data-setting="customWidth"]' ).val( value );
-				this.model.set( 'customWidth', value, { silent: true } );
+
 			}
 		},
 
@@ -6194,14 +6204,15 @@
 	 * @augments Backbone.View
 	 */
 	media.view.Cropper = media.View.extend({
-		tagName: 'img',
 		className: 'crop-content',
+		template: media.template('crop-content'),
 		initialize: function() {
 			_.bindAll(this, 'onImageLoad');
-			this.$el.attr('src', this.options.attachment.get('url'));
 		},
 		ready: function() {
-			this.$el.on('load', this.onImageLoad);
+			this.controller.frame.on('content:error:crop', this.onError, this);
+			this.$image = this.$el.find('.crop-image');
+			this.$image.on('load', this.onImageLoad);
 			$(window).on('resize.cropper', _.debounce(this.onImageLoad, 250));
 		},
 		remove: function() {
@@ -6221,10 +6232,19 @@
 			if (typeof imgOptions === 'function') {
 				imgOptions = imgOptions(this.options.attachment, this.controller);
 			}
-			this.trigger('image-loaded');
-			this.controller.imgSelect = this.$el.imgAreaSelect(imgOptions);
-		}
 
+			imgOptions = _.extend(imgOptions, {parent: this.$el});
+			this.trigger('image-loaded');
+			this.controller.imgSelect = this.$image.imgAreaSelect(imgOptions);
+		},
+		onError: function() {
+			var filename = this.options.attachment.get('filename');
+
+			this.views.add( '.upload-errors', new media.view.UploaderStatusError({
+				filename: media.view.UploaderStatus.prototype.filename(filename),
+				message: _wpMediaViewsL10n.cropError
+			}), { at: 0 });
+		}
 	});
 
 	media.view.EditImage = media.View.extend({

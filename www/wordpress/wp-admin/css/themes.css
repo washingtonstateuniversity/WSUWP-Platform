@@ -1289,8 +1289,11 @@ body.more-filters-opened.filters-applied .theme-browser {
 	margin: 0 5px;
 	padding: 4px 8px;
 }
+.more-filters-container .filtering-by a {
+	margin-left: 10px;
+}
 body.filters-applied .more-filters-container .filters-group,
-body.filters-applied .more-filters-container a,
+body.filters-applied .more-filters-container a.button,
 body.filters-applied .more-filters-container br {
 	display: none !important;
 }
@@ -1410,10 +1413,11 @@ body.show-upload-theme p.no-themes {
 .rating-100 span.five:before {
 	content: "\f155";
 }
-.rating .votes {
+.rating .ratings {
 	display: inline;
 	margin-left: 10px;
 	line-height: 20px;
+	color: #999;
 }
 .loading-themes .theme-browser,
 .error .theme-browser {
@@ -1509,7 +1513,7 @@ body.full-overlay-active {
 	margin: 0;
 	z-index: 10;
 	overflow: auto;
-	background: transparent;
+	background: #eee;
 	border-right: none;
 }
 
@@ -1672,6 +1676,16 @@ body.full-overlay-active {
 	display: none;
 }
 
+.wp-full-overlay .theme-navigation {
+	padding: 10px 20px;
+	position: absolute;
+		bottom: 10px;
+	text-align: left;
+}
+.wp-full-overlay .theme-navigation .next-theme {
+	float: right;
+}
+
 /* Animations */
 .wp-full-overlay,
 .wp-full-overlay-sidebar,
@@ -1750,7 +1764,7 @@ body.full-overlay-active {
 
 .install-theme-info {
 	display: none;
-	padding: 10px 20px 20px;
+	padding: 10px 20px 60px;
 }
 
 .single-theme .install-theme-info {
@@ -1816,7 +1830,7 @@ body.full-overlay-active {
 }
 
 #theme-installer .wp-full-overlay-main {
-	background: #fff url(../images/spinner.gif) no-repeat fixed center center;
+	background: #fff url(../images/spinner.gif) no-repeat center center;
 	-webkit-background-size: 20px 20px;
 	background-size: 20px 20px;
 }

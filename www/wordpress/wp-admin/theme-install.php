@@ -145,11 +145,11 @@ include(ABSPATH . 'wp-admin/admin-header.php');
 			<div class="filtering-by">
 				<span><?php _e( 'Filtering by:' ); ?></span>
 				<div class="tags"></div>
+				<a href="#"><?php _e( 'Edit' ); ?></a>
 			</div>
 		</div>
 	</div>
 	<div class="theme-browser"></div>
-	<div class="theme-overlay"></div>
 	<div id="theme-installer" class="wp-full-overlay expanded"></div>
 
 	<p class="no-themes"><?php _e( 'No themes found. Try a different search.' ); ?></p>
@@ -212,7 +212,11 @@ if ( $tab ) {
 						<span class="three"></span>
 						<span class="four"></span>
 						<span class="five"></span>
-						<p class="votes"><?php printf( __( 'Based on %s ratings.' ), '{{ data.num_ratings }}' ); ?></p>
+					<# if ( data.num_ratings ) { #>
+						<p class="ratings">({{ data.num_ratings }})</p>
+					<# } else { #>
+						<p class="ratings"><?php _e( 'No ratings.' ); ?></p>
+					<# } #>
 					</div>
 					<div class="theme-version"><?php printf( __( 'Version: %s' ), '{{ data.version }}' ); ?></div>
 					<div class="theme-description">{{ data.description }}</div>
@@ -224,6 +228,10 @@ if ( $tab ) {
 				<span class="collapse-sidebar-label"><?php _e( 'Collapse' ); ?></span>
 				<span class="collapse-sidebar-arrow"></span>
 			</a>
+			<div class="theme-navigation">
+				<a class="previous-theme button" href="#"><?php _e( 'Previous' ); ?></a>
+				<a class="next-theme button" href="#"><?php _e( 'Next' ); ?></a>
+			</div>
 		</div>
 	</div>
 	<div class="wp-full-overlay-main">
