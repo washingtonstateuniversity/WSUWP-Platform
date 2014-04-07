@@ -52,6 +52,8 @@ $requested_uri       = trim( $_SERVER['REQUEST_URI'], '/' );
 $requested_uri_parts = explode( '/', $requested_uri );
 $requested_path = $requested_uri_parts[0] . '/';
 
+wp_cache_add_global_groups( 'wsuwp:network' );
+
 // If we're dealing with a root domain, we want to leave it at a path of '/'
 if ( '/' !== $requested_path )
 	$requested_path = '/' . $requested_path;
