@@ -1020,7 +1020,7 @@ function wp_underscore_playlist_templates() {
 	<img src="{{ data.thumb.src }}"/>
 	<# } #>
 	<div class="wp-playlist-caption">
-		<span class="wp-playlist-item-meta wp-playlist-item-title">&#8220;{{ data.title }}&#8221;</span>
+		<span class="wp-playlist-item-meta wp-playlist-item-title">&#8220;{{{ data.title }}}&#8221;</span>
 		<# if ( data.meta.album ) { #><span class="wp-playlist-item-meta wp-playlist-item-album">{{ data.meta.album }}</span><# } #>
 		<# if ( data.meta.artist ) { #><span class="wp-playlist-item-meta wp-playlist-item-artist">{{ data.meta.artist }}</span><# } #>
 	</div>
@@ -1032,7 +1032,7 @@ function wp_underscore_playlist_templates() {
 			<# if ( data.caption ) { #>
 				{{ data.caption }}
 			<# } else { #>
-				<span class="wp-playlist-item-title">&#8220;{{ data.title }}&#8221;</span>
+				<span class="wp-playlist-item-title">&#8220;{{{ data.title }}}&#8221;</span>
 				<# if ( data.artists && data.meta.artist ) { #>
 				<span class="wp-playlist-item-artist"> &mdash; {{ data.meta.artist }}</span>
 				<# } #>
@@ -1269,7 +1269,7 @@ function wp_playlist_shortcode( $attr ) {
 	<?php if ( 'audio' === $type ): ?>
 	<div class="wp-playlist-current-item"></div>
 	<?php endif ?>
-	<<?php echo $safe_type ?> controls="controls" preload="metadata" width="<?php
+	<<?php echo $safe_type ?> controls="controls" preload="none" width="<?php
 		echo (int) $theme_width;
 	?>"<?php if ( 'video' === $safe_type ):
 		echo ' height="', (int) $theme_height, '"';
@@ -1392,7 +1392,6 @@ function wp_audio_shortcode( $attr, $content = '' ) {
 
 	$default_types = wp_get_audio_extensions();
 	$defaults_atts = array(
-		'caption'  => '',
 		'src'      => '',
 		'loop'     => '',
 		'autoplay' => '',
@@ -1552,7 +1551,6 @@ function wp_video_shortcode( $attr, $content = '' ) {
 
 	$default_types = wp_get_video_extensions();
 	$defaults_atts = array(
-		'caption'  => '',
 		'src'      => '',
 		'poster'   => '',
 		'loop'     => '',

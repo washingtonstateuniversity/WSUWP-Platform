@@ -189,7 +189,7 @@
 			shortcode = {};
 
 			if ( 'video' === type ) {
-				if ( attachment.image ) {
+				if ( attachment.image && -1 === attachment.image.src.indexOf( attachment.icon ) ) {
 					shortcode.poster = attachment.image.src;
 				}
 
@@ -200,23 +200,6 @@
 				if ( attachment.height ) {
 					shortcode.height = attachment.height;
 				}
-			}
-
-			if ( ! _.isEmpty( attachment.caption ) ) {
-				shortcode.caption = attachment.caption;
-			} else if ( attachment.meta && attachment.meta.title ) {
-				shortcode.caption = '&#8220;' + attachment.meta.title + '&#8221;';
-				if ( attachment.meta.album ) {
-					shortcode.caption += ' from ' + attachment.meta.album;
-				}
-
-				if ( attachment.meta.artist ) {
-					shortcode.caption += ' by ' + attachment.meta.artist;
-				}
-			} else if ( ! _.isEmpty( attachment.description ) ) {
-				shortcode.caption = attachment.description;
-			} else {
-				shortcode.caption = attachment.title;
 			}
 
 			extension = attachment.filename.split('.').pop();

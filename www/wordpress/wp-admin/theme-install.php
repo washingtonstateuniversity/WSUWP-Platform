@@ -123,6 +123,9 @@ include(ABSPATH . 'wp-admin/admin-header.php');
 			<a class="more-filters" href="#"><?php _e( 'Feature Filter' ); ?></a>
 		</div>
 		<div class="more-filters-container">
+			<a class="apply-filters button button-secondary" href="#"><?php _e( 'Apply Filters' ); ?><span></span></a>
+			<a class="clear-filters button button-secondary" href="#"><?php _e( 'Clear' ); ?></a>
+			<br class="clear" />
 		<?php
 		$feature_list = get_theme_feature_list();
 		foreach ( $feature_list as $feature_name => $features ) {
@@ -139,9 +142,6 @@ include(ABSPATH . 'wp-admin/admin-header.php');
 			echo '</div>';
 		}
 		?>
-			<br class="clear" />
-			<a class="apply-filters button button-secondary" href="#"><?php _e( 'Apply Filters' ); ?><span></span></a>
-			<a class="clear-filters button button-secondary" href="#"><?php _e( 'Clear' ); ?></a>
 			<div class="filtering-by">
 				<span><?php _e( 'Filtering by:' ); ?></span>
 				<div class="tags"></div>
@@ -219,7 +219,7 @@ if ( $tab ) {
 					<# } #>
 					</div>
 					<div class="theme-version"><?php printf( __( 'Version: %s' ), '{{ data.version }}' ); ?></div>
-					<div class="theme-description">{{ data.description }}</div>
+					<div class="theme-description">{{{ data.description }}}</div>
 				</div>
 			</div>
 		</div>
