@@ -771,18 +771,14 @@ final class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control
 		?>
 		<script type="text/template" id="tmpl-header-choice">
 			<# if (data.random) { #>
-
-			<div class="placeholder random">
-				<div class="inner">
-					<button type="button"><span class="dashicons dashicons-randomize dice"></span>
-					<# if ( data.type === 'uploaded' ) { #>
-						<?php _e( 'Randomize uploaded headers' ); ?>
-					<# } else if ( data.type === 'default' ) { #>
-						<?php _e( 'Randomize suggested headers' ); ?>
-					<# } #>
+					<button type="button" class="button display-options random">
+						<span class="dashicons dashicons-randomize dice"></span>
+						<# if ( data.type === 'uploaded' ) { #>
+							<?php _e( 'Randomize uploaded headers' ); ?>
+						<# } else if ( data.type === 'default' ) { #>
+							<?php _e( 'Randomize suggested headers' ); ?>
+						<# } #>
 					</button>
-				</div>
-			</div>
 
 			<# } else { #>
 
@@ -804,7 +800,7 @@ final class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control
 			<# if (data.choice) { #>
 				<# if (data.random) { #>
 
-			<div class="placeholder" tabindex="0">
+			<div class="placeholder">
 				<div class="inner">
 					<span><span class="dashicons dashicons-randomize dice"></span>
 					<# if ( data.type === 'uploaded' ) { #>
@@ -823,7 +819,7 @@ final class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control
 				<# } #>
 			<# } else { #>
 
-			<div class="placeholder" tabindex="0">
+			<div class="placeholder">
 				<div class="inner">
 					<span>
 						<?php _e( 'No image set' ); ?>
@@ -854,7 +850,7 @@ final class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control
 
 
 		<div class="customize-control-content">
-			<p class="customizer-section-intro" tabindex="0">
+			<p class="customizer-section-intro">
 				<?php
 				// @todo translate (and look to custom-header.php for inspiration)
 				echo ( 'Personalize your site with your own header image.' ) . ' ';
@@ -868,7 +864,7 @@ final class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control
 				?>
 			</p>
 			<div class="current">
-				<span class="customize-control-title" tabindex="0">
+				<span class="customize-control-title">
 					<?php _e( 'Current header' ); ?>
 				</span>
 				<div class="container">
@@ -882,14 +878,14 @@ final class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control
 				<div style="clear:both"></div>
 			</div>
 			<div class="choices">
-				<span class="customize-control-title header-previously-uploaded" tabindex="0">
+				<span class="customize-control-title header-previously-uploaded">
 					<?php _ex( 'Previously uploaded', 'custom headers' ); ?>
 				</span>
 				<div class="uploaded">
 					<div class="list">
 					</div>
 				</div>
-				<span class="customize-control-title header-default" tabindex="0">
+				<span class="customize-control-title header-default">
 					<?php _ex( 'Suggested', 'custom headers' ); ?>
 				</span>
 				<div class="default">
@@ -921,12 +917,12 @@ class WP_Widget_Area_Customize_Control extends WP_Customize_Control {
 	public function render_content() {
 		?>
 		<span class="button-secondary add-new-widget" tabindex="0">
-			<?php esc_html_e( 'Add a Widget' ); ?>
+			<?php _e( 'Add a Widget' ); ?>
 		</span>
 
 		<span class="reorder-toggle" tabindex="0">
-			<span class="reorder"><?php esc_html_e( 'Reorder' ); ?></span>
-			<span class="reorder-done"><?php esc_html_e( 'Done' ); ?></span>
+			<span class="reorder"><?php _ex( 'Reorder', 'Reorder widgets in Customizer' ); ?></span>
+			<span class="reorder-done"><?php _ex( 'Done', 'Cancel reordering widgets in Customizer'  ); ?></span>
 		</span>
 		<?php
 	}
@@ -944,11 +940,10 @@ class WP_Widget_Form_Customize_Control extends WP_Customize_Control {
 	public $width;
 	public $height;
 	public $is_wide = false;
-	public $is_live_previewable = false;
 
 	public function to_json() {
 		parent::to_json();
-		$exported_properties = array( 'widget_id', 'widget_id_base', 'sidebar_id', 'width', 'height', 'is_wide', 'is_live_previewable' );
+		$exported_properties = array( 'widget_id', 'widget_id_base', 'sidebar_id', 'width', 'height', 'is_wide' );
 		foreach ( $exported_properties as $key ) {
 			$this->json[ $key ] = $this->$key;
 		}

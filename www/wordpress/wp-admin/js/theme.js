@@ -317,34 +317,25 @@ themes.Collection = Backbone.Collection.extend({
 		request: {}
 	},
 
-	// Send Ajax POST request to api.wordpress.org/themes
+	// Send request to api.wordpress.org/themes
 	apiCall: function( request, paginated ) {
 
-		// Ajax request to .org API
-		return $.ajax({
-			url: 'https://api.wordpress.org/themes/info/1.1/?action=query_themes',
+		// Send tags (and fields) as comma-separated to keep the JSONP query string short.
+		if ( request.tag && _.isArray( request.tag ) ) {
+			request.tag = request.tag.join( ',' );
+		}
 
-			// We want JSON data
-			dataType: 'json',
-			type: 'POST',
-			crossDomain: true,
+		// JSONP request to .org API
+		return $.ajax({
+			url: 'https://api.wordpress.org/themes/info/1.1/?callback=?',
+			dataType: 'jsonp',
 
 			// Request data
 			data: {
 				action: 'query_themes',
 				request: _.extend({
 					per_page: 72,
-					fields: {
-						description: true,
-						tested: true,
-						requires: true,
-						rating: true,
-						downloaded: true,
-						downloadLink: true,
-						last_updated: true,
-						homepage: true,
-						num_ratings: true
-					}
+					fields: 'description,tested,requires,rating,downloaded,downloadLink,last_updated,homepage,num_ratings'
 				}, request)
 			},
 
@@ -1245,8 +1236,8 @@ themes.view.Installer = themes.view.Appearance.extend({
 		'click .theme-section': 'onSort',
 		'click .theme-filter': 'onFilter',
 		'click .more-filters': 'moreFilters',
-		'click .apply-filters': 'addFilter',
-		'click [type="checkbox"]': 'filtersChecked',
+		'click .apply-filters': 'applyFilters',
+		'click [type="checkbox"]': 'addFilter',
 		'click .clear-filters': 'clearFilters',
 		'click .feature-name': 'filterSection',
 		'click .filtering-by a': 'backToFilters'
@@ -1281,8 +1272,9 @@ themes.view.Installer = themes.view.Appearance.extend({
 		});
 
 		this.listenTo( this.collection, 'query:fail', function() {
+			$( 'body' ).removeClass( 'loading-themes' );
 			$( '.theme-browser' ).find( 'div.error' ).remove();
-			$( '.theme-browser' ).append( '<div class="error"><p>' + l10n.error + '</p></div>' );
+			$( '.theme-browser' ).find( 'div.themes' ).before( '<div class="error"><p>' + l10n.error + '</p></div>' );
 		});
 
 		// Create a new collection with the proper theme data
@@ -1373,8 +1365,13 @@ themes.view.Installer = themes.view.Appearance.extend({
 		this.collection.query( request );
 	},
 
-	// Clicking on a checkbox triggers a tag request
-	addFilter: function( event ) {
+	// Clicking on a checkbox to add another filter to the request
+	addFilter: function() {
+		this.filtersChecked();
+	},
+
+	// Applying filters triggers a tag request
+	applyFilters: function( event ) {
 		var name,
 			tags = this.filtersChecked(),
 			request = { tag: tags },

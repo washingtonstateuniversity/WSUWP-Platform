@@ -41,7 +41,10 @@ dl.aligncenter {
 }
 
 .html5-captions .wp-caption {
-	padding: 4px;
+	border: none;
+	background-color: transparent;
+	margin: 0;
+	padding: 0;
 }
 
 .mceIEcenter {
@@ -292,17 +295,6 @@ audio {
 	width: 70%;
 	margin: 0 15%;
 	text-align: center;
-}
-
-.wpview-type-video .track-details,
-.wpview-type-audio .track-details {
-	position: absolute;
-	top: 0;
-	left: 5px;
-	width: 85%;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
 }
 
 .wpview-type-gallery:after {

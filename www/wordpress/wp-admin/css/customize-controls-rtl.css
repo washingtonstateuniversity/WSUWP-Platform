@@ -170,6 +170,10 @@ body {
 	line-height: 28px;
 }
 
+.customize-control select[multiple] {
+	height: auto;
+}
+
 .customize-control-title {
 	display: block;
 	font-size: 14px;
@@ -465,8 +469,8 @@ body {
 	margin-bottom: 18px;
 }
 
-#customize-control-header_image .uploaded button,
-#customize-control-header_image .default button {
+#customize-control-header_image .uploaded button:not(.random),
+#customize-control-header_image .default button:not(.random) {
 	width: 100%;
 	padding: 0;
 	margin: 0;
@@ -474,7 +478,6 @@ body {
 	border: none;
 	color: inherit;
 	cursor: pointer;
-	outline: none;
 }
 
 #customize-control-header_image button img {
@@ -487,6 +490,7 @@ body {
 	overflow: hidden;
 	-webkit-border-radius: 2px;
 	border: 1px solid #eee;
+	-webkit-border-radius: 2px;
 	border-radius: 2px;
 }
 
@@ -536,6 +540,7 @@ body {
 	position: absolute;
 	top: 0; right: 0; bottom: 0; left: 0;
 	border: 4px solid #2ea2cc;
+	-webkit-border-radius: 2px;
 	border-radius: 2px;
 }
 #customize-control-header_image .header-view.button.selected {
@@ -579,11 +584,17 @@ body {
 	height: 40px;
 }
 
-#customize-control-header_image .random .inner {
-	display: block;
+#customize-control-header_image button.random {
+	width: 100%;
+	height: 40px;
 }
 
-#customize-control-header_image .placeholder:hover .dice {
+#customize-control-header_image button.random .dice {
+	margin-top: 4px;
+}
+
+#customize-control-header_image .placeholder:hover .dice,
+#customize-control-header_image .header-view:hover > button.random .dice {
 	-webkit-animation: dice-color-change 3s infinite;
 	-ms-animation: dice-color-change 3s infinite;
 	animation: dice-color-change 3s infinite;

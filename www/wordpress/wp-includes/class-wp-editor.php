@@ -80,6 +80,14 @@ final class _WP_Editors {
 		) );
 
 		self::$this_tinymce = ( $set['tinymce'] && user_can_richedit() );
+
+		if ( self::$this_tinymce ) {
+			if ( false !== strpos( $editor_id, '[' ) ) {
+				self::$this_tinymce = false;
+				_deprecated_argument( 'wp_editor()', '3.9', 'TinyMCE editor IDs cannot have brackets.' );
+			}
+		}
+
 		self::$this_quicktags = (bool) $set['quicktags'];
 
 		if ( self::$this_tinymce )
@@ -160,7 +168,13 @@ final class _WP_Editors {
 			$buttons .= '<a id="' . $editor_id . '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">' . __('Visual') . "</a>\n";
 		}
 
-		echo '<div id="wp-' . $editor_id . '-wrap" class="wp-core-ui wp-editor-wrap ' . $switch_class . '">';
+		$wrap_class = 'wp-core-ui wp-editor-wrap ' . $switch_class;
+
+		if ( $set['dfw'] ) {
+			$wrap_class .= ' has-dfw';
+		}
+
+		echo '<div id="wp-' . $editor_id . '-wrap" class="' . $wrap_class . '">';
 
 		if ( self::$editor_buttons_css ) {
 			wp_print_styles('editor-buttons');
