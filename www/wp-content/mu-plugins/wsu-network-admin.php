@@ -478,7 +478,10 @@ class WSU_Network_Admin {
 				$domain = strtolower( $domain );
 			}
 
-			$path = trailingslashit( $network_meta['path'] );
+			// Ensure a leading slash is always on the path.
+			$path = '/' . ltrim( $network_meta['path'], '/' );
+			$path = trailingslashit( $path );
+
 			if ( false === wsuwp_validate_path( $path ) ) {
 				wp_die( __( 'Invalid site address. Non standard characters were found in the path name.' ) );
 			} else {
