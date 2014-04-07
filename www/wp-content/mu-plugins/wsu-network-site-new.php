@@ -82,20 +82,15 @@ class WSUWP_New_Site_Administration {
 			$site_path = '/' . trailingslashit( implode( '/', $site_path ) );
 		}
 
-		// Domains can have a-z, A-Z, 0-9, -, and .
-		$domain = '';
-		if ( preg_match( '|^([a-zA-Z0-9-.])+$|', $site_domain ) ) {
-			$domain = strtolower( $site_domain );
-		}
-
 		// Paths can have a-z, A-Z, 0-9, -, and /
 		$path = '';
 		if ( preg_match( '|^([a-zA-Z0-9-/])+$|', $site_path ) ) {
 			$path = strtolower( $site_path );
 		}
 
-		// Once the preg_match has been applied, we should error if any changes were made.
-		if ( $domain !== $site_domain ) {
+		if ( wsuwp_validate_domain( $site_domain ) ) {
+			$domain = $site_domain;
+		} else {
 			wp_die( __( 'Invalid site address. Non standard characters were found in the domain name.' ) );
 		}
 
