@@ -474,6 +474,7 @@ class WSU_Network_Admin {
 				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->blogs SET domain = %s, path = %s WHERE blog_id = %d", $domain, $path, $site_id ) );
 				update_blog_option( $site_id, 'siteurl', esc_url_raw( 'http://' . $domain . $path ) );
 				update_blog_option( $site_id, 'home', esc_url_raw( 'http://' . $domain . $path ) );
+				wp_cache_delete( $network_id, 'wsuwp:network' );
 			}
 		}
 		wsuwp_restore_current_network();
