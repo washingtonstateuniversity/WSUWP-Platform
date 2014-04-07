@@ -9,7 +9,7 @@
 
 /**
  * Output the markup for a audio tag to be used in an Underscore template
- *	when data.model is passed.
+ * when data.model is passed.
  *
  * @since 3.9.0
  */
@@ -42,7 +42,7 @@ function wp_underscore_audio_template() {
 
 /**
  * Output the markup for a video tag to be used in an Underscore template
- *	when data.model is passed.
+ * when data.model is passed.
  *
  * @since 3.9.0
  */
@@ -975,7 +975,11 @@ function wp_print_media_templates() {
 				<# _.each( data.attachments, function( attachment, index ) { #>
 					<dl class="gallery-item">
 						<dt class="gallery-icon">
-							<img src="{{{ attachment.thumbnail.url }}}" width="{{ attachment.thumbnail.width }}" height="{{ attachment.thumbnail.height }}" />
+							<# if ( attachment.thumbnail ) { #>
+								<img src="{{ attachment.thumbnail.url }}" width="{{ attachment.thumbnail.width }}" height="{{ attachment.thumbnail.height }}" />
+							<# } else { #>
+								<img src="{{ attachment.url }}" />
+							<# } #>
 						</dt>
 						<dd class="wp-caption-text gallery-caption">
 							{{ attachment.caption }}
