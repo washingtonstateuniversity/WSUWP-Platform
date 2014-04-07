@@ -471,9 +471,19 @@ class WSU_Network_Admin {
 		if ( isset( $network_meta['domain'] ) || isset( $network_meta['path'] ) ) {
 			$network = wp_get_network( $network_id );
 
-			// @todo proper validation
-			$domain = untrailingslashit( sanitize_key( $network_meta['domain'] ) );
-			$path = trailingslashit( sanitize_key( $network_meta['path'] ) );
+			$domain = untrailingslashit( $network_meta['domain'] );
+			if ( false === wsuwp_validate_domain( $domain ) ) {
+				wp_die( __( 'Invalid site address. Non standard characters were found in the domain name.' ) );
+			} else {
+				$domain = strtolower( $domain );
+			}
+
+			$path = trailingslashit( $network_meta['path'] );
+			if ( false === wsuwp_validate_path( $path ) ) {
+				wp_die( __( 'Invalid site address. Non standard characters were found in the path name.' ) );
+			} else {
+				$path = strtolower( $path );
+			}
 
 			if ( ! empty( $network ) && ( $network->domain !== $domain || $network->path !== $path ) ) {
 				// Find the network's primary site to change it's domain and path as well.
