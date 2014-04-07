@@ -456,7 +456,9 @@ class WSU_Network_Admin {
 		 * @var WPDB $wpdb
 		 */
 		global $wpdb;
+
 		wsuwp_switch_to_network( $network_id );
+
 		foreach ( $network_meta as $key => $value ) {
 			if ( array_key_exists( $key, $this->network_meta_edit ) ) {
 				$value = $this->network_meta_edit[ $key ]['validate']( $value );
@@ -469,14 +471,25 @@ class WSU_Network_Admin {
 			if ( ! empty( $network ) && ( $network->domain !== untrailingslashit( $network_meta['domain'] ) || $network->path !== trailingslashit( $network_meta['path'] ) ) ) {
 				$domain = untrailingslashit( $network_meta['domain'] );
 				$path = trailingslashit( $network_meta['path'] );
-				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->site SET domain = %s, path = %s WHERE id = %d", $domain, $path, $network_id  ) );
+
+				// Find the network's primary site to change it's domain and path as well.
 				$site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s AND site_id = %d", $network->domain, $network->path, $network_id ) );
+
+				// Update the domain and path of the network.
+				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->site SET domain = %s, path = %s WHERE id = %d", $domain, $path, $network_id  ) );
+
+				// Update the domain and path of the site.
 				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->blogs SET domain = %s, path = %s WHERE blog_id = %d", $domain, $path, $site_id ) );
+
+				// Site level options need to be set properly for the request to work.
 				update_blog_option( $site_id, 'siteurl', esc_url_raw( 'http://' . $domain . $path ) );
 				update_blog_option( $site_id, 'home', esc_url_raw( 'http://' . $domain . $path ) );
+
+				// Using update_blog_option above clears the site level cache. We need to clear the network level cache.
 				wp_cache_delete( $network_id, 'wsuwp:network' );
 			}
 		}
+
 		wsuwp_restore_current_network();
 	}
 
