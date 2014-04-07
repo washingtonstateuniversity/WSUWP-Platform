@@ -405,3 +405,37 @@ function wsuwp_get_primary_network_id() {
 
 	return $primary_network_id;
 }
+
+/**
+ * Validate a domain against a set of allowed characters.
+ *
+ * Allowed characters are a-z, A-Z, 0-9, -, and .
+ *
+ * @param string $domain Domain to validate
+ *
+ * @return bool True if valid, false if not.
+ */
+function wsuwp_validate_domain( $domain ) {
+	if ( preg_match( '|^([a-zA-Z0-9-.])+$|', $domain ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Validate a path against a set of allowed characters.
+ *
+ * Allowed characters are a-z, A-Z, 0-9, -, ., and /
+ *
+ * @param string $path Path to validate.
+ *
+ * @return bool True if valid. False if not.
+ */
+function wsuwp_validate_path( $path ) {
+	if ( preg_match( '|^([a-zA-Z0-9-/])+$|', $path ) ) {
+		return true;
+	}
+
+	return false;
+}
