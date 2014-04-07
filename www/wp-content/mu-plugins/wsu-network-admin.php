@@ -544,16 +544,16 @@ class WSU_Network_Admin {
 					<tbody>
 					<tr class="form-field">
 						<th scope="row">
-							<label for="network['domain']">Network Domain:</label>
+							<label for="network[domain]">Network Domain:</label>
 						</th>
-						<td><input class="wide-text" type="text" name="network['domain']" value="<?php echo esc_attr( $network[0]->domain ); ?>">
+						<td><input class="wide-text" type="text" name="network[domain]" value="<?php echo esc_attr( $network[0]->domain ); ?>">
 						<p class="description">Changing the domain or path of an existing network may have severe consequences.</p></td>
 					</tr>
 					<tr class="form-field">
 						<th scope="row">
-							<label for="network['path']">Network Path:</label>
+							<label for="network[path]">Network Path:</label>
 						</th>
-						<td><input class="wide-text" type="text" name="network['path']" value="<?php echo esc_attr( $network[0]->path ); ?>"></td>
+						<td><input class="wide-text" type="text" name="network[path]" value="<?php echo esc_attr( $network[0]->path ); ?>"></td>
 					</tr>
 					<?php echo $edit_output; ?>
 					<tr class="form-field">
