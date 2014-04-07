@@ -452,6 +452,10 @@ class WSU_Network_Admin {
 	 * @param array $network_meta Meta information to update for the network.
 	 */
 	private function _update_network( $network_id, $network_meta ) {
+		/**
+		 * @var WPDB $wpdb
+		 */
+		global $wpdb;
 		wsuwp_switch_to_network( $network_id );
 		foreach ( $network_meta as $key => $value ) {
 			if ( array_key_exists( $key, $this->network_meta_edit ) ) {
@@ -463,7 +467,9 @@ class WSU_Network_Admin {
 		if ( isset( $network_meta['domain'] ) || isset( $network_meta['path'] ) ) {
 			$network = wp_get_network( $network_id );
 			if ( ! empty( $network ) && ( $network->domain !== untrailingslashit( $network_meta['domain'] ) || $network->path !== trailingslashit( $network_meta['path'] ) ) ) {
-				// Update the network with new info.
+				$domain = untrailingslashit( $network_meta['domain'] );
+				$path = trailingslashit( $network_meta['path'] );
+				$update_network = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->site SET domain = %s, path = %s WHERE id = %d", $domain, $path, $network_id  ) );
 			}
 		}
 		wsuwp_restore_current_network();
