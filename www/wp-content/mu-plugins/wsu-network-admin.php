@@ -446,10 +446,12 @@ class WSU_Network_Admin {
 	}
 
 	/**
-	 * Update a network's meta data with information passed from the Edit Network screen.
+	 * Update a network with information passed from the Edit Network screen. This allows for general
+	 * network options to be changed as well as the domain and path attached to a network. The domain
+	 * and path are not touched if they do not differ from the current settings.
 	 *
 	 * @param int   $network_id   ID of the network to update.
-	 * @param array $network_meta Meta information to update for the network.
+	 * @param array $network_meta Information to update for the network.
 	 */
 	private function _update_network( $network_id, $network_meta ) {
 		/**
