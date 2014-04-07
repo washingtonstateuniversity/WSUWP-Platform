@@ -56,10 +56,12 @@ class WSUWP_WordPress_Dashboard {
 	public function update_footer_text( $text ) {
 		global $wsuwp_global_version, $wsuwp_wp_changeset;
 
+		$text = '<!-- Original version text ' . $text . '-->';
+
 		$version_text = explode( ' ', $text );
 		$version = explode( '-', $version_text[1] );
 
-		$text = 'WSUWP Platform <a target=_blank href="https://github.com/washingtonstateuniversity/WSUWP-Platform/tree/v' . $wsuwp_global_version . '">' . $wsuwp_global_version . '</a> | ';
+		$text .= 'WSUWP Platform <a target=_blank href="https://github.com/washingtonstateuniversity/WSUWP-Platform/tree/v' . $wsuwp_global_version . '">' . $wsuwp_global_version . '</a> | ';
 		$text .= 'WordPress ' . $version[0];
 
 		if ( isset( $version[1] ) ) {
