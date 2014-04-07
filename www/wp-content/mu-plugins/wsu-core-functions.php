@@ -172,10 +172,11 @@ function wsuwp_is_multi_network() {
  * @return array containing network data
  */
 function wsuwp_get_networks( $args = array() ) {
-	if ( ! is_multisite() )
-		return array();
-
 	global $wpdb;
+
+	if ( ! is_multisite() ) {
+		return array();
+	}
 
 	$network_results = (array) $wpdb->get_results( "SELECT * FROM $wpdb->site" );
 
