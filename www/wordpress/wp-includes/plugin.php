@@ -328,6 +328,7 @@ function current_filter() {
  * Retrieve the name of the current action.
  *
  * @since 3.9.0
+ *
  * @uses current_filter()
  *
  * @return string Hook name of the current action.
@@ -340,19 +341,19 @@ function current_action() {
  * Retrieve the name of a filter currently being processed.
  *
  * The function current_filter() only returns the most recent filter or action
- * being executed.  did_action() returns true once the action is initially
- * processed.  This function allows detection for any filter currently being
+ * being executed. did_action() returns true once the action is initially
+ * processed. This function allows detection for any filter currently being
  * executed (despite not being the most recent filter to fire, in the case of
  * hooks called from hook callbacks) to be verified.
  *
  * @since 3.9.0
+ *
  * @see current_filter()
  * @see did_action()
+ * @global array $wp_current_filter Current filter.
  *
- * @param string $filter Optional. Filter to check. Defaults to null, which checks if any filter is currently being run.
- *
- * @global array $wp_current_filter
- *
+ * @param null|string $filter Optional. Filter to check. Defaults to null, which
+ *                            checks if any filter is currently being run.
  * @return bool Whether the filter is currently in the stack
  */
 function doing_filter( $filter = null ) {
@@ -369,10 +370,11 @@ function doing_filter( $filter = null ) {
  * Retrieve the name of an action currently being processed.
  *
  * @since 3.9.0
+ *
  * @uses doing_filter()
  *
- * @param string $action Optional. Action to check. Defaults to null, which checks if any action is currently being run.
- *
+ * @param string|null $action Optional. Action to check. Defaults to null, which checks
+ *                            if any action is currently being run.
  * @return bool Whether the action is currently in the stack.
  */
 function doing_action( $action = null ) {
@@ -638,16 +640,30 @@ function plugin_basename( $file ) {
  * This is used in {@see plugin_basename()} to resolve symlinked paths.
  *
  * @param string $file Known path to the file.
+ * @return bool Whether the path was able to be registered.
  */
 function wp_register_plugin_realpath( $file ) {
 	global $wp_plugin_paths;
 
+	// Normalize, but store as static to avoid recalculation of a constant value
+	static $wp_plugin_path, $wpmu_plugin_path;
+	if ( ! isset( $wp_plugin_path ) ) {
+		$wp_plugin_path   = wp_normalize_path( WP_PLUGIN_DIR   );
+		$wpmu_plugin_path = wp_normalize_path( WPMU_PLUGIN_DIR );
+	}
+
 	$plugin_path = wp_normalize_path( dirname( $file ) );
 	$plugin_realpath = wp_normalize_path( dirname( realpath( $file ) ) );
+
+	if ( $plugin_path === $wp_plugin_path || $plugin_path === $wpmu_plugin_path ) {
+		return false;
+	}
 
 	if ( $plugin_path !== $plugin_realpath ) {
 		$wp_plugin_paths[ $plugin_path ] = $plugin_realpath;
 	}
+
+	return true;
 }
 
 /**

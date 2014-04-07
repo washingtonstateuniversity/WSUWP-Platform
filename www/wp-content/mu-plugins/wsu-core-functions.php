@@ -144,14 +144,15 @@ function wsuwp_restore_current_site() {
  * @return bool
  */
 function wsuwp_is_multi_network() {
-	if ( ! is_multisite() )
+	global $wpdb;
+
+	if ( ! is_multisite() ) {
 		return false;
+	}
 
 	if ( defined( 'WP_MULTI_NETWORK' ) && true === WP_MULTI_NETWORK ) {
 		return true;
 	}
-
-	global $wpdb;
 
 	if ( false === ( $is_multi_network = get_transient( 'wsuwp_is_multi_network' ) ) ) {
 		$rows = (array) $wpdb->get_col("SELECT DISTINCT id FROM $wpdb->site LIMIT 2");
@@ -171,10 +172,11 @@ function wsuwp_is_multi_network() {
  * @return array containing network data
  */
 function wsuwp_get_networks( $args = array() ) {
-	if ( ! is_multisite() )
-		return array();
-
 	global $wpdb;
+
+	if ( ! is_multisite() ) {
+		return array();
+	}
 
 	$network_results = (array) $wpdb->get_results( "SELECT * FROM $wpdb->site" );
 
