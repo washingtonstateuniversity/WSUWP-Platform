@@ -416,14 +416,7 @@ function wsuwp_get_primary_network_id() {
  * @return bool True if valid, false if not.
  */
 function wsuwp_validate_domain( $domain ) {
-	$validated_domain = '';
-
-	// Domains can have a-z, A-Z, 0-9, -, and .
 	if ( preg_match( '|^([a-zA-Z0-9-.])+$|', $domain ) ) {
-		$validated_domain = strtolower( $domain );
-	}
-
-	if ( $validated_domain === $domain ) {
 		return true;
 	}
 
