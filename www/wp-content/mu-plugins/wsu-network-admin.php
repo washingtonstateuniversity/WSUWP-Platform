@@ -446,19 +446,54 @@ class WSU_Network_Admin {
 	}
 
 	/**
-	 * Update a network's meta data with information passed from the Edit Network screen.
+	 * Update a network with information passed from the Edit Network screen. This allows for general
+	 * network options to be changed as well as the domain and path attached to a network. The domain
+	 * and path are not touched if they do not differ from the current settings.
 	 *
 	 * @param int   $network_id   ID of the network to update.
-	 * @param array $network_meta Meta information to update for the network.
+	 * @param array $network_meta Information to update for the network.
 	 */
 	private function _update_network( $network_id, $network_meta ) {
+		/**
+		 * @var WPDB $wpdb
+		 */
+		global $wpdb;
+
 		wsuwp_switch_to_network( $network_id );
+
 		foreach ( $network_meta as $key => $value ) {
 			if ( array_key_exists( $key, $this->network_meta_edit ) ) {
 				$value = $this->network_meta_edit[ $key ]['validate']( $value );
 				update_site_option( $key, $value );
 			}
 		}
+
+		if ( isset( $network_meta['domain'] ) || isset( $network_meta['path'] ) ) {
+			$network = wp_get_network( $network_id );
+
+			// @todo proper validation
+			$domain = untrailingslashit( sanitize_key( $network_meta['domain'] ) );
+			$path = trailingslashit( sanitize_key( $network_meta['path'] ) );
+
+			if ( ! empty( $network ) && ( $network->domain !== $domain || $network->path !== $path ) ) {
+				// Find the network's primary site to change it's domain and path as well.
+				$site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s AND site_id = %d", $network->domain, $network->path, $network_id ) );
+
+				// Update the domain and path of the network.
+				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->site SET domain = %s, path = %s WHERE id = %d", $domain, $path, $network_id  ) );
+
+				// Update the domain and path of the site.
+				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->blogs SET domain = %s, path = %s WHERE blog_id = %d", $domain, $path, $site_id ) );
+
+				// Site level options need to be set properly for the request to work.
+				update_blog_option( $site_id, 'siteurl', esc_url_raw( 'http://' . $domain . $path ) );
+				update_blog_option( $site_id, 'home', esc_url_raw( 'http://' . $domain . $path ) );
+
+				// Using update_blog_option above clears the site level cache. We need to clear the network level cache.
+				wp_cache_delete( $network_id, 'wsuwp:network' );
+			}
+		}
+
 		wsuwp_restore_current_network();
 	}
 
@@ -542,6 +577,19 @@ class WSU_Network_Admin {
 				<?php wp_nonce_field( 'update-network', '_wpnonce_update-network' ) ?>
 				<table class="form-table">
 					<tbody>
+					<tr class="form-field">
+						<th scope="row">
+							<label for="network[domain]">Network Domain:</label>
+						</th>
+						<td><input class="wide-text" type="text" name="network[domain]" value="<?php echo esc_attr( $network[0]->domain ); ?>">
+						<p class="description">Changing the domain or path of an existing network may have severe consequences.</p></td>
+					</tr>
+					<tr class="form-field">
+						<th scope="row">
+							<label for="network[path]">Network Path:</label>
+						</th>
+						<td><input class="wide-text" type="text" name="network[path]" value="<?php echo esc_attr( $network[0]->path ); ?>"></td>
+					</tr>
 					<?php echo $edit_output; ?>
 					<tr class="form-field">
 						<th scope="row"></th>
