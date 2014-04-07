@@ -1,0 +1,649 @@
+# Copyright (C) 2012 Automattic
+# This file is distributed under the GNU General Public License v2.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: P2 1.4.0-wpcom\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tags/p2\n"
+"POT-Creation-Date: 2012-04-07 15:43:22+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2013-04-27 15:58+0100\n"
+"Last-Translator: Thord Daniel Hedengren <tdh@tdh.me>\n"
+"Language-Team: TDH <tdh@tdh.se>\n"
+"X-Generator: Poedit 1.5.5\n"
+"Language: Swedish\n"
+
+#: tag.php:14
+msgid "Tagged: %s"
+msgstr "Taggad: %s"
+
+#: tag.php:16 search.php:16 index.php:34 author.php:23
+msgid "Toggle Comment Threads"
+msgstr "Visa kommentarstr&aring;d"
+
+#: tag.php:16 search.php:16 index.php:34 single.php:21 author.php:23
+msgid "Keyboard Shortcuts"
+msgstr "Kortkommandon"
+
+#: tag.php:33 search.php:31
+msgid "No posts found!"
+msgstr "Inga poster hittades!"
+
+#: tag.php:39 search.php:39 index.php:55 author.php:41
+msgid "&larr; Older posts"
+msgstr "&larr; &Auml;ldre poster"
+
+#: tag.php:40 search.php:40 index.php:56 author.php:42
+msgid "Newer posts &rarr;"
+msgstr "Nyare poster &rarr;"
+
+#: footer.php:15
+msgid "Theme: %1$s by %2$s."
+msgstr "Tema: %1$s av %2$s."
+
+#: footer.php:23
+msgid "compose new post"
+msgstr "skriv ny post"
+
+#: footer.php:24
+msgid "next post/next comment"
+msgstr "n&auml;sta post/n&auml;sta kommentar"
+
+#: footer.php:25
+msgid "previous post/previous comment"
+msgstr "f&ouml;rra posten/f&ouml;rra kommentaren"
+
+#: footer.php:26
+msgid "reply"
+msgstr "svara"
+
+#: footer.php:27
+msgid "edit"
+msgstr "&auml;ndra"
+
+#: footer.php:28
+msgid "show/hide comments"
+msgstr "visa/d&ouml;lj kommentarer"
+
+#: footer.php:29
+msgid "go to top"
+msgstr "till sidans topp"
+
+#: footer.php:30
+msgid "go to login"
+msgstr "logga in"
+
+#: footer.php:31
+msgid "show/hide help"
+msgstr "visa/d&ouml;lj hj&auml;lp"
+
+#: footer.php:32
+msgid "shift"
+msgstr "shift"
+
+#: footer.php:32
+msgid "cancel"
+msgstr "avbryt"
+
+#: attachment.php:45
+msgid "Full size is %s pixels"
+msgstr "Fullbredd &auml;r %s pixlar"
+
+#: attachment.php:48
+msgid "Link to full-size image"
+msgstr "L&auml;nk till fullstor bild"
+
+#: attachment.php:69
+msgid "View file:"
+msgstr "Visa fil:"
+
+#: attachment.php:70 entry.php:79 entry.php:90 inc/template-tags.php:109
+msgid "(More ...)"
+msgstr "(Mer …)"
+
+#: header.php:30
+msgid "Post"
+msgstr "Post"
+
+#: header.php:36
+msgid "Menu"
+msgstr "Meny"
+
+#: header.php:37
+msgid "Skip to content"
+msgstr "Till inneh&aring;llet"
+
+#: post-form.php:17 post-form.php:53 post-form.php:54 inc/js.php:135
+#: inc/ajax.php:220
+msgid "Post Title"
+msgstr "Postens titel"
+
+#: post-form.php:32
+msgid "Status Update"
+msgstr "Statusuppdatering"
+
+#: post-form.php:33
+msgid "Blog Post"
+msgstr "Bloggpost"
+
+#: post-form.php:34
+msgid "Quote"
+msgstr "Citat"
+
+#: post-form.php:35
+msgid "Link"
+msgstr "L&auml;nk"
+
+#: post-form.php:63 post-form.php:65 post-form.php:66 post-form.php:67
+#: inc/js.php:134
+msgid "Citation"
+msgstr "Citat"
+
+#: post-form.php:72 post-form.php:73 post-form.php:74 inc/js.php:133
+#: inc/ajax.php:216
+msgid "Tag it"
+msgstr "Tagga"
+
+#: post-form.php:75
+msgid "Post it"
+msgstr "Posta"
+
+#: post-form.php:80 inc/js.php:143
+msgid "Loading..."
+msgstr "Laddar..."
+
+#: entry.php:18
+msgid "Posts by %1$s ( @%2$s )"
+msgstr "Poster av %1$s ( @%2$s )"
+
+#: entry.php:39 functions.php:351
+msgid "Permalink"
+msgstr "Permal&auml;nk"
+
+#: entry.php:46 entry.php:111 entry.php:115 functions.php:334
+#: functions.php:431 functions.php:543 functions.php:565
+msgid "Reply"
+msgstr "Svara"
+
+#: entry.php:51 functions.php:356
+msgid "Edit"
+msgstr "&Auml;ndra"
+
+#: entry.php:58 inc/ajax.php:162
+msgid "<br />Tags:"
+msgstr "<br />Taggar:"
+
+#: entry.php:102
+msgid "Required fields are marked %s"
+msgstr "Obligatoriska f&auml;lt markeras %s"
+
+#: entry.php:125
+msgid "Toggle Comments"
+msgstr "Visa/d&ouml;lj kommentarer"
+
+#: entry.php:130
+msgid "Pages:"
+msgstr "Sidor:"
+
+#: search.php:14
+msgid "Search Results for: %s"
+msgstr "S&ouml;kresultat f&ouml;r: %s"
+
+#: search.php:32 404.php:15
+msgid ""
+"Apologies, but the page you requested could not be found. Perhaps searching "
+"will help."
+msgstr ""
+"Vi beklagar, men sidan du f&ouml;rs&ouml;kte ladda kunde inte hittas. Kanske "
+"kan du hitta den med s&ouml;kfunktionen?"
+
+#: functions.php:197
+msgid "Primary Menu"
+msgstr "Huvudmeny"
+
+#: functions.php:207
+msgid "Sidebar"
+msgstr "Sidokolumn"
+
+#: functions.php:366
+msgid "Your comment is awaiting moderation."
+msgstr "Din kommentar inv&auml;ntar granskning."
+
+#: functions.php:405
+msgid "Video Post"
+msgstr "Videopost"
+
+#: functions.php:407
+msgid "Image Post"
+msgstr "Bildpost"
+
+#: functions.php:544
+msgid "Log in to Reply"
+msgstr "Logga in f&ouml;r att svara"
+
+#: functions.php:587
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: functions.php:587
+msgid "Proudly powered by %s."
+msgstr "Drivs med %s."
+
+#: comments.php:21
+msgid "&larr; Older Comments"
+msgstr "&larr; &Auml;ldre kommentarer"
+
+#: comments.php:22
+msgid "Newer Comments &rarr;"
+msgstr "Nyare kommentarer &rarr;"
+
+#: index.php:24
+msgid "Recent Updates"
+msgstr "Nyligen uppdaterat"
+
+#: index.php:24
+msgid "Page %s"
+msgstr "Sida %s"
+
+#: index.php:29
+msgctxt "Month name"
+msgid "Updates from %s"
+msgstr "Uppdateringar fr&aring;n %s"
+
+#: index.php:48 single.php:35
+msgid "No posts yet!"
+msgstr "Inga poster &auml;n!"
+
+#: inc/template-tags.php:80
+msgid "%1$s is discussing."
+msgstr "%1$s diskuterar"
+
+#: inc/template-tags.php:82
+msgid "%1$s and %2$s are discussing."
+msgstr "%1$s och %2$s diskuterar."
+
+#: inc/template-tags.php:87
+msgid "%1$s, %2$s, and %3$s are discussing."
+msgstr "%1$s, %2$s, och %3$s diskuterar."
+
+#: inc/template-tags.php:94
+msgid "%1$s, %2$s, %3$s, and %4$d other are discussing."
+msgid_plural "%1$s, %2$s, %3$s, and %4$d others are discussing."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/template-tags.php:175
+msgid "Hi, %s. %s"
+msgstr "Hej, %s. %s"
+
+#: inc/template-tags.php:175
+msgid "Whatcha up to?"
+msgstr "Vad h&auml;nder?"
+
+#: inc/template-tags.php:246 inc/js.php:149
+msgid "%1$s <em>on</em> %2$s"
+msgstr "%1$s <em>den</em> %2$s"
+
+#: inc/js.php:132
+msgid "Tags:"
+msgstr "Taggar:"
+
+#: inc/js.php:136
+msgid "Go to homepage"
+msgstr "Till f&ouml;rstasidan"
+
+#: inc/js.php:138
+msgid "%d new update(s)"
+msgstr "%d ny(a) uppdatering(ar)"
+
+#: inc/js.php:139
+msgid "%d new comment(s)"
+msgstr "%d ny(a) kommentar(er)"
+
+#: inc/js.php:140
+msgid "Jump to top"
+msgstr "Hoppa till toppen"
+
+#: inc/js.php:141
+msgid "An error has occurred, your post was not posted"
+msgstr "Ett fel intr&auml;ffade, din post publicerades inte"
+
+#: inc/js.php:142
+msgid "Your update has been posted"
+msgstr "Din uppdatering har publicerats"
+
+#: inc/js.php:144
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: inc/js.php:145
+msgid "Save"
+msgstr "Spara"
+
+#: inc/js.php:146 single.php:19
+msgid "Hide threads"
+msgstr "G&ouml;m tr&aring;dar"
+
+#: inc/js.php:147
+msgid "Show threads"
+msgstr "Visa tr&aring;dar"
+
+#: inc/js.php:148
+msgid "Your comments or posts will be lost if you continue."
+msgstr "Din kommentar eller post kommer f&ouml;rsvinna om du forts&auml;tter."
+
+#: inc/js.php:154
+msgid "After typing @, type a name or username to find a member of this site"
+msgstr ""
+"Skriv ett namn eller anv&auml;ndarnamn efter @ f&ouml;r att hitta en medlem "
+"på sidan"
+
+#: inc/js.php:155
+msgid "No matches."
+msgstr "Inga tr&auml;ffar."
+
+#: inc/js.php:156
+msgid ""
+"Are you sure you would like to clear this comment? Its contents will be "
+"deleted."
+msgstr ""
+"&Auml;r du s&auml;ker p&aring; att du vill ta bort din kommentar? "
+"Inneh&aring;llet kommer raderas."
+
+#: inc/js.php:157
+msgid "Oops! Looks like you are not logged in."
+msgstr "Hoppsan! Du verkar inte vara inloggad."
+
+#: inc/js.php:158
+msgid "Please log in again"
+msgstr "V&auml;nligen logga in igen"
+
+#: inc/js.php:159
+msgid ""
+"Whoops! Looks like you are not connected to the server. P2 could not connect "
+"with WordPress."
+msgstr ""
+"Hoppsan! Det verkar som att du inte har n&aring;gon kontakt med servern. P2 "
+"kunden inte f&aring; kontakt med WordPress."
+
+#: inc/options-page.php:16
+msgid "Theme Options"
+msgstr "Temainst&auml;llningar"
+
+#: inc/options-page.php:68 inc/options-page.php:179
+msgid "Whatcha' up to?"
+msgstr "Vad h&auml;nder?"
+
+#: inc/options-page.php:95
+msgid "Options saved."
+msgstr "Inst&auml;llningarna sparades."
+
+#: inc/options-page.php:101
+msgid "P2 Options"
+msgstr "Inst&auml;llningar f&ouml;r P2"
+
+#: inc/options-page.php:106
+msgid "Functionality Options"
+msgstr "Funktionsinst&auml;llningar"
+
+#: inc/options-page.php:114
+msgid "Posting Access:"
+msgstr "Publicerings&aring;tkomst:"
+
+#: inc/options-page.php:120
+msgid "Allow any WordPress.com member to post"
+msgstr "Till&aring;t medlemmar av WordPress.com att posta"
+
+#: inc/options-page.php:122
+msgid "Allow any registered member to post"
+msgstr "Till&aring;t alla registrerade medlemmar att posta"
+
+#: inc/options-page.php:130
+msgid "Hide Threads:"
+msgstr "G&ouml;m tr&aring;dar:"
+
+#: inc/options-page.php:134
+msgid "Hide comment threads by default"
+msgstr "G&ouml;m kommentarstr&aring;dar som standard"
+
+#: inc/options-page.php:144
+msgid "Design Options"
+msgstr "Designinst&auml;llningar"
+
+#: inc/options-page.php:150
+msgid "Custom Background Color:"
+msgstr "St&auml;ll in bakgrundsf&auml;rg:"
+
+#: inc/options-page.php:152
+msgid "Pick a Color"
+msgstr "V&auml;lj en f&auml;rg"
+
+#: inc/options-page.php:158
+msgid "Background Image:"
+msgstr "Bakgrundsbild:"
+
+#: inc/options-page.php:160
+msgid "None"
+msgstr "Ingen"
+
+#: inc/options-page.php:161
+msgid "Bubbles"
+msgstr "Bubblor"
+
+#: inc/options-page.php:162
+msgid "Polka Dots"
+msgstr "Polkagris-prickar"
+
+#: inc/options-page.php:163
+msgid "Squares"
+msgstr "Fyrkanter"
+
+#: inc/options-page.php:164
+msgid "Plaid"
+msgstr "Pl&auml;d"
+
+#: inc/options-page.php:165
+msgid "Stripes"
+msgstr "R&auml;nder"
+
+#: inc/options-page.php:166
+msgid "Santa"
+msgstr "Jul"
+
+#: inc/options-page.php:170
+msgid "Sidebar display:"
+msgstr "Sidokolumnen:"
+
+#: inc/options-page.php:173
+msgid "Hide the Sidebar"
+msgstr "G&ouml;m sidokolumnen"
+
+#: inc/options-page.php:177
+msgid "Post prompt:"
+msgstr "Uppmana f&ouml;r post:"
+
+#: inc/options-page.php:180
+msgid "if empty, defaults to <strong>Whatcha up to?</strong>"
+msgstr "om tom visas <strong>Vad h&auml;nder?</strong>"
+
+#: inc/options-page.php:184
+msgid "Post Titles:"
+msgstr "Post-rubriker"
+
+#: inc/options-page.php:187
+msgid "Display titles"
+msgstr "Visa rubriker"
+
+#: inc/options-page.php:197
+msgid "Update Options"
+msgstr "Uppdatera inst&auml;llningarna"
+
+#: inc/options-page.php:252
+msgid "Hide Text"
+msgstr "G&ouml;m text"
+
+#: inc/options-page.php:258
+msgid "Show Text"
+msgstr "Visa text"
+
+#: inc/widgets/recent-tags.php:10
+msgid "P2 Recent Tags"
+msgstr "P2 Nyligen anv&auml;nda taggar"
+
+#: inc/widgets/recent-tags.php:10
+msgid "The tags from the latest posts."
+msgstr "Taggarna fr&aring;n de senaste posterna."
+
+#: inc/widgets/recent-tags.php:24 inc/widgets/recent-comments.php:39
+msgid "Title:"
+msgstr "Titel:"
+
+#: inc/widgets/recent-tags.php:30
+msgid "Number of tags to show:"
+msgstr "Antal taggar att visa:"
+
+#: inc/widgets/recent-tags.php:46
+msgid "Recent tags"
+msgstr "Nyligen anv&auml;nda taggar"
+
+#: inc/widgets/recent-tags.php:66
+msgid "All Updates RSS"
+msgstr "Alla uppdateringar via RSS"
+
+#: inc/widgets/recent-comments.php:10
+msgid "P2 Recent Comments"
+msgstr "P2 Nyligen kommenterat"
+
+#: inc/widgets/recent-comments.php:10
+msgid "Recent comments with avatars."
+msgstr "Senaste kommentarer med avatarer."
+
+#: inc/widgets/recent-comments.php:35
+msgid "No avatar"
+msgstr "Ingen avtar"
+
+#: inc/widgets/recent-comments.php:45
+msgid "Number of comments to show:"
+msgstr "Antal kommentarer att visa:"
+
+#: inc/widgets/recent-comments.php:51
+msgid "Avatars:"
+msgstr "Avatarer:"
+
+#: inc/widgets/recent-comments.php:72
+msgid "Recent comments"
+msgstr "Nyligen kommenterat"
+
+#: inc/widgets/recent-comments.php:131
+msgid "Anonymous"
+msgstr "Anonym"
+
+#: inc/widgets/recent-comments.php:163
+msgid "%s on <a href='%s' class='tooltip' title='%s'>%s</a>"
+msgstr "%s p&aring; <a href='%s' class='tooltip' title='%s'>%s</a>"
+
+#: inc/ajax.php:27 inc/ajax.php:100 inc/ajax.php:111 inc/ajax.php:169
+#: inc/ajax.php:198
+msgid "Error: not logged in."
+msgstr "Fel: inte inloggad."
+
+#: inc/ajax.php:32 inc/ajax.php:118
+msgid "Error: not allowed to edit post."
+msgstr "Fel: f&aring;r inte redigera postem."
+
+#: inc/ajax.php:177
+msgid "Error: not allowed to edit this comment."
+msgstr "Fel: f&aring;r inte redigera kommentaren."
+
+#: inc/ajax.php:203
+msgid "Error: not allowed to post."
+msgstr "Fel: f&aring;r inte publicera."
+
+#: inc/ajax.php:311
+msgid "Error: you must be logged in to post a comment."
+msgstr "Fel: du m&aring;ste vara inloggad f&ouml;r att kommentera."
+
+#: inc/ajax.php:322
+msgid "Error: please fill the required fields (name, email)."
+msgstr "Fel: v&auml;nligen fyll i de obligatoriska f&auml;lten (namn, e-post)."
+
+#: inc/ajax.php:324
+msgid "Error: please enter a valid email address."
+msgstr "Fel: v&auml;nligen ange en korrekt e-postadress."
+
+#: inc/ajax.php:328
+msgid "Error: Please type a comment."
+msgstr "Fel: v&auml;nligen skriv en kommentar."
+
+#: inc/ajax.php:342
+msgid "Error: Unknown error occurred. Comment not posted."
+msgstr ""
+"Fel: ett ok&auml;nt fel intr&auml;ffade, kommentaren publicerades inte."
+
+#: single.php:42
+msgid "&larr;"
+msgstr "&larr;"
+
+#: single.php:43
+msgid "&rarr;"
+msgstr "&rarr;"
+
+#: author.php:19
+msgctxt "Author name"
+msgid "Updates from %s"
+msgstr "Uppdateringar fr&aring;n %s"
+
+#: author.php:35 404.php:14
+msgid "Not Found"
+msgstr "Hittades inte"
+
+#: author.php:36
+msgid "Apologies, but the page you requested could not be found."
+msgstr "Vi beklagar, men sidan du s&ouml;kte hittades inte."
+
+#. Theme Name of the plugin/theme
+msgid "P2"
+msgstr "P2"
+
+#. Theme URI of the plugin/theme
+msgid "http://p2theme.com/"
+msgstr "http://p2theme.com/"
+
+#. Description of the plugin/theme
+msgid ""
+"A group blog theme for short update messages, inspired by Twitter. "
+"Featuring: Hassle-free posting from the front page. Perfect for group "
+"blogging, or as a liveblog theme. Dynamic page updates. Threaded comment "
+"display on the front page. In-line editing for posts and comments. Live tag "
+"suggestion based on previously used tags. A show/hide feature for comments, "
+"to keep things tidy. Real-time notifications when a new comment or update is "
+"posted. Super-handy keyboard shortcuts. Helvetica Neue for you modern font "
+"lovers."
+msgstr ""
+"Ett gruppbloggtema f&ouml;r korta uppdateringar, inspirerat av Twitter. "
+"Erbjuder problemfri publicering fr&aring;n f&ouml;rstasidan. Perfekt f&ouml;"
+"r grupp- eller livebloggande. Dynamisk uppdatering av inneh&aring;llet. "
+"Tr&aring;dade kommentarer visas p&aring; f&ouml;rstasidan. Redigering av "
+"poster och kommentarer direkt p&aring; sidan. Taggf&ouml;rslag utifr&aring;n "
+"tidigare anv&auml;nda taggar. H&aring;ll det st&auml;dat genom att sisa/"
+"d&ouml;lja kommentarer. Realtidsnotiser n&auml;r en ny kommentar eller post "
+"publiceras. Smidiga kortkommandon. Helventica Neue f&ouml;r alla &auml;"
+"lskare av moderna typsnitt."
+
+#. Author of the plugin/theme
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Author URI of the plugin/theme
+msgid "http://automattic.com/"
+msgstr "http://automattic.com/"
+
+#. Tags of the plugin/theme
+msgid ""
+"blue, two-columns, fixed-width, rtl-language-support, right-sidebar, white, "
+"light, front-page-post-form, translation-ready, custom-background, custom-"
+"header, custom-menu, post-formats, sticky-posts, theme-options, blog, "
+"education, lifestream, productivity, clean, corporate, geometric, light, "
+"minimal, modern"
+msgstr ""

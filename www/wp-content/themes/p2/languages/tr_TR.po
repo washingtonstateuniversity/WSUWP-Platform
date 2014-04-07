@@ -1,0 +1,614 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: P2\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: 404.php:14 author.php:34
+msgid "Not Found"
+msgstr "Bulunamadı"
+
+#: 404.php:15 search.php:32
+msgid "Apologies, but the page you requested could not be found. Perhaps searching will help."
+msgstr "Üzgünüm, aradığınız sayfa bulunamadı. Arama yapabilirsiniz."
+
+#: attachment.php:45
+msgid "Full size is %s pixels"
+msgstr "Tam boyut %s piksel boyutunda"
+
+#: attachment.php:48
+msgid "Link to full-size image"
+msgstr "Tam boyut görüntüle"
+
+#: attachment.php:54 attachment.php:72
+msgid "Edit this entry."
+msgstr "Bu yazıyı düzenle."
+
+#: attachment.php:69
+msgid "View file:"
+msgstr "Görüntülenen dosya:"
+
+#: attachment.php:70 entry.php:79 entry.php:88 inc/template-tags.php:109
+msgid "(More ...)"
+msgstr "(Devamı ...)"
+
+#: author.php:19
+msgctxt "Author name"
+msgid "Updates from %s"
+msgstr "%s tarafından yazılanlar"
+
+#: author.php:22 index.php:33 search.php:16 tag.php:16
+msgid "Toggle Comment Threads"
+msgstr "Yorumları Göster/Gizle"
+
+#: author.php:22 index.php:33 search.php:16 single.php:21 tag.php:16
+msgid "Keyboard Shortcuts"
+msgstr "Klavye Kısayolları"
+
+#: author.php:35
+msgid "Apologies, but the page you requested could not be found."
+msgstr "Üzgünüm, aradığınız sayfa bulunamadı."
+
+#: author.php:40 index.php:54 search.php:39 tag.php:39
+msgid "&larr; Older posts"
+msgstr "&larr; Eski yazılar"
+
+#: author.php:41 index.php:55 search.php:40 tag.php:40
+msgid "Newer posts &rarr;"
+msgstr "Yeni yazılar &rarr;"
+
+#: comments.php:21
+msgid "&larr; Older Comments"
+msgstr "&larr; Eski Yorumlar"
+
+#: comments.php:22
+msgid "Newer Comments &rarr;"
+msgstr "Yeni Yorumlar &rarr;"
+
+#: entry.php:18
+msgid "Posts by %1$s ( @%2$s )"
+msgstr "%1$s (@%2$s) tarafından yazılanlar"
+
+#: entry.php:37 functions.php:389
+msgid "Permalink"
+msgstr "Permalink"
+
+#: entry.php:46 entry.php:103 entry.php:107 functions.php:372
+#: functions.php:469 functions.php:594 functions.php:616
+msgid "Reply"
+msgstr "Cevapla"
+
+#: entry.php:51 functions.php:394
+msgid "Edit"
+msgstr "Düzenle"
+
+#: entry.php:58 inc/ajax.php:151
+msgid "<br />Tags:"
+msgstr "<br /> Etiketler:"
+
+#: entry.php:100
+msgid "Required fields are marked %s"
+msgstr "Gerekli alanlar %s ile işaretlenmişlerdir"
+
+#: entry.php:117
+msgid "Toggle Comments"
+msgstr "Yorumları Göster/Gizle"
+
+#: entry.php:122
+msgid "Pages:"
+msgstr "Sayfa:"
+
+#: footer.php:15
+msgid "Theme: %1$s by %2$s."
+msgstr "Tema:%2$s tarafından yapılan %1$s."
+
+#: footer.php:23
+msgid "compose new post"
+msgstr "yeni yazı oluştur"
+
+#: footer.php:24
+msgid "next post/next comment"
+msgstr "sonraki yazı/yorum"
+
+#: footer.php:25
+msgid "previous post/previous comment"
+msgstr "önceki yazı/yorum"
+
+#: footer.php:26
+msgid "reply"
+msgstr "cevapla"
+
+#: footer.php:27
+msgid "edit"
+msgstr "düzenle"
+
+#: footer.php:28
+msgid "show/hide comments"
+msgstr "yorumları göster/gizle"
+
+#: footer.php:29
+msgid "go to top"
+msgstr "üste çık"
+
+#: footer.php:30
+msgid "go to login"
+msgstr "giriş yap"
+
+#: footer.php:31
+msgid "show/hide help"
+msgstr "yardımı göster/gizle"
+
+#: footer.php:32
+msgid "shift + esc"
+msgstr "shift + esc"
+
+#: footer.php:32
+msgid "cancel"
+msgstr "iptal"
+
+#: functions.php:212
+msgid "Primary Menu"
+msgstr "Birincil Menü"
+
+#: functions.php:222
+msgid "Sidebar"
+msgstr "Yanmenü"
+
+#: functions.php:404
+msgid "Your comment is awaiting moderation."
+msgstr "Yorumunuz denetim için bekliyor."
+
+#: functions.php:443
+msgid "Video Post"
+msgstr "Video Yazısı"
+
+#: functions.php:445
+msgid "Image Post"
+msgstr "Fotoğraf"
+
+#: functions.php:595
+msgid "Log in to Reply"
+msgstr "Cevaplamak için giriş yapın"
+
+#: functions.php:638
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: functions.php:638
+msgid "Proudly powered by %s."
+msgstr "Altyapı %s"
+
+#: functions.php:737 index.php:24
+msgid "Page %s"
+msgstr "Sayfa %s"
+
+#: header.php:29
+msgid "Post"
+msgstr "Yazı"
+
+#: header.php:35
+msgid "Menu"
+msgstr "Menü"
+
+#: header.php:36
+msgid "Skip to content"
+msgstr "İçeriğe git"
+
+#: inc/ajax-read.php:191
+msgid "Error: you must be logged in to post a comment."
+msgstr "Hata: Yorum yazmak için oturum açmalısınız."
+
+#: inc/ajax-read.php:202
+msgid "Error: please fill the required fields (name, email)."
+msgstr "Hata: Gerekli alanları (isim, e-posta) doldurunuz."
+
+#: inc/ajax-read.php:204
+msgid "Error: please enter a valid email address."
+msgstr "Hata: geçerli bir e-posta adresi girin."
+
+#: inc/ajax-read.php:208
+msgid "Error: Please type a comment."
+msgstr "Hata: Yorum yazın."
+
+#: inc/ajax-read.php:222
+msgid "Error: Unknown error occurred. Comment not posted."
+msgstr "Hata: Bilinmeyen bir hata oluştu. Yorum gönderilemedi."
+
+#: inc/ajax.php:42 inc/ajax.php:86 inc/ajax.php:100 inc/ajax.php:161
+#: inc/ajax.php:193
+msgid "Error: not logged in."
+msgstr "Hata: giriş yapmadınız."
+
+#: inc/ajax.php:47 inc/ajax.php:107
+msgid "Error: not allowed to edit post."
+msgstr "Hata: yazıları düzenleme izniniz yok."
+
+#: inc/ajax.php:169
+msgid "Error: not allowed to edit this comment."
+msgstr "Hata: yorumu düzenleme yetkiniz yok."
+
+#: inc/ajax.php:198
+msgid "Error: not allowed to post."
+msgstr "Hata: yazı gönderilemez."
+
+#: inc/ajax.php:211 inc/js.php:129 post-form.php:72 post-form.php:73
+#: post-form.php:74
+msgid "Tag it"
+msgstr "Etiketle"
+
+#: inc/ajax.php:215 inc/js.php:131 post-form.php:17 post-form.php:53
+#: post-form.php:54
+msgid "Post Title"
+msgstr "Yazı Başlığı"
+
+#: inc/js.php:128
+msgid "Tags:"
+msgstr "Etiketler:"
+
+#: inc/js.php:130 post-form.php:63 post-form.php:65 post-form.php:66
+#: post-form.php:67
+msgid "Citation"
+msgstr "Alıntı"
+
+#: inc/js.php:132
+msgid "Go to homepage"
+msgstr "Anasayfaya git"
+
+#: inc/js.php:134
+msgid "%d new update(s)"
+msgstr "%d yeni güncelleme"
+
+#: inc/js.php:135
+msgid "%d new comment(s)"
+msgstr "%d yeni yorum"
+
+#: inc/js.php:136
+msgid "Jump to top"
+msgstr "Üste çık"
+
+#: inc/js.php:137
+msgid "An error has occurred, your post was not posted"
+msgstr "Bir hata oluştu, yazınız gönderilemedi."
+
+#: inc/js.php:138
+msgid "Your update has been posted"
+msgstr "Yazınız gönderildi"
+
+#: inc/js.php:139
+msgid "Loading..."
+msgstr "Yükleniyor ..."
+
+#: inc/js.php:140
+msgid "Cancel"
+msgstr "İptal"
+
+#: inc/js.php:141
+msgid "Save"
+msgstr "Kaydet"
+
+#: inc/js.php:142 single.php:19
+msgid "Hide threads"
+msgstr "Yorumları gizle"
+
+#: inc/js.php:143
+msgid "Show threads"
+msgstr "Yorumları göster"
+
+#: inc/js.php:144
+msgid "Your comments or posts will be lost if you continue."
+msgstr "Eğer çıkarsanız yazınız/yorumunuz gönderilemez."
+
+#: inc/js.php:145 inc/template-tags.php:252
+msgid "%1$s <em>on</em> %2$s"
+msgstr "%1$s <em>-</em> %2$s"
+
+#: inc/js.php:150
+msgid "After typing @, type a name or username to find a member of this site"
+msgstr "@ yazdıktan sonra bir isim veya kullanıcı adı yazarak bir üyeyi arayabilirsiniz"
+
+#: inc/js.php:151
+msgid "No matches."
+msgstr "Eşleşme yok."
+
+#: inc/js.php:152
+msgid "Are you sure you would like to clear this comment? Its contents will be deleted."
+msgstr "Bu yorumu silmek istediğinizden emin misiniz? İçerik tamamen silinecektir."
+
+#: inc/js.php:153
+msgid "Oops! Looks like you are not logged in."
+msgstr "Oops! Giriş yapmamış gözüküyorsunuz."
+
+#: inc/js.php:154
+msgid "Please log in again"
+msgstr "Lütfen tekrar giriş yapınız"
+
+#: inc/js.php:155
+msgid "Whoops! Looks like you are not connected to the server. P2 could not connect with WordPress."
+msgstr "Hoppala! Sunucuya bağlı değilsiniz."
+
+#: inc/js.php:156
+msgid "This field is required."
+msgstr "Bu alan gereklidir."
+
+#: inc/options-page.php:16
+msgid "Theme Options"
+msgstr "Tema Ayarları"
+
+#: inc/options-page.php:68 inc/options-page.php:179
+msgid "Whatcha' up to?"
+msgstr "Nasıl gidiyor?"
+
+#: inc/options-page.php:95
+msgid "Options saved."
+msgstr "Ayarlar kaydedildi."
+
+#: inc/options-page.php:101
+msgid "P2 Options"
+msgstr "P2 Ayarları"
+
+#: inc/options-page.php:106
+msgid "Functionality Options"
+msgstr "Fonksiyonel Ayarlar"
+
+#: inc/options-page.php:114
+msgid "Posting Access:"
+msgstr "Gönderme Ayarları:"
+
+#: inc/options-page.php:120
+msgid "Allow any WordPress.com member to post"
+msgstr "Bütün WordPress.com üyeleri yazı gönderebilir"
+
+#: inc/options-page.php:122
+msgid "Allow any registered member to post"
+msgstr "Bütün üyeler yazı gönderebilir."
+
+#: inc/options-page.php:130
+msgid "Hide Threads:"
+msgstr "Yorumları Gizle:"
+
+#: inc/options-page.php:134
+msgid "Hide comment threads by default"
+msgstr "Yorumları varsayılan olarak gizle"
+
+#: inc/options-page.php:144
+msgid "Design Options"
+msgstr "Tasarım Ayarları"
+
+#: inc/options-page.php:150
+msgid "Custom Background Color:"
+msgstr "Özel Arkaplan Rengi:"
+
+#: inc/options-page.php:152
+msgid "Pick a Color"
+msgstr "Renk Seçin"
+
+#: inc/options-page.php:158
+msgid "Background Image:"
+msgstr "Arkaplan Resmi:"
+
+#: inc/options-page.php:160
+msgid "None"
+msgstr "Yok"
+
+#: inc/options-page.php:161
+msgid "Bubbles"
+msgstr "Bubbles"
+
+#: inc/options-page.php:162
+msgid "Polka Dots"
+msgstr "Puanl"
+
+#: inc/options-page.php:163
+msgid "Squares"
+msgstr "Kareler"
+
+#: inc/options-page.php:164
+msgid "Plaid"
+msgstr "Ekoseli"
+
+#: inc/options-page.php:165
+msgid "Stripes"
+msgstr "Stripes"
+
+#: inc/options-page.php:166
+msgid "Santa"
+msgstr "Santa"
+
+#: inc/options-page.php:170
+msgid "Sidebar display:"
+msgstr "Yanmenü gösterimi:"
+
+#: inc/options-page.php:173
+msgid "Hide the Sidebar"
+msgstr "Yanmenüyü Gizle"
+
+#: inc/options-page.php:177
+msgid "Post prompt:"
+msgstr "Durum mesajı:"
+
+#: inc/options-page.php:180
+msgid "if empty, defaults to <strong>Whatcha up to?</strong>"
+msgstr "eğer boş bırakırsanız varsayılan olarak <strong>Nasıl Gidiyor?</strong> etkin olucak."
+
+#: inc/options-page.php:184
+msgid "Post Titles:"
+msgstr "Başlıklar:"
+
+#: inc/options-page.php:187
+msgid "Display titles"
+msgstr "Başlıkları göster"
+
+#: inc/options-page.php:197
+msgid "Update Options"
+msgstr "Güncelleme Ayarları"
+
+#: inc/options-page.php:252
+msgid "Hide Text"
+msgstr "Yazıyı Gizle"
+
+#: inc/options-page.php:258
+msgid "Show Text"
+msgstr "Yazıyı Göster"
+
+#: inc/template-tags.php:80
+msgid "%1$s is discussing."
+msgstr "%1$s yorum yazdı."
+
+#: inc/template-tags.php:82
+msgid "%1$s and %2$s are discussing."
+msgstr "%1$s ve %2$s yorum yazdılar."
+
+#: inc/template-tags.php:87
+msgid "%1$s, %2$s, and %3$s are discussing."
+msgstr "%1$s, %2$s ve %3$s yorum yazdı."
+
+#: inc/template-tags.php:94
+msgid "%1$s, %2$s, %3$s, and %4$d other are discussing."
+msgid_plural "%1$s, %2$s, %3$s, and %4$d others are discussing."
+msgstr[0] "%1$s, %2$s, %3$s ve %4$d kişi yorum yazdı."
+msgstr[1] "%1$s, %2$s, %3$s ve %4$d kişi yorum yazdı."
+
+#: inc/template-tags.php:175
+msgid "Hi, %s. %s"
+msgstr "Merhaba, %s. %s"
+
+#: inc/template-tags.php:175
+msgid "Whatcha up to?"
+msgstr "Nasıl Gidiyor?"
+
+#: inc/widgets/recent-comments.php:10
+msgid "P2 Recent Comments"
+msgstr "P2 Son Yorumlar"
+
+#: inc/widgets/recent-comments.php:10
+msgid "Recent comments with avatars."
+msgstr "Son yorumları avatarlı gösterir."
+
+#: inc/widgets/recent-comments.php:35
+msgid "No avatar"
+msgstr "Avatar yok"
+
+#: inc/widgets/recent-comments.php:39 inc/widgets/recent-tags.php:24
+msgid "Title:"
+msgstr "Başlık:"
+
+#: inc/widgets/recent-comments.php:45
+msgid "Number of comments to show:"
+msgstr "Gösterilecek yorum sayısı:"
+
+#: inc/widgets/recent-comments.php:51
+msgid "Avatars:"
+msgstr "Avatarlar:"
+
+#: inc/widgets/recent-comments.php:72
+msgid "Recent comments"
+msgstr "Son yorumlar"
+
+#: inc/widgets/recent-comments.php:131
+msgid "Anonymous"
+msgstr "Anonim"
+
+#: inc/widgets/recent-comments.php:163
+msgid "%s on <a href='%s' class='tooltip' title='%s'>%s</a>"
+msgstr "%s - <a href='%s' class='tooltip' title='%s'>%s</a>"
+
+#: inc/widgets/recent-tags.php:10
+msgid "P2 Recent Tags"
+msgstr "P2 Son Etiketler"
+
+#: inc/widgets/recent-tags.php:10
+msgid "The tags from the latest posts."
+msgstr "Son yazılardan etiketler gösterir."
+
+#: inc/widgets/recent-tags.php:30
+msgid "Number of tags to show:"
+msgstr "Gösterilecek etiketler:"
+
+#: inc/widgets/recent-tags.php:46
+msgid "Recent tags"
+msgstr "Son etiketler"
+
+#: index.php:24
+msgid "Recent Updates"
+msgstr "Son Güncellemeler"
+
+#: index.php:28
+msgctxt "Month name"
+msgid "Updates from %s"
+msgstr "%s ayındaki güncellemeler"
+
+#: index.php:47 single.php:35
+msgid "No posts yet!"
+msgstr "Henüz yazı yok!"
+
+#: post-form.php:32
+msgid "Status Update"
+msgstr "Durum Güncellemesi"
+
+#: post-form.php:33
+msgid "Blog Post"
+msgstr "Blog Yazısı"
+
+#: post-form.php:34
+msgid "Quote"
+msgstr "Alıntı"
+
+#: post-form.php:35
+msgid "Link"
+msgstr "Bağlantı"
+
+#: post-form.php:75
+msgid "Post it"
+msgstr "Gönder"
+
+#: search.php:14
+msgid "Search Results for: %s"
+msgstr "%s Arama Sonuçları"
+
+#: search.php:31 tag.php:33
+msgid "No posts found!"
+msgstr "Yazı bulunamadı!"
+
+#: single.php:42
+msgctxt "Previous post link"
+msgid "&larr; %title"
+msgstr "← %başlık"
+
+#: single.php:43
+msgctxt "Next post link"
+msgid "%title &rarr;"
+msgstr "%title →"
+
+#: tag.php:14
+msgid "Tagged: %s"
+msgstr "Etiketler:%s"
+
+#. Theme Name of the plugin/theme
+#: 
+msgid "P2"
+msgstr "P2"
+
+#. Theme URI of the plugin/theme
+#: 
+msgid "http://p2theme.com/"
+msgstr "http://p2theme.com/"
+
+#. Description of the plugin/theme
+#: 
+msgid "A group blog theme for short update messages, inspired by Twitter. Featuring: Hassle-free posting from the front page. Perfect for group blogging, or as a liveblog theme. Dynamic page updates. Threaded comment display on the front page. In-line editing for posts and comments. Live tag suggestion based on previously used tags. A show/hide feature for comments, to keep things tidy. Real-time notifications when a new comment or update is posted. Super-handy keyboard shortcuts. Helvetica Neue for you modern font lovers."
+msgstr "Kısa mesaj gönderimi için yapılmış bir blog tasarımıdır. Twitter benzeri. Grup arası mesajlaşmada veya kısa bloglamalar için kullanılabilir."
+
+#. Author of the plugin/theme
+#: 
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Author URI of the plugin/theme
+#: 
+msgid "http://automattic.com/"
+msgstr "http://automattic.com/"
+
