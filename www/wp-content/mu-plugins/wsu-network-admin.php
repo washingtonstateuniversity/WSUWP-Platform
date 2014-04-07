@@ -459,6 +459,13 @@ class WSU_Network_Admin {
 				update_site_option( $key, $value );
 			}
 		}
+
+		if ( isset( $network_meta['domain'] ) || isset( $network_meta['path'] ) ) {
+			$network = wp_get_network( $network_id );
+			if ( ! empty( $network ) && ( $network->domain !== untrailingslashit( $network_meta['domain'] ) || $network->path !== trailingslashit( $network_meta['path'] ) ) ) {
+				// Update the network with new info.
+			}
+		}
 		wsuwp_restore_current_network();
 	}
 
