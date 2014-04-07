@@ -470,10 +470,12 @@ class WSU_Network_Admin {
 
 		if ( isset( $network_meta['domain'] ) || isset( $network_meta['path'] ) ) {
 			$network = wp_get_network( $network_id );
-			if ( ! empty( $network ) && ( $network->domain !== untrailingslashit( $network_meta['domain'] ) || $network->path !== trailingslashit( $network_meta['path'] ) ) ) {
-				$domain = untrailingslashit( $network_meta['domain'] );
-				$path = trailingslashit( $network_meta['path'] );
 
+			// @todo proper validation
+			$domain = untrailingslashit( sanitize_key( $network_meta['domain'] ) );
+			$path = trailingslashit( sanitize_key( $network_meta['path'] ) );
+
+			if ( ! empty( $network ) && ( $network->domain !== $domain || $network->path !== $path ) ) {
 				// Find the network's primary site to change it's domain and path as well.
 				$site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s AND site_id = %d", $network->domain, $network->path, $network_id ) );
 
