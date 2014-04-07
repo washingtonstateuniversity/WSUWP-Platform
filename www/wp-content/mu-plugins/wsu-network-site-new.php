@@ -83,7 +83,7 @@ class WSUWP_New_Site_Administration {
 		}
 
 		if ( wsuwp_validate_domain( $site_domain ) ) {
-			$domain = $site_domain;
+			$domain = strtolower( $site_domain );
 		} else {
 			wp_die( __( 'Invalid site address. Non standard characters were found in the domain name.' ) );
 		}
