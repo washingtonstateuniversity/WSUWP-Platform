@@ -216,7 +216,8 @@
  * Displays a theme update notice
  * when an update is available.
  */
-.theme-browser .theme .theme-update {
+.theme-browser .theme .theme-update,
+.theme-browser .theme .theme-installed {
 	background: #d54e21;
 	background: rgba(213, 78, 33, 0.95);
 	color: #fff;
@@ -234,7 +235,8 @@
 	overflow: hidden;
 }
 
-.theme-browser .theme .theme-update:before {
+.theme-browser .theme .theme-update:before,
+.theme-browser .theme .theme-installed:before {
 	content: '\f463';
 	display: inline-block;
 	font: normal 20px/1 'dashicons';
@@ -1074,6 +1076,17 @@ body.folded .theme-overlay .theme-wrap {
   16.2 - Install Themes
 ------------------------------------------------------------------------------*/
 
+/* Already installed theme */
+.theme-browser .theme .theme-installed {
+	background: #0074a2;
+}
+.theme-browser .theme .theme-installed:before {
+	content: '\f147';
+}
+.theme-browser .theme.is-installed .theme-actions .button-primary {
+	display: none !important;
+}
+
 .theme-navigation {
 	background: #fff;
 	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
@@ -1247,6 +1260,9 @@ body.more-filters-opened.filters-applied .theme-browser {
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	padding: 10px;
+}
+.more-filters-container .wide-filters-group {
+	width: 38%;
 }
 .more-filters-container .feature-name {
 	margin: 0;
@@ -1749,7 +1765,7 @@ body.full-overlay-active {
 }
 
 #customize-container iframe,
-#theme-installer iframe {
+.theme-install-overlay iframe {
 	height: 100%;
 	width: 100%;
 	z-index: 20;
@@ -1765,11 +1781,11 @@ body.full-overlay-active {
 	margin-top: 0;
 }
 
-#theme-installer {
+.theme-install-overlay {
 	display: none;
 }
 
-#theme-installer.single-theme {
+.theme-install-overlay.single-theme {
 	display: block;
 }
 
@@ -1782,7 +1798,7 @@ body.full-overlay-active {
 	padding-top: 15px;
 }
 
-#theme-installer .install-theme-info {
+.theme-install-overlay .install-theme-info {
 	display: block;
 }
 
@@ -1825,22 +1841,22 @@ body.full-overlay-active {
 	max-width: 100%;
 }
 
-#theme-installer .wp-full-overlay-header {
+.theme-install-overlay .wp-full-overlay-header {
 	margin-top: 9px;
 }
 
-#theme-installer .wp-full-overlay-header .theme-install {
+.theme-install-overlay .wp-full-overlay-header .theme-install {
 	float: left;
 	/* For when .theme-install is a span rather than a.button-primary (already installed theme) */
 	line-height: 26px;
 }
 
-#theme-installer .wp-full-overlay-sidebar {
+.theme-install-overlay .wp-full-overlay-sidebar {
 	background: #EEE;
 	border-left: 1px solid #DDD;
 }
 
-#theme-installer .wp-full-overlay-main {
+.theme-install-overlay .wp-full-overlay-main {
 	background: #fff url(../images/spinner.gif) no-repeat center center;
 	-webkit-background-size: 20px 20px;
 	background-size: 20px 20px;
@@ -1863,7 +1879,7 @@ body.full-overlay-active {
 	}
 
 	.customize-loading #customize-container,
-	#theme-installer .wp-full-overlay-main {
+	.theme-install-overlay .wp-full-overlay-main {
 		background-image: url(../images/spinner-2x.gif);
 	}
 }
