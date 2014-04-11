@@ -1,5 +1,8 @@
 <?php
 
+include_once( 'includes/main-header.php' ); // Include main header functionality.
+include_once( 'includes/customizer.php' ); // Include customizer functionality.
+
 // Two Navigation Menus
 add_action( 'init', 'spine_theme_menus' );
 function spine_theme_menus() {
@@ -41,14 +44,19 @@ function spine_theme_setup_theme() {
 	add_image_size( 'billboard-image', 1584, 99163 );
 }
 
-
-
-// DEFAULTS
-
-// Condense verbose menu classes
-add_filter( 'nav_menu_css_class', 'spine_theme_abbridged_menu_classes', 10, 3 );
-function spine_theme_abbridged_menu_classes( $classes, $item, $args ) {
-	if ( in_array( 'current-menu-item', $classes ) ) {
+add_filter( 'nav_menu_css_class', 'spine_abbridged_menu_classes', 10 );
+/**
+ * Condense verbose menu classes provided by WordPress.
+ *
+ * Removes the default current-menu-item and current_page_parent classes
+ * if they are found on this page view and replaces them with 'current'.
+ *
+ * @param array $classes Current list of nav menu classes.
+ *
+ * @return array Modified list of nav menu classes.
+ */
+function spine_abbridged_menu_classes( $classes ) {
+	if ( in_array( 'current-menu-item', $classes ) || in_array( 'current_page_parent', $classes ) ) {
 		return array( 'current' );
 	}
 
@@ -114,9 +122,11 @@ add_filter('get_image_tag_class', 'image_tag_class', 0, 4);
 
 */
 
-// Sectioning
-function spine_is_subpage() {
-    global $post;
+// SECTIONING
+
+function spine_is_sub() {
+    $post = get_post();
+
     if ( is_page() && $post->post_parent ) {
         return $post->post_parent;
     } else {
@@ -124,50 +134,81 @@ function spine_is_subpage() {
 	}
 }
 
-function spine_section_title(){
-	global $post;
-
-	if ( is_page() && $post->post_parent ) {
-		$parents = array_reverse( get_post_ancestors( $post->id ) );
-		$topmost_parent = get_page( $parents[0] );
-
-		return $topmost_parent->post_title;
-	}
-
-	return $post->post_title;
-}
-
-function spine_section_slug(){
-	global $post;
-
-	if ( is_page() && $post->post_parent ) {
-		$parents = array_reverse( get_post_ancestors( $post->id ) );
-		$topmost_parent = get_page( $parents[0] );
-
-		return $topmost_parent->post_name;
-	}
-
-	return $post->post_name;
-}
-
-// Default Read More
-function spine_theme_excerpt_more( $more ) {
-	return ' <a class="read-more" href="'. get_permalink( get_the_ID() ) . '">Read More</a>';
-}
-add_filter( 'excerpt_more', 'spine_theme_excerpt_more' );
-
-// Extend Body Class 
-
-add_filter( 'body_class','spine_theme_extend_body_classes' );
-function spine_theme_extend_body_classes( $classes ) {
-	$stippled = 'stippled-'.mt_rand(0,19); // Add Randomizer
-	$classes[] = $stippled;
+add_filter( 'body_class','spine_speckled_body_classes' );
+/**
+ * Add randomized body classes.
+ *
+ * @param array $classes Current list of body classes.
+ *
+ * @return array Modified list of body classes.
+ */
+function spine_speckled_body_classes( $classes ) {
+	$classes[] = 'five' . mt_rand( 1, 5 );
+	$classes[] = 'ten' . mt_rand( 1, 10 );
+	$classes[] = 'twenty' . mt_rand( 1, 20 );
 
 	return $classes;
 }
 
-// CUSTOMIZATION
-include_once( 'admin/customizer.php' );
+add_filter('body_class', 'spine_categorized_body_classes');
+/**
+ * Add custom body classes for category views.
+ *
+ * @param array $classes Current list of body classes
+ *
+ * @return array Modified list of body classes
+ */
+function spine_categorized_body_classes( $classes ) {
+	if ( has_category() && is_singular() ) {
+		foreach( get_the_category( get_the_ID() ) as $category ) {
+			$classes[] = 'categorized-' . $category->slug;
+		}
+	}
+
+	return array_unique( $classes );
+}
+
+add_filter( 'body_class', 'spine_sectioned_body_classes' );
+/**
+ * Add custom body classes based on the requested URL for individual
+ * page and post views.
+ *
+ * @param array $classes Current list of body classes.
+ *
+ * @return array Modified list of body classes.
+ */
+function spine_sectioned_body_classes( $classes ) {
+
+	// Paths may be polluted with additional site information, so we
+	// compare the post/page permalink with the home URL.
+	$path = str_replace( get_home_url(), '', get_permalink() );
+	$path = trim( $path, '/' );
+	$path = explode( '/', $path );
+
+	if ( is_singular() && ! empty( $path ) ) {
+		$depth = count( $path ) - 1;
+		$classes[] = 'depth-' . $depth;
+
+		if ( 1 === count( $path ) ) {
+			$classes[] = 'section-' . $path[0];
+			$classes[] = 'page-' . $path[0];
+		} else {
+			$classes[] = 'section-' . array_shift( $path );
+			foreach( $path as $part ) {
+				$classes[] = 'sub-section-' . $part;
+			}
+			$classes[] = 'page-' . array_pop( $path );
+		}
+	}
+
+	return array_unique( $classes );
+}
+
+// Default Read More
+function spine_theme_excerpt_more() {
+	return ' <a class="read-more" href="'. get_permalink( get_the_ID() ) . '" >More</a>';
+}
+add_filter( 'excerpt_more', 'spine_theme_excerpt_more' );
 
 // TEMPLATES
 
@@ -175,11 +216,7 @@ include_once( 'admin/customizer.php' );
 
 // Add CSS files
 function spine_theme_admin_styles() {
-    wp_enqueue_style( 'admin-interface-styles', get_template_directory_uri() . '/admin/admin.css' );
-    add_editor_style( 'admin-editor-styles', get_template_directory_uri() . '/admin/editor.css' );
+	wp_enqueue_style( 'admin-interface-styles', get_template_directory_uri() . '/includes/admin.css' );
+	add_editor_style( 'admin-editor-styles', get_template_directory_uri() . '/includes/editor.css' );
 }
 add_action( 'admin_enqueue_scripts', 'spine_theme_admin_styles' );
-
-
-// Ad Hoc Sections
-// include_once('admin/sections.php');
