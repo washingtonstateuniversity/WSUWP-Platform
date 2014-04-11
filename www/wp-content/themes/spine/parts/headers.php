@@ -1,49 +1,28 @@
 <?php
 
-	global $post;
-	
-	$site_name      = get_bloginfo('name');
-	$site_tagline   = get_bloginfo('description');
-	$first_category = get_the_category();
-	$section_title  = get_the_category();
+/**
+ * Retrieve an array of values to be used in the header.
+ *
+ * site_name
+ * site_tagline
+ * page_title
+ * post_title
+ * section_title
+ * subsection_title
+ * posts_page_title
+ * sup_header_default
+ * sub_header_default
+ * sup_header_alternate
+ * sub_header_alternate
+ */
+$spine_main_header_values = spine_get_main_header();
 
 ?>
-
-<header class="spine-bookmark">
-<hgroup>
-	<div class="site"><a href="<?php home_url(); ?>" title="<?php echo esc_attr( $site_name ); ?>" rel="home"><?php echo esc_html( $site_name ); ?></a></div>
-	<div class="tagline"><a href="<?php home_url(); ?>" title="<?php echo esc_attr( $site_tagline ); ?>" rel="home"><?php echo esc_html( $site_tagline ); ?></a></div>
-	<?php
-
-	if ( spine_is_subpage() ) {
-		echo '	<div class="section">' . spine_section_title() . '</div>';
-	}
-
-	if ( ( is_archive() || is_category() || is_single() ) && ! empty( $first_category ) && isset( $first_category[0]->cat_name ) ) {
-		echo '	<div class="category">'.$first_category[0]->cat_name.'</div>';
-	}
-
-	if ( is_page() ) {
-		echo '	<div class="page">' . get_the_title() . '</div>';
-	}
-
-	if ( is_single() ) {
-		echo '	<div class="post">' . get_the_title() . '</div>';
-	}
-
-	?>
-</hgroup>
+<header class="spine-bookmark main-header">
+	<div class="header-group hgroup">
+		
+		<sup class="sup-header" data-section="<?php echo $spine_main_header_values['section_title']; ?>" data-pagetitle="<?php echo $spine_main_header_values['page_title']; ?>" data-posttitle="<?php echo $spine_main_header_values['post_title']; ?>" data-default="<?php echo esc_attr($spine_main_header_values['sup_header_default']); ?>" data-alternate="<?php echo esc_attr($spine_main_header_values['sup_header_alternate']); ?>"><span class="sup-header-default"><?php echo strip_tags( $spine_main_header_values['sup_header_default'], '<a>' ); ?></span></sup>
+		<sub class="sub-header" data-sitename="<?php echo $spine_main_header_values['site_name']; ?>" data-pagetitle="<?php echo $spine_main_header_values['page_title']; ?>" data-posttitle="<?php echo $spine_main_header_values['post_title']; ?>" data-default="<?php echo esc_attr($spine_main_header_values['sub_header_default']); ?>" data-alternate="<?php echo esc_attr($spine_main_header_values['sub_header_alternate']); ?>"><span class="sub-header-default"><?php echo strip_tags( $spine_main_header_values['sub_header_default'], '<a>' ); ?></span></sub>
+		
+	</div>
 </header>
-
-<!--<header class="main-header category-header spine-bookmark">
-    <div class="parent-header"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></div>
-    <div class="child-header">
-	    <?php
-		if ( is_day() ) : echo get_the_date();
-		elseif ( is_month() ) : echo get_the_date( 'F Y' );
-		elseif ( is_year() )  : echo get_the_date( 'Y' );
-		else : echo 'Archives';
-		endif;
-		?>
-    </div>
-</header>-->
