@@ -754,13 +754,6 @@ final class _WP_Editors {
 			// Default TinyMCE strings
 			'New document' => __( 'New document' ),
 			'Formats' => _x( 'Formats', 'TinyMCE' ),
-			'Headers' => _x( 'Headings', 'TinyMCE' ),
-			'Header 1' => __( 'Heading 1' ),
-			'Header 2' => __( 'Heading 2' ),
-			'Header 3' => __( 'Heading 3' ),
-			'Header 4' => __( 'Heading 4' ),
-			'Header 5' => __( 'Heading 5' ),
-			'Header 6' => __( 'Heading 6' ),
 
 			'Headings' => _x( 'Headings', 'TinyMCE' ),
 			'Heading 1' => __( 'Heading 1' ),
@@ -776,6 +769,7 @@ final class _WP_Editors {
 			'Blockquote' => __( 'Blockquote' ),
 			'Div' => _x( 'Div', 'HTML tag' ),
 			'Pre' => _x( 'Pre', 'HTML tag' ),
+			'Address' => _x( 'Address', 'HTML tag' ),
 
 			'Inline' => _x( 'Inline', 'HTML elements' ),
 			'Underline' => __( 'Underline' ),
@@ -947,7 +941,7 @@ final class _WP_Editors {
 
 			/* translators: word count */
 			'Words: {0}' => sprintf( __( 'Words: %s' ), '{0}' ),
-			'Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.' => __( 'Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.' ),
+			'Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.' => __( 'Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.' ) . "\n\n" . __( 'If you&#8217;re looking to paste rich content from Microsoft Word, try turning this option off. The editor will clean up text pasted from Word automatically.' ),
 			'Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help' => __( 'Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help' ),
 			'You have unsaved changes are you sure you want to navigate away?' => __( 'The changes you made will be lost if you navigate away from this page.' ),
 			'Your browser doesn\'t support direct access to the clipboard. Please use the Ctrl+X/C/V keyboard shortcuts instead.' => __( 'Your browser does not support direct access to the clipboard. Please use the Ctrl+X/C/V keyboard shortcuts instead.' ),
@@ -996,6 +990,11 @@ final class _WP_Editors {
 			if ( false !== strpos( $value, '&' ) ) {
 				$mce_translation[$key] = html_entity_decode( $value, ENT_QUOTES, 'UTF-8' );
 			}
+		}
+
+		// Set direction
+		if ( is_rtl() ) {
+			$mce_translation['_dir'] = 'rtl';
 		}
 
 		return "tinymce.addI18n( '$mce_locale', " . json_encode( $mce_translation ) . ");\n" .
@@ -1080,17 +1079,18 @@ final class _WP_Editors {
 		<?php
 
 		$baseurl = self::$baseurl;
+		// Load tinymce.js when running from /src, else load wp-tinymce.js.gz (production) or tinymce.min.js (SCRIPT_DEBUG)
+		$mce_suffix = false !== strpos( $GLOBALS['wp_version'], '-src' ) ? '' : '.min';
 
 		if ( $tmce_on ) {
 			if ( $compressed ) {
 				echo "<script type='text/javascript' src='{$baseurl}/wp-tinymce.php?c=1&amp;$version'></script>\n";
 			} else {
-				echo "<script type='text/javascript' src='{$baseurl}/tinymce.js?$version'></script>\n";
+				echo "<script type='text/javascript' src='{$baseurl}/tinymce{$mce_suffix}.js?$version'></script>\n";
 				echo "<script type='text/javascript' src='{$baseurl}/plugins/compat3x/plugin{$suffix}.js?$version'></script>\n";
 			}
 
-			if ( 'en' != self::$mce_locale )
-				echo "<script type='text/javascript'>\n" . self::wp_mce_translation() . "</script>\n";
+			echo "<script type='text/javascript'>\n" . self::wp_mce_translation() . "</script>\n";
 
 			if ( self::$ext_plugins ) {
 				// Load the old-format English strings to prevent unsightly labels in old style popups
@@ -1264,9 +1264,9 @@ final class _WP_Editors {
 
 		<div id="wp-fullscreen-save">
 			<input type="button" class="button button-primary right" value="<?php echo $save; ?>" onclick="wp.editor.fullscreen.save();" />
-			<span class="spinner"></span>
 			<span class="wp-fullscreen-saved-message"><?php if ( $post->post_status == 'publish' ) _e('Updated.'); else _e('Saved.'); ?></span>
 			<span class="wp-fullscreen-error-message"><?php _e('Save failed.'); ?></span>
+			<span class="spinner"></span>
 		</div>
 
 		</div>

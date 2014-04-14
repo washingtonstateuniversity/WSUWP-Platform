@@ -43,7 +43,7 @@ input[type=radio]:checked:before {
     color: white;
     -webkit-box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5);
     box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5); }
-  .wp-core-ui .button-primary[disabled], .wp-core-ui .button-primary:disabled, .wp-core-ui .button-primary.button-primary-disabled {
+  .wp-core-ui .button-primary[disabled], .wp-core-ui .button-primary:disabled, .wp-core-ui .button-primary.button-primary-disabled, .wp-core-ui .button-primary.disabled {
     color: #cfd1c7 !important;
     background: #89993a !important;
     border-color: #727f30 !important;
@@ -244,7 +244,8 @@ ul#adminmenu a.wp-has-current-submenu:after, ul#adminmenu > li.current > a.curre
 
 /* Pointers */
 .wp-pointer .wp-pointer-content h3 {
-  background-color: #a3b745; }
+  background-color: #a3b745;
+  border-color: #93a43e; }
 
 .wp-pointer .wp-pointer-content h3:before {
   color: #a3b745; }
