@@ -151,13 +151,7 @@ function spine_speckled_body_classes( $classes ) {
 }
 
 add_filter('body_class', 'spine_categorized_body_classes');
-/**
- * Add custom body classes for category views.
- *
- * @param array $classes Current list of body classes
- *
- * @return array Modified list of body classes
- */
+/* Add categorized in classes to body on singular views */
 function spine_categorized_body_classes( $classes ) {
 	if ( has_category() && is_singular() ) {
 		foreach( get_the_category( get_the_ID() ) as $category ) {
@@ -194,8 +188,10 @@ function spine_sectioned_body_classes( $classes ) {
 			$classes[] = 'page-' . $path[0];
 		} else {
 			$classes[] = 'section-' . array_shift( $path );
+			$prefix = 'sub-';
 			foreach( $path as $part ) {
-				$classes[] = 'sub-section-' . $part;
+				$classes[] = $prefix.'section-' . $part;
+				$prefix = 'sub-'.$prefix;
 			}
 			$classes[] = 'page-' . array_pop( $path );
 		}

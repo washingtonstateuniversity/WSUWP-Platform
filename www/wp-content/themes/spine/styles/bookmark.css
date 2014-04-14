@@ -1,0 +1,47 @@
+/* Random Backgrounds */
+body.page.five1, body.page.five2 { background-color: black; }
+
+main { background: url('bookmark/backgrounds/letters/lightest-one.jpg') left top no-repeat; }
+.page.five1 main { background: url('bookmark/backgrounds/letters/black-one.jpg') left top no-repeat; }
+.page.five2 main { background: url('bookmark/backgrounds/letters/black-two.jpg') left top no-repeat; }
+.page.five3 main { background: url('bookmark/backgrounds/letters/lightest-one.jpg') left top no-repeat; }
+.page.five4 main { background: url('bookmark/backgrounds/letters/black-one.jpg') left top no-repeat; }
+.page.five5 main { background: url('bookmark/backgrounds/letters/black-one.jpg') left top no-repeat; }
+
+/* Bookmark Style */
+.style-bookmark .main-header {
+	background: #981e32;
+	position: relative;
+	top: 0px;
+	left: 330px;
+	width: 2000px;
+	border: 0px;
+	}
+.main-header .header-group {
+	position: absolute;
+	bottom: 1em;
+	left: 1.5em;
+	width: 396px;
+	}
+.size-lt-medium .main-header {
+	left: 0px;
+	}
+.size-lt-medium .header-group {
+	left: 2em;
+	}
+.sup-header-default,
+.sub-header-default {
+	display: block;
+	line-height: 1em;
+	}
+.main-header sup a {
+	font-size: .9em;
+	color: #e6e8e9;
+	text-transform: uppercase;
+	}
+	
+/* Articles */
+.page h1.article-title {
+	font-weight: normal;
+	font-size: 2.5em;
+	}

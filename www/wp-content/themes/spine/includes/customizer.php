@@ -4,12 +4,12 @@
 // http://ottopress.com/2012/making-a-custom-control-for-the-theme-customizer/
 
 function spine_theme_customize_styles() {
-    wp_enqueue_style('customize-interface-styles', get_template_directory_uri() . '/admin/customize.css');
+    wp_enqueue_style('customize-interface-styles', get_template_directory_uri() . '/includes/customize.css');
 }
 add_action( 'customize_controls_enqueue_scripts', 'spine_theme_customize_styles' );
 
 function spine_theme_customize_scripts() {
-    wp_enqueue_script('customize-interface-scripts', get_template_directory_uri().'/admin/customize.js', array( 'jquery' ),'',true );
+    wp_enqueue_script('customize-interface-scripts', get_template_directory_uri().'/includes/customize.js', array( 'jquery' ),'',true );
 }
 add_action( 'customize_controls_enqueue_scripts', 'spine_theme_customize_scripts' );
 
@@ -281,14 +281,14 @@ function spine_customize_register($wp_customize){
         'priority' => 400,
     ));
     
-    $wp_customize->add_setting('spine_style[theme_style]', array(
+    $wp_customize->add_setting('spine_options[theme_style]', array(
         'default'        => 'bookmark',
         'capability'     => 'edit_theme_options',
         'type'           => 'option',
     ));
     
     $wp_customize->add_control('spine_theme_style', array(
-        'settings'   => 'spine_style[theme_style]',
+        'settings'   => 'spine_options[theme_style]',
         'label'      => __('Additional Styling', 'spine'),
         'section'    => 'section_spine_style',
         'type'       => 'select',
@@ -298,14 +298,14 @@ function spine_customize_register($wp_customize){
         ),
     ));
     
-    $wp_customize->add_setting('spine_style[secondary_colors]', array(
+    $wp_customize->add_setting('spine_options[secondary_colors]', array(
         'default'        => 'gray',
         'capability'     => 'edit_theme_options',
         'type'           => 'option',
     ));
     
     $wp_customize->add_control('spine_secondary_colors', array(
-        'settings'   => 'spine_style[secondary_colors]',
+        'settings'   => 'spine_options[secondary_colors]',
         'label'      => __('Secondary Colors', 'spine'),
         'section'    => 'section_spine_style',
         'type'       => 'select',
