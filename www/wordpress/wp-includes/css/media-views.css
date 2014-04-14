@@ -609,6 +609,10 @@
 	margin-right: 20px;
 }
 
+.media-frame-content .crop-content {
+	height: 100%;
+}
+
 .media-frame-content .crop-content .crop-image {
 	display: block;
 	margin: auto;
@@ -1807,7 +1811,7 @@
 	left: 440px;
 }
 
-.advanced,
+.advanced-section,
 .link-settings {
 	margin-top: 10px;
 }
