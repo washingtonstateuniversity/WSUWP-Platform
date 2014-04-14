@@ -20,65 +20,48 @@ main {
 	background-repeat: no-repeat;
 	background-position: left top;
 	}
-	
-	
+
 /* Main Header Defaults (previously siteID) */
 
+.main-header {
+	height: 142px;
+	background-color: #981e32;
+	background-color: #5e6a71;
+	width: 300%;
+	position: relative;
+	}
+.main-header .header-group {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	max-width: 792px;
+	}
 .main-header sup,
 .main-header sub {
 	display: block;
 	color: white;
 	line-height: 1em;
 	vertical-align: baseline;
-	margin: 0px 0px 0px 0px;
-	margin-top: 0px;
+	margin: 0px;
+	padding-left: 28px;
+	width: 100%;
 	}
-.spine-bookmark.main-header a,
-.spine-bookmark.main-header a:hover {
+.main-header a,
+.main-header a:hover {
 	color: white;
 	}
-.main-header sup,
-.spine-bookmark.main-header sup a {
+.main-header sup {
 	font-size: .9em;
-	color: #e6e8e9;
 	text-transform: uppercase;
+	}
+.main-header sup a {
+	color: #e6e8e9;
 	}
 .main-header sub {
 	font-size: 2em;
+	padding-bottom: .5em;
 	}
-
-.main-header sup span.default,
-.main-header sub span.default {
-	display: block;
-	line-height: 1em;
-	}
-
-/* Bookmark Style */
-.spine-bookmark {
-	background: #981e32;
-	position: relative;
-	top: 0px;
-	left: 330px;
-	width: 2000px;
-	border: 0px;
-	height: 132px;
-	width: 200%;
-	}
-.spine-bookmark .header-group {
-	position: absolute;
-	bottom: 1em;
-	left: 1.5em;
-	width: 396px;
-	}
-.size-lt-medium .main-header.spine-bookmark {
-	left: 0px;
-	}
-.size-lt-medium .main-header.spine-bookmark hgroup,
-.size-lt-medium .main-header.spine-bookmark .hgroup {
-	left: 2em;
-	}
-.sup-header-default,
-.sub-header-default {
+.main-header sup span {
 	display: block;
 	line-height: 1em;
 	}
@@ -96,6 +79,7 @@ main {
 	}
 */
 
+/* Figures and Images */
 xx.margin article div.alignright {
 	margin-right: -198px;
 	margin-left: 10px;
@@ -129,22 +113,22 @@ figcaption {
 	}
 
 /* Pagers */
-:not(.skeletal) .previously-nextly {
+.previously-nextly {
 	padding-top: 10px;
 	padding-bottom: 30px;
 	}
-:not(.skeletal) .previously-nextly .previously {
+.previously-nextly .previously {
 	float: left;
 	}
-:not(.skeletal) .previously-nextly .nextly {
+.previously-nextly .nextly {
 	text-align: right;
 	float: right;
 	}
-:not(.skeletal) .previously-nextly .previously a:before {
+.previously-nextly .previously a:before {
 	content: "\00AB\00A0";
 	display: inline-block;
 	}
-:not(.skeletal) .previously-nextly .nextly a:after {
+.previously-nextly .nextly a:after {
 	content: "\00A0\00BB";
 	display: inline-block;
 	}
