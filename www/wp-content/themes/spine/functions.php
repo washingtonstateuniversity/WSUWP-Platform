@@ -123,6 +123,10 @@ add_filter('get_image_tag_class', 'image_tag_class', 0, 4);
 */
 
 // SECTIONING
+// @todo remove this hack... :)
+function spine_is_subpage() {
+	return spine_is_sub();
+}
 
 function spine_is_sub() {
     $post = get_post();
