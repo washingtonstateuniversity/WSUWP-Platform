@@ -1,7 +1,65 @@
 <?php
 
+// Global version tracker.
+$wsuwp_spine_theme_version = '0.1.1';
+
 include_once( 'includes/main-header.php' ); // Include main header functionality.
 include_once( 'includes/customizer.php' ); // Include customizer functionality.
+
+/**
+ * Creates a script version based on this theme, the WSUWP Platform, and
+ * the platform's current version of WordPress if available.
+ *
+ * In individual installations, only this theme's version will be used. In
+ * the platform installation, this will help break cache on any major change.
+ */
+function spine_get_script_version() {
+	global $wsuwp_spine_theme_version, $wsuwp_global_version, $wsuwp_wp_changeset;
+
+	$script_version = $wsuwp_spine_theme_version;
+
+	if ( null !== $wsuwp_global_version ) {
+		$script_version .= '-' . $wsuwp_global_version;
+	}
+
+	if ( null !== $wsuwp_wp_changeset ) {
+		$script_version .= '-' . $wsuwp_wp_changeset;
+	}
+
+	return $script_version;
+}
+
+add_action( 'wp_enqueue_scripts', 'spine_wp_enqueue_scripts' );
+/**
+ * Enqueue scripts and styles required for front end pageviews.
+ */
+function spine_wp_enqueue_scripts() {
+	// Much relies on the main stylesheet provided by the WSU Spine.
+	wp_enqueue_style( 'wsu-spine', '//repo.wsu.edu/spine/1/spine.min.css', array(), spine_get_script_version() );
+
+	// By default, the current theme (parent or child) has its stylesheet enqueued. If a child
+	// theme would like to also enqueue the parent theme's (this) stylesheet, it should either
+	// use @import inside the child stylesheet or, better yet, use wp_dequeue_style( 'spine-theme' )
+	// to remove this default and add both the child and parent stylesheets with new instances
+	// of wp_enqueue_style().
+	wp_enqueue_style( 'spine-theme', get_stylesheet_directory_uri() . '/style.css', array( 'wsu-spine' ), spine_get_script_version() );
+
+	// WordPress core provides much of jQuery UI, but not in a nice enough package to enqueue all at once.
+	// For this reason, we'll pull the entire package from the Google CDN.
+	wp_enqueue_script( 'wsu-jquery-ui-full', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js', array( 'jquery' ) );
+
+	// Much relies on the main Javascript provided by the WSU Spine.
+	wp_enqueue_script( 'wsu-spine', '//repo.wsu.edu/spine/1/spine.min.js', array( 'wsu-jquery-ui-full' ), spine_get_script_version(), false );
+}
+
+add_action( 'admin_enqueue_scripts', 'spine_admin_enqueue_scripts' );
+/**
+ * Enqueue styles required for admin pageviews.
+ */
+function spine_admin_enqueue_scripts() {
+	wp_enqueue_style( 'admin-interface-styles', get_template_directory_uri() . '/includes/admin.css' );
+	add_editor_style( 'admin-editor-styles', get_template_directory_uri() . '/includes/editor.css' );
+}
 
 // Two Navigation Menus
 add_action( 'init', 'spine_theme_menus' );
@@ -210,13 +268,3 @@ function spine_theme_excerpt_more() {
 }
 add_filter( 'excerpt_more', 'spine_theme_excerpt_more' );
 
-// TEMPLATES
-
-// ADMIN MODS
-
-// Add CSS files
-function spine_theme_admin_styles() {
-	wp_enqueue_style( 'admin-interface-styles', get_template_directory_uri() . '/includes/admin.css' );
-	add_editor_style( 'admin-editor-styles', get_template_directory_uri() . '/includes/editor.css' );
-}
-add_action( 'admin_enqueue_scripts', 'spine_theme_admin_styles' );
