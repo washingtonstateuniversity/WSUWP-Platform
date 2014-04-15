@@ -109,6 +109,7 @@ strong .post-com-count span {
 
 /* Active tabs use a bottom border color that matches the page background color. */
 .about-wrap h2 .nav-tab-active, .nav-tab-active, .nav-tab-active:hover {
+  background-color: #f1f1f1;
   border-bottom-color: #f1f1f1; }
 
 /* Admin Menu: submenu */
@@ -284,6 +285,19 @@ body.more-filters-opened .more-filters, body.more-filters-opened .more-filters:b
   background-color: #52accc; }
 
 body.more-filters-opened .more-filters:hover, body.more-filters-opened .more-filters:focus, body.more-filters-opened .more-filters:hover:before, body.more-filters-opened .more-filters:focus:before {
+  background-color: #096484;
+  color: #fff; }
+
+/* Widgets */
+.widgets-chooser li.widgets-chooser-selected {
+  background-color: #096484;
+  color: #fff; }
+
+.widgets-chooser li.widgets-chooser-selected:before, .widgets-chooser li.widgets-chooser-selected:focus:before {
+  color: #fff; }
+
+/* Customize */
+#customize-theme-controls .widget-area-select .selected {
   background-color: #096484;
   color: #fff; }
 
