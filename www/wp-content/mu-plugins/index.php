@@ -13,3 +13,8 @@ $wsuwp_global_version = '0.5.14';
 $wsuwp_wp_changeset = '28153';
 
 include dirname( __FILE__ ) . '/wsu-co-authors-plus-skin/wsu-co-authors-plus-skin.php';
+
+function wsuwp_global_version() {
+	global $wsuwp_global_version, $wsuwp_wp_changeset;
+	return $wsuwp_global_version . '-' . $wsuwp_wp_changeset;
+}
