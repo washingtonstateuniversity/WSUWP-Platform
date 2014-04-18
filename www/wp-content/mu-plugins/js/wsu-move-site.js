@@ -5,6 +5,6 @@
  */
 (function($){
 	var move_site = $('#wsu-move-site');
-	$('#_wpnonce' ).after( move_site );
+	$('.form-table' ).prepend( move_site );
 	move_site.show();
 }(jQuery));
