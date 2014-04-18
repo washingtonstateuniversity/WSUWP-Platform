@@ -14,6 +14,11 @@ $wsuwp_wp_changeset = '28153';
 
 include dirname( __FILE__ ) . '/wsu-co-authors-plus-skin/wsu-co-authors-plus-skin.php';
 
+/**
+ * Returns the current deployment version of WSUWP Platform
+ *
+ * @return string Combines the WSUWP global version and WordPress changeset.
+ */
 function wsuwp_global_version() {
 	global $wsuwp_global_version, $wsuwp_wp_changeset;
 	return $wsuwp_global_version . '-' . $wsuwp_wp_changeset;
