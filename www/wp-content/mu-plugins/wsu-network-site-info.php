@@ -23,9 +23,10 @@ class WSU_Network_Site_Info {
 			return;
 		}
 		?>
-		<div id="wsu-move-site" style="display:none;">
-			Site Move.
-		</div>
+		<table style="display:none;"><tr id="wsu-move-site" class="form-field form-required">
+			<th scope="row"><?php _e( 'Network' ) ?></th>
+			<td><select name="wsu_network"><option value="">--- Select Network ---</option></select></td>
+		</tr></table>
 		<?php
 	}
 
