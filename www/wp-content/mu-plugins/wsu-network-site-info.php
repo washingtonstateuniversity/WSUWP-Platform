@@ -13,6 +13,7 @@ class WSU_Network_Site_Info {
 	public function __construct() {
 		add_action( 'admin_footer', array( $this, 'display_move_site' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
+		add_action( 'admin_action_update-site', array( $this, 'update_network' ), 10 );
 	}
 
 	/**
@@ -29,7 +30,7 @@ class WSU_Network_Site_Info {
 		?>
 		<table style="display:none;"><tr id="wsu-move-site" class="form-field form-required">
 			<th scope="row"><?php _e( 'Network' ) ?></th>
-			<td><select name="wsu_network">
+			<td><select name="wsu_network_id">
 		<?php
 		$networks = wsuwp_get_networks();
 		foreach( $networks as $network ) {
@@ -50,5 +51,23 @@ class WSU_Network_Site_Info {
 		}
 	}
 
+	/**
+	 * Move a site to another network when requested.
+	 */
+	public function update_network() {
+		if ( 'site-info-network' !== get_current_screen()->id ) {
+			return;
+		}
+
+		if ( isset($_REQUEST['action']) && 'update-site' == $_REQUEST['action'] ) {
+			check_admin_referer( 'edit-site' );
+
+			if ( isset( $_POST['wsu_network_id'] ) ) {
+				// Save new network ID
+			}
+		} else {
+			return;
+		}
+	}
 }
 new WSU_Network_Site_Info();
