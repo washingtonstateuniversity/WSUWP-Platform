@@ -63,7 +63,14 @@ class WSU_Network_Site_Info {
 			check_admin_referer( 'edit-site' );
 
 			if ( isset( $_POST['wsu_network_id'] ) ) {
-				// Save new network ID
+				$network_id = absint( $_POST['wsu_network_id'] );
+				$id = absint( $_REQUEST['id'] );
+				if ( 0 === $network_id || 0 === $id ) {
+					return;
+				}
+				$current_details = get_blog_details( $id );
+				$current_details->site_id = $network_id;
+				update_blog_details( $id, $current_details );
 			}
 		} else {
 			return;
