@@ -447,3 +447,10 @@ function wsuwp_network_count() {
 	$network_count = count( wsuwp_get_networks() );
 	return $network_count;
 }
+
+/**
+ * @return int The number of global users.
+ */
+function wsuwp_global_user_count() {
+	return absint( get_site_option( 'user_count' ) );
+}
