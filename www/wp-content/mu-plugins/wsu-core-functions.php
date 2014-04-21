@@ -439,3 +439,11 @@ function wsuwp_validate_path( $path ) {
 
 	return false;
 }
+
+/**
+ * @return int The number of networks currently configured.
+ */
+function wsuwp_network_count() {
+	$network_count = count( wsuwp_get_networks() );
+	return $network_count;
+}
