@@ -44,6 +44,32 @@ class WSUWP_WordPress_Dashboard {
 		remove_meta_box( 'dashboard_plugins'          , 'dashboard-network', 'normal' );
 		remove_meta_box( 'dashboard_primary'          , 'dashboard-network', 'side'   );
 		remove_meta_box( 'dashboard_secondary'        , 'dashboard-network', 'side'   );
+
+		wp_add_dashboard_widget( 'dashboard_wsuwp_counts', 'WSUWP Global Data', array( $this, 'network_dashboard_counts' ) );
+	}
+
+	/**
+	 * Provide a widget that displays the counts for networks, sites, and users
+	 * when viewing the network administration dashboard.
+	 */
+	public function network_dashboard_counts() {
+		if ( wsuwp_get_current_network()->id == wsuwp_get_primary_network_id() ) {
+			?>
+			<h4>Global Data:</h4>
+			<ul>
+				<li>Networks: <?php echo wsuwp_network_count(); ?></li>
+				<li>Sites:</li>
+				<li>Users:</li>
+			</ul>
+			<?php
+		}
+		?>
+		<h4>Network Data:</h4>
+		<ul>
+			<li>Sites: <?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
+			<li>Users: <?php echo esc_html( get_site_option( 'user_count' ) ); ?></li>
+		</ul>
+		<?php
 	}
 
 	/**
