@@ -244,10 +244,11 @@ function spine_sectioned_body_classes( $classes ) {
 	if ( is_singular() && ! empty( $path ) ) {
 		$depth = count( $path ) - 1;
 		$classes[] = 'depth-' . $depth;
+		$strip = array('?','=');
 
 		if ( 1 === count( $path ) ) {
-			$classes[] = 'section-' . $path[0];
-			$classes[] = 'page-' . $path[0];
+			$classes[] = 'section-' . str_replace( $strip, "", $path[0]);
+			$classes[] = 'page-' . str_replace( $strip, "", $path[0]);
 		} else {
 			$classes[] = 'section-' . array_shift( $path );
 			$prefix = 'sub-';
