@@ -28,6 +28,7 @@
 /www/wp-content/plugins/*/
 !/www/wp-content/plugins/wsuwp-sso-authentication/
 !/www/wp-content/plugins/wsuwp-custom-css/
+!/www/wp-content/plugins/wordpress-importer/
 
 # Ignore all uploads in the wp-content directory by default.
 /www/wp-content/uploads
