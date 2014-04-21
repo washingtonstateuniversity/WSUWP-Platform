@@ -37,7 +37,9 @@ class WSU_Network_Site_Info {
 			echo '<option value="' . $network->id . '" ' . selected( $site_network_id, $network->id, false ) . '>' . $network->domain . $network->path . '</option>';
 		}
 		?>
-				</select></td>
+				</select>
+				<p class="description">Select the network for this site. <strong>Note:</strong> When moving a site between networks, any other changes made on this screen will be lost.</p>
+			</td>
 		</tr></table>
 		<?php
 	}
