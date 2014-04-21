@@ -115,7 +115,8 @@ function spine_get_main_header() {
 		}
 	}
 
-	if ( is_front_page() && is_page() ) {
+	if ( is_front_page() ) {
+		$sup_header_default = $site_name;
 		$sub_header_default = $site_tagline;
 	}
 

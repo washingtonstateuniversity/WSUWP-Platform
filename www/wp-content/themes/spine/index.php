@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main>
+<main class="spine-main-index">
 
 <?php get_template_part('parts/headers'); ?> 
 
@@ -9,16 +9,11 @@
 	<div class="column one">
 	
 		<?php // Introductory Article
-		if ( ( get_post_status('1') == 'publish' ) && ( get_the_title('1') == 'Hello world!') ) { get_template_part( 'parts/welcome' ); }  ?>
+		if ( ( get_post_status('1') == 'publish' ) && ( get_the_title('1') == 'Hello world!') ) { get_template_part( 'includes/startup/welcome' ); }  ?>
 	
 		<?php while ( have_posts() ) : the_post(); ?>
 				
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<header class="entry-header">
-				<h2 class="entry-title"><?php the_title(); ?></h2>
-			</header>
-			<?php the_content(); ?>
-		</article>
+			<?php get_template_part('articles/post'); ?>
 
 		<?php endwhile; // end of the loop. ?>
 

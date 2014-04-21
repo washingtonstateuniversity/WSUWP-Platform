@@ -1,12 +1,24 @@
 /* Random Backgrounds */
-body.page.five1, body.page.five2 { background-color: black; }
+/* body.page.five1, body.page.five2 { background-color: black; } */
 
-main { background: url('bookmark/backgrounds/letters/lightest-one.jpg') left top no-repeat; }
+/*
+.home main {
+	background: url('bookmark/backgrounds/letters/lightest-one-large.jpg') left -80px no-repeat;
+	background-size: 100% auto;
+	}
+*/
+.home main {
+	background: url('bookmark/backgrounds/letters/lightest-one-large.jpg') -15px -100px no-repeat;
+	background-size: 615px auto;
+	}
+
+/*
 .page.five1 main { background: url('bookmark/backgrounds/letters/black-one.jpg') left top no-repeat; }
 .page.five2 main { background: url('bookmark/backgrounds/letters/black-two.jpg') left top no-repeat; }
 .page.five3 main { background: url('bookmark/backgrounds/letters/lightest-one.jpg') left top no-repeat; }
 .page.five4 main { background: url('bookmark/backgrounds/letters/black-one.jpg') left top no-repeat; }
 .page.five5 main { background: url('bookmark/backgrounds/letters/black-one.jpg') left top no-repeat; }
+*/
 
 /* Bookmark Style */
 .style-bookmark .main-header {
