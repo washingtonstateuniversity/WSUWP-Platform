@@ -449,6 +449,11 @@ function wsuwp_network_count() {
 }
 
 /**
+ * Retrieve the total number of users configured in the global environment
+ * of all networks. This value is updated twice a day through a cron event,
+ * and while seemingly attached to a network's site option, is populated by
+ * a query that encompasses the entire user table.
+ *
  * @return int The number of global users.
  */
 function wsuwp_global_user_count() {
