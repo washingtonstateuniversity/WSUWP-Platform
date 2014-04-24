@@ -460,9 +460,33 @@ function wsuwp_global_user_count() {
 	return absint( get_site_option( 'user_count' ) );
 }
 
+/**
+ * Retrieve a count of users on a specific network.
+ *
+ * This data will be generated every 30 minutes. Generation is initiated via
+ * an attempt to use the function.
+ *
+ * @param int $network_id Network ID
+ *
+ * @return int Count of users on the network
+ */
 function wsuwp_network_user_count( $network_id = 0 ) {
+	global $wpdb;
+
 	if ( 0 === $network_id ) {
 		$network_id = wsuwp_get_current_network()->id;
 	}
-	return 0;
+
+	wsuwp_switch_to_network( $network_id );
+	$network_user_data = get_site_option( 'network_user_data', array( 'count' => 0, 'updated' => 0 ) );
+
+	if ( empty( $network_user_data['count'] ) || empty( $network_user_data['updated'] ) || ( time() - 1800 ) > absint( $network_user_data['updated'] ) ) {
+		$network_key = 'wsuwp_network_' . absint( $network_id ) . '_capabilities';
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) as c FROM $wpdb->usermeta WHERE meta_key = %s ", $network_key ) );
+		$network_user_data = array( 'count' => absint( $count ), 'updated' => time() );
+		update_site_option( 'network_user_data', $network_user_data );
+	}
+	wsuwp_restore_current_network();
+
+	return absint( $network_user_data['count'] );
 }
