@@ -459,3 +459,10 @@ function wsuwp_network_count() {
 function wsuwp_global_user_count() {
 	return absint( get_site_option( 'user_count' ) );
 }
+
+function wsuwp_network_user_count( $network_id = 0 ) {
+	if ( 0 === $network_id ) {
+		$network_id = wsuwp_get_current_network()->id;
+	}
+	return 0;
+}
