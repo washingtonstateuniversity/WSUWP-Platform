@@ -7,6 +7,8 @@ class WSU_Network_Users {
 	 * Add hooks and filters for managing network users.
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'set_super_admins' ) );
+
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_network' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_network' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_network' ) );
@@ -14,6 +16,27 @@ class WSU_Network_Users {
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_global' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_global' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_global' ) );
+	}
+
+	/**
+	 * Use the $super_admins global to define super admins based on
+	 * the network being loaded. Users assigned as super admins to the
+	 * primary network should also be considered super admins on other
+	 * networks.
+	 */
+	public function set_super_admins() {
+		global $super_admins;
+
+		wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+		$super_admins = get_site_option( 'site_admins', array() );
+		wsuwp_restore_current_network();
+
+		if ( wsuwp_get_current_network()->id != wsuwp_get_primary_network_id() ) {
+			$network_admins = get_site_option( 'site_admins', array() );
+			$super_admins = array_unique( array_merge( $super_admins, $network_admins ) );
+		}
+
+		return $super_admins;
 	}
 
 	/**
