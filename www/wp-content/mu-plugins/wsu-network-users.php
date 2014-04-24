@@ -16,6 +16,8 @@ class WSU_Network_Users {
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_global' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_global' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_global' ) );
+
+		add_action( 'edit_user_profile', array( $this, 'toggle_super_admin' ) );
 	}
 
 	/**
@@ -95,6 +97,31 @@ class WSU_Network_Users {
 	 */
 	public function add_user_to_global( $user_id ) {
 		add_user_meta( $user_id, 'wsuwp_global_capabilities', array(), true );
+	}
+
+	/**
+	 * Display an option to assign super admin privileges to a user.
+	 *
+	 * Only global admins are able to see this option.
+	 *
+	 * @param WP_User $profile_user The user being edited.
+	 */
+	public function toggle_super_admin( $profile_user ) {
+		if ( $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
+			?>
+			<tr>
+				<th><?php _e( 'Super Admin' ); ?></th>
+				<td><p><label><input type="checkbox" id="super_admin" name="super_admin"<?php checked( is_super_admin( $profile_user->ID ) ); ?> /> <?php _e( 'Grant this user super admin privileges for the Network.' ); ?></label></p></td>
+			</tr>
+			<?php
+		} elseif ( $this->is_global_admin() ) {
+			?>
+			<tr>
+				<th><?php _e( 'Super Admin' ); ?></th>
+				<td><p>This user is a global admin and cannot be modified.</p></td>
+			</tr>
+			<?php
+		}
 	}
 }
 new WSU_Network_Users();
