@@ -67,7 +67,7 @@ class WSUWP_WordPress_Dashboard {
 		<h4>Network Data:</h4>
 		<ul>
 			<li>Sites: <?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
-			<li>Users: </li>
+			<li>Users: <?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></li>
 		</ul>
 		<?php
 	}
