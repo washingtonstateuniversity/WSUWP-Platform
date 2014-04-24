@@ -40,6 +40,19 @@ class WSU_Network_Users {
 	}
 
 	/**
+	 * Retrieve an array of super admins at the global level.
+	 *
+	 * @return array List of global admins.
+	 */
+	public function get_global_admins() {
+		wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+		$global_admins = get_site_option( 'site_admins', array() );
+		wsuwp_restore_current_network();
+
+		return $global_admins;
+	}
+
+	/**
 	 * Add capabilities for the current network to a user.
 	 *
 	 * @param int $user_id User ID of a new user added to a network.
