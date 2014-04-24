@@ -17,8 +17,10 @@ class WSU_Network_Users {
 	 * @param int $user_id User ID of a new user added to a network.
 	 */
 	public function add_user_to_network( $user_id ) {
-		$network_id = wsuwp_get_current_network()->id;
-		add_user_meta( $user_id, 'wsuwp_network_' . $network_id . '_capabilities', array(), true );
+		$network_id = absint( wsuwp_get_current_network()->id );
+		if ( 0 < $network_id ) {
+			add_user_meta( $user_id, 'wsuwp_network_' . $network_id . '_capabilities', array(), true );
+		}
 	}
 
 	/**
