@@ -18,7 +18,7 @@ class WSU_Network_Users {
 	 */
 	public function add_user_to_network( $user_id ) {
 		$network_id = wsuwp_get_current_network()->id;
-		update_user_meta( $user_id, 'wsuwp_network_' . $network_id . '_capabilities', array() );
+		add_user_meta( $user_id, 'wsuwp_network_' . $network_id . '_capabilities', array(), true );
 	}
 
 	/**
