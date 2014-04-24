@@ -490,3 +490,24 @@ function wsuwp_network_user_count( $network_id = 0 ) {
 
 	return absint( $network_user_data['count'] );
 }
+
+/**
+ * Retrieve a count of sites on the global platform of networks.
+ *
+ * @return int Count of sites on the global platform.
+ */
+function wsuwp_global_site_count() {
+	global $wpdb;
+
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	$global_site_data = get_site_option( 'global_site_data', array( 'count' => 0, 'updated' => 0 ) );
+
+	if ( empty( $global_site_data['count'] ) || empty( $global_site_data['updated'] ) || ( time() - 1800 ) > absint( $global_site_data['updated'] ) ) {
+		$count = $wpdb->get_var( "SELECT COUNT(blog_id) as c FROM $wpdb->blogs WHERE spam = '0' AND deleted = '0' and archived = '0'" );
+		$global_site_data = array( 'count' => absint( $count ), 'updated' => time() );
+		update_site_option( 'global_site_data', $global_site_data );
+	}
+	wsuwp_restore_current_network();
+
+	return absint( $global_site_data['count'] );
+}

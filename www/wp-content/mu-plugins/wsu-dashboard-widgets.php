@@ -58,7 +58,7 @@ class WSUWP_WordPress_Dashboard {
 			<h4>Global Data:</h4>
 			<ul>
 				<li>Networks: <?php echo wsuwp_network_count(); ?></li>
-				<li>Sites:</li>
+				<li>Sites: <?php echo wsuwp_global_site_count(); ?></li>
 				<li>Users: <?php echo wsuwp_global_user_count(); ?></li>
 			</ul>
 			<?php
