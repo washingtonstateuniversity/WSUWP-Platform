@@ -7,8 +7,13 @@ class WSU_Network_Users {
 	 * Add hooks and filters for managing network users.
 	 */
 	public function __construct() {
-		add_action( 'wpmu_new_user', array( $this, 'add_user_to_network' ) );
-		add_action( 'wpmu_new_user', array( $this, 'add_user_to_global' ) );
+		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_network' ) );
+		add_action( 'personal_options_update',  array( $this, 'add_user_to_network' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_network' ) );
+
+		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_global' ) );
+		add_action( 'personal_options_update',  array( $this, 'add_user_to_global' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_global' ) );
 	}
 
 	/**
