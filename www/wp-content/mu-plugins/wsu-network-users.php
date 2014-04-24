@@ -31,7 +31,7 @@ class WSU_Network_Users {
 
 		if ( wsuwp_get_current_network()->id != wsuwp_get_primary_network_id() ) {
 			$network_admins = get_site_option( 'site_admins', array() );
-			$super_admins = array_unique( array_merge( $super_admins, $global_admins ) );
+			$super_admins = array_unique( array_merge( $network_admins, $global_admins ) );
 		}
 
 		return $super_admins;
