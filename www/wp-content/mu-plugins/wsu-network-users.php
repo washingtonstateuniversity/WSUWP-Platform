@@ -18,6 +18,7 @@ class WSU_Network_Users {
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_global' ) );
 
 		add_action( 'edit_user_profile', array( $this, 'toggle_super_admin' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
 	}
 
 	/**
@@ -122,6 +123,57 @@ class WSU_Network_Users {
 			</tr>
 			<?php
 		}
+	}
+
+	/**
+	 * Handle the super admin checkbox from the user edit page.
+	 *
+	 * @param int $user_id User ID for user being saved.
+	 */
+	public function toggle_super_admin_update( $user_id ) {
+		if ( $this->is_global_admin() && isset( $_POST['super_admin'] ) ) {
+			if ( empty( $_POST['super_admin'] ) ) {
+				$this->revoke_super_admin( $user_id );
+			} else {
+				$this->grant_super_admin( $user_id );
+			}
+		}
+	}
+
+	/**
+	 * Revoke super admin privileges on this network.
+	 *
+	 * @param int $user_id User ID being demoted.
+	 */
+	public function revoke_super_admin( $user_id ) {
+		if ( ! $this->is_global_admin() ) {
+			return;
+		}
+
+		$network_admins = get_site_option( 'site_admins', array() );
+		$user = get_userdata( $user_id );
+		if ( $user &&  false !== ( $key = array_search( $user->user_login, $network_admins ) ) ) {
+			unset( $network_admins[ $key ] );
+			update_site_option( 'site_admins', $network_admins );
+		}
+	}
+
+	/**
+	 * Grant super admin privileges on this network.
+	 *
+	 * @param int $user_id User ID being promoted.
+	 */
+	public function grant_super_admin( $user_id ) {
+		if ( ! $this->is_global_admin() ) {
+			return;
+		}
+
+		$network_admins = get_site_option( 'site_admins', array() );
+		$user = get_userdata( $user_id );
+		if ( $user && ! in_array( $user->user_login, $network_admins ) ) {
+			$network_admins[] = $user->user_login;
+		}
+		update_site_option( 'site_admins', $network_admins );
 	}
 }
 new WSU_Network_Users();
