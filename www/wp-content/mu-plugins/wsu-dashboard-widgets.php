@@ -18,6 +18,16 @@ class WSUWP_WordPress_Dashboard {
 		add_filter( 'update_footer', array( $this, 'update_footer_text' ), 11 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 11 );
 		add_action( 'in_admin_footer', array( $this, 'display_shield_in_footer' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_dashboard_stylesheet' ) );
+	}
+
+	/**
+	 * Enqueue styles specific to the network admin dashboard.
+	 */
+	public function enqueue_dashboard_stylesheet() {
+		if ( 'dashboard-network' === get_current_screen()->id ) {
+			wp_enqueue_style( 'wsuwp-dashboard-style', plugins_url( '/css/dashboard-network.css', __FILE__ ), array(), wsuwp_global_version() );
+		}
 	}
 
 	/**
@@ -56,7 +66,7 @@ class WSUWP_WordPress_Dashboard {
 		if ( wsuwp_get_current_network()->id == wsuwp_get_primary_network_id() ) {
 			?>
 			<h4>Global Data:</h4>
-			<ul>
+			<ul class="wsuwp-global-counts">
 				<li>Networks: <?php echo wsuwp_network_count(); ?></li>
 				<li>Sites: <?php echo wsuwp_global_site_count(); ?></li>
 				<li>Users: <?php echo wsuwp_global_user_count(); ?></li>
@@ -65,7 +75,7 @@ class WSUWP_WordPress_Dashboard {
 		}
 		?>
 		<h4>Network Data:</h4>
-		<ul>
+		<ul class="wsuwp-network-counts">
 			<li>Sites: <?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
 			<li>Users: <?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></li>
 		</ul>

@@ -1,0 +1,9 @@
+.wsuwp-global-counts li {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	border: 1px solid #000;
+	margin-left:25px;
+	text-align:center;
+	font-size:24px;
+}
