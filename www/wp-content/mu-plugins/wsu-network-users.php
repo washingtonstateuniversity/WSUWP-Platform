@@ -53,6 +53,29 @@ class WSU_Network_Users {
 	}
 
 	/**
+	 * Determine if a user is a global admin.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return bool True if the user is a global admin. False if not.
+	 */
+	public function is_global_admin( $user_id = 0 ) {
+		if ( 0 === $user_id ) {
+			$user = wp_get_current_user();
+		} else {
+			$user = get_userdata( $user_id );
+		}
+
+		$global_admins = $this->get_global_admins();
+
+		if ( is_array( $global_admins ) && in_array( $user->user_login, $global_admins ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Add capabilities for the current network to a user.
 	 *
 	 * @param int $user_id User ID of a new user added to a network.
