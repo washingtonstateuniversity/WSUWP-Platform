@@ -27,13 +27,11 @@ class WSU_Network_Users {
 	public function set_super_admins() {
 		global $super_admins;
 
-		wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
-		$super_admins = get_site_option( 'site_admins', array() );
-		wsuwp_restore_current_network();
+		$global_admins = $this->get_global_admins();
 
 		if ( wsuwp_get_current_network()->id != wsuwp_get_primary_network_id() ) {
 			$network_admins = get_site_option( 'site_admins', array() );
-			$super_admins = array_unique( array_merge( $super_admins, $network_admins ) );
+			$super_admins = array_unique( array_merge( $super_admins, $global_admins ) );
 		}
 
 		return $super_admins;
