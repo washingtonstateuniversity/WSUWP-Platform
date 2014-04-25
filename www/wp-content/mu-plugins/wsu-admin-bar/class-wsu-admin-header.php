@@ -185,6 +185,11 @@ class WSU_Admin_Header {
 			// Add each of the user's sites from this specific network to the menu
 			foreach( $sites as $site ) {
 				switch_to_blog( $site['blog_id'] );
+
+				if ( ! is_super_admin() && ! is_user_member_of_blog() ) {
+					continue;
+				}
+
 				$site_details = get_blog_details();
 
 				$blavatar = '<div class="blavatar"></div>';
