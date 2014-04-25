@@ -186,7 +186,7 @@ class WSU_Admin_Header {
 			foreach( $sites as $site ) {
 				switch_to_blog( $site['blog_id'] );
 
-				if ( ! is_super_admin() && ! is_user_member_of_blog() ) {
+				if ( ! current_user_can( 'manage_network', $network->id ) && ! is_user_member_of_blog() ) {
 					continue;
 				}
 
