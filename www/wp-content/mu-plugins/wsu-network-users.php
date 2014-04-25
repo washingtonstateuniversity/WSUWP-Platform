@@ -174,6 +174,33 @@ class WSU_Network_Users {
 	}
 
 	/**
+	 * Determine if a user login has been assigned as a network
+	 * level administrator.
+	 *
+	 * @param string $user_login User login to check.
+	 * @param int    $network_id Network ID to check against.
+	 *
+	 * @return bool True if the user is a network admin. False if not.
+	 */
+	private function is_network_admin( $user_login, $network_id = 0 ) {
+		if ( 0 === absint( $network_id ) ) {
+			$network_id = wsuwp_get_current_network()->id;
+		}
+
+		$network_id = absint( $network_id );
+
+		wsuwp_switch_to_network( $network_id );
+		$network_admins = get_site_option( 'site_admins', array() );
+		wsuwp_restore_current_network();
+
+		if ( in_array( $user_login, $network_admins ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Determine if a user has capabilities to manage a specific network.
 	 *
 	 * manage_network checks in WordPress core do not pass a network ID, so we
@@ -188,14 +215,11 @@ class WSU_Network_Users {
 	 * @return array Modified list of capabilities for the user.
 	 */
 	public function user_can_manage_network( $allcaps, $caps, $args, $user ) {
-		if ( $args[0] === 'manage_network' && isset( $args[2] ) ) {
-			$network_id = absint( $args[2] );
-			wsuwp_switch_to_network( $network_id );
-			$network_admins = get_site_option( 'site_admins', array() );
-			if ( $user && in_array( $user->user_login, $network_admins ) ) {
+		if ( 'manage_network' === $args[0] ) {
+			$network_id = isset( $args[2] ) ? $args[2] : 0;
+			if ( $user && $this->is_network_admin( $user->user_login, $network_id ) ) {
 				$allcaps['manage_network'] = true;
 			}
-			wsuwp_restore_current_network();
 		}
 
 		return $allcaps;
