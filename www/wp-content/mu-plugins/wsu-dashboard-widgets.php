@@ -65,7 +65,7 @@ class WSUWP_WordPress_Dashboard {
 	public function network_dashboard_counts() {
 		if ( wsuwp_get_current_network()->id == wsuwp_get_primary_network_id() ) {
 			?>
-			<h4>Global Data</h4>
+			<h4>Global</h4>
 			<ul class="wsuwp-global-counts">
 				<li id="dash-global-networks"><?php echo wsuwp_network_count(); ?></li>
 				<li id="dash-global-sites"><?php echo wsuwp_global_site_count(); ?></li>
