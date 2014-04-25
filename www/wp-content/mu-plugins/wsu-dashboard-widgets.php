@@ -55,7 +55,13 @@ class WSUWP_WordPress_Dashboard {
 		remove_meta_box( 'dashboard_primary'          , 'dashboard-network', 'side'   );
 		remove_meta_box( 'dashboard_secondary'        , 'dashboard-network', 'side'   );
 
-		wp_add_dashboard_widget( 'dashboard_wsuwp_counts', 'WSUWP Global Data', array( $this, 'network_dashboard_counts' ) );
+		if ( wsuwp_get_primary_network_id() == wsuwp_get_current_network()->id ) {
+			$count_title = 'WSUWP Platform Counts';
+		} else {
+			$network_name = get_site_option( 'site_name' );
+			$count_title = esc_html( $network_name ) . ' Counts';
+		}
+		wp_add_dashboard_widget( 'dashboard_wsuwp_counts', $count_title, array( $this, 'network_dashboard_counts' ) );
 	}
 
 	/**
