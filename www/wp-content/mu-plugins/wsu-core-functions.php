@@ -447,3 +447,69 @@ function wsuwp_network_count() {
 	$network_count = count( wsuwp_get_networks() );
 	return $network_count;
 }
+
+/**
+ * Retrieve the total number of users configured in the global environment
+ * of all networks.
+ *
+ * This value is updated twice a day through a cron event and while seemingly
+ * attached to a network's "site option", is populated by a query that
+ * encompasses the entire user table.
+ *
+ * @return int The number of global users.
+ */
+function wsuwp_global_user_count() {
+	return absint( get_site_option( 'user_count' ) );
+}
+
+/**
+ * Retrieve a count of users on a specific network.
+ *
+ * This data will be generated every 30 minutes. Generation is initiated via
+ * an attempt to use the function.
+ *
+ * @param int $network_id Network ID
+ *
+ * @return int Count of users on the network
+ */
+function wsuwp_network_user_count( $network_id = 0 ) {
+	global $wpdb;
+
+	if ( 0 === $network_id ) {
+		$network_id = wsuwp_get_current_network()->id;
+	}
+
+	wsuwp_switch_to_network( $network_id );
+	$network_user_data = get_site_option( 'network_user_data', array( 'count' => 0, 'updated' => 0 ) );
+
+	if ( empty( $network_user_data['count'] ) || empty( $network_user_data['updated'] ) || ( time() - 1800 ) > absint( $network_user_data['updated'] ) ) {
+		$network_key = 'wsuwp_network_' . absint( $network_id ) . '_capabilities';
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) as c FROM $wpdb->usermeta WHERE meta_key = %s ", $network_key ) );
+		$network_user_data = array( 'count' => absint( $count ), 'updated' => time() );
+		update_site_option( 'network_user_data', $network_user_data );
+	}
+	wsuwp_restore_current_network();
+
+	return absint( $network_user_data['count'] );
+}
+
+/**
+ * Retrieve a count of sites on the global platform of networks.
+ *
+ * @return int Count of sites on the global platform.
+ */
+function wsuwp_global_site_count() {
+	global $wpdb;
+
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	$global_site_data = get_site_option( 'global_site_data', array( 'count' => 0, 'updated' => 0 ) );
+
+	if ( empty( $global_site_data['count'] ) || empty( $global_site_data['updated'] ) || ( time() - 1800 ) > absint( $global_site_data['updated'] ) ) {
+		$count = $wpdb->get_var( "SELECT COUNT(blog_id) as c FROM $wpdb->blogs WHERE spam = '0' AND deleted = '0' and archived = '0'" );
+		$global_site_data = array( 'count' => absint( $count ), 'updated' => time() );
+		update_site_option( 'global_site_data', $global_site_data );
+	}
+	wsuwp_restore_current_network();
+
+	return absint( $global_site_data['count'] );
+}

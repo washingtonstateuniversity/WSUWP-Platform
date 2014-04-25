@@ -1,0 +1,58 @@
+#dashboard_wsuwp_counts h4 {
+	width: 100%;
+	text-align: center;
+	padding-bottom: 0;
+	font-size: 20px;
+	color: #2f5055;
+}
+
+.wsuwp-global-counts,
+.wsuwp-network-counts {
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	margin-top: 0;
+	max-width: 500px;
+}
+
+.wsuwp-global-counts {
+	margin-bottom: 40px;
+}
+
+.wsuwp-global-counts li,
+.wsuwp-network-counts li {
+	display: inline-block;
+	width: 32.7%;
+	height: 80px;
+	text-align: center;
+	font-size: 52px;
+	line-height: 80px;
+	color: #00a5bd;
+}
+
+.wsuwp-network-counts li {
+	width: 49%;
+}
+
+.wsuwp-global-counts li:after,
+.wsuwp-network-counts li:after {
+	font-size: 15px;
+	line-height: 15px;
+	margin-top: -10px;
+	display: block;
+	color: #5e6a71;
+}
+
+#dash-global-networks:after {
+	content: "Networks";
+}
+
+#dash-global-sites:after,
+#dash-network-sites:after {
+	content: "Sites";
+}
+
+#dash-global-users:after,
+#dash-network-users:after {
+	content: "Users";
+}

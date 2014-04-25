@@ -18,6 +18,16 @@ class WSUWP_WordPress_Dashboard {
 		add_filter( 'update_footer', array( $this, 'update_footer_text' ), 11 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 11 );
 		add_action( 'in_admin_footer', array( $this, 'display_shield_in_footer' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_dashboard_stylesheet' ) );
+	}
+
+	/**
+	 * Enqueue styles specific to the network admin dashboard.
+	 */
+	public function enqueue_dashboard_stylesheet() {
+		if ( 'dashboard-network' === get_current_screen()->id ) {
+			wp_enqueue_style( 'wsuwp-dashboard-style', plugins_url( '/css/dashboard-network.css', __FILE__ ), array(), wsuwp_global_version() );
+		}
 	}
 
 	/**
@@ -45,7 +55,13 @@ class WSUWP_WordPress_Dashboard {
 		remove_meta_box( 'dashboard_primary'          , 'dashboard-network', 'side'   );
 		remove_meta_box( 'dashboard_secondary'        , 'dashboard-network', 'side'   );
 
-		wp_add_dashboard_widget( 'dashboard_wsuwp_counts', 'WSUWP Global Data', array( $this, 'network_dashboard_counts' ) );
+		if ( wsuwp_get_primary_network_id() == wsuwp_get_current_network()->id ) {
+			$count_title = 'WSUWP Platform Counts';
+		} else {
+			$network_name = get_site_option( 'site_name' );
+			$count_title = esc_html( $network_name ) . ' Counts';
+		}
+		wp_add_dashboard_widget( 'dashboard_wsuwp_counts', $count_title, array( $this, 'network_dashboard_counts' ) );
 	}
 
 	/**
@@ -55,19 +71,19 @@ class WSUWP_WordPress_Dashboard {
 	public function network_dashboard_counts() {
 		if ( wsuwp_get_current_network()->id == wsuwp_get_primary_network_id() ) {
 			?>
-			<h4>Global Data:</h4>
-			<ul>
-				<li>Networks: <?php echo wsuwp_network_count(); ?></li>
-				<li>Sites:</li>
-				<li>Users:</li>
+			<h4>Global</h4>
+			<ul class="wsuwp-global-counts">
+				<li id="dash-global-networks"><?php echo wsuwp_network_count(); ?></li>
+				<li id="dash-global-sites"><?php echo wsuwp_global_site_count(); ?></li>
+				<li id="dash-global-users"><?php echo wsuwp_global_user_count(); ?></li>
 			</ul>
 			<?php
 		}
 		?>
-		<h4>Network Data:</h4>
-		<ul>
-			<li>Sites: <?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
-			<li>Users: <?php echo esc_html( get_site_option( 'user_count' ) ); ?></li>
+		<h4>Network</h4>
+		<ul class="wsuwp-network-counts">
+			<li id="dash-network-sites"><?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
+			<li id="dash-network-users"><?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></li>
 		</ul>
 		<?php
 	}
@@ -75,9 +91,7 @@ class WSUWP_WordPress_Dashboard {
 	/**
 	 * Customize the update footer text a bit.
 	 *
-	 * @param $text
-	 *
-	 * @return mixed|string
+	 * @return string The text to display in the dashboard footer.
 	 */
 	public function update_footer_text() {
 		global $wsuwp_global_version, $wsuwp_wp_changeset;
