@@ -12,12 +12,18 @@ class WSU_Admin_Header {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts'        ),  10 );
 	}
 
+	/**
+	 * Register a custom color scheme for the admin interface using WSU crimson.
+	 *
+	 * @todo See if we can tweak this to be better.
+	 */
 	public function register_admin_color_schemes() {
 		wp_admin_css_color( 'coug', 'Cougars',
 			WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-colors-cougars.css',
 			array( '#262b2d', '#981e32', '#0074a2', '#2ea2cc' )
 		);
 	}
+
 	/**
 	 * Add my networks menu to admin bar.
 	 *
@@ -37,14 +43,13 @@ class WSU_Admin_Header {
 	 * @param WP_Admin_Bar $wp_admin_bar The wp_admin_bar global, no need to return once modified
 	 */
 	public function my_networks_menu( $wp_admin_bar ) {
-		global $current_site;
-
 		/**
 		 * This is really only useful to installations with multiple networks. If it is not
 		 * a multi network setup, then we should leave the admin bar alone.
 		 */
-		if ( ! wsuwp_is_multi_network() )
+		if ( ! wsuwp_is_multi_network() ) {
 			return;
+		}
 
 		$user_sites = wsuwp_get_user_sites( get_current_user_id() );
 
@@ -105,6 +110,7 @@ class WSU_Admin_Header {
 		if ( is_network_admin() ) {
 			$node_site_name->title = get_current_site()->site_name;
 		}
+
 		/**
 		 * Add the original menu items back to the admin bar now that we have our my-networks
 		 * item in place.
@@ -214,6 +220,9 @@ class WSU_Admin_Header {
 		}
 	}
 
+	/**
+	 * Enqueue CSS used in the admin bar to add proper dashicons.
+	 */
 	public function admin_enqueue_scripts() {
 		wp_enqueue_style( 'wsu-admin-bar', WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-bar.css' );
 	}
