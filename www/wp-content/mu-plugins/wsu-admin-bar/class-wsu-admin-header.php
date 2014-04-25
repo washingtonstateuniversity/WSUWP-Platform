@@ -33,8 +33,9 @@ class WSU_Admin_Header {
 	public function set_user_networks() {
 		global $wp_admin_bar;
 
-		if ( ! isset( $wp_admin_bar->user->networks ) )
+		if ( ! isset( $wp_admin_bar->user->networks ) ) {
 			$wp_admin_bar->user->networks = wsuwp_get_user_networks();
+		}
 	}
 
 	/**
