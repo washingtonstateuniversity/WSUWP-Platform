@@ -159,12 +159,10 @@ class WSU_Admin_Header {
 			));
 
 			/**
-			 * Only show a link to Network Dashboard if the user is a super admin.
-			 *
-			 * @todo Determine is_super_admin_of_network rather than using the check
-			 *       for the current page load.
+			 * Only show a link to Network Dashboard if the user has the
+			 * correct capabilities for managing this network.
 			 */
-			if ( is_super_admin() ) {
+			if ( current_user_can( 'manage_network', $network->id ) ) {
 				$wp_admin_bar->add_menu( array(
 					'parent' => 'network-' . $network->id,
 					'id'     => 'network-' . $network->id . '-admin',
