@@ -65,19 +65,19 @@ class WSUWP_WordPress_Dashboard {
 	public function network_dashboard_counts() {
 		if ( wsuwp_get_current_network()->id == wsuwp_get_primary_network_id() ) {
 			?>
-			<h4>Global Data:</h4>
+			<h4>Global Data</h4>
 			<ul class="wsuwp-global-counts">
-				<li>Networks: <?php echo wsuwp_network_count(); ?></li>
-				<li>Sites: <?php echo wsuwp_global_site_count(); ?></li>
-				<li>Users: <?php echo wsuwp_global_user_count(); ?></li>
+				<li id="dash-global-networks"><?php echo wsuwp_network_count(); ?></li>
+				<li id="dash-global-sites"><?php echo wsuwp_global_site_count(); ?></li>
+				<li id="dash-global-users"><?php echo wsuwp_global_user_count(); ?></li>
 			</ul>
 			<?php
 		}
 		?>
-		<h4>Network Data:</h4>
+		<h4>Network</h4>
 		<ul class="wsuwp-network-counts">
-			<li>Sites: <?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
-			<li>Users: <?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></li>
+			<li id="dash-network-sites"><?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
+			<li id="dash-network-users"><?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></li>
 		</ul>
 		<?php
 	}
