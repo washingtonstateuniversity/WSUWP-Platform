@@ -107,17 +107,12 @@ class WSU_Network_Users {
 	public function toggle_super_admin( $profile_user ) {
 		if ( is_network_admin() && $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
 			?>
+			<table class="form-table">
 			<tr>
-				<th><?php _e( 'Super Admin' ); ?></th>
-				<td><p><label><input type="checkbox" id="super_admin" name="super_admin"<?php checked( is_super_admin( $profile_user->ID ) ); ?> /> <?php _e( 'Grant this user super admin privileges for the Network.' ); ?></label></p></td>
+				<th><?php _e( 'Network Admin' ); ?></th>
+				<td><p><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', wsuwp_get_current_network()->id ) ); ?> /><label><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
 			</tr>
-			<?php
-		} elseif ( $this->is_global_admin() ) {
-			?>
-			<tr>
-				<th><?php _e( 'Super Admin' ); ?></th>
-				<td><p>This user is a global admin and cannot be modified.</p></td>
-			</tr>
+			</table>
 			<?php
 		}
 	}
@@ -132,8 +127,8 @@ class WSU_Network_Users {
 			return;
 		}
 
-		if ( $this->is_global_admin() && isset( $_POST['super_admin'] ) ) {
-			if ( empty( $_POST['super_admin'] ) ) {
+		if ( $this->is_global_admin() && isset( $_POST['network_admin'] ) ) {
+			if ( empty( $_POST['network_admin'] ) ) {
 				$this->revoke_super_admin( $user_id );
 			} else {
 				$this->grant_super_admin( $user_id );
