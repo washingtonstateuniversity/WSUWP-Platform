@@ -168,6 +168,8 @@ class WSU_Network_Users {
 		$user = get_userdata( $user_id );
 		if ( $user && ! in_array( $user->user_login, $network_admins ) ) {
 			$network_admins[] = $user->user_login;
+			// A super admin should also be added as a member to the primary site.
+			add_user_to_blog( get_current_blog_id(), $user_id, 'administrator' );
 		}
 		update_site_option( 'site_admins', $network_admins );
 	}

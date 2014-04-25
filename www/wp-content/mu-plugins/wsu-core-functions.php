@@ -31,8 +31,9 @@ function wsuwp_get_user_sites( $user_id, $all = false ) {
  */
 function wsuwp_get_user_networks( $user_id = null ) {
 
-	if ( ! $user_id )
+	if ( ! $user_id ) {
 		$user_id = get_current_user_id();
+	}
 
 	$user_sites = wsuwp_get_user_sites( $user_id );
 	$user_network_ids = array_values( array_unique( wp_list_pluck( $user_sites, 'site_id' ) ) );
