@@ -69,6 +69,17 @@ class WSU_Admin_Header {
 			return;
 		}
 
+		$user_networks = wsuwp_get_user_networks( get_current_user_id() );
+
+		/**
+		 * If a user is a member of only one network and they are not a super admin of that
+		 * network—implied by the current page load, do not remove the My Sites menu or show
+		 * the My Networks menu.
+		 */
+		if ( ! is_super_admin() && 1 >= count( $user_networks ) ) {
+			return;
+		}
+
 		/**
 		 * Remove the default My Sites menu, as we will be grouping sites under networks
 		 * in a custom menu.
