@@ -91,9 +91,7 @@ class WSUWP_WordPress_Dashboard {
 	/**
 	 * Customize the update footer text a bit.
 	 *
-	 * @param $text
-	 *
-	 * @return mixed|string
+	 * @return string The text to display in the dashboard footer.
 	 */
 	public function update_footer_text() {
 		global $wsuwp_global_version, $wsuwp_wp_changeset;
