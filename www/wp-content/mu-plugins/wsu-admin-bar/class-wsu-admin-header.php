@@ -158,12 +158,20 @@ class WSU_Admin_Header {
 				'href'   => network_admin_url(),
 			));
 
-			$wp_admin_bar->add_menu( array(
-				'parent' => 'network-' . $network->id,
-				'id'     => 'network-' . $network->id . '-admin',
-				'title'  => 'Network Dashboard',
-				'href'   => network_admin_url(),
-			));
+			/**
+			 * Only show a link to Network Dashboard if the user is a super admin.
+			 *
+			 * @todo Determine is_super_admin_of_network rather than using the check
+			 *       for the current page load.
+			 */
+			if ( is_super_admin() ) {
+				$wp_admin_bar->add_menu( array(
+					'parent' => 'network-' . $network->id,
+					'id'     => 'network-' . $network->id . '-admin',
+					'title'  => 'Network Dashboard',
+					'href'   => network_admin_url(),
+				));
+			}
 
 			// Add a sub group for the network menu that will contain sites
 			/** @todo something different than is_super_admin here */
