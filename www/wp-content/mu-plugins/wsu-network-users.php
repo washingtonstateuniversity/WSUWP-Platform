@@ -110,7 +110,7 @@ class WSU_Network_Users {
 			<table class="form-table">
 			<tr>
 				<th><?php _e( 'Network Admin' ); ?></th>
-				<td><p><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', wsuwp_get_current_network()->id ) ); ?> /><label><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
+				<td><p><label><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', wsuwp_get_current_network()->id ) ); ?> /><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
 			</tr>
 			</table>
 			<?php
