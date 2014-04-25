@@ -12,19 +12,18 @@
 	margin-right: auto;
 	width: 100%;
 	margin-top: 0;
+	max-width: 500px;
 }
 
 .wsuwp-global-counts {
-	width: 415px;
 	margin-bottom: 40px;
 }
 
 .wsuwp-global-counts li,
 .wsuwp-network-counts li {
 	display: inline-block;
-	width: 100px;
+	width: 32.7%;
 	height: 80px;
-	margin-left: 25px;
 	text-align: center;
 	font-size: 52px;
 	line-height: 80px;
@@ -32,9 +31,7 @@
 }
 
 .wsuwp-network-counts li {
-	display: inline-block;
 	width: 49%;
-	margin-left: 0;
 }
 
 .wsuwp-global-counts li:after,
