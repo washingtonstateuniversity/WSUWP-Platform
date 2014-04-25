@@ -105,7 +105,7 @@ class WSU_Network_Users {
 	 * @param WP_User $profile_user The user being edited.
 	 */
 	public function toggle_super_admin( $profile_user ) {
-		if ( $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
+		if ( is_network_admin() && $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
 			?>
 			<tr>
 				<th><?php _e( 'Super Admin' ); ?></th>
@@ -128,6 +128,10 @@ class WSU_Network_Users {
 	 * @param int $user_id User ID for user being saved.
 	 */
 	public function toggle_super_admin_update( $user_id ) {
+		if ( ! is_network_admin() ) {
+			return;
+		}
+
 		if ( $this->is_global_admin() && isset( $_POST['super_admin'] ) ) {
 			if ( empty( $_POST['super_admin'] ) ) {
 				$this->revoke_super_admin( $user_id );
