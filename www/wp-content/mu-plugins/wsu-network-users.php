@@ -127,10 +127,10 @@ class WSU_Network_Users {
 			return;
 		}
 
-		if ( $this->is_global_admin() && isset( $_POST['network_admin'] ) ) {
+		if ( $this->is_global_admin() ) {
 			if ( empty( $_POST['network_admin'] ) ) {
 				$this->revoke_super_admin( $user_id );
-			} else {
+			} elseif ( 'on' === $_POST['network_admin'] ) {
 				$this->grant_super_admin( $user_id );
 			}
 		}
