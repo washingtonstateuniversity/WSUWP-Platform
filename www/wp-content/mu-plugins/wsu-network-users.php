@@ -24,20 +24,15 @@ class WSU_Network_Users {
 	}
 
 	/**
-	 * Use the $super_admins global to define super admins based on
-	 * the network being loaded. Users assigned as super admins to the
-	 * primary network should also be considered super admins on other
-	 * networks.
+	 * Set the $super_admins global to define global super admins.
+	 *
+	 * The super admin role is a global admin role only. Capabilities should
+	 * be used to handle permissions at the individual network level.
 	 */
 	public function set_super_admins() {
 		global $super_admins;
 
-		$global_admins = $this->get_global_admins();
-
-		if ( wsuwp_get_current_network()->id != wsuwp_get_primary_network_id() ) {
-			$network_admins = get_site_option( 'site_admins', array() );
-			$super_admins = array_unique( array_merge( $network_admins, $global_admins ) );
-		}
+		$super_admins = $this->get_global_admins();
 
 		return $super_admins;
 	}
