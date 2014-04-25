@@ -19,6 +19,8 @@ class WSU_Network_Users {
 
 		add_action( 'edit_user_profile', array( $this, 'toggle_super_admin' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
+
+		add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
 	}
 
 	/**
@@ -174,6 +176,34 @@ class WSU_Network_Users {
 			$network_admins[] = $user->user_login;
 		}
 		update_site_option( 'site_admins', $network_admins );
+	}
+
+	/**
+	 * Determine if a user has capabilities to manage a specific network.
+	 *
+	 * manage_network checks in WordPress core do not pass a network ID, so we
+	 * do not check those as they are handled by the default is_super_admin()
+	 * call during a single page load.
+	 *
+	 * @param array   $allcaps All capabilities set for the user right now.
+	 * @param array   $caps    The capabilities being checked.
+	 * @param array   $args    Arguments passed with the has_cap() call.
+	 * @param WP_User $user    The current user being checked.
+	 *
+	 * @return array Modified list of capabilities for the user.
+	 */
+	public function user_can_manage_network( $allcaps, $caps, $args, $user ) {
+		if ( $args[0] === 'manage_network' && isset( $args[2] ) ) {
+			$network_id = absint( $args[2] );
+			wsuwp_switch_to_network( $network_id );
+			$network_admins = get_site_option( 'site_admins', array() );
+			if ( $user && in_array( $user->user_login, $network_admins ) ) {
+				$allcaps['manage_network'] = true;
+			}
+			wsuwp_restore_current_network();
+		}
+
+		return $allcaps;
 	}
 }
 new WSU_Network_Users();
