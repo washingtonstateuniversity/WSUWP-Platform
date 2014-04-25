@@ -172,12 +172,11 @@ class WSU_Admin_Header {
 			}
 
 			// Add a sub group for the network menu that will contain sites
-			/** @todo something different than is_super_admin here */
 			$wp_admin_bar->add_group( array(
 				'parent' => 'network-' . $network->id,
 				'id'     => 'network-' . $network->id . '-list',
 				'meta'   => array(
-					'class' => is_super_admin() ? 'ab-sub-secondary' : '',
+					'class' => current_user_can( 'manage_network', $network->id ) ? 'ab-sub-secondary' : '',
 				),
 			));
 
