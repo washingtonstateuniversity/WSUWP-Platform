@@ -19,23 +19,20 @@ class WSU_Network_Users {
 
 		add_action( 'edit_user_profile', array( $this, 'toggle_super_admin' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
+
+		add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
 	}
 
 	/**
-	 * Use the $super_admins global to define super admins based on
-	 * the network being loaded. Users assigned as super admins to the
-	 * primary network should also be considered super admins on other
-	 * networks.
+	 * Set the $super_admins global to define global super admins.
+	 *
+	 * The super admin role is a global admin role only. Capabilities should
+	 * be used to handle permissions at the individual network level.
 	 */
 	public function set_super_admins() {
 		global $super_admins;
 
-		$global_admins = $this->get_global_admins();
-
-		if ( wsuwp_get_current_network()->id != wsuwp_get_primary_network_id() ) {
-			$network_admins = get_site_option( 'site_admins', array() );
-			$super_admins = array_unique( array_merge( $network_admins, $global_admins ) );
-		}
+		$super_admins = $this->get_global_admins();
 
 		return $super_admins;
 	}
@@ -108,19 +105,14 @@ class WSU_Network_Users {
 	 * @param WP_User $profile_user The user being edited.
 	 */
 	public function toggle_super_admin( $profile_user ) {
-		if ( $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
+		if ( is_network_admin() && $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
 			?>
+			<table class="form-table">
 			<tr>
-				<th><?php _e( 'Super Admin' ); ?></th>
-				<td><p><label><input type="checkbox" id="super_admin" name="super_admin"<?php checked( is_super_admin( $profile_user->ID ) ); ?> /> <?php _e( 'Grant this user super admin privileges for the Network.' ); ?></label></p></td>
+				<th><?php _e( 'Network Admin' ); ?></th>
+				<td><p><label><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', wsuwp_get_current_network()->id ) ); ?> /><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
 			</tr>
-			<?php
-		} elseif ( $this->is_global_admin() ) {
-			?>
-			<tr>
-				<th><?php _e( 'Super Admin' ); ?></th>
-				<td><p>This user is a global admin and cannot be modified.</p></td>
-			</tr>
+			</table>
 			<?php
 		}
 	}
@@ -131,10 +123,14 @@ class WSU_Network_Users {
 	 * @param int $user_id User ID for user being saved.
 	 */
 	public function toggle_super_admin_update( $user_id ) {
-		if ( $this->is_global_admin() && isset( $_POST['super_admin'] ) ) {
-			if ( empty( $_POST['super_admin'] ) ) {
+		if ( ! is_network_admin() ) {
+			return;
+		}
+
+		if ( $this->is_global_admin() ) {
+			if ( empty( $_POST['network_admin'] ) ) {
 				$this->revoke_super_admin( $user_id );
-			} else {
+			} elseif ( 'on' === $_POST['network_admin'] ) {
 				$this->grant_super_admin( $user_id );
 			}
 		}
@@ -172,8 +168,64 @@ class WSU_Network_Users {
 		$user = get_userdata( $user_id );
 		if ( $user && ! in_array( $user->user_login, $network_admins ) ) {
 			$network_admins[] = $user->user_login;
+			// A super admin should also be added as a member to the primary site.
+			add_user_to_blog( get_current_blog_id(), $user_id, 'administrator' );
 		}
 		update_site_option( 'site_admins', $network_admins );
+	}
+
+	/**
+	 * Determine if a user login has been assigned as a network
+	 * level administrator.
+	 *
+	 * @param string $user_login User login to check.
+	 * @param int    $network_id Network ID to check against.
+	 *
+	 * @return bool True if the user is a network admin. False if not.
+	 */
+	private function is_network_admin( $user_login, $network_id = 0 ) {
+		if ( 0 === absint( $network_id ) ) {
+			$network_id = wsuwp_get_current_network()->id;
+		}
+
+		$network_id = absint( $network_id );
+
+		wsuwp_switch_to_network( $network_id );
+		$network_admins = get_site_option( 'site_admins', array() );
+		wsuwp_restore_current_network();
+
+		if ( in_array( $user_login, $network_admins ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Determine if a user has capabilities to manage a specific network.
+	 *
+	 * manage_network checks in WordPress core do not pass a network ID, so we
+	 * do not check those as they are handled by the default is_super_admin()
+	 * call during a single page load.
+	 *
+	 * @param array   $allcaps All capabilities set for the user right now.
+	 * @param array   $caps    The capabilities being checked.
+	 * @param array   $args    Arguments passed with the has_cap() call.
+	 * @param WP_User $user    The current user being checked.
+	 *
+	 * @return array Modified list of capabilities for the user.
+	 */
+	public function user_can_manage_network( $allcaps, $caps, $args, $user ) {
+		$network_admin_array = array( 'manage_network', 'manage_network_plugins', 'manage_network_themes', 'manage_network_users' );
+
+		if ( in_array( $args[0], $network_admin_array ) ) {
+			$network_id = isset( $args[2] ) ? $args[2] : 0;
+			if ( $user && $this->is_network_admin( $user->user_login, $network_id ) ) {
+				$allcaps[ $args[0] ] = true;
+			}
+		}
+
+		return $allcaps;
 	}
 }
 new WSU_Network_Users();

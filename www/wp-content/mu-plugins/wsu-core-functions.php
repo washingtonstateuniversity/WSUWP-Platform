@@ -31,8 +31,9 @@ function wsuwp_get_user_sites( $user_id, $all = false ) {
  */
 function wsuwp_get_user_networks( $user_id = null ) {
 
-	if ( ! $user_id )
+	if ( ! $user_id ) {
 		$user_id = get_current_user_id();
+	}
 
 	$user_sites = wsuwp_get_user_sites( $user_id );
 	$user_network_ids = array_values( array_unique( wp_list_pluck( $user_sites, 'site_id' ) ) );
@@ -78,16 +79,15 @@ function wsuwp_get_current_site() {
  * @return bool
  */
 function wsuwp_switch_to_network( $network_id ) {
-	if ( ! $network_id )
-		return false;
-
 	/** @type WPDB $wpdb */
 	global $current_site, $wpdb;
 
-	// Create a backup of $current_site in the global scope
-	$GLOBALS['_wp_switched_stack']['network'] = $current_site;
-	$GLOBALS['_wp_switched_stack']['blog_id'] = $wpdb->blogid;
-	$GLOBALS['_wp_switched_stack']['site_id'] = $wpdb->siteid;
+	if ( ! $network_id ) {
+		return false;
+	}
+
+	// Create a backup of $current_site in the global scope.
+	$GLOBALS['_wsuwp_switched_stack'][] = array( 'network' => $current_site, 'blog_id' => $wpdb->blogid, 'site_id' => $wpdb->siteid );
 
 	$new_network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
 	$current_site = array_shift( $new_network );
@@ -98,22 +98,24 @@ function wsuwp_switch_to_network( $network_id ) {
 }
 
 /**
- * Restore the network we are currently viewing to the $current_site global. If $current_site
- * already contains the current network, then there is no need to modify anything. If we do
- * restore from the _wp_switched_network global, then unset to require another use of
- * wsuwp_switch_to_network().
+ * Restore the last network that was in use before switching.
+ *
+ * @return bool False if there were no networks to switch back to. True if a stack was available.
  */
 function wsuwp_restore_current_network() {
 	/** @type WPDB $wpdb */
 	global $current_site, $wpdb;
-	if ( isset( $GLOBALS['_wp_switched_stack']['network'] ) ) {
-		$current_site = $GLOBALS['_wp_switched_stack']['network'];
+
+	if ( empty( $GLOBALS['_wsuwp_switched_stack'] ) ) {
+		return false;
 	}
 
-	if ( isset( $GLOBALS['_wp_switched_stack']['blog_id'] ) && isset( $GLOBALS['_wp_switched_stack']['site_id'] ) ) {
-		$wpdb->set_blog_id( $GLOBALS['_wp_switched_stack']['blog_id'], $GLOBALS['_wp_switched_stack']['site_id'] );
-	}
-	unset( $GLOBALS['_wp_switched_stack'] );
+	$network_data = array_pop( $GLOBALS['_wsuwp_switched_stack'] );
+
+	$current_site = $network_data['network'];
+	$wpdb->set_blog_id( $network_data['blog_id'], $network_data['site_id'] );
+
+	return true;
 }
 
 /**

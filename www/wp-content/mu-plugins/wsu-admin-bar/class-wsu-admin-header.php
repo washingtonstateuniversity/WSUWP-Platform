@@ -12,12 +12,18 @@ class WSU_Admin_Header {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts'        ),  10 );
 	}
 
+	/**
+	 * Register a custom color scheme for the admin interface using WSU crimson.
+	 *
+	 * @todo See if we can tweak this to be better.
+	 */
 	public function register_admin_color_schemes() {
 		wp_admin_css_color( 'coug', 'Cougars',
 			WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-colors-cougars.css',
 			array( '#262b2d', '#981e32', '#0074a2', '#2ea2cc' )
 		);
 	}
+
 	/**
 	 * Add my networks menu to admin bar.
 	 *
@@ -27,8 +33,9 @@ class WSU_Admin_Header {
 	public function set_user_networks() {
 		global $wp_admin_bar;
 
-		if ( ! isset( $wp_admin_bar->user->networks ) )
+		if ( ! isset( $wp_admin_bar->user->networks ) ) {
 			$wp_admin_bar->user->networks = wsuwp_get_user_networks();
+		}
 	}
 
 	/**
@@ -37,29 +44,39 @@ class WSU_Admin_Header {
 	 * @param WP_Admin_Bar $wp_admin_bar The wp_admin_bar global, no need to return once modified
 	 */
 	public function my_networks_menu( $wp_admin_bar ) {
-		global $current_site;
-
 		/**
 		 * This is really only useful to installations with multiple networks. If it is not
 		 * a multi network setup, then we should leave the admin bar alone.
 		 */
-		if ( ! wsuwp_is_multi_network() )
+		if ( ! wsuwp_is_multi_network() ) {
 			return;
+		}
 
 		$user_sites = wsuwp_get_user_sites( get_current_user_id() );
 
 		/**
-		 * The user is not a super admin and they only belong to one network. At this point
-		 * it's most likely that we should not give them access to a networks menu. If they
-		 * only belong to one site as well, then we should remove the My Sites menu item to
-		 * avoid confusion.
+		 * If the user is a member of only one site, we can assume they are also a member of
+		 * only one network. If this is the case *and* they are not a super admin of this
+		 * network, which is properly determined during the page load, then we remove the
+		 * My Sites menu entirely and return without creating a My Networks menu.
 		 *
-		 * @todo - determine real capabilities here rather than the blanket super admin role
+		 * This also catches a case in which a user has been added as a member of a network,
+		 * but does not have access to any individual site yet. At that point, a blank
+		 * admin bar will be displayed.
 		 */
-		if ( ! is_super_admin() && 1 === count( $user_sites ) ) {
+		if ( ! is_super_admin() && 1 >= count( $user_sites ) ) {
 			$wp_admin_bar->remove_menu( 'my-sites' );
 			return;
-		} elseif ( ! is_super_admin() ) {
+		}
+
+		$user_networks = wsuwp_get_user_networks( get_current_user_id() );
+
+		/**
+		 * If a user is a member of only one network and they are not a super admin of that
+		 * network—implied by the current page load, do not remove the My Sites menu or show
+		 * the My Networks menu.
+		 */
+		if ( ! is_super_admin() && 1 >= count( $user_networks ) ) {
 			return;
 		}
 
@@ -105,6 +122,7 @@ class WSU_Admin_Header {
 		if ( is_network_admin() ) {
 			$node_site_name->title = get_current_site()->site_name;
 		}
+
 		/**
 		 * Add the original menu items back to the admin bar now that we have our my-networks
 		 * item in place.
@@ -140,20 +158,25 @@ class WSU_Admin_Header {
 				'href'   => network_admin_url(),
 			));
 
-			$wp_admin_bar->add_menu( array(
-				'parent' => 'network-' . $network->id,
-				'id'     => 'network-' . $network->id . '-admin',
-				'title'  => 'Network Dashboard',
-				'href'   => network_admin_url(),
-			));
+			/**
+			 * Only show a link to Network Dashboard if the user has the
+			 * correct capabilities for managing this network.
+			 */
+			if ( current_user_can( 'manage_network', $network->id ) ) {
+				$wp_admin_bar->add_menu( array(
+					'parent' => 'network-' . $network->id,
+					'id'     => 'network-' . $network->id . '-admin',
+					'title'  => 'Network Dashboard',
+					'href'   => network_admin_url(),
+				));
+			}
 
 			// Add a sub group for the network menu that will contain sites
-			/** @todo something different than is_super_admin here */
 			$wp_admin_bar->add_group( array(
 				'parent' => 'network-' . $network->id,
 				'id'     => 'network-' . $network->id . '-list',
 				'meta'   => array(
-					'class' => is_super_admin() ? 'ab-sub-secondary' : '',
+					'class' => current_user_can( 'manage_network', $network->id ) ? 'ab-sub-secondary' : '',
 				),
 			));
 
@@ -162,6 +185,11 @@ class WSU_Admin_Header {
 			// Add each of the user's sites from this specific network to the menu
 			foreach( $sites as $site ) {
 				switch_to_blog( $site['blog_id'] );
+
+				if ( ! current_user_can( 'manage_network', $network->id ) && ! is_user_member_of_blog() ) {
+					continue;
+				}
+
 				$site_details = get_blog_details();
 
 				$blavatar = '<div class="blavatar"></div>';
@@ -214,6 +242,9 @@ class WSU_Admin_Header {
 		}
 	}
 
+	/**
+	 * Enqueue CSS used in the admin bar to add proper dashicons.
+	 */
 	public function admin_enqueue_scripts() {
 		wp_enqueue_style( 'wsu-admin-bar', WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-bar.css' );
 	}
