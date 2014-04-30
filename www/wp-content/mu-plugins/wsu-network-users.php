@@ -228,4 +228,4 @@ class WSU_Network_Users {
 		return $allcaps;
 	}
 }
-new WSU_Network_Users();
+//new WSU_Network_Users();
