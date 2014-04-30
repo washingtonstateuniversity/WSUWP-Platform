@@ -71,10 +71,12 @@ class WSU_Network_Site_Info {
 					return;
 				}
 				$current_details = get_blog_details( $id );
-				$current_details->site_id = $network_id;
-				update_blog_details( $id, $current_details );
-				wp_safe_redirect( network_admin_url( 'sites.php') );
-				die();
+				if ( $network_id != $current_details->site_id ) {
+					$current_details->site_id = $network_id;
+					update_blog_details( $id, $current_details );
+					wp_safe_redirect( network_admin_url( 'sites.php') );
+					die();
+				}
 			}
 		} else {
 			return;
