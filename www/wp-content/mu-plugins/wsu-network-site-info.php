@@ -64,17 +64,23 @@ class WSU_Network_Site_Info {
 		if ( isset($_REQUEST['action']) && 'update-site' == $_REQUEST['action'] ) {
 			check_admin_referer( 'edit-site' );
 
+			// Lookup the current site and clear site bootstrap cache for it.
+			$id = absint( $_REQUEST['id'] );
+			$current_details = get_blog_details( $id );
+			wp_cache_delete( $current_details->domain . $current_details->path, 'wsuwp:site' );
+
+			// Look for a request to move a site between networks.
 			if ( isset( $_POST['wsu_network_id'] ) ) {
 				$network_id = absint( $_POST['wsu_network_id'] );
-				$id = absint( $_REQUEST['id'] );
 				if ( 0 === $network_id || 0 === $id ) {
 					return;
 				}
-				$current_details = get_blog_details( $id );
-				$current_details->site_id = $network_id;
-				update_blog_details( $id, $current_details );
-				wp_safe_redirect( network_admin_url( 'sites.php') );
-				die();
+				if ( $network_id != $current_details->site_id ) {
+					$current_details->site_id = $network_id;
+					update_blog_details( $id, $current_details );
+					wp_safe_redirect( network_admin_url( 'sites.php') );
+					die();
+				}
 			}
 		} else {
 			return;
