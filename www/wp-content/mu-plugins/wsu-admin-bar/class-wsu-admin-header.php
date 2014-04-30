@@ -187,6 +187,7 @@ class WSU_Admin_Header {
 				switch_to_blog( $site['blog_id'] );
 
 				if ( ! current_user_can( 'manage_network', $network->id ) && ! is_user_member_of_blog() ) {
+					restore_current_blog();
 					continue;
 				}
 
