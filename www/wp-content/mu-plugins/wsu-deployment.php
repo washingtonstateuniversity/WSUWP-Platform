@@ -130,7 +130,7 @@ class WSU_Deployment {
 
 		if ( isset( $payload->head_commit->id ) ) {
 			add_post_meta( $instance_id, '_deploy_commit_hash', sanitize_key( $payload->head_commit->id ) );
-			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
+			add_post_meta( $instance_id, '_deploy_commit_url', esc_url_raw( $payload->head_commit->url ) );
 		} else {
 			add_post_meta( $instance_id, '_deploy_commit_hash', 'Unexpected data structure' );
 		}
