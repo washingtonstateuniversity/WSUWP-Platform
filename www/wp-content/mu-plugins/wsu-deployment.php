@@ -160,6 +160,7 @@ class WSU_Deployment {
 		$args = array(
 			'post_type' => $this->deploy_instance_slug,
 			'post_title' => $title,
+			'post_status' => 'publish',
 		);
 		$instance_id = wp_insert_post( $args );
 
