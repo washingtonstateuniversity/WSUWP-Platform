@@ -139,12 +139,18 @@ class WSU_Deployment {
 			'avatar_url' => false,
 		);
 
+		// Check for a tag reference and store it.
 		if ( isset( $payload->ref ) ) {
 			$deployment_data['tag'] = $payload->ref;
+		} else {
+			die();
 		}
 
-		if ( isset( $payload->ref_type ) ) {
+		// Check to make sure a tag is being created and not a branch.
+		if ( isset( $payload->ref_type ) && 'tag' === $payload->ref_type ) {
 			$deployment_data['ref_type'] = $payload->ref_type;
+		} else {
+			die();
 		}
 
 		if ( isset( $payload->sender ) ) {
@@ -155,7 +161,7 @@ class WSU_Deployment {
 		$deployment = get_post( get_the_ID() );
 		$time = time();
 
-		// Capture actual deployment and then kill the page load.
+		// Build the deployment instance.
 		$title = date( 'Y-m-d H:i:s', $time ) . ' | ' . esc_html( $deployment->post_title ) . ' | ' . esc_html( $deployment_data[ 'tag'] ) . ' | ' . esc_html( $deployment_data['sender'] );
 		$args = array(
 			'post_type' => $this->deploy_instance_slug,
@@ -171,6 +177,7 @@ class WSU_Deployment {
 		}
 		$deployments[ $time ] = absint( $instance_id );
 		update_post_meta( get_the_ID(), '_deploy_instances', $deployments );
+
 		die();
 	}
 
