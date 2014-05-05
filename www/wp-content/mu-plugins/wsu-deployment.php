@@ -126,15 +126,16 @@ class WSU_Deployment {
 		$payload = sanitize_meta( '_deploy_data', $payload, 'post' );
 		$payload = maybe_serialize( $payload );
 		$payload = maybe_unserialize( $payload );
+		$payload_orig = $payload;
 		$payload = json_decode( $payload );
 
 		if ( isset( $payload->head_commit->id ) ) {
 			add_post_meta( $instance_id, '_deploy_commit_hash', sanitize_key( $payload->head_commit->id ) );
 			add_post_meta( $instance_id, '_deploy_commit_url', esc_url_raw( $payload->head_commit->url ) );
-			add_post_meta( $instance_id, '_deploy_payload', $payload );
+			add_post_meta( $instance_id, '_deploy_payload', $payload_orig );
 		} else {
 			add_post_meta( $instance_id, '_deploy_commit_hash', 'Unexpected data structure' );
-			add_post_meta( $instance_id, '_deploy_payload', $payload );
+			add_post_meta( $instance_id, '_deploy_payload', $payload_orig );
 		}
 
 		if ( isset( $payload->pusher->name ) ) {
