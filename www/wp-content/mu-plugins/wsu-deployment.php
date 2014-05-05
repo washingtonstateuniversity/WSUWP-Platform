@@ -125,9 +125,8 @@ class WSU_Deployment {
 			die();
 		}
 
-		// This is temporary until I can figure out the structure.
+		// This seems overkill, but it is working.
 		$payload = wp_unslash( $_POST['payload'] );
-		$payload = sanitize_meta( '_deploy_data', $payload, 'post' );
 		$payload = maybe_serialize( $payload );
 		$payload = maybe_unserialize( $payload );
 		$payload = json_decode( $payload );
