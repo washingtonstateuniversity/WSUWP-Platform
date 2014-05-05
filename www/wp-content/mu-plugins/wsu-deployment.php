@@ -112,6 +112,8 @@ class WSU_Deployment {
 		} elseif ( ! isset( $_SERVER['HTTP_X_GITHUB_EVENT'] ) ) {
 			wp_safe_redirect( home_url() );
 		}
+
+		die();
 	}
 
 	/**
