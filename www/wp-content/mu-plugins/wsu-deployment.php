@@ -188,6 +188,7 @@ class WSU_Deployment {
 
 		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
 		if ( ! empty( $deployments ) ) {
+			$deployments = array_reverse( $deployments );
 			echo '<ul>';
 			foreach ( $deployments as $time => $instance_id ) {
 				$deploy_data = get_post_meta( $instance_id, '_deploy_data', true );
