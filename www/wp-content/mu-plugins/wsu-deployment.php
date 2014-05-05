@@ -107,7 +107,7 @@ class WSU_Deployment {
 			return;
 		}
 
-		if ( isset( $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] ) && 'create' === $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] ) {
+		if ( isset( $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] ) && 'create' === $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] && ! empty( $_POST['payload'] ) ) {
 			$this->_handle_create_webhook();
 		} elseif ( ! isset( $_SERVER['HTTP_X_GITHUB_EVENT'] ) ) {
 			wp_safe_redirect( home_url() );
@@ -120,11 +120,6 @@ class WSU_Deployment {
 	 * Handle the 'create' event passed via webhook from GitHub.
 	 */
 	private function _handle_create_webhook() {
-		// Until we're certain, we should skip POST requests without a payload.
-		if ( empty( $_POST['payload'] ) ) {
-			die();
-		}
-
 		// This seems overkill, but it is working.
 		$payload = wp_unslash( $_POST['payload'] );
 		$payload = maybe_serialize( $payload );
