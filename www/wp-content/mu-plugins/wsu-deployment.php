@@ -125,16 +125,6 @@ class WSU_Deployment {
 			die();
 		}
 
-		$deployment = get_post( get_the_ID() );
-
-		// Capture actual deployment and then kill the page load.
-		$title = time() . ' | ' . esc_html( $deployment->post_title );
-		$args = array(
-			'post_type' => $this->deploy_instance_slug,
-			'post_title' => $title,
-		);
-		$instance_id = wp_insert_post( $args );
-
 		// This is temporary until I can figure out the structure.
 		$payload = wp_unslash( $_POST['payload'] );
 		$payload = sanitize_meta( '_deploy_data', $payload, 'post' );
@@ -162,13 +152,24 @@ class WSU_Deployment {
 			$deployment_data['avatar_url'] = $payload->sender->avatar_url;
 		}
 
+		$deployment = get_post( get_the_ID() );
+		$time = time();
+
+		// Capture actual deployment and then kill the page load.
+		$title = date( 'Y-m-d H:i:s', $time ) . ' | ' . esc_html( $deployment->post_title ) . ' | ' . esc_html( $deployment_data[ 'tag'] ) . ' | ' . esc_html( $deployment_data['sender'] );
+		$args = array(
+			'post_type' => $this->deploy_instance_slug,
+			'post_title' => $title,
+		);
+		$instance_id = wp_insert_post( $args );
+
 		add_post_meta( $instance_id, '_deploy_data', $deployment_data, true );
 
 		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
 		if ( ! is_array( $deployments ) ) {
 			$deployments = array();
 		}
-		$deployments[ time() ] = absint( $instance_id );
+		$deployments[ $time ] = absint( $instance_id );
 		update_post_meta( get_the_ID(), '_deploy_instances', $deployments );
 		die();
 	}
