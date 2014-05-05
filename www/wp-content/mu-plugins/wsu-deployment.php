@@ -107,6 +107,17 @@ class WSU_Deployment {
 			return;
 		}
 
+		if ( isset( $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] ) && 'create' === $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] ) {
+			$this->_handle_create_webhook();
+		} elseif ( ! isset( $_SERVER['HTTP_X_GITHUB_EVENT'] ) ) {
+			wp_safe_redirect( home_url() );
+		}
+	}
+
+	/**
+	 * Handle the 'create' event passed via webhook from GitHub.
+	 */
+	private function _handle_create_webhook() {
 		// Until we're certain, we should skip POST requests without a payload.
 		if ( empty( $_POST['payload'] ) ) {
 			die();
