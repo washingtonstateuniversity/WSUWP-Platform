@@ -75,7 +75,7 @@ class WSU_Admin_Header {
 		 * network—implied by the current page load, do not remove the My Sites menu or show
 		 * the My Networks menu.
 		 */
-		if ( ! is_super_admin() && 1 >= count( $user_networks ) ) {
+		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= count( $user_networks ) ) {
 			return;
 		}
 
