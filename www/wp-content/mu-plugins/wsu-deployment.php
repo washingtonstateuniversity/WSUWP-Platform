@@ -173,7 +173,17 @@ class WSU_Deployment {
 		$deployments[ $time ] = absint( $instance_id );
 		update_post_meta( get_the_ID(), '_deploy_instances', $deployments );
 
+		$this->_handle_deploy( $deployment_data['tag'], $deployment->ID );
+
 		die();
+	}
+
+	private function _handle_deploy( $tag, $post_id ) {
+		$tag = escapeshellarg( $tag );
+		$repository_directory = 'deployments-test';
+		$prod_directory = 'themes/deployments-test';
+
+		shell_exec( 'sh /var/repos/deployments-manager/deploy ' . $tag . ' ' . $repository_directory . ' ' . $prod_directory );
 	}
 
 	/**
