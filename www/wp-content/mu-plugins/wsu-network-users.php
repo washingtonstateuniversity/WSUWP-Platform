@@ -202,11 +202,7 @@ class WSU_Network_Users {
 	}
 
 	/**
-	 * Determine if a user has capabilities to manage a specific network.
-	 *
-	 * manage_network checks in WordPress core do not pass a network ID, so we
-	 * do not check those as they are handled by the default is_super_admin()
-	 * call during a single page load.
+	 * Add network admin capabilities based on the user's admin role.
 	 *
 	 * @param array   $allcaps All capabilities set for the user right now.
 	 * @param array   $caps    The capabilities being checked.
@@ -216,19 +212,9 @@ class WSU_Network_Users {
 	 * @return array Modified list of capabilities for the user.
 	 */
 	public function user_can_manage_network( $allcaps, $caps, $args, $user ) {
-		$network_admin_array = array(
-			'manage_network',
-			'manage_network_options',
-			'manage_network_plugins',
-			'manage_network_themes',
-			'manage_network_users',
-		);
-
-		if ( in_array( $args[0], $network_admin_array ) ) {
-			$network_id = isset( $args[2] ) ? $args[2] : 0;
-			if ( $user && $this->is_network_admin( $user->user_login, $network_id ) ) {
-				$allcaps[ $args[0] ] = true;
-			}
+		$network_id = isset( $args[2] ) ? $args[2] : 0;
+		if ( $user && $this->is_network_admin( $user->user_login, $network_id ) ) {
+			$allcaps[ $args[0] ] = true;
 		}
 
 		return $allcaps;
