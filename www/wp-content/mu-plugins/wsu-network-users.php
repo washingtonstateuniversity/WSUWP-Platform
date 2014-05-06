@@ -215,6 +215,11 @@ class WSU_Network_Users {
 		$network_id = isset( $args[2] ) ? $args[2] : 0;
 		if ( $user && $this->is_network_admin( $user->user_login, $network_id ) ) {
 			$allcaps[ $args[0] ] = true;
+
+			// activate_plugins and manage_network_plugins are tied together here.
+			if ( 'activate_plugins' === $args[0] ) {
+				$allcaps['manage_network_plugins'] = true;
+			}
 		}
 
 		return $allcaps;
