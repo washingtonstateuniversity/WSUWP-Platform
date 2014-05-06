@@ -216,7 +216,7 @@ class WSU_Network_Users {
 	 * @return array Modified list of capabilities for the user.
 	 */
 	public function user_can_manage_network( $allcaps, $caps, $args, $user ) {
-		$network_admin_array = array( 'manage_network', 'manage_network_plugins', 'manage_network_themes', 'manage_network_users' );
+		$network_admin_array = array( 'manage_network', 'manage_network_options', 'manage_network_plugins', 'manage_network_themes', 'manage_network_users' );
 
 		if ( in_array( $args[0], $network_admin_array ) ) {
 			$network_id = isset( $args[2] ) ? $args[2] : 0;
