@@ -185,7 +185,7 @@ class WSU_Network_Users {
 	 *
 	 * @return bool True if the user is a network admin. False if not.
 	 */
-	private function is_network_admin( $user_login, $network_id = 0 ) {
+	public function is_network_admin( $user_login, $network_id = 0 ) {
 		if ( 0 === absint( $network_id ) ) {
 			$network_id = wsuwp_get_current_network()->id;
 		}
@@ -294,4 +294,18 @@ class WSU_Network_Users {
 		return $allcaps;
 	}
 }
-new WSU_Network_Users();
+$wsu_network_users = new WSU_Network_Users();
+
+/**
+ * Wrapper function to determine if a user is a network admin.
+ *
+ * @param string $user_login Username for the user being checked.
+ * @param int    $network_id ID of the network.
+ *
+ * @return bool  True if the user is a network admin. False if not.
+ */
+function wsuwp_is_network_admin( $user_login, $network_id = 0 ) {
+	global $wsu_network_users;
+
+	return $wsu_network_users->is_network_admin( $user_login, $network_id );
+}
