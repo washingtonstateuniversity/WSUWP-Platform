@@ -180,7 +180,7 @@ class WSU_Admin_Header {
 			));
 
 			$sites = wp_get_sites( array( 'network_id' => $network->id ) );
-
+			$network_sites_added = 0;
 			// Add each of the user's sites from this specific network to the menu
 			foreach( $sites as $site ) {
 				switch_to_blog( $site['blog_id'] );
@@ -236,6 +236,13 @@ class WSU_Admin_Header {
 				) );
 
 				restore_current_blog();
+				$network_sites_added++;
+			}
+
+			// If a user is a member of the network (likely the primary), but not a member
+			// of any sites, we should remove that network menu entirely.
+			if ( 0 === $network_sites_added ) {
+				$wp_admin_bar->remove_menu( 'network-' . $network->id );
 			}
 
 			wsuwp_restore_current_network();
