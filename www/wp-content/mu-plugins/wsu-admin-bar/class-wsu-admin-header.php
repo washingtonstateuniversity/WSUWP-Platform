@@ -56,15 +56,14 @@ class WSU_Admin_Header {
 
 		/**
 		 * If the user is a member of only one site, we can assume they are also a member of
-		 * only one network. If this is the case *and* they are not a super admin of this
-		 * network, which is properly determined during the page load, then we remove the
-		 * My Sites menu entirely and return without creating a My Networks menu.
+		 * only one network. If this is the case *and* they are not an admin of this network,
+		 * then we remove the My Sites menu entirely and return without creating a My Networks menu.
 		 *
 		 * This also catches a case in which a user has been added as a member of a network,
 		 * but does not have access to any individual site yet. At that point, a blank
 		 * admin bar will be displayed.
 		 */
-		if ( ! is_super_admin() && 1 >= count( $user_sites ) ) {
+		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= count( $user_sites ) ) {
 			$wp_admin_bar->remove_menu( 'my-sites' );
 			return;
 		}
@@ -76,7 +75,7 @@ class WSU_Admin_Header {
 		 * network—implied by the current page load, do not remove the My Sites menu or show
 		 * the My Networks menu.
 		 */
-		if ( ! is_super_admin() && 1 >= count( $user_networks ) ) {
+		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= count( $user_networks ) ) {
 			return;
 		}
 
@@ -181,7 +180,7 @@ class WSU_Admin_Header {
 			));
 
 			$sites = wp_get_sites( array( 'network_id' => $network->id ) );
-
+			$network_sites_added = 0;
 			// Add each of the user's sites from this specific network to the menu
 			foreach( $sites as $site ) {
 				switch_to_blog( $site['blog_id'] );
@@ -237,6 +236,13 @@ class WSU_Admin_Header {
 				) );
 
 				restore_current_blog();
+				$network_sites_added++;
+			}
+
+			// If a user is a member of the network (likely the primary), but not a member
+			// of any sites, we should remove that network menu entirely.
+			if ( 0 === $network_sites_added ) {
+				$wp_admin_bar->remove_menu( 'network-' . $network->id );
 			}
 
 			wsuwp_restore_current_network();

@@ -7,7 +7,7 @@ class WSU_Network_Users {
 	 * Add hooks and filters for managing network users.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'set_super_admins' ) );
+		add_action( 'init', array( $this, 'set_super_admins' ), 1 );
 
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_network' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_network' ) );
@@ -21,6 +21,8 @@ class WSU_Network_Users {
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
 
 		add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
+		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
+		add_filter( 'user_has_cap', array( $this, 'remove_secondary_network_caps' ), 99, 4 );
 	}
 
 	/**
@@ -183,7 +185,7 @@ class WSU_Network_Users {
 	 *
 	 * @return bool True if the user is a network admin. False if not.
 	 */
-	private function is_network_admin( $user_login, $network_id = 0 ) {
+	public function is_network_admin( $user_login, $network_id = 0 ) {
 		if ( 0 === absint( $network_id ) ) {
 			$network_id = wsuwp_get_current_network()->id;
 		}
@@ -202,11 +204,7 @@ class WSU_Network_Users {
 	}
 
 	/**
-	 * Determine if a user has capabilities to manage a specific network.
-	 *
-	 * manage_network checks in WordPress core do not pass a network ID, so we
-	 * do not check those as they are handled by the default is_super_admin()
-	 * call during a single page load.
+	 * Add network admin capabilities based on the user's admin role.
 	 *
 	 * @param array   $allcaps All capabilities set for the user right now.
 	 * @param array   $caps    The capabilities being checked.
@@ -216,16 +214,98 @@ class WSU_Network_Users {
 	 * @return array Modified list of capabilities for the user.
 	 */
 	public function user_can_manage_network( $allcaps, $caps, $args, $user ) {
-		$network_admin_array = array( 'manage_network', 'manage_network_plugins', 'manage_network_themes', 'manage_network_users' );
-
-		if ( in_array( $args[0], $network_admin_array ) ) {
+		if ( 'manage_network' === $args[0] ) {
 			$network_id = isset( $args[2] ) ? $args[2] : 0;
-			if ( $user && $this->is_network_admin( $user->user_login, $network_id ) ) {
-				$allcaps[ $args[0] ] = true;
+		} else {
+			$network_id = 0;
+		}
+
+		if ( $user && $this->is_network_admin( $user->user_login, $network_id ) ) {
+			$allcaps[ $args[0] ] = true;
+
+			// activate_plugins and manage_network_plugins are tied together here.
+			if ( 'activate_plugins' === $args[0] ) {
+				$allcaps['manage_network_plugins'] = true;
 			}
 		}
 
 		return $allcaps;
 	}
+
+	/**
+	 * Allow network admins access to many capabilities disabled by default.
+	 *
+	 * WordPress core checks for is_super_admin(), which disqualifies many of our
+	 * network admins. This overwrites that decision.
+	 *
+	 * @param array  $caps    List of associated capabilities with this meta cap.
+	 * @param string $cap     Specific capability being requested.
+	 * @param int    $user_id User ID of the user being checked.
+	 * @param array  $args    Miscellaneous arguments passed.
+	 *
+	 * @return array Capabilities mapped to the user.
+	 */
+	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
+		if ( isset( $caps[0] ) && 'do_not_allow' === $caps[0] ) {
+			$user = get_user_by( 'id', $user_id );
+			if ( $user && $this->is_network_admin( $user->user_login ) ) {
+				$caps[0] = $cap;
+
+				if ( 'edit_user' === $cap ) {
+					$caps[0] = 'edit_users';
+				} elseif ( 'delete_user' === $cap ) {
+					$caps[0] = 'delete_users';
+				}
+			}
+		}
+
+		return $caps;
+	}
+
+	/**
+	 * Remove some blanket capabilities after initial filtering.
+	 *
+	 * Some capabilities should not be enabled at the individual network level.
+	 *
+	 * @param array   $allcaps All capabilities set for the user right now.
+	 * @param array   $caps    The capabilities being checked.
+	 * @param array   $args    Arguments passed with the has_cap() call.
+	 * @param WP_User $user    The current user being checked.
+	 *
+	 * @return array Modified list of capabilities for the user.
+	 */
+	public function remove_secondary_network_caps( $allcaps, $caps, $args, $user ) {
+		$remove_caps = array(
+			'delete_themes',
+			'install_themes',
+			'update_themes',
+			'edit_themes',
+			'update_plugins',
+			'install_plugins',
+			'edit_plugins',
+			'edit_files',
+			'update_core',
+		);
+
+		if ( in_array( $args[0], $remove_caps ) ) {
+			$allcaps[ $args[0] ] = false;
+		}
+
+		return $allcaps;
+	}
 }
-new WSU_Network_Users();
+$wsu_network_users = new WSU_Network_Users();
+
+/**
+ * Wrapper function to determine if a user is a network admin.
+ *
+ * @param string $user_login Username for the user being checked.
+ * @param int    $network_id ID of the network.
+ *
+ * @return bool  True if the user is a network admin. False if not.
+ */
+function wsuwp_is_network_admin( $user_login, $network_id = 0 ) {
+	global $wsu_network_users;
+
+	return $wsu_network_users->is_network_admin( $user_login, $network_id );
+}

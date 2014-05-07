@@ -30,13 +30,24 @@ function wsuwp_get_user_sites( $user_id, $all = false ) {
  * @return array containing list of user's networks
  */
 function wsuwp_get_user_networks( $user_id = null ) {
+	/* @var WPDB $wpdb */
+	global $wpdb;
 
 	if ( ! $user_id ) {
 		$user_id = get_current_user_id();
 	}
 
-	$user_sites = wsuwp_get_user_sites( $user_id );
-	$user_network_ids = array_values( array_unique( wp_list_pluck( $user_sites, 'site_id' ) ) );
+	$user_id = absint( $user_id );
+	$network_keys = $wpdb->get_col( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = $user_id AND meta_key LIKE 'wsuwp_network_%_capabilities'" );
+
+	$user_network_ids = array();
+
+	foreach( $network_keys as $network_key ) {
+		$network_id = explode( '_', $network_key );
+		if ( isset( $network_id[2] ) ) {
+			$user_network_ids[] = absint( $network_id[2] );
+		}
+	}
 
 	return wsuwp_get_networks( array( 'network_id' => $user_network_ids ) );
 }
