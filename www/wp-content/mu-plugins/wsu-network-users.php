@@ -3,6 +3,14 @@
  * Class WSU_Network_Users
  */
 class WSU_Network_Users {
+
+	/**
+	 * Allows us to track the intent of a users list table load.
+	 *
+	 * @var bool True if a user search is being performed. False if not.
+	 */
+	var $is_user_search = false;
+
 	/**
 	 * Add hooks and filters for managing network users.
 	 */
@@ -25,6 +33,7 @@ class WSU_Network_Users {
 		add_filter( 'user_has_cap', array( $this, 'remove_secondary_network_caps' ), 99, 4 );
 
 		add_action( 'pre_user_query', array( $this, 'pre_user_query' ), 10, 1 );
+		add_filter( 'user_search_columns', array( $this, 'user_search_columns' ), 10, 1 );
 	}
 
 	/**
@@ -314,6 +323,7 @@ class WSU_Network_Users {
 		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
 		$query->query_where = "WHERE 1=1 AND (wp_usermeta.meta_key = 'wsuwp_network_" . $network_id . "_capabilities' )";
 
+		// Specific users are being included or excluded from search.
 		if ( ! empty( $query->query_vars['include'] ) ) {
 			$ids = implode( ',', wp_parse_id_list( $query->query_vars['include'] ) );
 			$query->query_where .= " AND $wpdb->users.ID IN ($ids)";
@@ -321,6 +331,45 @@ class WSU_Network_Users {
 			$ids = implode( ',', wp_parse_id_list( $query->query_vars['exclude'] ) );
 			$query->query_where .= " AND $wpdb->users.ID NOT IN ($ids)";
 		}
+
+		// Copied wildcard detection from core's WP_User_Query::prepare_query()
+		if ( $this->is_user_search ) {
+			$search = $query->query_vars['search'];
+
+			$leading_wild = ( ltrim( $search, '*' ) != $search );
+			$trailing_wild = ( rtrim( $search, '*' ) != $search );
+
+			if ( $leading_wild && $trailing_wild ) {
+				$wild = 'both';
+			} elseif ( $leading_wild ) {
+				$wild = 'leading';
+			} elseif ( $trailing_wild ) {
+				$wild = 'trailing';
+			} else {
+				$wild = false;
+			}
+
+			if ( $wild ) {
+				$search = trim( $search, '*' );
+			}
+
+			$query->query_where .= $query->get_search_sql( $search, $search, $wild );
+		}
+	}
+
+	/**
+	 * Determine if a user search is being done via filter on the original query.
+	 *
+	 * HACK - this sets a property that we use to detect if a search has been performed.
+	 *
+	 * @param array $search_columns Array of search columns.
+	 *
+	 * @return array Array of search columns
+	 */
+	public function user_search_columns( $search_columns  ) {
+		$this->is_user_search = true;
+
+		return $search_columns;
 	}
 }
 $wsu_network_users = new WSU_Network_Users();
