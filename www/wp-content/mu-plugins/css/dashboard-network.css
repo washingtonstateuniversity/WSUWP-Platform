@@ -30,6 +30,16 @@
 	color: #00a5bd;
 }
 
+.wsuwp-global-counts li a,
+.wsuwp-network-counts li a {
+	color: #00A5BD;
+}
+
+.wsuwp-network-counts li a:hover,
+.wsuwp-global-counts li a:hover {
+	color: #0099D5;
+}
+
 .wsuwp-network-counts li {
 	width: 49%;
 }
