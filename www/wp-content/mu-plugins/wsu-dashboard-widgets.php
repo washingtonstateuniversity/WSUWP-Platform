@@ -73,17 +73,17 @@ class WSUWP_WordPress_Dashboard {
 			?>
 			<h4>Global</h4>
 			<ul class="wsuwp-global-counts">
-				<li id="dash-global-networks"><?php echo wsuwp_network_count(); ?></li>
-				<li id="dash-global-sites"><?php echo wsuwp_global_site_count(); ?></li>
-				<li id="dash-global-users"><?php echo wsuwp_global_user_count(); ?></li>
+				<li id="dash-global-networks"><a href="<?php echo esc_url( network_admin_url( 'sites.php?display=network' ) ); ?>"><?php echo wsuwp_network_count(); ?></a></li>
+				<li id="dash-global-sites"><a href="<?php echo esc_url( network_admin_url( 'sites.php' ) ); ?>"><?php echo wsuwp_global_site_count(); ?></a></li>
+				<li id="dash-global-users"><a href="<?php echo esc_url( network_admin_url( 'users.php' ) ); ?>"><?php echo wsuwp_global_user_count(); ?></a></li>
 			</ul>
 			<?php
 		}
 		?>
 		<h4>Network</h4>
 		<ul class="wsuwp-network-counts">
-			<li id="dash-network-sites"><?php echo esc_html( get_site_option( 'blog_count' ) ); ?></li>
-			<li id="dash-network-users"><?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></li>
+			<li id="dash-network-sites"><a href="<?php echo esc_url( network_admin_url( 'sites.php' ) ); ?>"><?php echo esc_html( get_site_option( 'blog_count' ) ); ?></a></li>
+			<li id="dash-network-users"><a href="<?php echo esc_url( network_admin_url( 'users.php' ) ); ?>"><?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></a></li>
 		</ul>
 		<?php
 	}
