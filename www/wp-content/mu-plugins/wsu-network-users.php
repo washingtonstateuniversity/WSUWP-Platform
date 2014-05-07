@@ -318,18 +318,45 @@ class WSU_Network_Users {
 			return;
 		}
 
+		// The primary network (global) should show all users.
+		if ( wsuwp_get_primary_network_id() == wsuwp_get_current_network()->id ) {
+			return;
+		}
+
+		$global_admin_ids = array();
+		foreach( $this->get_global_admins() as $global_admin ) {
+			$user = get_user_by( 'login', $global_admin );
+			$global_admin_ids[] = $user->ID;
+		}
+
+		wp_enqueue_script( 'wsuwp-network-users', plugins_url( '/js/wsuwp-network-users.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
+
 		$network_id = absint( wsuwp_get_current_network()->id );
 
 		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
 		$query->query_where = "WHERE 1=1 AND (wp_usermeta.meta_key = 'wsuwp_network_" . $network_id . "_capabilities' )";
 
+		if ( isset( $_REQUEST['role'] ) && 'super' === $_REQUEST['role'] ) {
+			$network_admins = get_site_option( 'site_admins', array() );
+			foreach( $network_admins as $network_admin ) {
+				$network_admin = get_user_by( 'login', $network_admin );
+				$query->query_vars['include'][] = $network_admin->ID;
+			}
+		}
+
 		// Specific users are being included or excluded from search.
 		if ( ! empty( $query->query_vars['include'] ) ) {
 			$ids = implode( ',', wp_parse_id_list( $query->query_vars['include'] ) );
 			$query->query_where .= " AND $wpdb->users.ID IN ($ids)";
+			$global_admin_ids = implode( ',', wp_parse_id_list( $global_admin_ids ) );
+			$query->query_where .= " AND $wpdb->users.ID NOT IN ($global_admin_ids)";
 		} elseif ( ! empty( $query->query_vars['exclude'] ) ) {
+			$query->query_vars['exclude'] += $global_admin_ids;
 			$ids = implode( ',', wp_parse_id_list( $query->query_vars['exclude'] ) );
 			$query->query_where .= " AND $wpdb->users.ID NOT IN ($ids)";
+		} else {
+			$global_admin_ids = implode( ',', wp_parse_id_list( $global_admin_ids ) );
+			$query->query_where .= " AND $wpdb->users.ID NOT IN ($global_admin_ids)";
 		}
 
 		// Copied wildcard detection from core's WP_User_Query::prepare_query()
