@@ -7,7 +7,7 @@ class WSU_Network_Users {
 	 * Add hooks and filters for managing network users.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'set_super_admins' ) );
+		add_action( 'init', array( $this, 'set_super_admins' ), 1 );
 
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_network' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_network' ) );
