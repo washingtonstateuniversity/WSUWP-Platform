@@ -318,6 +318,11 @@ class WSU_Network_Users {
 			return;
 		}
 
+		// The primary network (global) should show all users.
+		if ( wsuwp_get_primary_network_id() == wsuwp_get_current_network()->id ) {
+			return;
+		}
+
 		$network_id = absint( wsuwp_get_current_network()->id );
 
 		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
