@@ -323,6 +323,12 @@ class WSU_Network_Users {
 			return;
 		}
 
+		$global_admin_ids = array();
+		foreach( $this->get_global_admins() as $global_admin ) {
+			$user = get_user_by( 'login', $global_admin );
+			$global_admin_ids[] = $user->ID;
+		}
+
 		$network_id = absint( wsuwp_get_current_network()->id );
 
 		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
@@ -332,9 +338,15 @@ class WSU_Network_Users {
 		if ( ! empty( $query->query_vars['include'] ) ) {
 			$ids = implode( ',', wp_parse_id_list( $query->query_vars['include'] ) );
 			$query->query_where .= " AND $wpdb->users.ID IN ($ids)";
+			$global_admin_ids = implode( ',', wp_parse_id_list( $global_admin_ids ) );
+			$query->query_where .= " AND $wpdb->users.ID NOT IN ($global_admin_ids)";
 		} elseif ( ! empty( $query->query_vars['exclude'] ) ) {
+			$query->query_vars['exclude'] += $global_admin_ids;
 			$ids = implode( ',', wp_parse_id_list( $query->query_vars['exclude'] ) );
 			$query->query_where .= " AND $wpdb->users.ID NOT IN ($ids)";
+		} else {
+			$global_admin_ids = implode( ',', wp_parse_id_list( $global_admin_ids ) );
+			$query->query_where .= " AND $wpdb->users.ID NOT IN ($global_admin_ids)";
 		}
 
 		// Copied wildcard detection from core's WP_User_Query::prepare_query()
