@@ -336,6 +336,14 @@ class WSU_Network_Users {
 		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
 		$query->query_where = "WHERE 1=1 AND (wp_usermeta.meta_key = 'wsuwp_network_" . $network_id . "_capabilities' )";
 
+		if ( isset( $_REQUEST['role'] ) && 'super' === $_REQUEST['role'] ) {
+			$network_admins = get_site_option( 'site_admins', array() );
+			foreach( $network_admins as $network_admin ) {
+				$network_admin = get_user_by( 'login', $network_admin );
+				$query->query_vars['include'][] = $network_admin->ID;
+			}
+		}
+
 		// Specific users are being included or excluded from search.
 		if ( ! empty( $query->query_vars['include'] ) ) {
 			$ids = implode( ',', wp_parse_id_list( $query->query_vars['include'] ) );
