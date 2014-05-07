@@ -9,7 +9,7 @@
  * Network: true
  */
 
-$wsuwp_global_version = '0.6.4';
+$wsuwp_global_version = '0.6.5';
 $wsuwp_wp_changeset = '28153';
 
 include dirname( __FILE__ ) . '/wsu-co-authors-plus-skin/wsu-co-authors-plus-skin.php';
