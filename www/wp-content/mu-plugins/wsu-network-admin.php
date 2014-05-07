@@ -246,7 +246,7 @@ class WSU_Network_Admin {
 				'',
 				'menu-top menu-icon-site menu-top-first',
 				'menu-site',
-				'div',
+				'dashicons-networking',
 			);
 
 			$submenu['sites.php?display=network'][5] = array(
