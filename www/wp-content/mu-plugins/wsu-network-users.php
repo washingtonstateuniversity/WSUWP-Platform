@@ -23,6 +23,8 @@ class WSU_Network_Users {
 		add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
 		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
 		add_filter( 'user_has_cap', array( $this, 'remove_secondary_network_caps' ), 99, 4 );
+
+		add_action( 'pre_user_query', array( $this, 'pre_user_query' ), 10, 1 );
 	}
 
 	/**
@@ -292,6 +294,33 @@ class WSU_Network_Users {
 		}
 
 		return $allcaps;
+	}
+
+	/**
+	 * Rewrite user queries for networks when showing the network users list table.
+	 *
+	 * @param WP_User_Query $query The current user query.
+	 */
+	public function pre_user_query( $query ) {
+		/* @var WPDB $wpdb */
+		global $wpdb;
+
+		if ( 'users-network' !== get_current_screen()->id ) {
+			return;
+		}
+
+		$network_id = absint( wsuwp_get_current_network()->id );
+
+		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
+		$query->query_where = "WHERE 1=1 AND (wp_usermeta.meta_key = 'wsuwp_network_" . $network_id . "_capabilities' )";
+
+		if ( ! empty( $query->query_vars['include'] ) ) {
+			$ids = implode( ',', wp_parse_id_list( $query->query_vars['include'] ) );
+			$query->query_where .= " AND $wpdb->users.ID IN ($ids)";
+		} elseif ( ! empty( $query->query_vars['exclude'] ) ) {
+			$ids = implode( ',', wp_parse_id_list( $query->query_vars['exclude'] ) );
+			$query->query_where .= " AND $wpdb->users.ID NOT IN ($ids)";
+		}
 	}
 }
 $wsu_network_users = new WSU_Network_Users();
