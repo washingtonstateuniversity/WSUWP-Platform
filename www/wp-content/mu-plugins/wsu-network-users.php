@@ -329,6 +329,8 @@ class WSU_Network_Users {
 			$global_admin_ids[] = $user->ID;
 		}
 
+		wp_enqueue_script( 'wsuwp-network-users', plugins_url( '/js/wsuwp-network-users.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
+
 		$network_id = absint( wsuwp_get_current_network()->id );
 
 		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
