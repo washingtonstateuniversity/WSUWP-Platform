@@ -24,6 +24,9 @@
 # The Query Monitor plugin adds a db.php drop in that we should ignore.
 /www/wp-content/db.php
 
+# Ignore any local filters
+/www/wp-content/mu-plugins/local-index.php
+
 # Ignore all plugins in the wp-content directory by default. We'll explicitly allow those we track here.
 /www/wp-content/plugins/*/
 !/www/wp-content/plugins/wsuwp-sso-authentication/
