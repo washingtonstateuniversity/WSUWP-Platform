@@ -82,7 +82,7 @@ class Jetpack_Custom_CSS {
 			) );
 
 			if ( $_POST['action'] == 'preview' ) {
-				wp_safe_redirect( add_query_arg( 'csspreview', 'true', get_option( 'home' ) ) );
+				wp_safe_redirect( add_query_arg( 'csspreview', 'true', trailingslashit( home_url() ) ) );
 				exit;
 			}
 
