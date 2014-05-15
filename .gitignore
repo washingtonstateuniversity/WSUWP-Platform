@@ -10,6 +10,9 @@
 # Ignore PHPStorm project files.
 /.idea
 
+# Ignore node modules created by NPM
+/node_modules
+
 # Ignore any custom hosts definitions.
 /*-wsuwp-hosts
 !/default-wsuwp-hosts
