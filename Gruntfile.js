@@ -13,6 +13,12 @@ module.exports = function(grunt) {
 					},
 					{
 						expand: true,
+						src: 'wp-content/*.php',
+						dest: 'build/',
+						cwd: 'www'
+					},
+					{
+						expand: true,
 						src: ['wp-content/mu-plugins/**','!/www/wp-content/mu-plugins/local-index.php'],
 						dest: 'build/',
 						cwd: 'www'
