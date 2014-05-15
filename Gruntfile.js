@@ -44,6 +44,12 @@ module.exports = function(grunt) {
 						src: ['**', '!README.md'],
 						dest: 'build/wp-content/plugins/',
 						cwd: 'build-plugins/public'
+					},
+					{
+						expand: true,
+						src: ['**', '!README.md'],
+						dest: 'build/wp-content/plugins/',
+						cwd: 'build-plugins/private'
 					}
 				]
 			}
