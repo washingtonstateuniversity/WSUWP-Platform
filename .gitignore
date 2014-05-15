@@ -46,7 +46,3 @@
 
 # Ignore all themes in the wp-content directory by default. We'll explicitly allow those we track here.
 /www/wp-content/themes/*/
-!/www/wp-content/themes/spine/
-!/www/wp-content/themes/twentytwelve/
-!/www/wp-content/themes/twentythirteen/
-!/www/wp-content/themes/p2/
