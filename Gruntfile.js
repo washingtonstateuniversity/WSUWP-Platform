@@ -52,6 +52,22 @@ module.exports = function(grunt) {
 						cwd: 'build-plugins/private'
 					}
 				]
+			},
+			themes: {
+				files: [
+					{
+						expand: true,
+						src: ['**', '!README.md'],
+						dest: 'build/wp-content/themes/',
+						cwd: 'build-themes/public'
+					},
+					{
+						expand: true,
+						src: ['**', '!README.md'],
+						dest: 'build/wp-content/themes/',
+						cwd: 'build-themes/private'
+					}
+				]
 			}
 		}
 	});
