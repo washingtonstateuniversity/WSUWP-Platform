@@ -36,6 +36,16 @@ module.exports = function(grunt) {
 						cwd: 'www'
 					}
 				]
+			},
+			plugins: {
+				files: [
+					{
+						expand: true,
+						src: ['**', '!README.md'],
+						dest: 'build/wp-content/plugins/',
+						cwd: 'build-plugins/public'
+					}
+				]
 			}
 		}
 	});
