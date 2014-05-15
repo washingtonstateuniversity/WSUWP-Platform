@@ -25,11 +25,7 @@ module.exports = function(grunt) {
 					},
 					{
 						expand: true,
-						src: [
-							'wp-content/themes/twentytwelve/**',
-							'wp-content/themes/twentythirteen/**',
-							'wp-content/themes/twentyfourteen/**'
-						],
+						src: 'wp-content/themes/index.php',
 						dest: 'build/',
 						cwd: 'www'
 					}
