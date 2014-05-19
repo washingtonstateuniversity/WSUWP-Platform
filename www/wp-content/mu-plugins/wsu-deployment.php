@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: WSU Deployment
+Plugin Name: WSUWP Deployment
 Plugin URI: http://web.wsu.edu
 Description: Receive deploy requests in WordPress and act accordingly.
 Author: washingtonstateuniversity, jeremyfelt
@@ -173,17 +173,25 @@ class WSU_Deployment {
 		$deployments[ $time ] = absint( $instance_id );
 		update_post_meta( get_the_ID(), '_deploy_instances', $deployments );
 
-		$this->_handle_deploy( $deployment_data['tag'], $deployment->ID );
+		$this->_handle_deploy( $deployment_data['tag'], $deployment );
 
 		die();
 	}
 
-	private function _handle_deploy( $tag, $post_id ) {
-		$tag = escapeshellarg( $tag );
-		$repository_directory = 'deployments-test';
-		$prod_directory = 'themes/deployments-test';
+	/**
+	 * Hand deployment details to the relevant script on the production machine.
+	 *
+	 * @todo handle plugins and themes, right now we're assuming theme
+	 *
+	 * @param string  $tag  Tagged version being deployed.
+	 * @param WP_Post $post Object containing the project being deployed.
+	 */
+	private function _handle_deploy( $tag, $post ) {
+		$tag = escapeshellarg( $tag ); // @todo we have a format we can assert
 
-		shell_exec( 'sh /var/repos/deployments-manager/deploy ' . $tag . ' ' . $repository_directory . ' ' . $prod_directory );
+		$repository_directory = sanitize_key( $post->post_name );
+
+		shell_exec( 'sh /var/repos/wsuwp-deployment/deploy ' . $tag . ' ' . $repository_directory );
 	}
 
 	/**
