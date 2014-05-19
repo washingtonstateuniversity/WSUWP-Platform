@@ -25,9 +25,6 @@ The server configuration provisioned on the virtual machine is provided by the [
 
 1. Clone this repository into a local directory. (`git clone ...`)
 1. Navigate to the local directory in a terminal.
-1. Initialize submodules with `git submodule init`
-1. Initiate first sync of submodules with `git submodule update`
-	* This will checkout the version of WordPress we're using for the platform.
 1. Type `vagrant up`
 
 #### Zip
