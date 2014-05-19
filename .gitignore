@@ -10,6 +10,16 @@
 # Ignore PHPStorm project files.
 /.idea
 
+# Ignore node modules created by NPM
+/node_modules
+
+# Ignore the generated build directory
+/build
+
+# Ignore build files for plugins and themes
+/build-plugins/**/
+/build-themes/**/
+
 # Ignore any custom hosts definitions.
 /*-wsuwp-hosts
 !/default-wsuwp-hosts
@@ -24,15 +34,11 @@
 # The Query Monitor plugin adds a db.php drop in that we should ignore.
 /www/wp-content/db.php
 
-# Ignore filters in local development
+# Ignore any local filters
 /www/wp-content/mu-plugins/local-index.php
 
 # Ignore all plugins in the wp-content directory by default. We'll explicitly allow those we track here.
 /www/wp-content/plugins/*/
-!/www/wp-content/plugins/wsuwp-sso-authentication/
-!/www/wp-content/plugins/wsuwp-custom-css/
-!/www/wp-content/plugins/wordpress-importer/
-!/www/wp-content/plugins/safe-redirect-manager/
 
 # Ignore all uploads in the wp-content directory by default.
 /www/wp-content/uploads
@@ -42,7 +48,3 @@
 
 # Ignore all themes in the wp-content directory by default. We'll explicitly allow those we track here.
 /www/wp-content/themes/*/
-!/www/wp-content/themes/spine/
-!/www/wp-content/themes/twentytwelve/
-!/www/wp-content/themes/twentythirteen/
-!/www/wp-content/themes/p2/
