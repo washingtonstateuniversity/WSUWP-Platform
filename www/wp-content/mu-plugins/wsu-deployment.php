@@ -2,9 +2,9 @@
 /*
 Plugin Name: WSU Deployment
 Plugin URI: http://web.wsu.edu
-Description: Receive deploy requests and act accordingly.
+Description: Receive deploy requests in WordPress and act accordingly.
 Author: washingtonstateuniversity, jeremyfelt
-Version: 0.1
+Version: 0.2
 */
 
 class WSU_Deployment {
@@ -107,45 +107,83 @@ class WSU_Deployment {
 			return;
 		}
 
-		// Until we're certain, we should skip POST requests without a payload.
-		if ( empty( $_POST['payload'] ) ) {
-			die();
+		if ( isset( $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] ) && 'create' === $_SERVER[ 'HTTP_X_GITHUB_EVENT' ] && ! empty( $_POST['payload'] ) ) {
+			$this->_handle_create_webhook();
+		} elseif ( ! isset( $_SERVER['HTTP_X_GITHUB_EVENT'] ) ) {
+			wp_safe_redirect( home_url() );
 		}
 
-		$deployment = get_post( get_the_ID() );
-		// Capture actual deployment and then kill the page load.
-		$title = time() . ' | ' . esc_html( $deployment->post_title );
-		$args = array(
-			'post_type' => $this->deploy_instance_slug,
-			'post_title' => $title,
-		);
-		$instance_id = wp_insert_post( $args );
+		die();
+	}
 
-		// This is temporary until I can figure out the structure.
+	/**
+	 * Handle the 'create' event passed via webhook from GitHub.
+	 */
+	private function _handle_create_webhook() {
+		// This seems overkill, but it is working.
 		$payload = wp_unslash( $_POST['payload'] );
-		$payload = sanitize_meta( '_deploy_data', $payload, 'post' );
 		$payload = maybe_serialize( $payload );
 		$payload = maybe_unserialize( $payload );
 		$payload = json_decode( $payload );
 
-		if ( isset( $payload->head_commit->id ) ) {
-			add_post_meta( $instance_id, '_deploy_commit_hash', sanitize_key( $payload->head_commit->id ) );
-			add_post_meta( $instance_id, '_deploy_commit_url', sanitize_key( $payload->head_commit->url ) );
+		$deployment_data = array(
+			'tag' => false,
+			'ref_type' => false,
+			'sender' => false,
+			'avatar_url' => false,
+		);
+
+		// Check for a tag reference and store it.
+		if ( isset( $payload->ref ) ) {
+			$deployment_data['tag'] = $payload->ref;
 		} else {
-			add_post_meta( $instance_id, '_deploy_commit_hash', 'Unexpected data structure' );
+			die();
 		}
 
-		if ( isset( $payload->pusher->name ) ) {
-			add_post_meta( $instance_id, '_deploy_pusher', sanitize_text_field( $payload->pusher->name ) );
+		// Check to make sure a tag is being created and not a branch.
+		if ( isset( $payload->ref_type ) && 'tag' === $payload->ref_type ) {
+			$deployment_data['ref_type'] = $payload->ref_type;
+		} else {
+			die();
 		}
+
+		if ( isset( $payload->sender ) ) {
+			$deployment_data['sender'] = $payload->sender->login;
+			$deployment_data['avatar_url'] = $payload->sender->avatar_url;
+		}
+
+		$deployment = get_post( get_the_ID() );
+		$time = time();
+
+		// Build the deployment instance.
+		$title = date( 'Y-m-d H:i:s', $time ) . ' | ' . esc_html( $deployment->post_title ) . ' | ' . esc_html( $deployment_data[ 'tag'] ) . ' | ' . esc_html( $deployment_data['sender'] );
+		$args = array(
+			'post_type' => $this->deploy_instance_slug,
+			'post_title' => $title,
+			'post_status' => 'publish',
+		);
+		$instance_id = wp_insert_post( $args );
+
+		add_post_meta( $instance_id, '_deploy_data', $deployment_data, true );
 
 		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
 		if ( ! is_array( $deployments ) ) {
 			$deployments = array();
 		}
-		$deployments[ time() ] = absint( $instance_id );
+		$deployments[ $time ] = absint( $instance_id );
 		update_post_meta( get_the_ID(), '_deploy_instances', $deployments );
+
+		$this->_handle_deploy( $deployment_data['tag'], $deployment->ID );
+
 		die();
+	}
+
+	private function _handle_deploy( $tag, $post_id ) {
+		$tag = escapeshellarg( $tag );
+		$repository_directory = 'deployments-test';
+		$prod_directory = 'themes/deployments-test';
+
+		shell_exec( 'sh /var/repos/deployments-manager/deploy ' . $tag . ' ' . $repository_directory . ' ' . $prod_directory );
 	}
 
 	/**
@@ -164,7 +202,7 @@ class WSU_Deployment {
 	}
 
 	/**
-	 * Display the deployment instances that have occured on this
+	 * Display the deployment instances that have occurred on this
 	 * deployment configuration.
 	 *
 	 * @param $post
@@ -176,13 +214,17 @@ class WSU_Deployment {
 
 		$deployments = get_post_meta( get_the_ID(), '_deploy_instances', true );
 		if ( ! empty( $deployments ) ) {
+			$deployments = array_reverse( $deployments, true );
 			echo '<ul>';
 			foreach ( $deployments as $time => $instance_id ) {
-				$hash = get_post_meta( $instance_id, '_deploy_commit_hash', true );
-				if ( ! $hash ) {
-					$hash = 'View';
+				$deploy_data = get_post_meta( $instance_id, '_deploy_data', true );
+				if ( ! $deploy_data ) {
+					$deploy_tag = 'View';
+				} else {
+					$deploy_tag = $deploy_data['tag'];
 				}
-				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | <a href="' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '">' . esc_html( $hash ) . '</a></li>';
+
+				echo '<li>' . date( 'Y-m-d H:i:s', $time ) . ' | <a href="' . esc_html( admin_url( 'post.php?post=' . absint( $instance_id ) . '&action=edit') ) . '">' . esc_html( $deploy_tag ) . '</a></li>';
 			}
 			echo '<ul>';
 		}
@@ -193,22 +235,20 @@ class WSU_Deployment {
 	 * @param $post
 	 */
 	public function display_instance_payload( $post ) {
-		$commit_hash = get_post_meta( $post->ID, '_deploy_commit_hash', true );
-		$commit_url = get_post_meta( $post->ID, '_deploy_commit_url', true );
-		$commit_author = get_post_meta( $post->ID, '_deploy_pusher', true );
-		$commit_data = get_post_meta( $post->ID, '_deploy_data', true );
-		echo 'Commit: <a href="' . esc_url( $commit_url ) . '">' . esc_html( $commit_hash ) . '</a>';
-		echo '<br>Author: ' . esc_html( $commit_author );
-		echo '<pre>';
-		print_r( $commit_data );
-		echo '</pre>';
-		$more = json_decode( $commit_data );
-		print_r( $more );
-		echo '</pre>';
-		echo '<pre>';
-		print_r( $more->head_commit );
-		echo '</pre>';
-		echo $more->head_commit->id;
+		$deploy_data = get_post_meta( $post->ID, '_deploy_data', true );
+
+		if ( isset( $deploy_data['tag'] ) ) {
+			echo 'Tag: ' . esc_html( $deploy_data['tag'] ) . '<br />';
+		}
+
+		if ( isset( $deploy_data['ref_type'] ) ) {
+			echo 'Ref Type: ' . esc_html( $deploy_data['ref_type'] ) . '<br />';
+		}
+
+		if ( isset( $deploy_data['sender'] ) ) {
+			echo 'Author: ' . esc_html( $deploy_data['sender'] ) . '<br />';
+			echo '<img src="' . esc_url( $deploy_data['avatar_url'] ) . '" style="height:50px; width: auto;">';
+		}
 	}
 }
 new WSU_Deployment();
