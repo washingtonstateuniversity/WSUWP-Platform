@@ -5,7 +5,7 @@
  * Description: This is a blank index file with an unnecessary description.
  * Author: washingtonstateuniversity, jeremyfelt
  * Author URI: http://web.wsu.edu
- * Version: 0.1
+ * Version: 0.2
  * Network: true
  */
 
