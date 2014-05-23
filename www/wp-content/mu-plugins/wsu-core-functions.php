@@ -294,7 +294,7 @@ We hope you enjoy your new site. Thanks!
 		'registration' => 'none',
 		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv midi mid pdf',
 		'blog_upload_space' => 100,
-		'fileupload_maxk' => 1500,
+		'fileupload_maxk' => 50000,
 		'illegal_names' => array( 'www', 'web', 'root', 'admin', 'main', 'invite', 'administrator', 'files' ),
 		'wpmu_upgrade_site' => $wp_db_version,
 		'welcome_email' => $welcome_email,
