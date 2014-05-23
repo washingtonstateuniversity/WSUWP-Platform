@@ -309,8 +309,9 @@ We hope you enjoy your new site. Thanks!
 		'active_sitewide_plugins' => array(),
 		'WPLANG' => get_locale(),
 	);
-	if ( 0 == $network_meta['subdomain_install'] )
+	if ( 0 == $network_meta['subdomain_install'] ) {
 		$defaults['illegal_names'][] = 'blog';
+	}
 
 	$network_meta = wp_parse_args( $network_meta, $defaults );
 	/**
@@ -325,11 +326,13 @@ We hope you enjoy your new site. Thanks!
 
 	$insert = '';
 	foreach( $network_meta as $meta_key => $meta_value ) {
-		if ( is_array( $meta_value ) )
+		if ( is_array( $meta_value ) ) {
 			$meta_value = serialize( $meta_value );
+		}
 
-		if ( ! empty( $insert ) )
+		if ( ! empty( $insert ) ) {
 			$insert .= ', ';
+		}
 
 		$insert .= $wpdb->prepare( "( %d, %s, %s )", $network_id, $meta_key, $meta_value );
 	}
