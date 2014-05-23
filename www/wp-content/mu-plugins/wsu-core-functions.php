@@ -292,7 +292,7 @@ We hope you enjoy your new site. Thanks!
 		'admin_email' => null,
 		'admin_user_id' => null,
 		'registration' => 'none',
-		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv midi mid pdf',
+		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv midi mid pdf ai psd eps doc xls zip',
 		'blog_upload_space' => 100,
 		'fileupload_maxk' => 50000,
 		'illegal_names' => array( 'www', 'web', 'root', 'admin', 'main', 'invite', 'administrator', 'files' ),
