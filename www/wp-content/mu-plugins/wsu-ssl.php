@@ -14,6 +14,7 @@ class WSU_SSL {
 	 */
 	public function __construct() {
 		add_action( 'wpmu_new_blog', array( $this, 'determine_new_site_ssl' ), 10, 3 );
+		add_filter( 'parent_file', array( $this, 'ssl_admin_menu' ), 2, 1 );
 	}
 
 	/**
@@ -38,6 +39,27 @@ class WSU_SSL {
 			update_option( $domain . '_ssl_disabled', 1 );
 			restore_current_blog();
 		}
+	}
+
+	/**
+	 * Filter the submenu global to add a 'Manage Site SSL' link.
+	 *
+	 * @param string $parent_file Parent file of a menu subsection.
+	 *
+	 * @return string Parent file of a menu subsection.
+	 */
+	public function ssl_admin_menu( $parent_file ) {
+		global $submenu;
+
+		if ( wsuwp_get_current_network()->id == wsuwp_get_primary_network_id() ) {
+			$submenu['sites.php'][15] = array(
+				'Manage Site SSL',
+				'manage_sites',
+				'site-new.php',
+			);
+		}
+
+		return $parent_file;
 	}
 }
 new WSU_SSL();
