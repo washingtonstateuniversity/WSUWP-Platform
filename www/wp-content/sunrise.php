@@ -106,18 +106,19 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 
 	// If a row was found, set it in cache for future lookups
 	if ( $current_blog ) {
-		$wsuwp_table_prefix = $wpdb->get_blog_prefix( $current_blog->blog_id );
-		$wsuwp_ssl_enabled = $wpdb->get_var( "SELECT option_value FROM {$wsuwp_table_prefix}options WHERE option_name = 'wsuwp_ssl_enabled'" );
+		// Start with the assumption that SSL is available for this domain.
+		$current_blog->ssl_enabled = true;
 
-		if ( ! empty( $wsuwp_ssl_enabled ) ) {
-			$current_blog->ssl_enabled = true;
-		} else {
+		// We're looking for a base option name of foo.bar.com_ssl_disabled
+		$ssl_domain_check = $requested_domain . '_ssl_disabled';
+		$non_ssl_domain = $wpdb->get_row( $wpdb->prepare( "SELECT option_id FROM {$wpdb->base_prefix}options WHERE option_name = %s", $ssl_domain_check ) );
+
+		if ( is_object( $non_ssl_domain ) ) {
 			$current_blog->ssl_enabled = false;
 		}
 
 		wp_cache_add( $requested_domain . $requested_path, $current_blog, 'wsuwp:site', 60 * 60 * 12 );
 	}
-
 }
 
 if( $current_blog ) {
