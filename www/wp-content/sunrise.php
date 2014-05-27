@@ -106,6 +106,17 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 
 	// If a row was found, set it in cache for future lookups
 	if ( $current_blog ) {
+		$wsuwp_table_prefix = $wpdb->get_blog_prefix( $current_blog->blog_id );
+		$wsuwp_ssl_enabled = $wpdb->get_var( "SELECT option_value FROM {$wsuwp_table_prefix}options WHERE option_name = 'wsuwp_ssl_enabled'" );
+
+		if ( ! empty( $wsuwp_ssl_enabled ) ) {
+			define( 'FORCE_SSL_ADMIN', true );
+			define( 'FORCE_SSL_LOGIN', true );
+			$current_blog->ssl_enabled = true;
+		} else {
+			$current_blog->ssl_enabled = false;
+		}
+
 		wp_cache_add( $requested_domain . $requested_path, $current_blog, 'wsuwp:site', 60 * 60 * 12 );
 	}
 
