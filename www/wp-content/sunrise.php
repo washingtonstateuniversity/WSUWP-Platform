@@ -152,9 +152,9 @@ if( $current_blog ) {
 	// Check to see if this redirect domain is a site that we can handle
 	$redirect_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s", $redirect_domain ) );
 
-	/** @todo think about santizing this properly as esc_url() and wp_redirect() are not available yet */
+	/** @todo think about sanitizing this properly as esc_url() and wp_redirect() are not available yet */
 	if ( $redirect_site_id ) {
-		header( "Location: http://" . $redirect_domain,    true, 301 );
+		header( "Location: http://" . $redirect_domain, true, 301 );
 	} else {
 		header( "Location: http://wp.wsu.edu/", true, 301 );
 	}
