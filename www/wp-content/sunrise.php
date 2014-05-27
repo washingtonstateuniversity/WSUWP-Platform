@@ -23,7 +23,7 @@
  *         - http://network2.wp.wsu.edu/site1/
  *
  *     This does not work:
- *         - http://network2/wp.wsu.edu/site1/site2/
+ *         - http://network2.wp.wsu.edu/site1/site2/
  *
  * When this file has done its intended job, several things will have been setup for use
  * by the remaining parts of WordPress:
