@@ -85,12 +85,8 @@ class WSU_SSL {
 		<div class="wrap">
 			<h2 id="add-new-site"><?php _e('Manage Site SSL') ?></h2>
 			<p class="description">These sites have been configured on the WSUWP Platform, but do not yet have confirmed SSL configurations.</p>
-
-			<form method="post" action="<?php echo network_admin_url('site-new.php?action=add-network-site'); ?>">
-				<?php wp_nonce_field( 'add-network-site', '_wpnonce_add-network-site' ) ?>
-
-			</form>
 		</div>
+
 		<?php
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
