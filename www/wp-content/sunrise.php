@@ -38,11 +38,13 @@
  */
 
 // Remove strict standards reporting, only show notices and warnings.
-if ( WP_DEBUG && WSU_DISABLE_STRICT )
+if ( WP_DEBUG && WSU_DISABLE_STRICT ) {
 	error_reporting( E_ALL ^ E_STRICT );
+}
 
-if ( defined( 'COOKIE_DOMAIN' ) )
+if ( defined( 'COOKIE_DOMAIN' ) ) {
 	die( 'The constant "COOKIE_DOMAIN" is defined (probably in wp-config.php). Please remove or comment out that define() line.' );
+}
 
 //Capture the domain and path from the current request
 $requested_domain    = $_SERVER['HTTP_HOST'];
@@ -55,8 +57,9 @@ $requested_path = $requested_uri_parts[0] . '/';
 wp_cache_add_global_groups( 'wsuwp:network' );
 
 // If we're dealing with a root domain, we want to leave it at a path of '/'
-if ( '/' !== $requested_path )
+if ( '/' !== $requested_path ) {
 	$requested_path = '/' . $requested_path;
+}
 
 if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp:site' ) ) {
 	// Treat www the same as the root URL
@@ -65,10 +68,11 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	//suppress errors and capture current suppression setting
 	$suppression = $wpdb->suppress_errors();
 
-	if ( $requested_domain !== $alternate_domain )
+	if ( $requested_domain !== $alternate_domain ) {
 		$domain_where = $wpdb->prepare( "domain IN ( %s, %s )", $requested_domain, $alternate_domain );
-	else
+	} else {
 		$domain_where = $wpdb->prepare( "domain = %s", $requested_domain );
+	}
 
 	/**
 	 * The following query will find any one level deep subfolder sites on any page view, but
@@ -96,8 +100,9 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * it all together in the $current_site, $current_blog, $site_id, and $blog_id globals so
 	 * that it is available for the remaining operations on this page request.
 	 */
-	if( $found_site_id )
+	if( $found_site_id ) {
 		$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d LIMIT 1", $found_site_id ) );
+	}
 
 	// If a row was found, set it in cache for future lookups
 	if ( $current_blog ) {
@@ -137,10 +142,11 @@ if( $current_blog ) {
 	$redirect_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s", $redirect_domain ) );
 
 	/** @todo think about santizing this properly as esc_url() and wp_redirect() are not available yet */
-	if ( $redirect_site_id )
+	if ( $redirect_site_id ) {
 		header( "Location: http://" . $redirect_domain,    true, 301 );
-	else
+	} else {
 		header( "Location: http://wp.wsu.edu/", true, 301 );
+	}
 
 	die();
 }
