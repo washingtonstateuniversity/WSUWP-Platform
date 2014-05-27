@@ -69,6 +69,40 @@ class WSU_SSL {
 		return $parent_file;
 	}
 
+	/**
+	 * Retrieve a list of domains that have not yet been confirmed as SSL ready.
+	 *
+	 * @return array List of domains waiting for SSL confirmation.
+	 */
+	public function get_ssl_disabled_domains() {
+		/* @type WPDB $wpdb */
+		global $wpdb;
+
+		$query_string = like_escape( '_ssl_disabled' );
+
+		$domains = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '%{$query_string}'" );
+		$domains = wp_list_pluck( $domains, 'option_name' );
+		$domains = array_map( array( $this, 'strip_domain' ), $domains );
+
+		return $domains;
+	}
+
+	/**
+	 * Strip the _ssl_disabled suffix from the option name.
+	 *
+	 * @param string $option_name Original option name to be stripped.
+	 *
+	 * @return string Modified domain name.
+	 */
+	public function strip_domain( $option_name ) {
+		$domain = str_replace( '_ssl_disabled', '',  $option_name );
+
+		return $domain;
+	}
+
+	/**
+	 * Provide a page to display domains that have not yet been confirmed as SSL ready.
+	 */
 	public function ssl_sites_display() {
 		global $title;
 
@@ -81,10 +115,23 @@ class WSU_SSL {
 		require( ABSPATH . 'wp-admin/admin-header.php' );
 
 		?>
-
+		<style>
+			.confirm_ssl {
+				text-decoration: underline;
+				color: blue;
+				cursor: pointer;
+			}
+		</style>
 		<div class="wrap">
 			<h2 id="add-new-site"><?php _e('Manage Site SSL') ?></h2>
 			<p class="description">These sites have been configured on the WSUWP Platform, but do not yet have confirmed SSL configurations.</p>
+			<table class="form-table">
+				<?php
+				foreach( $this->get_ssl_disabled_domains() as $domain ) {
+					?><tr><td><span id="<?php esc_attr( $domain ); ?>" class="confirm_ssl">Confirm</span></td><td><?php echo esc_html( $domain ); ?></td></tr><?php
+				}
+				?>
+			</table>
 		</div>
 
 		<?php
