@@ -110,8 +110,6 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 		$wsuwp_ssl_enabled = $wpdb->get_var( "SELECT option_value FROM {$wsuwp_table_prefix}options WHERE option_name = 'wsuwp_ssl_enabled'" );
 
 		if ( ! empty( $wsuwp_ssl_enabled ) ) {
-			define( 'FORCE_SSL_ADMIN', true );
-			define( 'FORCE_SSL_LOGIN', true );
 			$current_blog->ssl_enabled = true;
 		} else {
 			$current_blog->ssl_enabled = false;
@@ -135,6 +133,11 @@ if( $current_blog ) {
 		$current_site->blog_id = $blog_id;
 
 		wp_cache_add( $site_id, $current_site, 'wsuwp:network', 60 * 60 * 12 );
+	}
+
+	if ( isset( $current_blog->ssl_enabled ) && true === $current_blog->ssl_enabled ) {
+		define( 'FORCE_SSL_ADMIN', true );
+		define( 'FORCE_SSL_LOGIN', true );
 	}
 
 	define( 'COOKIE_DOMAIN', $requested_domain );
