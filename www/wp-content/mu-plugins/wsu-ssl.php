@@ -70,14 +70,13 @@ class WSU_SSL {
 	}
 
 	public function ssl_sites_display() {
-		global $title, $parent_file;
+		global $title;
 
 		if ( ! isset( $_GET['display'] ) || 'ssl' !== $_GET['display'] ) {
 			return;
 		}
 
 		$title = __('Manage Site SSL');
-		$parent_file = 'sites.php';
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
 
