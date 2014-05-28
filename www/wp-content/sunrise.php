@@ -23,7 +23,7 @@
  *         - http://network2.wp.wsu.edu/site1/
  *
  *     This does not work:
- *         - http://network2/wp.wsu.edu/site1/site2/
+ *         - http://network2.wp.wsu.edu/site1/site2/
  *
  * When this file has done its intended job, several things will have been setup for use
  * by the remaining parts of WordPress:
@@ -38,11 +38,13 @@
  */
 
 // Remove strict standards reporting, only show notices and warnings.
-if ( WP_DEBUG && WSU_DISABLE_STRICT )
+if ( WP_DEBUG && WSU_DISABLE_STRICT ) {
 	error_reporting( E_ALL ^ E_STRICT );
+}
 
-if ( defined( 'COOKIE_DOMAIN' ) )
+if ( defined( 'COOKIE_DOMAIN' ) ) {
 	die( 'The constant "COOKIE_DOMAIN" is defined (probably in wp-config.php). Please remove or comment out that define() line.' );
+}
 
 //Capture the domain and path from the current request
 $requested_domain    = $_SERVER['HTTP_HOST'];
@@ -55,8 +57,9 @@ $requested_path = $requested_uri_parts[0] . '/';
 wp_cache_add_global_groups( 'wsuwp:network' );
 
 // If we're dealing with a root domain, we want to leave it at a path of '/'
-if ( '/' !== $requested_path )
+if ( '/' !== $requested_path ) {
 	$requested_path = '/' . $requested_path;
+}
 
 if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp:site' ) ) {
 	// Treat www the same as the root URL
@@ -65,10 +68,11 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	//suppress errors and capture current suppression setting
 	$suppression = $wpdb->suppress_errors();
 
-	if ( $requested_domain !== $alternate_domain )
+	if ( $requested_domain !== $alternate_domain ) {
 		$domain_where = $wpdb->prepare( "domain IN ( %s, %s )", $requested_domain, $alternate_domain );
-	else
+	} else {
 		$domain_where = $wpdb->prepare( "domain = %s", $requested_domain );
+	}
 
 	/**
 	 * The following query will find any one level deep subfolder sites on any page view, but
@@ -96,14 +100,25 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * it all together in the $current_site, $current_blog, $site_id, and $blog_id globals so
 	 * that it is available for the remaining operations on this page request.
 	 */
-	if( $found_site_id )
+	if( $found_site_id ) {
 		$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d LIMIT 1", $found_site_id ) );
+	}
 
 	// If a row was found, set it in cache for future lookups
 	if ( $current_blog ) {
+		// Start with the assumption that SSL is available for this domain.
+		$current_blog->ssl_enabled = true;
+
+		// We're looking for a base option name of foo.bar.com_ssl_disabled
+		$ssl_domain_check = $requested_domain . '_ssl_disabled';
+		$non_ssl_domain = $wpdb->get_row( $wpdb->prepare( "SELECT option_id FROM {$wpdb->base_prefix}options WHERE option_name = %s", $ssl_domain_check ) );
+
+		if ( is_object( $non_ssl_domain ) ) {
+			$current_blog->ssl_enabled = false;
+		}
+
 		wp_cache_add( $requested_domain . $requested_path, $current_blog, 'wsuwp:site', 60 * 60 * 12 );
 	}
-
 }
 
 if( $current_blog ) {
@@ -121,6 +136,11 @@ if( $current_blog ) {
 		wp_cache_add( $site_id, $current_site, 'wsuwp:network', 60 * 60 * 12 );
 	}
 
+	if ( isset( $current_blog->ssl_enabled ) && true === $current_blog->ssl_enabled ) {
+		//define( 'FORCE_SSL_ADMIN', true );
+		//define( 'FORCE_SSL_LOGIN', true );
+	}
+
 	define( 'COOKIE_DOMAIN', $requested_domain );
 } else {
 	/**
@@ -136,11 +156,12 @@ if( $current_blog ) {
 	// Check to see if this redirect domain is a site that we can handle
 	$redirect_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s", $redirect_domain ) );
 
-	/** @todo think about santizing this properly as esc_url() and wp_redirect() are not available yet */
-	if ( $redirect_site_id )
-		header( "Location: http://" . $redirect_domain,    true, 301 );
-	else
+	/** @todo think about sanitizing this properly as esc_url() and wp_redirect() are not available yet */
+	if ( $redirect_site_id ) {
+		header( "Location: http://" . $redirect_domain, true, 301 );
+	} else {
 		header( "Location: http://wp.wsu.edu/", true, 301 );
+	}
 
 	die();
 }
