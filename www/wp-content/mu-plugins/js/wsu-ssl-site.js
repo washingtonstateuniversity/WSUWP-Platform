@@ -29,6 +29,7 @@
 	function handle_unconfirm_response( response ) {
 		response = $.parseJSON( response );
 		if ( response.success ) {
+			$('#add-domain' ).val('');
 			window.location.reload();
 		}
 	}
