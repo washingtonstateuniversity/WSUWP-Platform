@@ -16,6 +16,7 @@ class WSU_SSL {
 		add_action( 'wpmu_new_blog', array( $this, 'determine_new_site_ssl' ), 10, 3 );
 		add_filter( 'parent_file', array( $this, 'ssl_admin_menu' ), 11, 1 );
 		add_action( 'load-site-new.php', array( $this, 'ssl_sites_display' ), 1 );
+		add_action( 'wp_ajax_confirm_ssl', array( $this, 'handle_ssl_ajax' ), 10 );
 	}
 
 	/**
@@ -127,6 +128,7 @@ class WSU_SSL {
 		<div class="wrap">
 			<h2 id="add-new-site"><?php _e('Manage Site SSL') ?></h2>
 			<p class="description">These sites have been configured on the WSUWP Platform, but do not yet have confirmed SSL configurations.</p>
+			<input id="ssl_ajax_nonce" type="hidden" value="<?php echo esc_attr( wp_create_nonce( 'confirm-ssl' ) ); ?>" />
 			<table class="form-table">
 				<?php
 				foreach( $this->get_ssl_disabled_domains() as $domain ) {
@@ -138,6 +140,28 @@ class WSU_SSL {
 
 		<?php
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
+		die();
+	}
+
+	public function handle_ssl_ajax() {
+		/* @type WPDB $wpdb */
+		global $wpdb;
+
+		check_ajax_referer( 'confirm-ssl', 'ajax_nonce' );
+
+		if ( true === wsuwp_validate_domain( $_POST['domain'] ) ) {
+			$domain_option = $_POST['domain'] . '_ssl_disabled';
+			$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name = %s", $domain_option ) );
+			if ( $result ) {
+				$response = json_encode( array( 'success' => $_POST['domain'] ) );
+			} else {
+				$response = json_encode( array( 'error' => 'The domain passed was valid, but confirmation was not successful.' ) );
+			}
+		} else {
+			$response = json_encode( array( 'error' => 'The domain passed for confirmation is not valid.' ) );
+		}
+
+		echo $response;
 		die();
 	}
 }
