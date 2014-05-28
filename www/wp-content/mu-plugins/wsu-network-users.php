@@ -414,3 +414,34 @@ function wsuwp_is_network_admin( $user_login, $network_id = 0 ) {
 
 	return $wsu_network_users->is_network_admin( $user_login, $network_id );
 }
+
+/**
+ * Email login credentials to a newly-registered user.
+ *
+ * Plugin function to replace core's wp_new_user_notification
+ *
+ * @param int    $user_id        User ID.
+ * @param string $plaintext_pass Optional. The user's plaintext password. Default empty.
+ */
+function wp_new_user_notification( $user_id, $plaintext_pass = '' ) {
+	$user = get_userdata( $user_id );
+
+	// The blogname option is escaped with esc_html on the way into the database in sanitize_option
+	// we want to reverse this for the plain text arena of emails.
+	$blogname = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
+
+	$message  = sprintf( __( 'A new user has been added to %s:' ), $blogname ) . "\r\n\r\n";
+	$message .= sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n";
+	$message .= sprintf( __( 'E-mail: %s' ), $user->user_email ) . "\r\n\r\n";
+	$message .= "No action is necessary. This message is purely informative." . "\r\n\r\n";
+	$message .= "- WSUWP Platform (wp.wsu.edu)";
+
+	@wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] New User Added' ), $blogname ), $message );
+
+	$message  = sprintf( "Hello and welcome to %s.", $blogname ) . "\r\n\r\n";
+	$message .= "You can now login with your WSU Network ID ($user->user_login) and password at " . wp_login_url() . "\r\n\r\n";
+	$message .= "- WSUWP Platform (wp.wsu.edu)";
+
+	wp_mail( $user->user_email, sprintf( __( '[%s] Welcome' ), $blogname ), $message );
+
+}
