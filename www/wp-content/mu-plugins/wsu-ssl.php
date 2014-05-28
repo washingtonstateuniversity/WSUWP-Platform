@@ -161,6 +161,13 @@ class WSU_SSL {
 			$domain_option = $_POST['domain'] . '_ssl_disabled';
 			$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name = %s", $domain_option ) );
 			if ( $result ) {
+				$domain_sites = $wpdb->get_results( $wpdb->prepare( "SELECT domain, path FROM $wpdb->blogs WHERE domain = %s", $_POST['domain'] ) );
+
+				// Clear site cache on each confirmed domain.
+				foreach( $domain_sites as $cached_site ) {
+					wp_cache_delete( $cached_site->domain . $cached_site->path, 'wsuwp:site' );
+				}
+
 				$response = json_encode( array( 'success' => $_POST['domain'] ) );
 			} else {
 				$response = json_encode( array( 'error' => 'The domain passed was valid, but confirmation was not successful.' ) );
@@ -177,6 +184,9 @@ class WSU_SSL {
 	 * Handle an AJAX request to mark a domain as unconfirmed for SSL.
 	 */
 	public function unconfirm_ssl_ajax() {
+		/* @type WPDB $wpdb */
+		global $wpdb;
+
 		check_ajax_referer( 'confirm-ssl', 'ajax_nonce' );
 
 		if ( true === wsuwp_validate_domain( trim( $_POST['domain'] ) ) ) {
@@ -184,6 +194,14 @@ class WSU_SSL {
 			switch_to_blog( 1 );
 			update_option( $option_name, '1' );
 			restore_current_blog();
+
+			$domain_sites = $wpdb->get_results( $wpdb->prepare( "SELECT domain, path FROM $wpdb->blogs WHERE domain = %s", $_POST['domain'] ) );
+
+			// Clear site cache on each unconfirmed domain.
+			foreach( $domain_sites as $cached_site ) {
+				wp_cache_delete( $cached_site->domain . $cached_site->path, 'wsuwp:site' );
+			}
+
 			$response = json_encode( array( 'success' => trim( $_POST['domain'] ) ) );
 		} else {
 			$response = json_encode( array( 'error' => 'Invalid domain.' ) );
