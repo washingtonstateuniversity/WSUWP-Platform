@@ -16,7 +16,7 @@ class WSU_SSL {
 		add_action( 'wpmu_new_blog', array( $this, 'determine_new_site_ssl' ), 10, 3 );
 		add_filter( 'parent_file', array( $this, 'ssl_admin_menu' ), 11, 1 );
 		add_action( 'load-site-new.php', array( $this, 'ssl_sites_display' ), 1 );
-		add_action( 'wp_ajax_confirm_ssl', array( $this, 'handle_ssl_ajax' ), 10 );
+		add_action( 'wp_ajax_confirm_ssl', array( $this, 'confirm_ssl_ajax' ), 10 );
 		add_action( 'wp_ajax_unconfirm_ssl', array( $this, 'unconfirm_ssl_ajax' ), 10 );
 	}
 
@@ -148,7 +148,10 @@ class WSU_SSL {
 		die();
 	}
 
-	public function handle_ssl_ajax() {
+	/**
+	 * Handle an AJAX request to mark a domain as confirmed for SSL.
+	 */
+	public function confirm_ssl_ajax() {
 		/* @type WPDB $wpdb */
 		global $wpdb;
 
@@ -170,8 +173,12 @@ class WSU_SSL {
 		die();
 	}
 
+	/**
+	 * Handle an AJAX request to mark a domain as unconfirmed for SSL.
+	 */
 	public function unconfirm_ssl_ajax() {
 		check_ajax_referer( 'confirm-ssl', 'ajax_nonce' );
+
 		if ( true === wsuwp_validate_domain( trim( $_POST['domain'] ) ) ) {
 			$option_name = trim( $_POST['domain'] ) . '_ssl_disabled';
 			switch_to_blog( 1 );
