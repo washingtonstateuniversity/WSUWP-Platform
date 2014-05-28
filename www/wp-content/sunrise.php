@@ -137,8 +137,8 @@ if( $current_blog ) {
 	}
 
 	if ( isset( $current_blog->ssl_enabled ) && true === $current_blog->ssl_enabled ) {
-		//define( 'FORCE_SSL_ADMIN', true );
-		//define( 'FORCE_SSL_LOGIN', true );
+		define( 'FORCE_SSL_ADMIN', true );
+		define( 'FORCE_SSL_LOGIN', true );
 	}
 
 	define( 'COOKIE_DOMAIN', $requested_domain );
