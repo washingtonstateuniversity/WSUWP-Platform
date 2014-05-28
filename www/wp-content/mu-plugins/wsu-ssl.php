@@ -125,6 +125,11 @@ class WSU_SSL {
 				color: blue;
 				cursor: pointer;
 			}
+			.form-table td {
+				padding: 8px 10px;
+				line-height: 1.1;
+				vertical-align: middle;
+			}
 		</style>
 		<div class="wrap">
 			<h2 id="add-new-site"><?php _e('Manage Site SSL') ?></h2>
