@@ -132,7 +132,7 @@ class WSU_SSL {
 			<table class="form-table">
 				<?php
 				foreach( $this->get_ssl_disabled_domains() as $domain ) {
-					?><tr><td><span id="<?php echo esc_attr( $domain ); ?>" class="confirm_ssl">Confirm</span></td><td><?php echo esc_html( $domain ); ?></td></tr><?php
+					?><tr><td><span id="<?php echo md5( $domain ); ?>" data-domain="<?php echo esc_attr( $domain ); ?>" class="confirm_ssl">Confirm</span></td><td><?php echo esc_html( $domain ); ?></td></tr><?php
 				}
 				?>
 			</table>
