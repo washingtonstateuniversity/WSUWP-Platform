@@ -136,10 +136,11 @@ class WSU_SSL {
 					?><tr><td><span id="<?php echo md5( $domain ); ?>" data-domain="<?php echo esc_attr( $domain ); ?>" class="confirm_ssl">Confirm</span></td><td><?php echo esc_html( $domain ); ?></td></tr><?php
 				}
 				?>
+				<tr><td><label for="add_domain">Add Unconfirmed SSL Domain:</label></td><td>
+						<input name="add_domain" id="add-domain" class="regular-text" value="" />
+						<input type="button" id="submit-add-domain" class="button button-primary" value="Add Domain" />
+				</td></tr>
 			</table>
-			<label for="add_domain">Add Unconfirmed SSL Domain:</label>
-			<input name="add_domain" id="add-domain" class="regular-text" value="" />
-			<input type="button" id="submit-add-domain" class="button button-primary" value="Add Domain" />
 		</div>
 
 		<?php
