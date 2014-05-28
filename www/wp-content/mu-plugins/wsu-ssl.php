@@ -160,6 +160,7 @@ class WSU_SSL {
 		if ( true === wsuwp_validate_domain( $_POST['domain'] ) ) {
 			$domain_option = $_POST['domain'] . '_ssl_disabled';
 			$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name = %s", $domain_option ) );
+			wp_cache_delete( 'alloptions', 'options' );
 			if ( $result ) {
 				$domain_sites = $wpdb->get_results( $wpdb->prepare( "SELECT domain, path FROM $wpdb->blogs WHERE domain = %s", $_POST['domain'] ) );
 
