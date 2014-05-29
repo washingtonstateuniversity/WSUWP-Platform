@@ -45,6 +45,7 @@ class WSU_Network_Admin {
 	 */
 	private $global_network_options = array(
 		'fileupload_maxk' => 50000,
+		'blog_upload_space' => 1000,
 	);
 
 	/**
@@ -68,6 +69,7 @@ class WSU_Network_Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
+		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
 	}
 
 	/**
@@ -664,6 +666,17 @@ class WSU_Network_Admin {
 		$network_options = $this->get_global_network_options();
 
 		return $network_options['fileupload_maxk'];
+	}
+
+	/**
+	 * Return the default value for total site upload space.
+	 *
+	 * @return int Size in MB
+	 */
+	public function set_blog_upload_space() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['blog_upload_space'];
 	}
 }
 new WSU_Network_Admin();
