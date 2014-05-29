@@ -46,6 +46,7 @@ class WSU_Network_Admin {
 	private $global_network_options = array(
 		'fileupload_maxk' => 50000,
 		'blog_upload_space' => 1000,
+		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv pdf ai psd eps doc xls zip',
 	);
 
 	/**
@@ -70,6 +71,7 @@ class WSU_Network_Admin {
 
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
 		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
+		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
 	}
 
 	/**
@@ -677,6 +679,17 @@ class WSU_Network_Admin {
 		$network_options = $this->get_global_network_options();
 
 		return $network_options['blog_upload_space'];
+	}
+
+	/**
+	 * Return the default value for allowed filetypes.
+	 * 
+	 * @return string Space delimited list of allowed filetypes.
+	 */
+	public function set_upload_filetypes() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['upload_filetypes'];
 	}
 }
 new WSU_Network_Admin();
