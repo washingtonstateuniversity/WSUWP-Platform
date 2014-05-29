@@ -39,6 +39,15 @@ class WSU_Network_Admin {
 	);
 
 	/**
+	 * These options are normally accessed via get_site_option()
+	 *
+	 * @var array List of network options.
+	 */
+	private $global_network_options = array(
+		'fileupload_maxk' => 50000,
+	);
+
+	/**
 	 * Add the filters and actions used
 	 */
 	public function __construct() {
@@ -57,6 +66,22 @@ class WSU_Network_Admin {
 		add_filter( 'all_plugins',                       array( $this, 'all_plugins',               ), 10, 1 );
 		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
+
+		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
+	}
+
+	/**
+	 * Retrieve the current, filtered list of network options that are provided on a global level.
+	 *
+	 * We parse this against the default list of arguments after filtering so that we can assume
+	 * the defaults are available to us at a later time.
+	 *
+	 * @return array List of default network options.
+	 */
+	public function get_global_network_options() {
+		$global_network_options = apply_filters( 'wsuwp_global_network_options', $this->global_network_options );
+
+		return wp_parse_args( $global_network_options, $this->global_network_options );
 	}
 
 	/**
@@ -626,8 +651,19 @@ class WSU_Network_Admin {
 	 */
 	public function admin_enqueue_scripts() {
 		if ( 'settings-network' === get_current_screen()->id && wsuwp_get_primary_network_id() != wsuwp_get_current_network()->id ) {
-			wp_enqueue_script( 'wsuwp-settings-network', plugins_url( '/js/wsu-network-settings.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
+			//wp_enqueue_script( 'wsuwp-settings-network', plugins_url( '/js/wsu-network-settings.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
 		}
+	}
+
+	/**
+	 * Return the default value for max fileupload size.
+	 *
+	 * @return int Size in KB
+	 */
+	public function set_fileupload_maxk() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['fileupload_maxk'];
 	}
 }
 new WSU_Network_Admin();
