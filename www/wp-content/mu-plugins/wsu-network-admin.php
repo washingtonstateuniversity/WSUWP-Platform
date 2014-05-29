@@ -47,6 +47,7 @@ class WSU_Network_Admin {
 		'fileupload_maxk' => 50000,
 		'blog_upload_space' => 1000,
 		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv pdf ai psd eps doc xls zip',
+		'add_new_users' => 1,
 	);
 
 	/**
@@ -72,6 +73,7 @@ class WSU_Network_Admin {
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
 		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
 		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
+		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
 	}
 
 	/**
@@ -683,13 +685,24 @@ class WSU_Network_Admin {
 
 	/**
 	 * Return the default value for allowed filetypes.
-	 * 
+	 *
 	 * @return string Space delimited list of allowed filetypes.
 	 */
 	public function set_upload_filetypes() {
 		$network_options = $this->get_global_network_options();
 
 		return $network_options['upload_filetypes'];
+	}
+
+	/**
+	 * Return the default value for allowing site admins to add new users.
+	 *
+	 * @return int|string 0 or 1 or '0' or '1'
+	 */
+	public function set_add_new_users() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['add_new_users'];
 	}
 }
 new WSU_Network_Admin();
