@@ -13,18 +13,6 @@ class WSU_Admin_Header {
 	}
 
 	/**
-	 * Register a custom color scheme for the admin interface using WSU crimson.
-	 *
-	 * @todo See if we can tweak this to be better.
-	 */
-	public function register_admin_color_schemes() {
-		wp_admin_css_color( 'coug', 'Cougars',
-			WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-colors-cougars.css',
-			array( '#262b2d', '#981e32', '#0074a2', '#2ea2cc' )
-		);
-	}
-
-	/**
 	 * Add my networks menu to admin bar.
 	 *
 	 * Add a list of a user's networks to the wp_admin_bar object similar to how
