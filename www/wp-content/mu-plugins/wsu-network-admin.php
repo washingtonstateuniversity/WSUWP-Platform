@@ -39,6 +39,21 @@ class WSU_Network_Admin {
 	);
 
 	/**
+	 * These options are normally accessed via get_site_option()
+	 *
+	 * @var array List of network options.
+	 */
+	private $global_network_options = array(
+		'fileupload_maxk' => 50000,
+		'blog_upload_space' => 1000,
+		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv pdf ai psd eps doc xls zip',
+		'add_new_users' => 1,
+		'registrationnotification' => 'no',
+		'registration' => 'none',
+		'upload_space_check_disabled' => 1,
+	);
+
+	/**
 	 * Add the filters and actions used
 	 */
 	public function __construct() {
@@ -56,6 +71,28 @@ class WSU_Network_Admin {
 		add_filter( 'views_plugins-network',             array( $this, 'add_plugin_table_views',    ), 10, 1 );
 		add_filter( 'all_plugins',                       array( $this, 'all_plugins',               ), 10, 1 );
 		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
+
+		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
+		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
+		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
+		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
+		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
+		add_filter( 'pre_site_option_registration', array( $this, 'set_registration' ), 10, 1 );
+		add_filter( 'pre_site_option_upload_space_check_disabled', array( $this, 'set_upload_space_check_disabled' ), 10, 1 );
+	}
+
+	/**
+	 * Retrieve the current, filtered list of network options that are provided on a global level.
+	 *
+	 * We parse this against the default list of arguments after filtering so that we can assume
+	 * the defaults are available to us at a later time.
+	 *
+	 * @return array List of default network options.
+	 */
+	public function get_global_network_options() {
+		$global_network_options = apply_filters( 'wsuwp_global_network_options', $this->global_network_options );
+
+		return wp_parse_args( $global_network_options, $this->global_network_options );
 	}
 
 	/**
@@ -552,16 +589,7 @@ class WSU_Network_Admin {
 			'user_count',
 			'initial_db_version',
 			'wpmu_upgrade_site',
-			'blog_upload_space',
-			'fileupload_max',
-			'upload_file_types',
 			'admin_user_id',
-			'registration',
-			'add_new_users',
-			'upload_space_check_disabled',
-			'subdomain_install',
-			'global_terms_enabled',
-			'ms_files_rewriting',
 			'WPLANG',
 			'admin_email',
 			'can_compress_scripts',
@@ -620,5 +648,81 @@ class WSU_Network_Admin {
 		die();
 	}
 
+	/**
+	 * Return the default value for max fileupload size.
+	 *
+	 * @return int Size in KB
+	 */
+	public function set_fileupload_maxk() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['fileupload_maxk'];
+	}
+
+	/**
+	 * Return the default value for total site upload space.
+	 *
+	 * @return int Size in MB
+	 */
+	public function set_blog_upload_space() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['blog_upload_space'];
+	}
+
+	/**
+	 * Return the default value for allowed filetypes.
+	 *
+	 * @return string Space delimited list of allowed filetypes.
+	 */
+	public function set_upload_filetypes() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['upload_filetypes'];
+	}
+
+	/**
+	 * Return the default value for allowing site admins to add new users.
+	 *
+	 * @return int|string 0 or 1 or '0' or '1'
+	 */
+	public function set_add_new_users() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['add_new_users'];
+	}
+
+	/**
+	 * Return the default value for notifying network admins of new user registrations.
+	 *
+	 * @return string yes or no
+	 */
+	public function set_registrationnotification() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['registrationnotification'];
+	}
+
+	/**
+	 * Return the default value for allowing registrations on networks.
+	 *
+	 * @return string
+	 */
+	public function set_registration() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['registration'];
+	}
+
+	/**
+	 * Return the default value for whether upload space should be checked for a site.
+	 *
+	 * @return int 0 to enable, 1 to disable
+	 */
+	public function set_upload_space_check_disabled() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['upload_space_check_disabled'];
+	}
 }
 new WSU_Network_Admin();

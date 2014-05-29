@@ -292,9 +292,9 @@ We hope you enjoy your new site. Thanks!
 		'admin_email' => null,
 		'admin_user_id' => null,
 		'registration' => 'none',
-		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv midi mid pdf',
+		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv pdf ai psd eps doc xls zip',
 		'blog_upload_space' => 100,
-		'fileupload_maxk' => 1500,
+		'fileupload_maxk' => 50000,
 		'illegal_names' => array( 'www', 'web', 'root', 'admin', 'main', 'invite', 'administrator', 'files' ),
 		'wpmu_upgrade_site' => $wp_db_version,
 		'welcome_email' => $welcome_email,
@@ -309,8 +309,9 @@ We hope you enjoy your new site. Thanks!
 		'active_sitewide_plugins' => array(),
 		'WPLANG' => get_locale(),
 	);
-	if ( 0 == $network_meta['subdomain_install'] )
+	if ( 0 == $network_meta['subdomain_install'] ) {
 		$defaults['illegal_names'][] = 'blog';
+	}
 
 	$network_meta = wp_parse_args( $network_meta, $defaults );
 	/**
@@ -325,11 +326,13 @@ We hope you enjoy your new site. Thanks!
 
 	$insert = '';
 	foreach( $network_meta as $meta_key => $meta_value ) {
-		if ( is_array( $meta_value ) )
+		if ( is_array( $meta_value ) ) {
 			$meta_value = serialize( $meta_value );
+		}
 
-		if ( ! empty( $insert ) )
+		if ( ! empty( $insert ) ) {
 			$insert .= ', ';
+		}
 
 		$insert .= $wpdb->prepare( "( %d, %s, %s )", $network_id, $meta_key, $meta_value );
 	}
