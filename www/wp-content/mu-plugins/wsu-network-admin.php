@@ -49,6 +49,7 @@ class WSU_Network_Admin {
 		'upload_filetypes' => 'jpg jpeg png gif mp3 mov avi wmv pdf ai psd eps doc xls zip',
 		'add_new_users' => 1,
 		'registrationnotification' => 'no',
+		'registration' => 'none',
 	);
 
 	/**
@@ -76,6 +77,7 @@ class WSU_Network_Admin {
 		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
 		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
 		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
+		add_filter( 'pre_site_option_registration', array( $this, 'set_registration' ), 10, 1 );
 	}
 
 	/**
@@ -716,6 +718,17 @@ class WSU_Network_Admin {
 		$network_options = $this->get_global_network_options();
 
 		return $network_options['registrationnotification'];
+	}
+
+	/**
+	 * Return the default value for allowing registrations on networks.
+	 *
+	 * @return string
+	 */
+	public function set_registration() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['registration'];
 	}
 }
 new WSU_Network_Admin();
