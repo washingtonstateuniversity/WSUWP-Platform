@@ -590,7 +590,6 @@ class WSU_Network_Admin {
 			'initial_db_version',
 			'wpmu_upgrade_site',
 			'admin_user_id',
-			'upload_space_check_disabled',
 			'WPLANG',
 			'admin_email',
 			'can_compress_scripts',
