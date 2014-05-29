@@ -50,6 +50,7 @@ class WSU_Network_Admin {
 		'add_new_users' => 1,
 		'registrationnotification' => 'no',
 		'registration' => 'none',
+		'upload_space_check_disabled' => 1,
 	);
 
 	/**
@@ -77,6 +78,7 @@ class WSU_Network_Admin {
 		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
 		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
 		add_filter( 'pre_site_option_registration', array( $this, 'set_registration' ), 10, 1 );
+		add_filter( 'pre_site_option_upload_space_check_disabled', array( $this, 'set_upload_space_check_disabled' ), 10, 1 );
 	}
 
 	/**
@@ -711,6 +713,17 @@ class WSU_Network_Admin {
 		$network_options = $this->get_global_network_options();
 
 		return $network_options['registration'];
+	}
+
+	/**
+	 * Return the default value for whether upload space should be checked for a site.
+	 *
+	 * @return int 0 to enable, 1 to disable
+	 */
+	public function set_upload_space_check_disabled() {
+		$network_options = $this->get_global_network_options();
+
+		return $network_options['upload_space_check_disabled'];
 	}
 }
 new WSU_Network_Admin();
