@@ -248,7 +248,7 @@ class WSU_Admin_Header {
 	 * Enqueue CSS used in the admin bar to add proper dashicons.
 	 */
 	public function admin_enqueue_scripts() {
-		wp_enqueue_style( 'wsu-admin-bar', WP_CONTENT_URL . '/mu-plugins/wsu-admin-bar/css/wsu-admin-bar.css' );
+		wp_enqueue_style( 'wsu-admin-bar', WP_CONTENT_URL . '/mu-plugins/css/wsu-admin-bar.css' );
 	}
 }
 new WSU_Admin_Header();
