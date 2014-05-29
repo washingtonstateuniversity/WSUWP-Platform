@@ -70,7 +70,6 @@ class WSU_Network_Admin {
 		add_filter( 'views_plugins-network',             array( $this, 'add_plugin_table_views',    ), 10, 1 );
 		add_filter( 'all_plugins',                       array( $this, 'all_plugins',               ), 10, 1 );
 		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
 		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
@@ -654,15 +653,6 @@ class WSU_Network_Admin {
 		<?php
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
-	}
-
-	/**
-	 * Enqueue custom scripts used for network administration.
-	 */
-	public function admin_enqueue_scripts() {
-		if ( 'settings-network' === get_current_screen()->id && wsuwp_get_primary_network_id() != wsuwp_get_current_network()->id ) {
-			//wp_enqueue_script( 'wsuwp-settings-network', plugins_url( '/js/wsu-network-settings.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
-		}
 	}
 
 	/**
