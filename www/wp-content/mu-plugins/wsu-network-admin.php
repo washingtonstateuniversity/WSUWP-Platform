@@ -625,7 +625,7 @@ class WSU_Network_Admin {
 	 * Enqueue custom scripts used for network administration.
 	 */
 	public function admin_enqueue_scripts() {
-		if ( 'settings-network' === get_current_screen()->id ) {
+		if ( 'settings-network' === get_current_screen()->id && wsuwp_get_primary_network_id() != wsuwp_get_current_network()->id ) {
 			wp_enqueue_script( 'wsuwp-settings-network', plugins_url( '/js/wsu-network-settings.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
 		}
 	}
