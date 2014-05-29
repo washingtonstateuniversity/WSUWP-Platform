@@ -12,8 +12,6 @@
 $wsuwp_global_version = '0.6.15';
 $wsuwp_wp_changeset = '28354';
 
-include dirname( __FILE__ ) . '/wsu-co-authors-plus-skin/wsu-co-authors-plus-skin.php';
-
 add_filter( 'spine_enable_builder_module', '__return_true' );
 
 /**
