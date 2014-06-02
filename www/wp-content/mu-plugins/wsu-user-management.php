@@ -133,7 +133,7 @@ class WSU_User_Management {
 				wp_die( 'Unable to add this user. Please try again.' );
 			}
 
-			$this->add_user_to_site( $user_id, $_REQUEST['role'], $_REQUEST['email'] );
+			$this->add_user_to_site( $user_id, $_REQUEST['role'], $_REQUEST['email'], false );
 
 			$meta = array(
 				'site_name' => get_option( 'blogname' ),
@@ -167,11 +167,12 @@ class WSU_User_Management {
 	 * @param int    $user_id        User ID being added to the site.
 	 * @param string $requested_role Role for the user on this site.
 	 * @param string $user_email     User's email address for notification.
+	 * @param bool   $confirmation   Defer to admin request for confirmation email. Default true. False avoids email.
 	 */
-	private function add_user_to_site( $user_id, $requested_role, $user_email ) {
+	private function add_user_to_site( $user_id, $requested_role, $user_email, $confirmation = true ) {
 		add_existing_user_to_blog( array( 'user_id' => $user_id, 'role' => $requested_role ) );
 
-		if ( ! isset( $_POST['noconfirmation'] ) ) {
+		if ( ! isset( $_POST['noconfirmation'] ) && true === $confirmation ) {
 			// send a welcome email, not a registration email.
 			$roles = get_editable_roles();
 			$role = $roles[ $requested_role ];
