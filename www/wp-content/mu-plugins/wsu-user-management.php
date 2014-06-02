@@ -19,6 +19,9 @@ class WSU_User_Management {
 	 */
 	public function __construct() {
 		add_action( 'admin_action_adduser', array( $this, 'add_existing_user_to_site' ) );
+		add_action( 'admin_action_createuser', array( $this, 'add_new_user_to_site' ) );
+
+		add_filter( 'update_welcome_user_email', array( $this, 'network_welcome_user_email' ) );
 	}
 
 	/**
@@ -91,6 +94,99 @@ Welcome!
 		}
 		wp_redirect( $redirect );
 		die();
+	}
+
+	/**
+	 * Handle users that are new to the site and the network.
+	 *
+	 * Incorporates code from wpmu_validate_signup() to help skip some of the standard user
+	 * creation process.
+	 */
+	public function add_new_user_to_site() {
+		global $add_user_errors;
+
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'create_users' ) ) {
+			wp_die( __( 'You do not have sufficient permissions to add users to this network.' ) );
+		}
+
+		check_admin_referer( 'create-user', '_wpnonce_create-user' );
+
+		// Adding a new user to this site
+		$user_details = wpmu_validate_user_signup( $_REQUEST[ 'user_login' ], $_REQUEST[ 'email' ] );
+
+		if ( is_wp_error( $user_details[ 'errors' ] ) && !empty( $user_details[ 'errors' ]->errors ) ) {
+			$add_user_errors = $user_details[ 'errors' ];
+		} else {
+			/**
+			 * Filter the user_login, also known as the username, before it is added to the site.
+			 *
+			 * @since 2.0.3
+			 *
+			 * @param string $user_login The sanitized username.
+			 */
+			$new_user_login = apply_filters( 'pre_user_login', sanitize_user( wp_unslash( $_REQUEST['user_login'] ), true ) );
+
+			// Disable the standard signup user notification email in ALL cases.
+			add_filter( 'wpmu_signup_user_notification', '__return_false' );
+
+			$password = wp_generate_password( 12, false );
+			$user_id = username_exists( $new_user_login );
+
+			if ( ! $user_id ) {
+				$user_id = wpmu_create_user( $new_user_login, $password, $_REQUEST['email'] );
+			} else {
+				// This user already exists, so add them to the site.
+				add_existing_user_to_blog( array( 'user_id' => $user_id, 'role' => $_REQUEST['role'] ) );
+			}
+
+			// A cautious attempt at handling our inability to add a user?
+			if ( ! $user_id ) {
+				wp_die( 'Unable to add this user. Please try again.' );
+			}
+
+			// Send a "welcome to the network" email to the user.
+			// @todo allow this to be overridden in network settings
+			wpmu_welcome_user_notification( $user_id, $password, array() );
+			/**
+			 * Fires immediately after a new user is activated.
+			 *
+			 * @since MU
+			 *
+			 * @param int   $user_id  User ID.
+			 * @param int   $password User password.
+			 * @param array $meta     Signup meta data.
+			 */
+			do_action( 'wpmu_activate_user', $user_id, $password, array() );
+
+			$redirect = add_query_arg( array( 'update' => 'addnoconfirmation' ), 'user-new.php' );
+			wp_redirect( $redirect );
+			die();
+		}
+	}
+
+	/**
+	 * Provide a default email to send when welcoming a user to a network.
+	 *
+	 * @param string $welcome_email The network welcome email.
+	 *
+	 * @return string The modified network welcome email.
+	 */
+	public function network_welcome_user_email( $welcome_email ) {
+		$welcome_email = 'Hi,
+
+A new account has been set up for your WSU Network ID (USERNAME) on SITE_NAME.
+
+You can login at LOGINLINK
+
+Welcome!
+
+- WSUWP Platform (wp.wsu.edu)';
+
+		return $welcome_email;
 	}
 }
 new WSU_User_Management();
