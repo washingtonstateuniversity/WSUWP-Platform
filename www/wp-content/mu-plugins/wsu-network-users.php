@@ -437,11 +437,4 @@ function wp_new_user_notification( $user_id, $plaintext_pass = '' ) {
 	$message .= "- WSUWP Platform (wp.wsu.edu)";
 
 	@wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] New User Added' ), $blogname ), $message );
-
-	$message  = sprintf( "Hello and welcome to %s.", $blogname ) . "\r\n\r\n";
-	$message .= "You can now login with your WSU Network ID ($user->user_login) and password at " . wp_login_url() . "\r\n\r\n";
-	$message .= "- WSUWP Platform (wp.wsu.edu)";
-
-	wp_mail( $user->user_email, sprintf( __( '[%s] Welcome' ), $blogname ), $message );
-
 }
