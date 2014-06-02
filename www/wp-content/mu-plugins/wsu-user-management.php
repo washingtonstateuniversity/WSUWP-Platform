@@ -23,6 +23,10 @@ class WSU_User_Management {
 
 	/**
 	 * Replace functionality at a single site level for adding an existing network user to a site.
+	 *
+	 * The majority of this code is from wp-admin/user-new.php. It has been altered to remove the
+	 * handling of any activation keys or confirmation links. Instead, we assume that an existing
+	 * user on the network can be added to a site on that network without much concern.
 	 */
 	public function add_existing_user_to_site() {
 		global $blog_id;
