@@ -133,6 +133,8 @@ class WSU_User_Management {
 				wp_die( 'Unable to add this user. Please try again.' );
 			}
 
+			$this->add_user_to_site( $user_id, $_REQUEST['role'], $_REQUEST['email'] );
+
 			$meta = array(
 				'site_name' => get_option( 'blogname' ),
 				'home_url' => home_url(),
