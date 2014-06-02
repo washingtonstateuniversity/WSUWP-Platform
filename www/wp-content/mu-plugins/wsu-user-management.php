@@ -70,27 +70,8 @@ class WSU_User_Management {
 			// "That user is already a member of this site."
 			$redirect = add_query_arg( array('update' => 'addexisting'), 'user-new.php' );
 		} else {
-			add_existing_user_to_blog( array( 'user_id' => $user_id, 'role' => $_REQUEST['role'] ) );
+			$this->add_user_to_site( $user_id, $_REQUEST['role'], $new_user_email );
 			$redirect = add_query_arg( array('update' => 'addnoconfirmation'), 'user-new.php' );
-
-			if ( ! isset( $_POST['noconfirmation'] ) ) {
-				// send a welcome email, not a registration email.
-				$roles = get_editable_roles();
-				$role = $roles[ $_REQUEST['role'] ];
-				// 1 = site name, 2 = URL, 3 = role
-				$message = __( 'Hi,
-
-You have been added to \'%1$s\' with the role of %3$s.
-
-Visit the site at %2$s and login with your WSU Network ID at %4$s
-
-Welcome!
-
-- WSUWP Platform (wp.wsu.edu)
-' );
-				$message = sprintf( $message, get_option( 'blogname' ), home_url(), wp_specialchars_decode( translate_user_role( $role['name'] ) ), admin_url() );
-				wp_mail( $new_user_email, sprintf( __( '[%s] Welcome Email' ), wp_specialchars_decode( get_option( 'blogname' ) ) ), $message );
-			}
 		}
 		wp_redirect( $redirect );
 		die();
@@ -140,7 +121,7 @@ Welcome!
 				$user_id = wpmu_create_user( $new_user_login, $password, $_REQUEST['email'] );
 			} else {
 				// This user already exists, so add them to the site.
-				add_existing_user_to_blog( array( 'user_id' => $user_id, 'role' => $_REQUEST['role'] ) );
+				$this->add_user_to_site( $user_id, $_REQUEST['role'], $_REQUEST['email'] );
 			}
 
 			// A cautious attempt at handling our inability to add a user?
@@ -165,6 +146,36 @@ Welcome!
 			$redirect = add_query_arg( array( 'update' => 'addnoconfirmation' ), 'user-new.php' );
 			wp_redirect( $redirect );
 			die();
+		}
+	}
+
+	/**
+	 * Add a user to the current site and send an email if applicable.
+	 *
+	 * @param int    $user_id        User ID being added to the site.
+	 * @param string $requested_role Role for the user on this site.
+	 * @param string $user_email     User's email address for notification.
+	 */
+	private function add_user_to_site( $user_id, $requested_role, $user_email ) {
+		add_existing_user_to_blog( array( 'user_id' => $user_id, 'role' => $requested_role ) );
+
+		if ( ! isset( $_POST['noconfirmation'] ) ) {
+			// send a welcome email, not a registration email.
+			$roles = get_editable_roles();
+			$role = $roles[ $requested_role ];
+			// 1 = site name, 2 = URL, 3 = role
+			$message = __( 'Hi,
+
+You have been added to \'%1$s\' with the role of %3$s.
+
+Visit the site at %2$s and login with your WSU Network ID at %4$s
+
+Welcome!
+
+- WSUWP Platform (wp.wsu.edu)
+' );
+			$message = sprintf( $message, get_option( 'blogname' ), home_url(), wp_specialchars_decode( translate_user_role( $role['name'] ) ), admin_url() );
+			wp_mail( $user_email, sprintf( __( '[%s] Welcome Email' ), wp_specialchars_decode( get_option( 'blogname' ) ) ), $message );
 		}
 	}
 
