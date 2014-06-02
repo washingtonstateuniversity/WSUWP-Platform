@@ -18,7 +18,7 @@ class WSU_User_Management {
 	 * Setup hooks.
 	 */
 	public function __construct() {
-		add_action( 'admin_action_adduser', array( 'add_existing_user_to_site' ) );
+		add_action( 'admin_action_adduser', array( $this, 'add_existing_user_to_site' ) );
 	}
 
 	/**
