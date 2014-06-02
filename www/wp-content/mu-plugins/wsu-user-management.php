@@ -21,7 +21,7 @@ class WSU_User_Management {
 		add_action( 'admin_action_adduser', array( $this, 'add_existing_user_to_site' ) );
 		add_action( 'admin_action_createuser', array( $this, 'add_new_user_to_site' ) );
 
-		add_filter( 'update_welcome_user_email', array( $this, 'network_welcome_user_email' ) );
+		add_filter( 'update_welcome_user_email', array( $this, 'network_welcome_user_email' ), 10, 4 );
 	}
 
 	/**
@@ -133,9 +133,15 @@ class WSU_User_Management {
 				wp_die( 'Unable to add this user. Please try again.' );
 			}
 
+			$meta = array(
+				'site_name' => get_option( 'blogname' ),
+				'home_url' => home_url(),
+				'admin_url' => admin_url(),
+			);
+
 			// Send a "welcome to the network" email to the user.
 			// @todo allow this to be overridden in network settings
-			wpmu_welcome_user_notification( $user_id, $password, array() );
+			wpmu_welcome_user_notification( $user_id, $password, $meta );
 			/**
 			 * Fires immediately after a new user is activated.
 			 *
@@ -145,7 +151,7 @@ class WSU_User_Management {
 			 * @param int   $password User password.
 			 * @param array $meta     Signup meta data.
 			 */
-			do_action( 'wpmu_activate_user', $user_id, $password, array() );
+			do_action( 'wpmu_activate_user', $user_id, $password, $meta );
 
 			$redirect = add_query_arg( array( 'update' => 'addnoconfirmation' ), 'user-new.php' );
 			wp_redirect( $redirect );
@@ -190,16 +196,19 @@ Welcome!
 	 *
 	 * @return string The modified network welcome email.
 	 */
-	public function network_welcome_user_email( $welcome_email ) {
-		$welcome_email = 'Hi,
+	public function network_welcome_user_email( $welcome_email, $user_id, $password, $meta ) {
+		$welcome_email = sprintf( 'Hi,
 
 A new account has been set up for your WSU Network ID (USERNAME) on SITE_NAME.
 
-You can login at LOGINLINK
+This account was created when you were added to the site, %1$s at %2$s.
+
+You can login to the SITE_NAME network at LOGINLINK
+You can login to the site, %1$s, at %3$s
 
 Welcome!
 
-- WSUWP Platform (wp.wsu.edu)';
+- WSUWP Platform (wp.wsu.edu)', $meta['site_name'], $meta['home_url'], $meta['admin_url'] );
 
 		return $welcome_email;
 	}
