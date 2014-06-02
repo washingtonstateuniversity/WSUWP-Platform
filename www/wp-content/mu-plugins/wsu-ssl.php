@@ -35,7 +35,7 @@ class WSU_SSL {
 		/* @type WPDB $wpdb */
 		global $wpdb;
 
-		$domain_exists = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE domain = %s LIMIT 1 AND blog_id != %d ", $domain, $blog_id ) );
+		$domain_exists = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE domain = %s AND blog_id != %d LIMIT 1", $domain, $blog_id ) );
 
 		if ( ! $domain_exists ) {
 			switch_to_blog( 1 );
