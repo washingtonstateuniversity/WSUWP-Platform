@@ -117,12 +117,16 @@ class WSU_User_Management {
 			$password = wp_generate_password( 12, false );
 			$user_id = username_exists( $new_user_login );
 
-			if ( ! $user_id ) {
-				$user_id = wpmu_create_user( $new_user_login, $password, $_REQUEST['email'] );
-			} else {
+			if ( $user_id ) {
 				// This user already exists, so add them to the site.
 				$this->add_user_to_site( $user_id, $_REQUEST['role'], $_REQUEST['email'] );
+
+				$redirect = add_query_arg( array( 'update' => 'addnoconfirmation' ), 'user-new.php' );
+				wp_redirect( $redirect );
+				die();
 			}
+
+			$user_id = wpmu_create_user( $new_user_login, $password, $_REQUEST['email'] );
 
 			// A cautious attempt at handling our inability to add a user?
 			if ( ! $user_id ) {
