@@ -85,7 +85,8 @@ Welcome!
 
 - WSUWP Platform (wp.wsu.edu)
 ' );
-				wp_mail( $new_user_email, sprintf( __( '[%s] Welcome Email' ), wp_specialchars_decode( get_option( 'blogname' ) ) ), sprintf( $message, get_option( 'blogname' ), home_url(), wp_specialchars_decode( translate_user_role( $role['name'] ) ), admin_url() ) );
+				$message = sprintf( $message, get_option( 'blogname' ), home_url(), wp_specialchars_decode( translate_user_role( $role['name'] ) ), admin_url() );
+				wp_mail( $new_user_email, sprintf( __( '[%s] Welcome Email' ), wp_specialchars_decode( get_option( 'blogname' ) ) ), $message );
 			}
 		}
 		wp_redirect( $redirect );
