@@ -209,6 +209,8 @@ class WSU_Network_Admin {
 
 		$user_login = $result['user_name'];
 		$original_user_login = $user_login;
+		$user_email = $result['user_email'];
+
 		$result = array();
 		$result['errors'] = new WP_Error();
 
@@ -262,6 +264,7 @@ class WSU_Network_Admin {
 
 		$result['user_login']          = $user_login;
 		$result['original_user_login'] = $original_user_login;
+		$result['user_email']          = $user_email;
 
 		return $result;
 	}
