@@ -18,7 +18,7 @@ class WSU_User_Management {
 	 * Setup hooks.
 	 */
 	public function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_print_footer_scripts', array( $this, 'print_footer_scripts' ) );
 
 		add_action( 'admin_action_adduser', array( $this, 'add_existing_user_to_site' ) );
 		add_action( 'admin_action_createuser', array( $this, 'add_new_user_to_site' ) );
@@ -27,17 +27,23 @@ class WSU_User_Management {
 	}
 
 	/**
-	 * Enqueue scripts and styles used to help manage user management.
+	 * Output inline scripts in the footer to help with messaging on user management pages.
 	 */
-	public function enqueue_scripts() {
+	public function print_footer_scripts() {
 		// On the new network user screen, we replace the messaging to indicate no notification will be sent.
 		if ( 'user-network' === get_current_screen()->id ) {
-			wp_enqueue_script( 'wsuwp-new-network-user', plugins_url( 'js/wsuwp-new-network-user.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
+			?><script>
+				(function($){
+					$('.form-table' ).find('td').last().html('<p class="description" style="max-width:640px;">Creating a new user on ' +
+						'this page does not send any notification email. Please communicate with the new user as appropriate. If you ' +
+						'would like a notification to be generated automatically, create the user at an individual site level.</p>');
+				}(jQuery));
+			</script><?php
 		}
 
 		// On the new site user screen, we replace "E-mail" with "E-mail or username" to aid in adding users.
 		if ( 'user' === get_current_screen()->id ) {
-			wp_enqueue_script( 'wsuwp-new-site-user', plugins_url( 'js/wsuwp-new-site-user.js', __FILE__), array( 'jquery' ), wsuwp_global_version(), true );
+			?><script>(function($){ $("label[for='adduser-email']").first().html('E-mail or username'); }(jQuery));</script><?php
 		}
 	}
 
