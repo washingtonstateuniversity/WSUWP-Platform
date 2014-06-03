@@ -15,6 +15,21 @@
 class WSU_User_Management {
 
 	/**
+	 * Contains a bit of helper language data about our various roles.
+	 *
+	 * This is pretty ridiculous. :)
+	 *
+	 * @var array
+	 */
+	var $role_data = array(
+		'Subscriber'    => array( 'a' => 'a'  ),
+		'Author'        => array( 'a' => 'an' ),
+		'Contributor'   => array( 'a' => 'a'  ),
+		'Editor'        => array( 'a' => 'an' ),
+		'Administrator' => array( 'a' => 'an' ),
+	);
+
+	/**
 	 * Setup hooks.
 	 */
 	public function __construct() {
@@ -185,6 +200,21 @@ class WSU_User_Management {
 	}
 
 	/**
+	 * Output "a" or "an" before the role name?
+	 *
+	 * @param string $role_name Name of the role being output.
+	 *
+	 * @return string a or an
+	 */
+	private function get_role_a( $role_name ) {
+		if ( isset( $this->role_data[ $role_name ] ) ) {
+			return $this->role_data[ $role_name ]['a'];
+		} else {
+			return 'a';
+		}
+	}
+
+	/**
 	 * Add a user to the current site and send an email if applicable.
 	 *
 	 * @param int    $user_id        User ID being added to the site.
@@ -199,18 +229,19 @@ class WSU_User_Management {
 			// send a welcome email, not a registration email.
 			$roles = get_editable_roles();
 			$role = $roles[ $requested_role ];
-			// 1 = site name, 2 = URL, 3 = role
-			$message = __( 'Hi,
 
-You have been added to \'%1$s\' with the role of %3$s.
+			// 1 = site name, 2 = URL, 3 = role, 4 = login URL, 5 = a vs an
+			$message = 'Hello,
 
-Visit the site at %2$s and login with your WSU Network ID at %4$s
+You are now %5$s %3$s at %1$s.
+
+Visit this site at %2$s and login with your WSU Network ID at %4$s
 
 Welcome!
 
 - WSUWP Platform (wp.wsu.edu)
-' );
-			$message = sprintf( $message, get_option( 'blogname' ), home_url(), wp_specialchars_decode( translate_user_role( $role['name'] ) ), admin_url() );
+';
+			$message = sprintf( $message, get_option( 'blogname' ), home_url(), wp_specialchars_decode( translate_user_role( $role['name'] ) ), admin_url(), $this->get_role_a( $role['name'] ) );
 			wp_mail( $user_email, sprintf( __( '[%s] Welcome Email' ), wp_specialchars_decode( get_option( 'blogname' ) ) ), $message );
 		}
 	}
