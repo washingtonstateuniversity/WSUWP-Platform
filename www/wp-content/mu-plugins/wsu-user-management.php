@@ -204,10 +204,9 @@ Welcome!
 
 A new account has been set up for your WSU Network ID (USERNAME) on SITE_NAME.
 
-This account was created when you were added to the site, %1$s at %2$s.
+This account was created when you were added as a member of %1$s, located at %2$s.
 
-You can login to the SITE_NAME network at LOGINLINK
-You can login to the site, %1$s, at %3$s
+You can login to %1$s with your WSU Network ID and password at %3$s
 
 Welcome!
 
