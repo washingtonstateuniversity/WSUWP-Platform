@@ -18,10 +18,22 @@ class WSU_User_Management {
 	 * Setup hooks.
 	 */
 	public function __construct() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
 		add_action( 'admin_action_adduser', array( $this, 'add_existing_user_to_site' ) );
 		add_action( 'admin_action_createuser', array( $this, 'add_new_user_to_site' ) );
 
 		add_filter( 'update_welcome_user_email', array( $this, 'network_welcome_user_email' ), 10, 4 );
+	}
+
+	/**
+	 * Enqueue scripts and styles used to help manage user management.
+	 */
+	public function enqueue_scripts() {
+		// On the new network user screen, we replace the messaging to indicate no notification will be sent.
+		if ( 'user-network' === get_current_screen()->id ) {
+			wp_enqueue_script( 'wsuwp-new-network-user', plugins_url( 'js/wsuwp-new-network-user.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
+		}
 	}
 
 	/**
