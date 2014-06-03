@@ -34,6 +34,11 @@ class WSU_User_Management {
 		if ( 'user-network' === get_current_screen()->id ) {
 			wp_enqueue_script( 'wsuwp-new-network-user', plugins_url( 'js/wsuwp-new-network-user.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
 		}
+
+		// On the new site user screen, we replace "E-mail" with "E-mail or username" to aid in adding users.
+		if ( 'user' === get_current_screen()->id ) {
+			wp_enqueue_script( 'wsuwp-new-site-user', plugins_url( 'js/wsuwp-new-site-user.js', __FILE__), array( 'jquery' ), wsuwp_global_version(), true );
+		}
 	}
 
 	/**
