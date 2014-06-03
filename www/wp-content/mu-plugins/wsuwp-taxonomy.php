@@ -19,6 +19,7 @@ class WSUWP_Taxonomy {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'add_taxonomies_to_pages' ) );
+		add_action( 'init', array( $this, 'add_taxonomies_to_media' ) );
 	}
 
 	/**
@@ -27,6 +28,14 @@ class WSUWP_Taxonomy {
 	public function add_taxonomies_to_pages() {
 		register_taxonomy_for_object_type( 'category', 'page' );
 		register_taxonomy_for_object_type( 'post_tag', 'page' );
+	}
+
+	/**
+	 * Register built in taxonomies - Categories and Tags - to media.
+	 */
+	public function add_taxonomies_to_media() {
+		register_taxonomy_for_object_type( 'category', 'attachment' );
+		register_taxonomy_for_object_type( 'post_tag', 'attachment' );
 	}
 }
 new WSUWP_Taxonomy();
