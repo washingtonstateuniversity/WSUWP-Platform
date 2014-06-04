@@ -42,6 +42,10 @@ if ( WP_DEBUG && WSU_DISABLE_STRICT ) {
 	error_reporting( E_ALL ^ E_STRICT );
 }
 
+if ( ! defined( 'WSU_LOCAL_CONFIG' ) ) {
+	define( 'WSU_LOCAL_CONFIG', false );
+}
+
 if ( defined( 'COOKIE_DOMAIN' ) ) {
 	die( 'The constant "COOKIE_DOMAIN" is defined (probably in wp-config.php). Please remove or comment out that define() line.' );
 }
@@ -136,7 +140,7 @@ if( $current_blog ) {
 		wp_cache_add( $site_id, $current_site, 'wsuwp:network', 60 * 60 * 12 );
 	}
 
-	if ( isset( $current_blog->ssl_enabled ) && true === $current_blog->ssl_enabled ) {
+	if ( isset( $current_blog->ssl_enabled ) && true === $current_blog->ssl_enabled && false === WSU_LOCAL_CONFIG ) {
 		define( 'FORCE_SSL_ADMIN', true );
 		define( 'FORCE_SSL_LOGIN', true );
 	}
