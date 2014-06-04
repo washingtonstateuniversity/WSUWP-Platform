@@ -28,9 +28,11 @@ class WSU_Network_Users {
 		add_action( 'edit_user_profile', array( $this, 'toggle_super_admin' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
 
-		add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
-		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
-		add_filter( 'user_has_cap', array( $this, 'remove_secondary_network_caps' ), 99, 4 );
+		if ( ! defined( 'WP_CLI' ) ) {
+			add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
+			add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
+			add_filter( 'user_has_cap', array( $this, 'remove_secondary_network_caps' ), 99, 4 );
+		}
 
 		add_action( 'pre_user_query', array( $this, 'pre_user_query' ), 10, 1 );
 		add_filter( 'user_search_columns', array( $this, 'user_search_columns' ), 10, 1 );
