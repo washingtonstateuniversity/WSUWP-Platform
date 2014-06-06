@@ -25,15 +25,15 @@ define( 'DB_HOST',     '127.0.0.1' );
 // URLs
 define( 'WP_HOME',        'http://wp.wsu.dev'           );
 define( 'WP_SITEURL',     'http://wp.wsu.dev'           );
-define( 'WP_CONTENT_URL', 'http://wp.wsu.dev/wp-content'           );
 
 // Load wp-content from parent direc
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 
 $batcache = false;
 
-if ( ! isset( $_SERVER['HTTP_HOST'] ) )
+if ( ! isset( $_SERVER['HTTP_HOST'] ) ) {
 	$_SERVER['HTTP_HOST'] = 'wp.wsu.dev';
+}
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
