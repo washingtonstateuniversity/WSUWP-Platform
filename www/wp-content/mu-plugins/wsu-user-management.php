@@ -70,8 +70,6 @@ class WSU_User_Management {
 	 * user on the network can be added to a site on that network without much concern.
 	 */
 	public function add_existing_user_to_site() {
-		global $blog_id;
-
 		if ( ! is_multisite() ) {
 			wp_die( __( 'Multisite support is not enabled.' ) );
 		}
