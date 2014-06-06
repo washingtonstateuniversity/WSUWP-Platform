@@ -83,16 +83,54 @@ class WSU_User_Management {
 		check_admin_referer( 'add-user', '_wpnonce_add-user' );
 
 		$user_details = null;
+		$blog_id = null;
+		$role = null;
 
-		if ( false !== strpos($_REQUEST['email'], '@') ) {
-			$user_details = get_user_by( 'email', $_REQUEST['email'] );
+		if ( 'site-users-network' === get_current_screen()->id ) {
+			if ( isset( $_REQUEST['id'] ) ) {
+				$blog_id = absint( $_REQUEST['id'] );
+			}
+
+			if ( isset( $_REQUEST['newuser'] ) ) {
+				$user_details = get_user_by( 'login', $_REQUEST['newuser'] );
+			}
+
+			if ( isset( $_REQUEST['new_role'] ) ) {
+				$role = $_REQUEST['new_role'];
+			}
+
+			$redirect_fail = add_query_arg( array( 'update' => 'err_add_notfound', 'id' => $blog_id ), 'site-users.php' );
+			$redirect_member = add_query_arg( array( 'update' => 'err_add_member', 'id' => $blog_id ), 'site-users.php' );
+			$redirect_success = add_query_arg( array( 'update' => 'adduser', 'id' => $blog_id ), 'site-users.php' );
 		} else {
-			$user_details = get_user_by( 'login', $_REQUEST['email'] );
+			$blog_id = get_current_blog_id();
+
+			if ( isset( $_REQUEST['email'] ) && false !== strpos($_REQUEST['email'], '@') ) {
+				$user_details = get_user_by( 'email', $_REQUEST['email'] );
+			} elseif ( isset( $_REQUEST['email'] ) ) {
+				$user_details = get_user_by( 'login', $_REQUEST['email'] );
+			}
+
+			if ( isset( $_REQUEST['role'] ) ) {
+				$role = $_REQUEST['role'];
+			}
+
+			$redirect_fail = add_query_arg( array( 'update' => 'does_not_exist' ), 'user-new.php' );
+			$redirect_member = add_query_arg( array( 'update' => 'addexisting' ), 'user-new.php' );
+			$redirect_success = add_query_arg( array( 'update' => 'addnoconfirmation' ), 'user-new.php' );
 		}
 
 		if ( ! $user_details ) {
-			wp_redirect( add_query_arg( array( 'update' => 'does_not_exist' ), 'user-new.php' ) );
+			wp_redirect( $redirect_fail );
 			die();
+		}
+
+		if ( ! $blog_id ) {
+			wp_die( __( 'A site ID was somehow not supplied.' ) );
+		}
+
+		if ( ! $role ) {
+			wp_die( __( 'A role was somehow not supplied.' ) );
 		}
 
 		if ( ! current_user_can( 'promote_user', $user_details->ID ) ) {
@@ -106,10 +144,10 @@ class WSU_User_Management {
 
 		if ( ( $username != null && ! is_super_admin( $user_id ) ) && ( array_key_exists( $blog_id, get_blogs_of_user( $user_id ) ) ) ) {
 			// "That user is already a member of this site."
-			$redirect = add_query_arg( array('update' => 'addexisting'), 'user-new.php' );
+			$redirect = $redirect_member;
 		} else {
-			$this->add_user_to_site( $user_id, $_REQUEST['role'], $new_user_email );
-			$redirect = add_query_arg( array('update' => 'addnoconfirmation'), 'user-new.php' );
+			$this->add_user_to_site( $user_id, $role, $new_user_email, true, $blog_id );
+			$redirect = $redirect_success;
 		}
 		wp_redirect( $redirect );
 		die();
@@ -221,9 +259,16 @@ class WSU_User_Management {
 	 * @param string $requested_role Role for the user on this site.
 	 * @param string $user_email     User's email address for notification.
 	 * @param bool   $confirmation   Defer to admin request for confirmation email. Default true. False avoids email.
+	 * @param int    $blog_id        Site ID to add the user to. Default is 0, which causes current blog.
 	 */
-	private function add_user_to_site( $user_id, $requested_role, $user_email, $confirmation = true ) {
+	private function add_user_to_site( $user_id, $requested_role, $user_email, $confirmation = true, $blog_id = 0 ) {
+		if ( 0 === $blog_id ) {
+			$blog_id = get_current_blog_id();
+		}
+
+		switch_to_blog( $blog_id );
 		add_existing_user_to_blog( array( 'user_id' => $user_id, 'role' => $requested_role ) );
+		restore_current_blog();
 
 		if ( ! isset( $_POST['noconfirmation'] ) && true === $confirmation ) {
 			// send a welcome email, not a registration email.
