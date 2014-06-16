@@ -744,6 +744,10 @@ class WSU_Network_Admin {
 	public function set_extended_upload_filetypes( $upload_filetypes ) {
 		$upload_filetypes = trim( $upload_filetypes ) . ' ' . $this->extended_network_options['upload_filetypes'];
 
+		if ( is_super_admin() ) {
+			$upload_filetypes .= ' exe';
+		}
+
 		return $upload_filetypes;
 	}
 
