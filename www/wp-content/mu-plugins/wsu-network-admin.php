@@ -731,6 +731,10 @@ class WSU_Network_Admin {
 			$mime_types['dmg'] = 'application/octet-stream';
 		}
 
+		if ( is_super_admin() ) {
+			$mime_types['exe'] = 'application/x-msdownload';
+		}
+
 		return $mime_types;
 	}
 
