@@ -46,11 +46,22 @@ class WSU_Network_Admin {
 	private $global_network_options = array(
 		'fileupload_maxk' => 50000,
 		'blog_upload_space' => 1000,
-		'upload_filetypes' => 'jpg jpeg png gif mp3 mp4 pdf ai psd eps doc xls zip',
+		'upload_filetypes' => 'jpg jpeg png gif mp3 mp4 pdf ai psd eps doc ppt xls csv key numbers pages',
 		'add_new_users' => 1,
 		'registrationnotification' => 'no',
 		'registration' => 'none',
 		'upload_space_check_disabled' => 1,
+	);
+
+	/**
+	 * These options are applied to sites that are marked to receive extended
+	 * permissions.
+	 *
+	 * @var array List of extended network options.
+	 */
+	private $extended_network_options = array(
+		'fileupload_maxk' => 100000,
+		'upload_filetypes' => 'dmg zip',
 	);
 
 	/**
@@ -73,8 +84,14 @@ class WSU_Network_Admin {
 		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
 
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
+		add_filter( 'wsuwp_extended_fileupload_maxk', array( $this, 'set_extended_fileupload_maxk' ), 10, 1 );
+
 		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
+
 		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
+		add_filter( 'upload_mimes', array( $this, 'set_mime_types' ), 10, 1 );
+		add_filter( 'wsuwp_extended_upload_filetypes', array( $this, 'set_extended_upload_filetypes' ), 10, 1 );
+
 		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
 		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
 		add_filter( 'pre_site_option_registration', array( $this, 'set_registration' ), 10, 1 );
@@ -659,7 +676,20 @@ class WSU_Network_Admin {
 	public function set_fileupload_maxk() {
 		$network_options = $this->get_global_network_options();
 
+		if ( 'extended' === get_option( 'wsuwp_extended_site', false ) ) {
+			$network_options['fileupload_maxk'] = apply_filters( 'wsuwp_extended_fileupload_maxk', $network_options['fileupload_maxk'] );
+		}
+
 		return $network_options['fileupload_maxk'];
+	}
+
+	/**
+	 * Apply the extended value for max upload size.
+	 *
+	 * @return int Size in KB
+	 */
+	public function set_extended_fileupload_maxk() {
+		return $this->extended_network_options['fileupload_maxk'];
 	}
 
 	/**
@@ -681,7 +711,47 @@ class WSU_Network_Admin {
 	public function set_upload_filetypes() {
 		$network_options = $this->get_global_network_options();
 
+		// Sites with extended permissions are allowed a different fileset.
+		if ( 'extended' === get_option( 'wsuwp_extended_site', false ) ) {
+			$network_options['upload_filetypes'] = apply_filters( 'wsuwp_extended_upload_filetypes', $network_options['upload_filetypes'] );
+		}
+
 		return $network_options['upload_filetypes'];
+	}
+
+	/**
+	 * Modify the default list of allowed mime types.
+	 *
+	 * @param array $mime_types List of recognized mime types.
+	 *
+	 * @return array Modified list of mime types.
+	 */
+	public function set_mime_types( $mime_types ) {
+		$mime_types['dmg'] = 'application/octet-stream';
+
+		// global admins can upload exe files.
+		if ( is_super_admin() ) {
+			$mime_types['exe'] = 'application/x-msdownload';
+		}
+
+		return $mime_types;
+	}
+
+	/**
+	 * Add extended filetypes to the default list allowed for networks.
+	 *
+	 * @param string $upload_filetypes Space delimited list of allowed filetypes.
+	 *
+	 * @return string Modified list of allowed filetypes.
+	 */
+	public function set_extended_upload_filetypes( $upload_filetypes ) {
+		$upload_filetypes = trim( $upload_filetypes ) . ' ' . $this->extended_network_options['upload_filetypes'];
+
+		if ( is_super_admin() ) {
+			$upload_filetypes .= ' exe';
+		}
+
+		return $upload_filetypes;
 	}
 
 	/**
