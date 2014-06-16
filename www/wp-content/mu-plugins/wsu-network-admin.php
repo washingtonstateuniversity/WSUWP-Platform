@@ -84,6 +84,8 @@ class WSU_Network_Admin {
 		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
 
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
+		add_filter( 'wsuwp_extended_fileupload_maxk', array( $this, 'set_extended_fileupload_maxk' ), 10, 1 );
+
 		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
 
 		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
@@ -674,7 +676,20 @@ class WSU_Network_Admin {
 	public function set_fileupload_maxk() {
 		$network_options = $this->get_global_network_options();
 
+		if ( 'extended' === get_option( 'wsuwp_extended_site', false ) ) {
+			$network_options['fileupload_maxk'] = apply_filters( 'wsuwp_extended_fileupload_maxk', $network_options['fileupload_maxk'] );
+		}
+
 		return $network_options['fileupload_maxk'];
+	}
+
+	/**
+	 * Apply the extended value for max upload size.
+	 *
+	 * @return int Size in KB
+	 */
+	public function set_extended_fileupload_maxk() {
+		return $this->extended_network_options['fileupload_maxk'];
 	}
 
 	/**
