@@ -61,7 +61,7 @@ class WSU_Network_Admin {
 	 */
 	private $extended_network_options = array(
 		'fileupload_maxk' => 100000,
-		'upload_filetypes' => 'exe dmg zip',
+		'upload_filetypes' => 'dmg zip',
 	);
 
 	/**
