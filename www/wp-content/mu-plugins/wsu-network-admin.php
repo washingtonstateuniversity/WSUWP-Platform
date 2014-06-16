@@ -90,6 +90,7 @@ class WSU_Network_Admin {
 
 		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
 		add_filter( 'mime_types', array( $this, 'set_mime_types' ), 10, 1 );
+		add_filter( 'upload_mimes', array( $this, 'set_super_admin_mime_types' ), 10, 1 );
 		add_filter( 'wsuwp_extended_upload_filetypes', array( $this, 'set_extended_upload_filetypes' ), 10, 1 );
 
 		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
@@ -731,6 +732,18 @@ class WSU_Network_Admin {
 			$mime_types['dmg'] = 'application/octet-stream';
 		}
 
+		return $mime_types;
+	}
+
+	/**
+	 * If the user is a super admin (global admin), allow them to upload
+	 * EXE files as well.
+	 * 
+	 * @param array $mime_types List of allowed mime types.
+	 *
+	 * @return array Modified list of allowed mime types.
+	 */
+	public function set_super_admin_mime_types( $mime_types ) {
 		if ( is_super_admin() ) {
 			$mime_types['exe'] = 'application/x-msdownload';
 		}
