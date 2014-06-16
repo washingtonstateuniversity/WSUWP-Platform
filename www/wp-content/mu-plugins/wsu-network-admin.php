@@ -54,6 +54,17 @@ class WSU_Network_Admin {
 	);
 
 	/**
+	 * These options are applied to sites that are marked to receive extended
+	 * permissions.
+	 *
+	 * @var array List of extended network options.
+	 */
+	private $extended_network_options = array(
+		'fileupload_maxk' => 100000,
+		'upload_filetypes' => 'exe dmg zip',
+	);
+
+	/**
 	 * Add the filters and actions used
 	 */
 	public function __construct() {
@@ -74,7 +85,11 @@ class WSU_Network_Admin {
 
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
 		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
+
 		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
+		add_filter( 'mime_types', array( $this, 'set_mime_types' ), 10, 1 );
+		add_filter( 'wsuwp_extended_upload_filetypes', array( $this, 'set_extended_upload_filetypes' ), 10, 1 );
+
 		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
 		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
 		add_filter( 'pre_site_option_registration', array( $this, 'set_registration' ), 10, 1 );
@@ -681,7 +696,40 @@ class WSU_Network_Admin {
 	public function set_upload_filetypes() {
 		$network_options = $this->get_global_network_options();
 
+		// Sites with extended permissions are allowed a different fileset.
+		if ( 'extended' === get_option( 'wsuwp_extended_site', false ) ) {
+			$network_options['upload_filetypes'] = apply_filters( 'wsuwp_extended_upload_filetypes', $network_options['upload_filetypes'] );
+		}
+
 		return $network_options['upload_filetypes'];
+	}
+
+	/**
+	 * Add dmg files to the list of available mime types.
+	 *
+	 * @param $mime_types
+	 *
+	 * @return mixed
+	 */
+	public function set_mime_types( $mime_types ) {
+		if ( ! isset( $mime_types['dmg'] ) ) {
+			$mime_types['dmg'] = 'application/octet-stream';
+		}
+
+		return $mime_types;
+	}
+
+	/**
+	 * Add extended filetypes to the default list allowed for networks.
+	 *
+	 * @param string $upload_filetypes Space delimited list of allowed filetypes.
+	 *
+	 * @return string Modified list of allowed filetypes.
+	 */
+	public function set_extended_upload_filetypes( $upload_filetypes ) {
+		$upload_filetypes = trim( $upload_filetypes ) . ' ' . $this->extended_network_options['upload_filetypes'];
+
+		return $upload_filetypes;
 	}
 
 	/**
