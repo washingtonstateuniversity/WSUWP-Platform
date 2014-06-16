@@ -12,6 +12,8 @@ class WSU_Network_Site_Info {
 	 */
 	public function __construct() {
 		add_action( 'admin_footer', array( $this, 'display_move_site' ), 10 );
+		add_action( 'admin_footer', array( $this, 'display_extended_site' ), 11 );
+
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 		add_action( 'admin_action_update-site', array( $this, 'update_network' ), 10 );
 	}
@@ -42,6 +44,32 @@ class WSU_Network_Site_Info {
 			</td>
 		</tr></table>
 		<?php
+	}
+
+	/**
+	 * Display an option to apply extended permissions to a site on the network.
+	 */
+	public function display_extended_site() {
+		global $id;
+
+		if ( 'site-info-network' !== get_current_screen()->id || ! is_super_admin() ) {
+			return;
+		}
+
+		switch_to_blog( $id );
+		$extended_status = get_option( 'wsuwp_extended_site', '0' );
+		restore_current_blog();
+
+		?>
+		<table style="display:none;"><tr id="wsuwp-extended-site" class="form-field form-required">
+				<th scope="row"><?php _e( 'Extended' ); ?></th>
+				<td><select name="wsuwp_extended_site">
+						<option value="0" <?php selected( $extended_status, '0', true ); ?>>Disabled</option>
+						<option value="extended" <?php selected( $extended_status, 'extended', true ); ?>>Extended</option>
+				</select></td>
+		</tr></table>
+		<?php
+
 	}
 
 	/**
