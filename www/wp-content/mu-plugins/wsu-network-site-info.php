@@ -97,6 +97,13 @@ class WSU_Network_Site_Info {
 			$current_details = get_blog_details( $id );
 			wp_cache_delete( $current_details->domain . $current_details->path, 'wsuwp:site' );
 
+			// Look for a request to apply extended permissions to a site.
+			if ( isset( $_POST['wsuwp_extended_site'] ) && in_array( $_POST['wsuwp_extended_site'], array( '0', 'extended' ) ) ) {
+				switch_to_blog( $id );
+				update_option( 'wsuwp_extended_site', $_POST['wsuwp_extended_site'] );
+				restore_current_blog();
+			}
+
 			// Look for a request to move a site between networks.
 			if ( isset( $_POST['wsu_network_id'] ) ) {
 				$network_id = absint( $_POST['wsu_network_id'] );
