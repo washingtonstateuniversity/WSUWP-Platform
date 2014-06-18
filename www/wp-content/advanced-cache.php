@@ -1,11 +1,4 @@
 <?php
-if ( is_readable( dirname( __FILE__ ) . '/batcache-stats.php' ) )
-	require_once dirname( __FILE__ ) . '/batcache-stats.php';
-
-if ( !function_exists( 'batcache_stats' ) ) {
-	function batcache_stats( $name, $value, $num = 1, $today = FALSE, $hour = FALSE ) { }
-}
-
 // nananananananananananananananana BATCACHE!!!
 
 function batcache_cancel() {
@@ -229,7 +222,6 @@ class batcache {
 		}
 
 		// Pass output to next ob handler
-		batcache_stats( 'batcache', 'total_page_views' );
 		return $this->cache['output'];
 	}
 
@@ -334,7 +326,6 @@ if ( ! empty( $GLOBALS['HTTP_RAW_POST_DATA'] ) || ! empty( $_POST ) )
 if ( is_array( $_COOKIE) && ! empty( $_COOKIE ) ) {
 	foreach ( array_keys( $_COOKIE ) as $batcache->cookie ) {
 		if ( ! in_array( $batcache->cookie, $batcache->noskip_cookies ) && ( substr( $batcache->cookie, 0, 2 ) == 'wp' || substr( $batcache->cookie, 0, 9 ) == 'wordpress' || substr( $batcache->cookie, 0, 14 ) == 'comment_author' ) ) {
-			batcache_stats( 'batcache', 'cookie_skip' );
 			return;
 		}
 	}
