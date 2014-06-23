@@ -20,6 +20,7 @@ class WSU_Network_Users {
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_network' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_network' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_network' ) );
+		add_action( 'added_existing_user', array( $this, 'add_user_to_network' ) );
 
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_global' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_global' ) );

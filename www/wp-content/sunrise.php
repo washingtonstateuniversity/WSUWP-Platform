@@ -145,7 +145,25 @@ if( $current_blog ) {
 		define( 'FORCE_SSL_LOGIN', true );
 	}
 
-	define( 'COOKIE_DOMAIN', $requested_domain );
+	/**
+	 * Build the cookie domain based on the configuration of the WSUWP_COOKIE_DOMAIN
+	 * constant. If it is not set, we set cookies to the originally requested domain.
+	 * If it is set as auto, we find the root domain of the request and use that for
+	 * cookies. If it is set and not explicitly defined as 'auto', we assume that a
+	 * cookie domain is being specified, similar to how you would do when using
+	 * COOKIE_DOMAIN originally.
+	 */
+	if ( defined( 'WSUWP_COOKIE_DOMAIN' ) && 'auto' === WSUWP_COOKIE_DOMAIN ) {
+		$requested_domain_parts = explode( '.', $requested_domain );
+		$wsuwp_cookie_domain = array_pop( $requested_domain_parts );
+		$wsuwp_cookie_domain = array_pop( $requested_domain_parts ) . '.' . $wsuwp_cookie_domain;
+	} elseif ( defined( 'WSUWP_COOKIE_DOMAIN' ) ) {
+		$wsuwp_cookie_domain = WSUWP_COOKIE_DOMAIN;
+	} else {
+		$wsuwp_cookie_domain = $requested_domain;
+	}
+
+	define( 'COOKIE_DOMAIN', $wsuwp_cookie_domain );
 } else {
 	/**
 	 * If we've made it here, the domain and path provided aren't doing us much good. At this
