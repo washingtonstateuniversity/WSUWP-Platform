@@ -100,8 +100,6 @@ class WSU_Admin_Header {
 		 * Insert a new menu item 'My {$name} Networks' on the left of the admin bar that will
 		 * provide access to each of the user's networks. This title can be altered through the
 		 * use of the `wsu_my_network_title` filter. By default it is 'My WSU Networks'
-		 *
-		 * @todo - insert logic that ignores this if the user is only a member of one network (or site)
 		 */
 		$wp_admin_bar->add_menu( array(
 			'id'    => 'my-networks',
