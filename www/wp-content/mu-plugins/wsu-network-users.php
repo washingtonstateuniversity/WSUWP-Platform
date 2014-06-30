@@ -1,4 +1,14 @@
 <?php
+/*
+* Plugin Name: WSUWP Manage Network Users
+* Plugin URI: http://web.wsu.edu
+* Description: Customizations around global and network admins.
+* Author: washingtonstateuniversity, jeremyfelt
+* Author URI: http://web.wsu.edu
+* Version: 0.1
+* Network: true
+*/
+
 /**
  * Class WSU_Network_Users
  */

@@ -1,15 +1,15 @@
 <?php
 /*
- * Plugin Name: Bland Index File
+ * Plugin Name: WSUWP Platform Global
  * Plugin URI: http://web.wsu.edu
- * Description: This is a blank index file with an unnecessary description.
+ * Description: Controls WSUWP Platform global version
  * Author: washingtonstateuniversity, jeremyfelt
  * Author URI: http://web.wsu.edu
- * Version: 0.2
+ * Version: 1.0.0
  * Network: true
  */
 
-$wsuwp_global_version = '0.9.1';
+$wsuwp_global_version = '1.0.0';
 $wsuwp_wp_changeset = '28354';
 
 add_filter( 'spine_enable_builder_module', '__return_true' );

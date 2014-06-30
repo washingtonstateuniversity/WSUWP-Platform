@@ -293,6 +293,9 @@ Welcome!
 	 * Provide a default email to send when welcoming a user to a network.
 	 *
 	 * @param string $welcome_email The network welcome email.
+	 * @param int    $user_id       The user's ID. Unused.
+	 * @param string $password      The user's password. Unused.
+	 * @param array  $meta          Meta information about the new site.
 	 *
 	 * @return string The modified network welcome email.
 	 */

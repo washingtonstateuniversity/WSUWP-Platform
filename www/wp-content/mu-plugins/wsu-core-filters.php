@@ -20,6 +20,8 @@ add_filter( 'pre_option_uploads_use_yearmonth_folders', '__return_true' );
 add_filter( 'upload_dir', 'wsuwp_upload_dir' );
 /**
  * @param array $uploads Data associated with the upload URL. We assume the subdir key is correct.
+ *
+ * @return array Modified upload URL data.
  */
 function wsuwp_upload_dir( $uploads ) {
 	if ( ! defined( 'WP_CONTENT_DIR' ) ) {

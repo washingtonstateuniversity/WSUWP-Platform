@@ -366,6 +366,13 @@ function wsuwp_activate_global_plugin( $plugin ) {
 	wsuwp_restore_current_network();
 }
 
+/**
+ * Determine if a plugin has been activated globally.
+ *
+ * @param $plugin String representing the plugin.
+ *
+ * @return bool True if plugin is globally activated. False if not.
+ */
 function wsuwp_is_plugin_active_for_global( $plugin ) {
 	if ( ! wsuwp_is_multi_network() )
 		return false;
@@ -462,6 +469,8 @@ function wsuwp_validate_path( $path ) {
 }
 
 /**
+ * Retrieve a count of the total number of networks.
+ *
  * @return int The number of networks currently configured.
  */
 function wsuwp_network_count() {

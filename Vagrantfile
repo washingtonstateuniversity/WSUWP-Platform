@@ -4,7 +4,7 @@
 # Vagrant setup helps to describe an environment for local development that
 # matches the WSUWP Platform production setup as closely as possible.
 #
-# We recommend Vagrant 1.4.3 and Virtualbox 4.3.x
+# We recommend Vagrant 1.6.3 and Virtualbox 4.3.x
 #
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
