@@ -212,7 +212,7 @@ class WSU_Network_Admin {
 	}
 
 	/**
-	 * Temporarily override user validation in anticpation of ticket #17904. In reality, we'll
+	 * Temporarily override user validation in anticipation of ticket #17904. In reality, we'll
 	 * be doing all of our authentication through active directory, so this won't be necessary,
 	 * but it does come in useful during initial testing.
 	 *
