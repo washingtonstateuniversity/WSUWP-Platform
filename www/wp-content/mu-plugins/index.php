@@ -1,11 +1,11 @@
 <?php
 /*
- * Plugin Name: Bland Index File
+ * Plugin Name: WSUWP Platform Global
  * Plugin URI: http://web.wsu.edu
- * Description: This is a blank index file with an unnecessary description.
+ * Description: Controls WSUWP Platform global version
  * Author: washingtonstateuniversity, jeremyfelt
  * Author URI: http://web.wsu.edu
- * Version: 0.2
+ * Version: 0.9.1
  * Network: true
  */
 
