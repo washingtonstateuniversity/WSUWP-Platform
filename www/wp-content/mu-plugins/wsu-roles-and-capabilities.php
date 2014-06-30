@@ -110,6 +110,7 @@ class WSU_Roles_And_Capabilities {
 				break;
 			case 'manage_links':
 				$caps[] = 'do_not_allow';
+				break;
 			default:
 				break;
 		}
