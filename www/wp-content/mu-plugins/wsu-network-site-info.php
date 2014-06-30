@@ -1,4 +1,11 @@
 <?php
+/*
+Plugin Name: WSUWP network/site-info replacement.
+Plugin URI: http://web.wsu.edu/
+Description: Manages custom portions of the network/site-info.php page.
+Author: washingtonstateuniversity, jeremyfelt
+Version: 0.1
+*/
 
 /**
  * Manages custom portions of the network/site-info.php page.
