@@ -170,7 +170,6 @@ class WSU_Network_Admin {
 	 *
 	 * @param array  $actions     Current assigned actions and links.
 	 * @param string $plugin_file The plugin file associated with the action.
-	 * @param array  $plugin_data Information about the plugin from the header.
 	 *
 	 * @return array The resulting array of actions and links assigned to the plugin.
 	 */
