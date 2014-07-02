@@ -66,6 +66,13 @@ function wp_install_defaults( $user_id ) {
 
 	$page_title = apply_filters( 'wsuwp_first_page_title', 'First Page' );
 
+	$page_template = apply_filters( 'wsuwp_first_page_template', 'default' );
+
+	$page_templates = wp_get_theme()->get_page_templates();
+	if ( 'default' != $page_template && ! isset( $page_templates[ $page_template ] ) ) {
+		$page_template = 'default';
+	}
+
 	$first_post_guid = get_option('home') . '/?page_id=2';
 
 	$wpdb->insert( $wpdb->posts, array(
@@ -86,7 +93,7 @@ function wp_install_defaults( $user_id ) {
 		'pinged'                => '',
 		'post_content_filtered' => '',
 	));
-	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 2, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
+	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 2, 'meta_key' => '_wp_page_template', 'meta_value' => $page_template ) );
 
 	// Insert a placeholder page with a slug to be used as the posts view.
 	$wpdb->insert( $wpdb->posts, array(
