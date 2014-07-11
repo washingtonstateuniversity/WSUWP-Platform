@@ -79,6 +79,7 @@ class WSU_Network_Admin {
 		add_filter( 'network_admin_plugin_action_links', array( $this, 'remove_plugin_action_links' ), 10, 2 );
 		add_filter( 'network_admin_plugin_action_links', array( $this, 'plugin_action_links'        ), 15, 2 );
 		add_action( 'activate_plugin',                   array( $this, 'activate_global_plugin'     ), 10, 1 );
+		add_action( 'deactivate_plugin', array( $this, 'deactivate_global_plugin' ), 10, 1 );
 		add_filter( 'views_plugins-network',             array( $this, 'add_plugin_table_views',    ), 10, 1 );
 		add_filter( 'all_plugins',                       array( $this, 'all_plugins',               ), 10, 1 );
 		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
@@ -188,10 +189,11 @@ class WSU_Network_Admin {
 			unset( $actions['activate'] );
 		}
 
-		if ( ! wsuwp_is_plugin_active_for_global( $plugin_file ) )
-			$actions['global'] = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;wsu-activate-global=1&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file) . '" title="Activate this plugin for all sites on all networks" class="edit">Activate Globally</a>';
-		else
-			$actions['global'] = '<a href="">Deactivate Globally</a>';
+		if ( ! wsuwp_is_plugin_active_for_global( $plugin_file ) ) {
+			$actions['global'] = '<a href="' . wp_nonce_url( 'plugins.php?action=activate&amp;wsu-activate-global=1&amp;plugin=' . $plugin_file, 'activate-plugin_' . $plugin_file ) . '" title="Activate this plugin for all sites on all networks" class="edit">Activate Globally</a>';
+		} else {
+			$actions['global'] = '<a href="' . wp_nonce_url( 'plugins.php?action=deactivate&amp;wsu-deactivate-global=1&amp;plugin=' . $plugin_file, 'deactivate-plugin_' . $plugin_file ) . '" title="Deactivate this plugin for all sites on all networks" class="edit">Deactivate Globally</a>';
+		}
 
 		return $actions;
 	}
@@ -209,6 +211,20 @@ class WSU_Network_Admin {
 			return null;
 
 		wsuwp_activate_global_plugin( $plugin );
+	}
+
+	/**
+	 * Deactivate a plugin globally on all sites in all networks.
+	 * @param $plugin
+	 *
+	 * @return null
+	 */
+	public function deactivate_global_plugin( $plugin ) {
+		if ( ! isset( $_GET['wsu-deactivate-global'] ) || ! is_main_network() ) {
+			return null;
+		}
+
+		wsuwp_deactivate_global_plugin( $plugin );
 	}
 
 	/**

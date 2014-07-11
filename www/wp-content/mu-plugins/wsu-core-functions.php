@@ -253,7 +253,12 @@ function wsuwp_create_network( $args ) {
 	if ( WP_DEFAULT_THEME !== $stylesheet && WP_DEFAULT_THEME !== $template )
 		$allowed_themes[ WP_DEFAULT_THEME ] = true;
 
-	// @todo think about grabbing active plugins here as well
+	/// Pull current globally active plugins and set them as active for the new network.
+	$active_global_plugins = wsuwp_get_active_global_plugins();
+	$active_network_plugins = array();
+	foreach ( $active_global_plugins as $active_plugin => $time ) {
+		$active_network_plugins[ $active_plugin ] = time();
+	}
 
 	$wpdb->insert( $wpdb->site, array( 'domain' => $args['domain'], 'path' => $args['path'] ) );
 	$network_id = $wpdb->insert_id;
@@ -267,6 +272,7 @@ function wsuwp_create_network( $args ) {
 		'admin_user_id'     => $site_user->ID,
 		'site_admins'       => $network_admins,
 		'allowedthemes'     => $allowed_themes,
+		'active_sitewide_plugins' => $active_network_plugins,
 		'subdomain_install' => intval( $args['subdomain_install'] ),
 	);
 	wsuwp_populate_network_meta( $network_id, $network_meta );
@@ -362,6 +368,28 @@ function wsuwp_activate_global_plugin( $plugin ) {
 	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	$current_global[ $plugin ] = time();
+	update_site_option( 'active_global_plugins', $current_global );
+	wsuwp_restore_current_network();
+}
+
+/**
+ * Deactivate a plugin globally on all sites in all networks.
+ *
+ * @param string $plugin Slug of the plugin to be deactivated.
+ */
+function wsuwp_deactivate_global_plugin( $plugin ) {
+	$networks = wsuwp_get_networks();
+	foreach ( $networks as $network ) {
+		wsuwp_switch_to_network( $network->id );
+		$current = get_site_option( 'active_sitewide_plugins', array() );
+		unset( $current[ $plugin ] );
+		update_site_option( 'active_sitewide_plugins', $current );
+		wsuwp_restore_current_network();
+	}
+
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	$current_global = get_site_option( 'active_global_plugins', array() );
+	unset( $current_global[ $plugin ] );
 	update_site_option( 'active_global_plugins', $current_global );
 	wsuwp_restore_current_network();
 }
