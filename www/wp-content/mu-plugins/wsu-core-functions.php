@@ -253,7 +253,12 @@ function wsuwp_create_network( $args ) {
 	if ( WP_DEFAULT_THEME !== $stylesheet && WP_DEFAULT_THEME !== $template )
 		$allowed_themes[ WP_DEFAULT_THEME ] = true;
 
-	// @todo think about grabbing active plugins here as well
+	/// Pull current globally active plugins and set them as active for the new network.
+	$active_global_plugins = wsuwp_get_active_global_plugins();
+	$active_network_plugins = array();
+	foreach ( $active_global_plugins as $active_plugin => $time ) {
+		$active_network_plugins[ $active_plugin ] = time();
+	}
 
 	$wpdb->insert( $wpdb->site, array( 'domain' => $args['domain'], 'path' => $args['path'] ) );
 	$network_id = $wpdb->insert_id;
@@ -267,6 +272,7 @@ function wsuwp_create_network( $args ) {
 		'admin_user_id'     => $site_user->ID,
 		'site_admins'       => $network_admins,
 		'allowedthemes'     => $allowed_themes,
+		'active_sitewide_plugins' => $active_network_plugins,
 		'subdomain_install' => intval( $args['subdomain_install'] ),
 	);
 	wsuwp_populate_network_meta( $network_id, $network_meta );
