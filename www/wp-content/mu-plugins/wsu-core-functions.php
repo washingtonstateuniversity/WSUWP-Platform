@@ -373,6 +373,28 @@ function wsuwp_activate_global_plugin( $plugin ) {
 }
 
 /**
+ * Deactivate a plugin globally on all sites in all networks.
+ *
+ * @param string $plugin Slug of the plugin to be deactivated.
+ */
+function wsuwp_deactivate_global_plugin( $plugin ) {
+	$networks = wsuwp_get_networks();
+	foreach ( $networks as $network ) {
+		wsuwp_switch_to_network( $network->id );
+		$current = get_site_option( 'active_sitewide_plugins', array() );
+		unset( $current[ $plugin ] );
+		update_site_option( 'active_sitewide_plugins', $current );
+		wsuwp_restore_current_network();
+	}
+
+	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	$current_global = get_site_option( 'active_global_plugins', array() );
+	unset( $current_global[ $plugin ] );
+	update_site_option( 'active_global_plugins', $current_global );
+	wsuwp_restore_current_network();
+}
+
+/**
  * Determine if a plugin has been activated globally.
  *
  * @param $plugin String representing the plugin.

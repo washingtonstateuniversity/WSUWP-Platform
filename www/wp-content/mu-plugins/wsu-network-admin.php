@@ -79,6 +79,7 @@ class WSU_Network_Admin {
 		add_filter( 'network_admin_plugin_action_links', array( $this, 'remove_plugin_action_links' ), 10, 2 );
 		add_filter( 'network_admin_plugin_action_links', array( $this, 'plugin_action_links'        ), 15, 2 );
 		add_action( 'activate_plugin',                   array( $this, 'activate_global_plugin'     ), 10, 1 );
+		add_action( 'deactivate_plugin', array( $this, 'deactivate_global_plugin' ), 10, 1 );
 		add_filter( 'views_plugins-network',             array( $this, 'add_plugin_table_views',    ), 10, 1 );
 		add_filter( 'all_plugins',                       array( $this, 'all_plugins',               ), 10, 1 );
 		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
@@ -210,6 +211,20 @@ class WSU_Network_Admin {
 			return null;
 
 		wsuwp_activate_global_plugin( $plugin );
+	}
+
+	/**
+	 * Deactivate a plugin globally on all sites in all networks.
+	 * @param $plugin
+	 *
+	 * @return null
+	 */
+	public function deactivate_global_plugin( $plugin ) {
+		if ( ! isset( $_GET['wsu-deactivate-global'] ) || ! is_main_network() ) {
+			return null;
+		}
+
+		wsuwp_deactivate_global_plugin( $plugin );
 	}
 
 	/**
