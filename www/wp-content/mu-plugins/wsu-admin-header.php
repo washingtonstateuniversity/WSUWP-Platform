@@ -13,9 +13,28 @@ class WSU_Admin_Header {
 	 * Add required hooks.
 	 */
 	public function __construct() {
+		add_action( 'add_admin_bar_menus', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts'        ),  10 );
+	}
+
+	/**
+	 * Output custom CSS for the admin bar whenever it is displayed.
+	 */
+	public function admin_bar_css() {
+		?>
+		<style>
+			#wpadminbar #wp-admin-bar-site-name > .ab-item:before {
+				top: 1px;
+				content: '\f102';
+			}
+
+			#wpadminbar #wp-admin-bar-my-networks > .ab-item:before {
+				top: 2px;
+				content: '\f319';
+			}
+		</style>
+		<?php
 	}
 
 	/**
