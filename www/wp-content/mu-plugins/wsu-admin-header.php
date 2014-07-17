@@ -86,11 +86,11 @@ class WSU_Admin_Header {
 		$node_edit        = $wp_admin_bar->get_node( 'edit' );
 		$node_site_name   = $wp_admin_bar->get_node( 'site-name'   );
 
-		// Null if not is_admin()
+		// Children of the site-name node. Null if not is_admin()
 		$node_view_site   = $wp_admin_bar->get_node( 'view-site' );
 		$node_edit_site   = $wp_admin_bar->get_node( 'edit-site' );
 
-		// Null if is_admin()
+		// Children of the site-name node. Null if is_admin()
 		$node_dashboard  = $wp_admin_bar->get_node( 'dashboard' );
 		$node_appearance = $wp_admin_bar->get_node( 'appearance' );
 		$node_themes     = $wp_admin_bar->get_node( 'themes' );
@@ -107,6 +107,7 @@ class WSU_Admin_Header {
 		$wp_admin_bar->remove_menu( 'edit' );
 		$wp_admin_bar->remove_menu( 'site-name'   );
 
+		// Remove children of the site-name node.
 		if ( is_admin() ) {
 			$wp_admin_bar->remove_menu( 'view-site' );
 			$wp_admin_bar->remove_menu( 'edit-site' );
@@ -140,6 +141,7 @@ class WSU_Admin_Header {
 			$node_site_name->title = get_current_site()->site_name;
 		}
 
+		// If the site name node is null, normally because we do not have access, rebuild the pieces.
 		if ( null === $node_site_name && wsuwp_is_network_admin( wp_get_current_user()->user_login ) ) {
 			$node_site_name = array(
 				'id' => 'site-name',
@@ -221,6 +223,7 @@ class WSU_Admin_Header {
 		 */
 		$wp_admin_bar->add_menu( $node_site_name   );
 
+		// Add the children of the site-name menu.
 		if ( is_admin() ) {
 			$wp_admin_bar->add_menu( $node_view_site );
 			$wp_admin_bar->add_menu( $node_edit_site );
