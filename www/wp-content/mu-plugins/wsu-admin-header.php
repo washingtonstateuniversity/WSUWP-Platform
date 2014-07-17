@@ -85,8 +85,19 @@ class WSU_Admin_Header {
 		 */
 		$node_edit        = $wp_admin_bar->get_node( 'edit' );
 		$node_site_name   = $wp_admin_bar->get_node( 'site-name'   );
+
+		// Null if not is_admin()
 		$node_view_site   = $wp_admin_bar->get_node( 'view-site' );
 		$node_edit_site   = $wp_admin_bar->get_node( 'edit-site' );
+
+		// Null if is_admin()
+		$node_dashboard  = $wp_admin_bar->get_node( 'dashboard' );
+		$node_appearance = $wp_admin_bar->get_node( 'appearance' );
+		$node_themes     = $wp_admin_bar->get_node( 'themes' );
+		$node_customize  = $wp_admin_bar->get_node( 'customize' );
+		$node_widgets    = $wp_admin_bar->get_node( 'widgets' );
+		$node_menus      = $wp_admin_bar->get_node( 'menus' );
+
 		$node_comments    = $wp_admin_bar->get_node( 'comments'    );
 		$node_new_content = $wp_admin_bar->get_node( 'new-content' );
 
@@ -95,8 +106,19 @@ class WSU_Admin_Header {
 		 */
 		$wp_admin_bar->remove_menu( 'edit' );
 		$wp_admin_bar->remove_menu( 'site-name'   );
-		$wp_admin_bar->remove_menu( 'view-site' );
-		$wp_admin_bar->remove_menu( 'edit-site' );
+
+		if ( is_admin() ) {
+			$wp_admin_bar->remove_menu( 'view-site' );
+			$wp_admin_bar->remove_menu( 'edit-site' );
+		} else {
+			$wp_admin_bar->remove_menu( 'dashboard' );
+			$wp_admin_bar->remove_menu( 'appearance' );
+			$wp_admin_bar->remove_menu( 'themes' );
+			$wp_admin_bar->remove_menu( 'customize' );
+			$wp_admin_bar->remove_menu( 'widgets' );
+			$wp_admin_bar->remove_menu( 'menus' );
+		}
+
 		$wp_admin_bar->remove_menu( 'comments'    );
 		$wp_admin_bar->remove_menu( 'new-content' );
 
@@ -119,29 +141,78 @@ class WSU_Admin_Header {
 		}
 
 		if ( null === $node_site_name && wsuwp_is_network_admin( wp_get_current_user()->user_login ) ) {
-			$node_site_name = new StdClass();
-			$node_site_name->id = 'site-name';
-			$node_site_name->title = get_option( 'blogname' );
-			$node_site_name->parent = false;
-			$node_site_name->href = home_url();
-			$node_site_name->group = false;
-			$node_site_name->meta = array();
+			$node_site_name = array(
+				'id' => 'site-name',
+				'title' => get_option( 'blogname' ),
+				'href' => home_url(),
+			);
+			$node_site_name = $this->_set_node( $node_site_name );
 
-			$node_view_site = new StdClass();
-			$node_view_site->id = 'view-site';
-			$node_view_site->title = 'Visit Site';
-			$node_view_site->parent = 'site-name';
-			$node_view_site->href = home_url();
-			$node_view_site->group = false;
-			$node_view_site->meta = array();
+			if ( is_admin() ) {
+				$node_view_site = array(
+					'id' => 'view-site',
+					'title' => __( 'Visit Site' ),
+					'parent' => 'site-name',
+					'href' => home_url(),
+				);
+				$node_view_site = $this->_set_node( $node_view_site );
 
-			$node_edit_site = new StdClass();
-			$node_edit_site->id = 'edit-site';
-			$node_edit_site->title = 'Edit Site';
-			$node_edit_site->parent = 'site-name';
-			$node_edit_site->href = network_admin_url( 'site-info.php?id=' . get_current_blog_id() );
-			$node_edit_site->group = false;
-			$node_edit_site->meta = array();
+				$node_edit_site = array(
+					'id' => 'edit-site',
+					'title' => __( 'Edit Site' ),
+					'parent' => 'site-name',
+					'href' => network_admin_url( 'site-info.php?id=' . get_current_blog_id() ),
+				);
+				$node_edit_site = $this->_set_node( $node_edit_site );
+			} else {
+				$node_dashboard = array(
+					'id' => 'dashboard',
+					'title' => __( 'Dashboard' ),
+					'parent' => 'site-name',
+					'href' => admin_url(),
+				);
+				$node_dashboard = $this->_set_node( $node_dashboard );
+
+				$node_appearance = array(
+					'id' => 'appearance',
+					'parent' => 'site-name',
+					'group' => true,
+				);
+				$node_appearance = $this->_set_node( $node_appearance );
+
+				$node_themes = array(
+					'id' => 'themes',
+					'title' => __( 'Themes' ),
+					'parent' => 'appearance',
+					'href' => admin_url( 'themes.php' ),
+				);
+				$node_themes = $this->_set_node( $node_themes );
+
+				$current_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+				$node_customize = array(
+					'id' => 'customize',
+					'title' => __( 'Customize' ),
+					'parent' => 'appearance',
+					'href' =>  add_query_arg( 'url', urlencode( $current_url ), wp_customize_url() ),
+				);
+				$node_customize = $this->_set_node( $node_customize );
+
+				$node_widgets = array(
+					'id'     => 'widgets',
+					'title'  => __( 'Widgets' ),
+					'parent' => 'appearance',
+					'href'   => admin_url( 'widgets.php' ),
+				);
+				$node_widgets = $this->_set_node( $node_widgets );
+
+				$node_menus = array(
+					'id' => 'menus',
+					'title' => __( 'Menus' ),
+					'parent' => 'appearance',
+					'href' => admin_url( 'nav-menus.php' ),
+				);
+				$node_menus = $this->_set_node( $node_menus );
+			}
 		}
 
 		/**
@@ -149,8 +220,19 @@ class WSU_Admin_Header {
 		 * item in place.
 		 */
 		$wp_admin_bar->add_menu( $node_site_name   );
-		$wp_admin_bar->add_menu( $node_view_site );
-		$wp_admin_bar->add_menu( $node_edit_site );
+
+		if ( is_admin() ) {
+			$wp_admin_bar->add_menu( $node_view_site );
+			$wp_admin_bar->add_menu( $node_edit_site );
+		} else {
+			$wp_admin_bar->add_menu( $node_dashboard );
+			$wp_admin_bar->add_menu( $node_appearance );
+			$wp_admin_bar->add_menu( $node_themes );
+			$wp_admin_bar->add_menu( $node_customize );
+			$wp_admin_bar->add_menu( $node_widgets );
+			$wp_admin_bar->add_menu( $node_menus );
+		}
+
 		$wp_admin_bar->add_menu( $node_comments    );
 		$wp_admin_bar->add_menu( $node_new_content );
 
@@ -271,6 +353,27 @@ class WSU_Admin_Header {
 
 			wsuwp_restore_current_network();
 		}
+	}
+
+	/**
+	 * Create an admin bar node.
+	 *
+	 * @param array $args List of arguments the node relies on.
+	 *
+	 * @return object Arguments in object form.
+	 */
+	private function _set_node( $args ) {
+		$defaults = array(
+			'id'     => false,
+			'title'  => false,
+			'parent' => false,
+			'href'   => false,
+			'group'  => false,
+			'meta'   => array(),
+		);
+		$args = wp_parse_args( $args,  $defaults );
+
+		return (object) $args;
 	}
 
 	/**
