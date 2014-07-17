@@ -85,6 +85,8 @@ class WSU_Admin_Header {
 		 */
 		$node_edit        = $wp_admin_bar->get_node( 'edit' );
 		$node_site_name   = $wp_admin_bar->get_node( 'site-name'   );
+		$node_view_site   = $wp_admin_bar->get_node( 'view-site' );
+		$node_edit_site   = $wp_admin_bar->get_node( 'edit-site' );
 		$node_comments    = $wp_admin_bar->get_node( 'comments'    );
 		$node_new_content = $wp_admin_bar->get_node( 'new-content' );
 
@@ -93,6 +95,8 @@ class WSU_Admin_Header {
 		 */
 		$wp_admin_bar->remove_menu( 'edit' );
 		$wp_admin_bar->remove_menu( 'site-name'   );
+		$wp_admin_bar->remove_menu( 'view-site' );
+		$wp_admin_bar->remove_menu( 'edit-site' );
 		$wp_admin_bar->remove_menu( 'comments'    );
 		$wp_admin_bar->remove_menu( 'new-content' );
 
@@ -114,11 +118,39 @@ class WSU_Admin_Header {
 			$node_site_name->title = get_current_site()->site_name;
 		}
 
+		if ( null === $node_site_name && wsuwp_is_network_admin( wp_get_current_user()->user_login ) ) {
+			$node_site_name = new StdClass();
+			$node_site_name->id = 'site-name';
+			$node_site_name->title = get_option( 'blogname' );
+			$node_site_name->parent = false;
+			$node_site_name->href = home_url();
+			$node_site_name->group = false;
+			$node_site_name->meta = array();
+
+			$node_view_site = new StdClass();
+			$node_view_site->id = 'view-site';
+			$node_view_site->title = 'Visit Site';
+			$node_view_site->parent = 'site-name';
+			$node_view_site->href = home_url();
+			$node_view_site->group = false;
+			$node_view_site->meta = array();
+
+			$node_edit_site = new StdClass();
+			$node_edit_site->id = 'edit-site';
+			$node_edit_site->title = 'Edit Site';
+			$node_edit_site->parent = 'site-name';
+			$node_edit_site->href = network_admin_url( 'site-info.php?id=' . get_current_blog_id() );
+			$node_edit_site->group = false;
+			$node_edit_site->meta = array();
+		}
+
 		/**
 		 * Add the original menu items back to the admin bar now that we have our my-networks
 		 * item in place.
 		 */
 		$wp_admin_bar->add_menu( $node_site_name   );
+		$wp_admin_bar->add_menu( $node_view_site );
+		$wp_admin_bar->add_menu( $node_edit_site );
 		$wp_admin_bar->add_menu( $node_comments    );
 		$wp_admin_bar->add_menu( $node_new_content );
 
