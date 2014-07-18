@@ -60,7 +60,7 @@ class WSU_Network_Admin {
 	 * @var array List of extended network options.
 	 */
 	private $extended_network_options = array(
-		'fileupload_maxk' => 100000,
+		'fileupload_maxk' => 150000,
 		'upload_filetypes' => 'dmg zip',
 	);
 
