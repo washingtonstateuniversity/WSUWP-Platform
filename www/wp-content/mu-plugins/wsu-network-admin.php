@@ -46,7 +46,7 @@ class WSU_Network_Admin {
 	private $global_network_options = array(
 		'fileupload_maxk' => 50000,
 		'blog_upload_space' => 1000,
-		'upload_filetypes' => 'jpg jpeg png gif mp3 mp4 pdf ai psd eps doc ppt xls csv key numbers pages',
+		'upload_filetypes' => 'jpg jpeg png gif mp3 webp oga ogg ogv webm mp4 pdf ai psd eps doc ppt xls csv key numbers pages',
 		'add_new_users' => 1,
 		'registrationnotification' => 'no',
 		'registration' => 'none',
