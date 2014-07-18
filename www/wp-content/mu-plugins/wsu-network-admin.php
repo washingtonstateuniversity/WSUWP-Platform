@@ -44,7 +44,7 @@ class WSU_Network_Admin {
 	 * @var array List of network options.
 	 */
 	private $global_network_options = array(
-		'fileupload_maxk' => 50000,
+		'fileupload_maxk' => 100000,
 		'blog_upload_space' => 1000,
 		'upload_filetypes' => 'jpg jpeg png gif mp3 webp oga ogg ogv webm mp4 pdf ai psd eps doc ppt xls csv key numbers pages',
 		'add_new_users' => 1,
