@@ -13,7 +13,7 @@ class WSU_Admin_Header {
 	 * Add required hooks.
 	 */
 	public function __construct() {
-		add_action( 'add_admin_bar_menus', array( $this, 'admin_bar_css' ), 10 );
+		add_action( 'admin_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
 	}
@@ -23,7 +23,7 @@ class WSU_Admin_Header {
 	 */
 	public function admin_bar_css() {
 		?>
-		<style>
+		<style type="text/css">
 			#wpadminbar #wp-admin-bar-my-networks > .ab-item:before {
 				top: 2px;
 				content: '\f319';
@@ -391,13 +391,6 @@ class WSU_Admin_Header {
 		$args = wp_parse_args( $args,  $defaults );
 
 		return (object) $args;
-	}
-
-	/**
-	 * Enqueue CSS used in the admin bar to add proper dashicons.
-	 */
-	public function admin_enqueue_scripts() {
-		wp_enqueue_style( 'wsu-admin-bar', plugins_url( 'css/wsu-admin-bar.css', __FILE__ ) );
 	}
 }
 new WSU_Admin_Header();
