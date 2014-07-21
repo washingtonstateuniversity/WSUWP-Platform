@@ -14,6 +14,7 @@ class WSU_Admin_Header {
 	 */
 	public function __construct() {
 		add_action( 'admin_head', array( $this, 'admin_bar_css' ), 10 );
+		add_action( 'wp_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
 	}
@@ -22,6 +23,9 @@ class WSU_Admin_Header {
 	 * Output custom CSS for the admin bar whenever it is displayed.
 	 */
 	public function admin_bar_css() {
+		if ( ! is_admin_bar_showing() ) {
+			return;
+		}
 		?>
 		<style type="text/css">
 			#wpadminbar #wp-admin-bar-my-networks > .ab-item:before {
