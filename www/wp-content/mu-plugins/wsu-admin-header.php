@@ -23,7 +23,7 @@ class WSU_Admin_Header {
 	 */
 	public function admin_bar_css() {
 		?>
-		<style>
+		<style type="text/css">
 			#wpadminbar #wp-admin-bar-my-networks > .ab-item:before {
 				top: 2px;
 				content: '\f319';
