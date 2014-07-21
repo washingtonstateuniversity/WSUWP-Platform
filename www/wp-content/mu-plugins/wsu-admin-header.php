@@ -13,7 +13,7 @@ class WSU_Admin_Header {
 	 * Add required hooks.
 	 */
 	public function __construct() {
-		add_action( 'add_admin_bar_menus', array( $this, 'admin_bar_css' ), 10 );
+		add_action( 'admin_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
 	}
