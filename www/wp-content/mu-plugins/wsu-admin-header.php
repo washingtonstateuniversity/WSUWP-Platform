@@ -14,6 +14,7 @@ class WSU_Admin_Header {
 	 */
 	public function __construct() {
 		add_action( 'admin_head', array( $this, 'admin_bar_css' ), 10 );
+		add_action( 'wp_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
 	}
@@ -22,6 +23,9 @@ class WSU_Admin_Header {
 	 * Output custom CSS for the admin bar whenever it is displayed.
 	 */
 	public function admin_bar_css() {
+		if ( ! is_admin_bar_showing() ) {
+			return;
+		}
 		?>
 		<style type="text/css">
 			#wpadminbar #wp-admin-bar-my-networks > .ab-item:before {
@@ -98,6 +102,7 @@ class WSU_Admin_Header {
 		 * menu items so that we can use them when reordering.
 		 */
 		$node_edit        = $wp_admin_bar->get_node( 'edit' );
+		$node_view        = $wp_admin_bar->get_node( 'view' );
 		$node_site_name   = $wp_admin_bar->get_node( 'site-name'   );
 
 		// Children of the site-name node. Null if not is_admin()
@@ -119,6 +124,7 @@ class WSU_Admin_Header {
 		 * Remove the default menu items that we will be reordering.
 		 */
 		$wp_admin_bar->remove_menu( 'edit' );
+		$wp_admin_bar->remove_menu( 'view' );
 		$wp_admin_bar->remove_menu( 'site-name'   );
 
 		// Remove children of the site-name node.
@@ -255,6 +261,10 @@ class WSU_Admin_Header {
 
 		if ( $node_edit ) {
 			$wp_admin_bar->add_menu( $node_edit );
+		}
+
+		if ( $node_view ) {
+			$wp_admin_bar->add_menu( $node_view );
 		}
 
 		/**
