@@ -250,9 +250,9 @@ class WSU_Network_Admin {
 		if( empty( $user_login ) )
 			$result['errors']->add( 'user_name', __( 'Please enter a username.' ) );
 
-		// User login must be at least 4 characters
-		if ( strlen( $user_login ) < 4 )
-			$result['errors']->add( 'user_name',  __( 'Username must be at least 4 characters.' ) );
+		// User login must be at least 3 characters
+		if ( strlen( $user_login ) < 3 )
+			$result['errors']->add( 'user_name',  __( 'Username must be at least 3 characters.' ) );
 
 		// Strip any whitespace and then match against case insensitive characters a-z 0-9 _ . - @
 		$user_login = preg_replace( '/\s+/', '', sanitize_user( $user_login, true ) );
