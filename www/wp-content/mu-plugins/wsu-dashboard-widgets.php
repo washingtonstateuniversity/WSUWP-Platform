@@ -62,6 +62,10 @@ class WSUWP_WordPress_Dashboard {
 			$count_title = esc_html( $network_name ) . ' Counts';
 		}
 		wp_add_dashboard_widget( 'dashboard_wsuwp_counts', $count_title, array( $this, 'network_dashboard_counts' ) );
+
+		if ( wsuwp_get_primary_network_id() == wsuwp_get_current_network()->id ) {
+			wp_add_dashboard_widget( 'dashboard_wsuwp_memcached', 'Global Memcached Usage', array( $this, 'global_memcached_stats' ) );
+		}
 	}
 
 	/**
@@ -72,7 +76,7 @@ class WSUWP_WordPress_Dashboard {
 		if ( wsuwp_get_current_network()->id == wsuwp_get_primary_network_id() ) {
 			?>
 			<h4>Global</h4>
-			<ul class="wsuwp-global-counts">
+			<ul class="wsuwp-platform-counts wsuwp-count-above wsuwp-count-thirds">
 				<li id="dash-global-networks"><a href="<?php echo esc_url( network_admin_url( 'sites.php?display=network' ) ); ?>"><?php echo wsuwp_network_count(); ?></a></li>
 				<li id="dash-global-sites"><a href="<?php echo esc_url( network_admin_url( 'sites.php' ) ); ?>"><?php echo wsuwp_global_site_count(); ?></a></li>
 				<li id="dash-global-users"><a href="<?php echo esc_url( network_admin_url( 'users.php' ) ); ?>"><?php echo wsuwp_global_user_count(); ?></a></li>
@@ -81,10 +85,38 @@ class WSUWP_WordPress_Dashboard {
 		}
 		?>
 		<h4>Network</h4>
-		<ul class="wsuwp-network-counts">
+		<ul class="wsuwp-platform-counts">
 			<li id="dash-network-sites"><a href="<?php echo esc_url( network_admin_url( 'sites.php' ) ); ?>"><?php echo esc_html( get_site_option( 'blog_count' ) ); ?></a></li>
 			<li id="dash-network-users"><a href="<?php echo esc_url( network_admin_url( 'users.php' ) ); ?>"><?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></a></li>
 		</ul>
+		<?php
+	}
+
+	/**
+	 * Display a dashboard widget with statistics from the Memcached service.
+	 */
+	public function global_memcached_stats() {
+		$a = new Memcached();
+		$a->addServer('localhost', 11211);
+		$stats = $a->getStats();
+		$stats = $stats['localhost:11211'];
+
+		?>
+		<h4>Cache Data</h4>
+		<ul class="wsuwp-platform-counts wsuwp-count-above">
+			<li id="dash-memcached-written"><?php echo size_format( $stats['bytes_written'] ); ?></li>
+			<li id="dash-memcached-read"><?php echo size_format( $stats['bytes_read'] ); ?></li>
+		</ul>
+
+		<h4>Cache Hits</h4>
+		<ul class="wsuwp-platform-counts wsuwp-count-above">
+			<li id="dash-memcached-gets"><?php echo $stats['get_hits']; ?></li>
+			<li id="dash-memcached-getsperc"><?php echo ( number_format( 100 * ( $stats['get_hits'] / $stats['cmd_get'] ), 1 ) ); ?>%</li>
+		</ul>
+		<p>The memcached service has been running for <strong><?php echo human_time_diff( time() - $stats['uptime'], time() ); ?></strong> and
+			has handled <strong><?php echo $stats['total_items']; ?> items</strong> over <strong><?php echo $stats['total_connections']; ?> connections</strong>.</p>
+		<p>Currently, <strong><?php echo $stats['curr_connections']; ?> connections</strong> are in use and memcached is storing <strong><?php echo $stats['curr_items']; ?>
+			items</strong> totalling <strong><?php echo size_format( $stats['bytes'] ); ?></strong>.</p>
 		<?php
 	}
 
