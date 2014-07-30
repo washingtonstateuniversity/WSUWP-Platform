@@ -1,3 +1,4 @@
+#dashboard_wsuwp_memcached h4,
 #dashboard_wsuwp_counts h4 {
 	width: 100%;
 	text-align: center;
@@ -6,6 +7,7 @@
 	color: #2f5055;
 }
 
+.wsuwp-memcached-counts,
 .wsuwp-global-counts,
 .wsuwp-network-counts {
 	margin-left: auto;
@@ -15,10 +17,12 @@
 	max-width: 500px;
 }
 
+#dashboard_wsuwp_memcached .top,
 .wsuwp-global-counts {
 	margin-bottom: 40px;
 }
 
+.wsuwp-memcached-counts li,
 .wsuwp-global-counts li,
 .wsuwp-network-counts li {
 	display: inline-block;
@@ -30,20 +34,24 @@
 	color: #00a5bd;
 }
 
+.wsuwp-memcached-counts li a,
 .wsuwp-global-counts li a,
 .wsuwp-network-counts li a {
 	color: #00A5BD;
 }
 
+.wsuwp-memcached-counts li a:hover,
 .wsuwp-network-counts li a:hover,
 .wsuwp-global-counts li a:hover {
 	color: #0099D5;
 }
 
+.wsuwp-memcached-counts li,
 .wsuwp-network-counts li {
 	width: 49%;
 }
 
+.wsuwp-memcached-counts li:after,
 .wsuwp-global-counts li:after,
 .wsuwp-network-counts li:after {
 	font-size: 15px;
@@ -65,4 +73,20 @@
 #dash-global-users:after,
 #dash-network-users:after {
 	content: "Users";
+}
+
+#dash-memcached-read:after {
+	content: "Received";
+}
+
+#dash-memcached-written:after {
+	content: "Sent";
+}
+
+#dash-memcached-gets:after {
+	content: "Total Gets";
+}
+
+#dash-memcached-getsperc:after {
+	content: "Success";
 }

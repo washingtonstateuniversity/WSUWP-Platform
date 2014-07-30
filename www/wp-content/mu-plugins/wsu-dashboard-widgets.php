@@ -62,6 +62,10 @@ class WSUWP_WordPress_Dashboard {
 			$count_title = esc_html( $network_name ) . ' Counts';
 		}
 		wp_add_dashboard_widget( 'dashboard_wsuwp_counts', $count_title, array( $this, 'network_dashboard_counts' ) );
+
+		if ( wsuwp_get_primary_network_id() == wsuwp_get_current_network()->id ) {
+			wp_add_dashboard_widget( 'dashboard_wsuwp_memcached', 'Global Memcached Usage', array( $this, 'global_memcached_stats' ) );
+		}
 	}
 
 	/**
@@ -85,6 +89,31 @@ class WSUWP_WordPress_Dashboard {
 			<li id="dash-network-sites"><a href="<?php echo esc_url( network_admin_url( 'sites.php' ) ); ?>"><?php echo esc_html( get_site_option( 'blog_count' ) ); ?></a></li>
 			<li id="dash-network-users"><a href="<?php echo esc_url( network_admin_url( 'users.php' ) ); ?>"><?php echo wsuwp_network_user_count( wsuwp_get_current_network()->id ); ?></a></li>
 		</ul>
+		<?php
+	}
+
+	public function global_memcached_stats() {
+		$a = new Memcached();
+		$a->addServer('localhost', 11211);
+		$stats = $a->getStats();
+		$stats = $stats['localhost:11211'];
+
+		?>
+		<h4>Cache Data</h4>
+		<ul class="wsuwp-memcached-counts top">
+			<li id="dash-memcached-written"><?php echo size_format( $stats['bytes_written'] ); ?></li>
+			<li id="dash-memcached-read"><?php echo size_format( $stats['bytes_read'] ); ?></li>
+		</ul>
+
+		<h4>Cache Hits</h4>
+		<ul class="wsuwp-memcached-counts top">
+			<li id="dash-memcached-gets"><?php echo $stats['get_hits']; ?></li>
+			<li id="dash-memcached-getsperc"><?php echo ( number_format( 100 * ( $stats['get_hits'] / $stats['cmd_get'] ), 1 ) ); ?>%</li>
+		</ul>
+		<p>The memcached service has been running for <?php echo human_time_diff( time() - $stats['uptime'], time() ); ?> and
+			has handled <?php echo $stats['total_items']; ?> items over <?php echo $stats['total_connections']; ?> connections.</p>
+		<p>Currently, <?php echo $stats['curr_connections']; ?> connections are in use and memcached is storing <?php echo $stats['curr_items']; ?>
+			items totalling <?php echo size_format( $stats['bytes'] ); ?>.</p>
 		<?php
 	}
 
