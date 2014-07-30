@@ -845,6 +845,10 @@ class WP_Object_Cache {
 			$this->global_prefix = ( is_multisite() || defined( 'CUSTOM_USER_TABLE' ) && defined( 'CUSTOM_USER_META_TABLE' ) ) ? '' : $table_prefix;
 			$this->blog_prefix = ( is_multisite() ? $blog_id : $table_prefix ) . ':';
 		}
+
+		// Setup cacheable values for handling expiration times
+		$this->thirty_days = 60 * 60 * 24 * 30;
+		$this->now         = time();
 	}
 
 	/**
@@ -864,7 +868,12 @@ class WP_Object_Cache {
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
 	public function add( $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
+		if ( wp_suspend_cache_addition() ) {
+			return false;
+		}
+
 		$derived_key = $this->buildKey( $key, $group );
+		$expiration  = $this->sanitize_expiration( $expiration );
 
 		// If group is a non-Memcached group, save to runtime cache, not Memcached
 		if ( in_array( $group, $this->no_mc_groups ) ) {
@@ -1039,6 +1048,7 @@ class WP_Object_Cache {
 	 */
 	public function cas( $cas_token, $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
 		$derived_key = $this->buildKey( $key, $group );
+		$expiration  = $this->sanitize_expiration( $expiration );
 
 		/**
 		 * If group is a non-Memcached group, save to runtime cache, not Memcached. Note
@@ -1052,9 +1062,9 @@ class WP_Object_Cache {
 
 		// Save to Memcached
 		if ( $byKey )
-			$result = $this->m->casByKey( $cas_token, $server_key, $derived_key, $value, absint( $expiration ) );
+			$result = $this->m->casByKey( $cas_token, $server_key, $derived_key, $value, $expiration );
 		else
-			$result = $this->m->cas( $cas_token, $derived_key, $value, absint( $expiration ) );
+			$result = $this->m->cas( $cas_token, $derived_key, $value, $expiration );
 
 		// Store in runtime cache if cas was successful
 		if ( Memcached::RES_SUCCESS === $this->getResultCode() )
@@ -1124,6 +1134,21 @@ class WP_Object_Cache {
 			$this->add_to_internal_cache( $derived_key, $result );
 
 		return $result;
+	}
+
+	/**
+	 * Decrement a numeric item's value.
+	 *
+	 * Alias for $this->decrement. Other caching backends use this abbreviated form of the function. It *may* cause
+	 * breakage somewhere, so it is nice to have. This function will also allow the core unit tests to pass.
+	 *
+	 * @param string    $key    The key under which to store the value.
+	 * @param int       $offset The amount by which to decrement the item's value.
+	 * @param string    $group  The group value appended to the $key.
+	 * @return int|bool         Returns item's new value on success or FALSE on failure.
+	 */
+	public function decr( $key, $offset = 1, $group = 'default' ) {
+		return $this->decrement( $key, $offset, $group );
 	}
 
 	/**
@@ -1580,7 +1605,7 @@ class WP_Object_Cache {
 	 * @param   string      $group      The group value appended to the $key.
 	 * @return  int|bool                Returns item's new value on success or FALSE on failure.
 	 */
-	public function incr(  $key, $offset = 1, $group = 'default' ) {
+	public function incr( $key, $offset = 1, $group = 'default' ) {
 		return $this->increment( $key, $offset, $group );
 	}
 
@@ -1676,6 +1701,7 @@ class WP_Object_Cache {
 	 */
 	public function replace( $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
 		$derived_key = $this->buildKey( $key, $group );
+		$expiration  = $this->sanitize_expiration( $expiration );
 
 		// If group is a non-Memcached group, save to runtime cache, not Memcached
 		if ( in_array( $group, $this->no_mc_groups ) ) {
@@ -1690,9 +1716,9 @@ class WP_Object_Cache {
 
 		// Save to Memcached
 		if ( $byKey )
-			$result = $this->m->replaceByKey( $server_key, $derived_key, $value, absint( $expiration ) );
+			$result = $this->m->replaceByKey( $server_key, $derived_key, $value, $expiration );
 		else
-			$result = $this->m->replace( $derived_key, $value, absint( $expiration ) );
+			$result = $this->m->replace( $derived_key, $value, $expiration );
 
 		// Store in runtime cache if add was successful
 		if ( Memcached::RES_SUCCESS === $this->getResultCode() )
@@ -1737,6 +1763,7 @@ class WP_Object_Cache {
 	 */
 	public function set( $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
 		$derived_key = $this->buildKey( $key, $group );
+		$expiration  = $this->sanitize_expiration( $expiration );
 
 		// If group is a non-Memcached group, save to runtime cache, not Memcached
 		if ( in_array( $group, $this->no_mc_groups ) ) {
@@ -1745,10 +1772,11 @@ class WP_Object_Cache {
 		}
 
 		// Save to Memcached
-		if ( $byKey )
-			$result = $this->m->setByKey( $server_key, $derived_key, $value, absint( $expiration ) );
-		else
-			$result = $this->m->set( $derived_key, $value, absint( $expiration ) );
+		if ( $byKey ) {
+			$result = $this->m->setByKey( $server_key, $derived_key, $value, $expiration );
+		} else {
+			$result = $this->m->set( $derived_key, $value, $expiration );
+		}
 
 		// Store in runtime cache if add was successful
 		if ( Memcached::RES_SUCCESS === $this->getResultCode() )
@@ -1795,7 +1823,8 @@ class WP_Object_Cache {
 	 */
 	public function setMulti( $items, $groups = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
 		// Build final keys and replace $items keys with the new keys
-		$derived_keys = $this->buildKeys( array_keys( $items ), $groups );
+		$derived_keys  = $this->buildKeys( array_keys( $items ), $groups );
+		$expiration    = $this->sanitize_expiration( $expiration );
 		$derived_items = array_combine( $derived_keys, $items );
 
 		// Do not add to memcached if in no_mc_groups
@@ -1813,9 +1842,9 @@ class WP_Object_Cache {
 
 		// Save to memcached
 		if ( $byKey )
-			$result = $this->m->setMultiByKey( $server_key, $derived_items, absint( $expiration ) );
+			$result = $this->m->setMultiByKey( $server_key, $derived_items, $expiration );
 		else
-			$result = $this->m->setMulti( $derived_items, absint( $expiration ) );
+			$result = $this->m->setMulti( $derived_items, $expiration );
 
 		// Store in runtime cache if add was successful
 		if ( Memcached::RES_SUCCESS === $this->getResultCode() )
@@ -1928,6 +1957,24 @@ class WP_Object_Cache {
 	}
 
 	/**
+	 * Ensure that a proper expiration time is set.
+	 *
+	 * Memcached treats any value over 30 days as a timestamp. If a developer sets the expiration for greater than 30
+	 * days or less than the current timestamp, the timestamp is in the past and the value isn't cached. This function
+	 * detects values in that range and corrects them.
+	 *
+	 * @param  string|int    $expiration    The dirty expiration time.
+	 * @return string|int                   The sanitized expiration time.
+	 */
+	public function sanitize_expiration( $expiration ) {
+		if ( $expiration > $this->thirty_days && $expiration <= $this->now ) {
+			$expiration = $expiration + $this->now;
+		}
+
+		return $expiration;
+	}
+
+	/**
 	 * Concatenates two values and casts to type of the first value.
 	 *
 	 * This is used in append and prepend operations to match how these functions are handled
@@ -1961,6 +2008,10 @@ class WP_Object_Cache {
 	 * @param   mixed       $value          Object value.
 	 */
 	public function add_to_internal_cache( $derived_key, $value ) {
+		if ( is_object( $value ) ) {
+			$value = clone $value;
+		}
+
 		$this->cache[$derived_key] = $value;
 	}
 
