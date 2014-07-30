@@ -58,12 +58,14 @@ class WSU_Roles_And_Capabilities {
 	 *
 	 * Allow contributors to access other portions of the editing process.
 	 *     - Add 'upload_files' capability so that media can be accessed.
+	 *     - Add 'edit_pages' capability so that editors can edit pages assigned to them.
 	 */
 	function modify_contributor_capabilities() {
 		$contributor = get_role( 'contributor' );
 
 		if ( null !== $contributor ) {
 			$contributor->add_cap( 'upload_files' );
+			$contributor->add_cap( 'edit_pages' );
 		}
 	}
 
