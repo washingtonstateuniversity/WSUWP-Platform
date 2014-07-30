@@ -20,6 +20,7 @@ class WSU_Roles_And_Capabilities {
 	 */
 	private function __construct() {
 		add_action( 'init',           array( $this, 'modify_editor_capabilities' ), 10    );
+		add_action( 'init', array( $this, 'modify_contributor_capabilities' ), 10 );
 		add_filter( 'editable_roles', array( $this, 'editable_roles'             ), 10, 1 );
 		add_filter( 'map_meta_cap',   array( $this, 'map_meta_cap'               ), 10, 4 );
 	}
@@ -49,6 +50,20 @@ class WSU_Roles_And_Capabilities {
 		if ( null !== $editor ) {
 			$editor->add_cap( 'create_users' );
 			$editor->add_cap( 'promote_users' );
+		}
+	}
+
+	/**
+	 * Modify the contributor role.
+	 *
+	 * Allow contributors to access other portions of the editing process.
+	 *     - Add 'upload_files' capability so that media can be accessed.
+	 */
+	function modify_contributor_capabilities() {
+		$contributor = get_role( 'contributor' );
+
+		if ( null !== $contributor ) {
+			$contributor->add_cap( 'upload_files' );
 		}
 	}
 
