@@ -15,14 +15,13 @@
 	max-width: 500px;
 }
 
-#dashboard_wsuwp_memcached .top,
-.wsuwp-global-counts {
+.wsuwp-count-above {
 	margin-bottom: 40px;
 }
 
 .wsuwp-platform-counts li {
 	display: inline-block;
-	width: 32.7%;
+	width: 49%;
 	height: 80px;
 	text-align: center;
 	font-size: 52px;
@@ -38,9 +37,8 @@
 	color: #0099D5;
 }
 
-.wsuwp-memcached-counts li,
-.wsuwp-network-counts li {
-	width: 49%;
+.wsuwp-count-thirds li {
+	width: 32.7%;
 }
 
 .wsuwp-platform-counts li:after {
