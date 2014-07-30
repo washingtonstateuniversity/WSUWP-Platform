@@ -113,10 +113,10 @@ class WSUWP_WordPress_Dashboard {
 			<li id="dash-memcached-gets"><?php echo $stats['get_hits']; ?></li>
 			<li id="dash-memcached-getsperc"><?php echo ( number_format( 100 * ( $stats['get_hits'] / $stats['cmd_get'] ), 1 ) ); ?>%</li>
 		</ul>
-		<p>The memcached service has been running for <?php echo human_time_diff( time() - $stats['uptime'], time() ); ?> and
-			has handled <?php echo $stats['total_items']; ?> items over <?php echo $stats['total_connections']; ?> connections.</p>
-		<p>Currently, <?php echo $stats['curr_connections']; ?> connections are in use and memcached is storing <?php echo $stats['curr_items']; ?>
-			items totalling <?php echo size_format( $stats['bytes'] ); ?>.</p>
+		<p>The memcached service has been running for <strong><?php echo human_time_diff( time() - $stats['uptime'], time() ); ?></strong> and
+			has handled <strong><?php echo $stats['total_items']; ?> items</strong> over <strong><?php echo $stats['total_connections']; ?> connections</strong>.</p>
+		<p>Currently, <strong><?php echo $stats['curr_connections']; ?> connections</strong> are in use and memcached is storing <strong><?php echo $stats['curr_items']; ?>
+			items</strong> totalling <strong><?php echo size_format( $stats['bytes'] ); ?></strong>.</p>
 		<?php
 	}
 
