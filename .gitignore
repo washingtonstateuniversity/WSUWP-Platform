@@ -37,6 +37,9 @@
 # Ignore any local filters
 /www/wp-content/mu-plugins/local-index.php
 
+# Ignore the local mail log.
+/www/wp-content/mu-plugins/wp-mail-log.txt
+
 # Ignore all plugins in the wp-content directory by default. We'll explicitly allow those we track here.
 /www/wp-content/plugins/*/
 
