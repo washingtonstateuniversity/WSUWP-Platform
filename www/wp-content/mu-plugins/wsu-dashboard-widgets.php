@@ -92,6 +92,9 @@ class WSUWP_WordPress_Dashboard {
 		<?php
 	}
 
+	/**
+	 * Display a dashboard widget with statistics from the Memcached service.
+	 */
 	public function global_memcached_stats() {
 		$a = new Memcached();
 		$a->addServer('localhost', 11211);
