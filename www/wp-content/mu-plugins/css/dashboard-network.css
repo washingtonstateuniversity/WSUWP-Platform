@@ -29,16 +29,16 @@
 	color: #00a5bd;
 }
 
+.wsuwp-count-thirds li {
+	width: 32.7%;
+}
+
 .wsuwp-platform-counts li a {
 	color: #00A5BD;
 }
 
 .wsuwp-platform-counts li a:hover {
 	color: #0099D5;
-}
-
-.wsuwp-count-thirds li {
-	width: 32.7%;
 }
 
 .wsuwp-platform-counts li:after {
