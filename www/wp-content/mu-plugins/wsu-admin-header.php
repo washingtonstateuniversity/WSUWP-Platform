@@ -17,6 +17,8 @@ class WSU_Admin_Header {
 		add_action( 'wp_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 	}
 
 	/**
@@ -32,8 +34,29 @@ class WSU_Admin_Header {
 				top: 2px;
 				content: '\f319';
 			}
+			#wpadminbar .ms-sites-search {
+				height: 32px;
+			}
+			#wpadminbar .ms-sites-search .ab-item {
+				height: 28px;
+				line-height: 28px;
+				margin-bottom: 4px;
+			}
+			#wpadminbar .ms-sites-search input {
+				padding: 0 2px 0 4px;
+				line-height: 28px;
+			}
 		</style>
 		<?php
+	}
+
+	/**
+	 * Enqueue any scripts necessary for the admin header functionality.
+	 */
+	public function enqueue_scripts() {
+		if ( is_admin_bar_showing() ) {
+			wp_enqueue_script( 'wsuwp-site-search', plugins_url( 'js/wsuwp-site-search.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
+		}
 	}
 
 	/**
@@ -314,6 +337,18 @@ class WSU_Admin_Header {
 
 			$sites = wp_get_sites( array( 'network_id' => $network->id ) );
 			$network_sites_added = 0;
+
+			// Add a unique site search menu for each network to aid with long lists.
+			// Adapted from upstream project - https://github.com/trepmal/my-sites-search
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'network-' . $network->id . '-list',
+				'id'     => 'network-' . $network->id . '-search',
+				'title'  => '<input type="text" placeholder="'. __( 'Search sites', 'wsuwp' ) .'" />',
+				'meta'   => array(
+					'class' => 'ms-sites-search hide-if-no-js'
+				)
+			) );
+
 			// Add each of the user's sites from this specific network to the menu
 			foreach( $sites as $site ) {
 				switch_to_blog( $site['blog_id'] );
