@@ -36,7 +36,6 @@ class WSU_Network_Users {
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_global' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_global' ) );
 
-		add_action( 'edit_user_profile', array( $this, 'toggle_super_admin' ) );
 		add_action( 'edit_user_profile', array( $this, 'toggle_capabilities' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_capabilities_update' ) );
@@ -126,31 +125,25 @@ class WSU_Network_Users {
 	}
 
 	/**
-	 * Display an option to assign super admin privileges to a user.
-	 *
-	 * Only global admins are able to see this option.
-	 *
-	 * @param WP_User $profile_user The user being edited.
-	 */
-	public function toggle_super_admin( $profile_user ) {
-		if ( is_network_admin() && $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
-			?>
-			<table class="form-table">
-			<tr>
-				<th><?php _e( 'Network Admin' ); ?></th>
-				<td><p><label><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', wsuwp_get_current_network()->id ) ); ?> /><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
-			</tr>
-			</table>
-			<?php
-		}
-	}
-
-	/**
 	 * Provide a method for adding custom capabilities to a user through the user edit screen.
+	 *
+	 * Depending on the capability being added, only network or global admins will be able to
+	 * see these options.
 	 *
 	 * @param WP_User $profile_user User currently being edited.
 	 */
 	public function toggle_capabilities( $profile_user ) {
+		if ( is_network_admin() && $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
+			?>
+			<table class="form-table">
+				<tr>
+					<th><?php _e( 'Network Admin' ); ?></th>
+					<td><p><label><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', wsuwp_get_current_network()->id ) ); ?> /><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
+				</tr>
+			</table>
+		<?php
+		}
+
 		if ( $this->is_global_admin() ) {
 			?>
 			<table class="form-table">
