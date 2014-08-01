@@ -37,7 +37,6 @@ class WSU_Network_Users {
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_global' ) );
 
 		add_action( 'edit_user_profile', array( $this, 'toggle_capabilities' ) );
-		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_capabilities_update' ) );
 
 		if ( ! defined( 'WP_CLI' ) ) {
@@ -154,24 +153,6 @@ class WSU_Network_Users {
 			</table><?php
 		}
 	}
-	/**
-	 * Handle the super admin checkbox from the user edit page.
-	 *
-	 * @param int $user_id User ID for user being saved.
-	 */
-	public function toggle_super_admin_update( $user_id ) {
-		if ( ! is_network_admin() ) {
-			return;
-		}
-
-		if ( $this->is_global_admin() ) {
-			if ( empty( $_POST['network_admin'] ) ) {
-				$this->revoke_super_admin( $user_id );
-			} elseif ( 'on' === $_POST['network_admin'] ) {
-				$this->grant_super_admin( $user_id );
-			}
-		}
-	}
 
 	/**
 	 * Handle the updating of custom capabilities through the user edit screen.
@@ -183,6 +164,16 @@ class WSU_Network_Users {
 			return;
 		}
 
+		// Process network admin assignment at the network level.
+		if ( is_network_admin() && $this->is_global_admin() ) {
+			if ( empty( $_POST['network_admin'] ) ) {
+				$this->revoke_super_admin( $user_id );
+			} elseif ( 'on' === $_POST['network_admin'] ) {
+				$this->grant_super_admin( $user_id );
+			}
+		}
+
+		// Process Javascript editor assigment at any level.
 		if ( empty( $_POST['javascript_editor'] ) ) {
 			delete_user_meta( $user_id, 'wsuwp_can_edit_javascript' );
 		} elseif ( 'on' === $_POST['javascript_editor'] ) {
