@@ -38,3 +38,13 @@ function wsuwp_upload_dir( $uploads ) {
 
 	return $uploads;
 }
+
+add_filter( 'cje_capability', 'wsuwp_cje_capability' );
+/**
+ * Set the capability required to edit custom Javascript if the Custom Javascript Editor is enabled.
+ *
+ * @return string
+ */
+function wsuwp_cje_capability() {
+	return 'edit_javascript';
+}
