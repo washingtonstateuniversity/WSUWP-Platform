@@ -37,7 +37,9 @@ class WSU_Network_Users {
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_global' ) );
 
 		add_action( 'edit_user_profile', array( $this, 'toggle_super_admin' ) );
+		add_action( 'edit_user_profile', array( $this, 'toggle_capabilities' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'toggle_super_admin_update' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'toggle_capabilities_update' ) );
 
 		if ( ! defined( 'WP_CLI' ) ) {
 			add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
@@ -144,6 +146,22 @@ class WSU_Network_Users {
 	}
 
 	/**
+	 * Provide a method for adding custom capabilities to a user through the user edit screen.
+	 *
+	 * @param WP_User $profile_user User currently being edited.
+	 */
+	public function toggle_capabilities( $profile_user ) {
+		if ( $this->is_global_admin() ) {
+			?>
+			<table class="form-table">
+				<tr>
+					<th><?php _e( 'Javascript Editor' ); ?></th>
+					<td><p><label><input type="checkbox" id="javascript_editor"  name="javascript_editor" <?php checked( user_can( $profile_user->ID, 'edit_javascript' ) ); ?> /><?php _e( 'Grant this user access to the Custom Javascript Editor.' ); ?></label></p></td>
+				</tr>
+			</table><?php
+		}
+	}
+	/**
 	 * Handle the super admin checkbox from the user edit page.
 	 *
 	 * @param int $user_id User ID for user being saved.
@@ -159,6 +177,23 @@ class WSU_Network_Users {
 			} elseif ( 'on' === $_POST['network_admin'] ) {
 				$this->grant_super_admin( $user_id );
 			}
+		}
+	}
+
+	/**
+	 * Handle the updating of custom capabilities through the user edit screen.
+	 *
+	 * @param int $user_id ID of the user being saved.
+	 */
+	public function toggle_capabilities_update( $user_id ) {
+		if ( ! $this->is_global_admin() ) {
+			return;
+		}
+
+		if ( empty( $_POST['javascript_editor'] ) ) {
+			delete_user_meta( $user_id, 'wsuwp_can_edit_javascript' );
+		} elseif ( 'on' === $_POST['javascript_editor'] ) {
+			update_user_meta( $user_id, 'wsuwp_can_edit_javascript', '1' );
 		}
 	}
 
@@ -250,6 +285,13 @@ class WSU_Network_Users {
 			// activate_plugins and manage_network_plugins are tied together here.
 			if ( 'activate_plugins' === $args[0] ) {
 				$allcaps['manage_network_plugins'] = true;
+			}
+		}
+
+		if ( $user && 'edit_javascript' === $args[0] ) {
+			$edit_javascript = get_user_meta( $user->ID, 'wsuwp_can_edit_javascript', true );
+			if ( '1' === $edit_javascript ) {
+				$allcaps['edit_javascript'] = true;
 			}
 		}
 
