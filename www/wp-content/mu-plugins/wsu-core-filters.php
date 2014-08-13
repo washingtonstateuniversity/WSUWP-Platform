@@ -81,3 +81,16 @@ add_filter( 'pre_option_tag_base', 'wsuwp_filter_tag_base' );
 function wsuwp_filter_tag_base() {
 	return '/tag';
 }
+
+add_action( '_admin_menu', 'wsuwp_filter_admin_menu' );
+/**
+ * Permalinks can impact so much in strange ways. It's best to disable this now until
+ * we can determine the best approach.
+ *
+ * Do realize that we're using a "private" action here with _admin_menu, so stability
+ * is not guaranteed.
+ */
+function wsuwp_filter_admin_menu() {
+	global $submenu;
+	unset( $submenu['options-general.php'][40] );
+}
