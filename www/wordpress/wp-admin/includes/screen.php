@@ -34,7 +34,7 @@ function get_column_headers( $screen ) {
 		 *
 		 * @param array $columns An array of column headers. Default empty.
 		 */
-		$column_headers[ $screen->id ] = apply_filters( 'manage_' . $screen->id . '_columns', array() );
+		$column_headers[ $screen->id ] = apply_filters( "manage_{$screen->id}_columns", array() );
 	}
 
 	return $column_headers[ $screen->id ];
@@ -530,7 +530,7 @@ final class WP_Screen {
 	 * @see set_current_screen()
 	 * @since 3.3.0
 	 */
-	function set_current_screen() {
+	public function set_current_screen() {
 		global $current_screen, $taxnow, $typenow;
 		$current_screen = $this;
 		$taxnow = $this->taxonomy;
@@ -581,7 +581,7 @@ final class WP_Screen {
 	 * @param WP_Screen $screen A screen object.
 	 * @param string $help Help text.
 	 */
-	static function add_old_compat_help( $screen, $help ) {
+	public static function add_old_compat_help( $screen, $help ) {
 		self::$_old_compat_help[ $screen->id ] = $help;
 	}
 
@@ -593,7 +593,7 @@ final class WP_Screen {
 	 *
 	 * @param string $parent_file The parent file of the screen. Typically the $parent_file global.
 	 */
-	function set_parentage( $parent_file ) {
+	public function set_parentage( $parent_file ) {
 		$this->parent_file = $parent_file;
 		list( $this->parent_base ) = explode( '?', $parent_file );
 		$this->parent_base = str_replace( '.php', '', $this->parent_base );
@@ -1011,11 +1011,10 @@ final class WP_Screen {
 	 * @since 3.3.0
 	 */
 	public function render_screen_options() {
-		global $wp_meta_boxes, $wp_list_table;
+		global $wp_meta_boxes;
 
 		$columns = get_column_headers( $this );
 		$hidden  = get_hidden_columns( $this );
-		$post    = get_post();
 
 		?>
 		<div id="screen-options-wrap" class="hidden" tabindex="-1" aria-label="<?php esc_attr_e('Screen Options Tab'); ?>">
@@ -1090,7 +1089,7 @@ final class WP_Screen {
 	 *
 	 * @since 3.3.0
 	 */
-	function render_screen_layout() {
+	public function render_screen_layout() {
 		if ( ! $this->get_option('layout_columns') )
 			return;
 
@@ -1111,6 +1110,11 @@ final class WP_Screen {
 				<?php
 			endfor; ?>
 		</div>
+		<div class="editor-expand hidden">
+			<label for="editor-expand-toggle">
+			<input type="checkbox" id="editor-expand-toggle" <?php checked( get_user_setting( 'editor_expand', 'on' ) === 'on' ); ?> />
+			<?php _e( 'Expand the editor to match the window height.' ); ?></label>
+		</div>
 		<?php
 	}
 
@@ -1119,7 +1123,7 @@ final class WP_Screen {
 	 *
 	 * @since 3.3.0
 	 */
-	function render_per_page_options() {
+	public function render_per_page_options() {
 		if ( ! $this->get_option( 'per_page' ) )
 			return;
 

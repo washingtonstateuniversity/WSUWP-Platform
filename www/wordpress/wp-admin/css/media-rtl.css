@@ -102,6 +102,7 @@
 	display: block;
 	line-height: 36px;
 	float: left;
+	margin-left: 10px;
 }
 
 .media-item .describe-toggle-off,
@@ -113,19 +114,18 @@
 	display: block;
 }
 
-#media-items .media-item {
-	border-bottom: 1px solid #dfdfdf;
+.media-upload-form .media-item {
 	min-height: 36px;
+	margin-bottom: 1px;
 	position: relative;
 	width: 100%;
+	background: #fff;
 }
 
-#media-items {
-	width: 623px;
-}
-
-.media-new-php #media-items {
-	margin: 1em 0;
+.media-upload-form .media-item,
+.media-upload-form .media-item .error {
+	-webkit-box-shadow: 0 1px 0 #dfdfdf;
+	box-shadow: 0 1px 0 #dfdfdf;
 }
 
 #media-items:empty {
@@ -135,15 +135,12 @@
 .media-item .filename {
 	line-height: 36px;
 	overflow: hidden;
-}
-
-.media-item .error-div {
-	padding-right: 10px;
+	margin-right: 6px;
 }
 
 .media-item .pinkynail {
 	float: right;
-	margin: 2px 0 0 10px;
+	margin: 2px 3px 0 10px;
 	max-width: 40px;
 	max-height: 32px;
 }
@@ -161,17 +158,16 @@
 .media-item .progress {
 	float: left;
 	height: 22px;
-	margin: 7px 0 0;
+	margin: 7px 6px;
 	width: 200px;
 	line-height: 2em;
 	padding: 0;
 	overflow: hidden;
-	margin-bottom: 2px;
 	-webkit-border-radius: 22px;
 	border-radius: 22px;
 	background: #ddd;
-	-webkit-box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
-	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .media-item .bar {
@@ -195,7 +191,7 @@
 	text-align: center;
 	line-height: 22px;
 	font-weight: 400;
-	text-shadow: 0px 1px 2px rgba(0,0,0,0.2);
+	text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .upload-php .fixed .column-parent {
@@ -210,22 +206,20 @@
 	display: block;
 }
 
-.media-upload-form .media-item.error {
-	margin: 0;
-	padding: 0;
+.media-upload-form .media-item.error,
+.media-upload-form .media-item .error {
+	width: auto;
+	margin: 0 0 1px 0;
 }
 
-.media-upload-form .media-item.error p,
-.media-item .error-div {
-	line-height: 16px;
-	margin: 5px 10px;
-	padding: 0;
+.media-upload-form .media-item .error {
+	padding: 10px 14px 10px 0;
 }
 
 .media-item .error-div a.dismiss {
 	display: block;
 	float: left;
-	margin: 5px 15px 0 4px;
+	margin: 0 15px 0 10px;
 }
 
 /*------------------------------------------------------------------------------
@@ -280,9 +274,14 @@
 
 .find-box-search .spinner {
 	float: none;
-	right: 125px;
+	right: 110px;
 	position: absolute;
-	top: 18px;
+	top: 2px;
+}
+
+.find-box-search,
+#find-posts-response {
+	position: relative; /* RTL fix, #WP28010 */
 }
 
 #find-posts-input,
@@ -507,7 +506,7 @@ border color while dragging a file over the uploader drop area */
 }
 
 .media-disabled,
-.imgedit-settings .disabled  {
+.imgedit-settings .disabled {
 	color: grey;
 }
 
@@ -699,6 +698,7 @@ audio, video {
 
 .mejs-container {
 	width: 100%;
+	max-width: 100%;
 }
 
 /* =Media Queries
@@ -720,5 +720,19 @@ audio, video {
 	.wp_attachment_details label[for="content"] {
 		font-size: 14px;
 		line-height: 1.5em;
+	}
+
+	.media-upload-form .media-item.error,
+	.media-upload-form .media-item .error {
+		font-size: 13px;
+		line-height: 1.5;
+	}
+
+	.media-upload-form .media-item.error {
+		padding: 1px 10px;
+	}
+
+	.media-upload-form .media-item .error {
+		padding: 10px 12px 10px 0;
 	}
 }

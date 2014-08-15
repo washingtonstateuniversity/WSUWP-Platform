@@ -264,6 +264,19 @@ function refresh_blog_details( $blog_id ) {
 }
 
 /**
+ * Refresh blog details when an option is updated.
+ *
+ * @access private
+ * @param string $option_name
+ */
+function _wp_refresh_blog_details_on_updated_option( $option_name ) {
+	$options = array( 'blogname', 'siteurl', 'post_count' );
+	if ( in_array( $option_name, $options ) ) {
+		refresh_blog_details( get_current_blog_id() );
+	}
+}
+
+/**
  * Update the details for a blog. Updates the blogs table for a given blog id.
  *
  * @since MU
@@ -861,11 +874,13 @@ function get_last_updated( $deprecated = '', $start = 0, $quantity = 40 ) {
  */
 function _update_blog_date_on_post_publish( $new_status, $old_status, $post ) {
 	$post_type_obj = get_post_type_object( $post->post_type );
-	if ( ! $post_type_obj->public )
+	if ( ! $post_type_obj || ! $post_type_obj->public ) {
 		return;
+	}
 
-	if ( 'publish' != $new_status && 'publish' != $old_status )
+	if ( 'publish' != $new_status && 'publish' != $old_status ) {
 		return;
+	}
 
 	// Post was freshly published, published post was saved, or published post was unpublished.
 
@@ -883,12 +898,49 @@ function _update_blog_date_on_post_delete( $post_id ) {
 	$post = get_post( $post_id );
 
 	$post_type_obj = get_post_type_object( $post->post_type );
-	if ( ! $post_type_obj->public )
+	if ( ! $post_type_obj || ! $post_type_obj->public ) {
 		return;
+	}
 
-	if ( 'publish' != $post->post_status )
+	if ( 'publish' != $post->post_status ) {
 		return;
+	}
 
 	wpmu_update_blogs_date();
+}
+
+/**
+ * Handler for updating the blog posts count date when a post is deleted.
+ *
+ * @since 4.0.0
+ *
+ * @param int $post_id Post ID.
+ */
+function _update_posts_count_on_delete( $post_id ) {
+	if ( 'publish' !== get_post_field( 'post_status', $post_id ) ) {
+		return;
+	}
+
+	update_posts_count();
+}
+
+/**
+ * Handler for updating the blog posts count date when a post status changes.
+ *
+ * @since 4.0.0
+ *
+ * @param string $new_status The status the post is changing to.
+ * @param string $old_status The status the post is changing from.
+ */
+function _update_posts_count_on_transition_post_status( $new_status, $old_status ) {
+	if ( $new_status === $old_status ) {
+		return;
+	}
+
+	if ( 'publish' !== $new_status && 'publish' !== $old_status ) {
+		return;
+	}
+
+	update_posts_count();
 }
 

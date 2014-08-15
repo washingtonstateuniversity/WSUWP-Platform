@@ -39,7 +39,7 @@ require_once( dirname( dirname( __FILE__ ) ) . '/wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 /** Load wpdb */
-require_once( ABSPATH . 'wp-includes/wp-db.php' );
+require_once( ABSPATH . WPINC . '/wp-db.php' );
 
 $step = isset( $_GET['step'] ) ? (int) $_GET['step'] : 0;
 
@@ -48,8 +48,14 @@ $step = isset( $_GET['step'] ) ? (int) $_GET['step'] : 0;
  *
  * @since 2.5.0
  */
-function display_header() {
+function display_header( $body_classes = '' ) {
 	header( 'Content-Type: text/html; charset=utf-8' );
+	if ( is_rtl() ) {
+		$body_classes .= 'rtl';
+	}
+	if ( $body_classes ) {
+		$body_classes = ' ' . $body_classes;
+	}
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
@@ -61,8 +67,8 @@ function display_header() {
 	wp_admin_css( 'install', true );
 	?>
 </head>
-<body class="wp-core-ui<?php if ( is_rtl() ) echo ' rtl'; ?>">
-<h1 id="logo"><a href="<?php echo esc_url( __( 'https://wordpress.org/' ) ); ?>"><?php _e( 'WordPress' ); ?></a></h1>
+<body class="wp-core-ui<?php echo $body_classes ?>">
+<h1 id="logo"><a href="<?php echo esc_url( __( 'https://wordpress.org/' ) ); ?>" tabindex="-1"><?php _e( 'WordPress' ); ?></a></h1>
 
 <?php
 } // end display_header()
@@ -74,23 +80,25 @@ function display_header() {
  */
 function display_setup_form( $error = null ) {
 	global $wpdb;
-	$user_table = ( $wpdb->get_var("SHOW TABLES LIKE '$wpdb->users'") != null );
 
-	// Ensure that Blogs appear in search engines by default
+	$sql = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->esc_like( $wpdb->users ) );
+	$user_table = ( $wpdb->get_var( $sql ) != null );
+
+	// Ensure that Blogs appear in search engines by default.
 	$blog_public = 1;
-	if ( ! empty( $_POST ) )
+	if ( isset( $_POST['weblog_title'] ) ) {
 		$blog_public = isset( $_POST['blog_public'] );
+	}
 
 	$weblog_title = isset( $_POST['weblog_title'] ) ? trim( wp_unslash( $_POST['weblog_title'] ) ) : '';
 	$user_name = isset($_POST['user_name']) ? trim( wp_unslash( $_POST['user_name'] ) ) : '';
-	$admin_password = isset($_POST['admin_password']) ? trim( wp_unslash( $_POST['admin_password'] ) ) : '';
 	$admin_email  = isset( $_POST['admin_email']  ) ? trim( wp_unslash( $_POST['admin_email'] ) ) : '';
 
 	if ( ! is_null( $error ) ) {
 ?>
 <p class="message"><?php echo $error; ?></p>
 <?php } ?>
-<form id="setup" method="post" action="install.php?step=2">
+<form id="setup" method="post" action="install.php?step=2" novalidate="novalidate">
 	<table class="form-table">
 		<tr>
 			<th scope="row"><label for="weblog_title"><?php _e( 'Site Title' ); ?></label></th>
@@ -113,7 +121,7 @@ function display_setup_form( $error = null ) {
 		<?php if ( ! $user_table ) : ?>
 		<tr>
 			<th scope="row">
-				<label for="admin_password"><?php _e('Password, twice'); ?></label>
+				<label for="pass1"><?php _e('Password, twice'); ?></label>
 				<p><?php _e('A password will be automatically generated for you if you leave this blank.'); ?></p>
 			</th>
 			<td>
@@ -126,15 +134,16 @@ function display_setup_form( $error = null ) {
 		<?php endif; ?>
 		<tr>
 			<th scope="row"><label for="admin_email"><?php _e( 'Your E-mail' ); ?></label></th>
-			<td><input name="admin_email" type="text" id="admin_email" size="25" value="<?php echo esc_attr( $admin_email ); ?>" />
+			<td><input name="admin_email" type="email" id="admin_email" size="25" value="<?php echo esc_attr( $admin_email ); ?>" />
 			<p><?php _e( 'Double-check your email address before continuing.' ); ?></p></td>
 		</tr>
 		<tr>
 			<th scope="row"><label for="blog_public"><?php _e( 'Privacy' ); ?></label></th>
-			<td colspan="2"><label><input type="checkbox" name="blog_public" value="1" <?php checked( $blog_public ); ?> /> <?php _e( 'Allow search engines to index this site.' ); ?></label></td>
+			<td colspan="2"><label><input type="checkbox" name="blog_public" id="blog_public" value="1" <?php checked( $blog_public ); ?> /> <?php _e( 'Allow search engines to index this site.' ); ?></label></td>
 		</tr>
 	</table>
 	<p class="step"><input type="submit" name="Submit" value="<?php esc_attr_e( 'Install WordPress' ); ?>" class="button button-large" /></p>
+	<input type="hidden" name="language" value="<?php echo isset( $_REQUEST['language'] ) ? esc_attr( $_REQUEST['language'] ) : ''; ?>" />
 </form>
 <?php
 } // end display_setup_form()
@@ -168,9 +177,27 @@ if ( ! is_string( $wpdb->base_prefix ) || '' === $wpdb->base_prefix ) {
 }
 
 switch($step) {
-	case 0: // Step 1
-	case 1: // Step 1, direct link.
-	  display_header();
+	case 0: // Step 0
+
+		if ( empty( $_GET['language'] ) && ( $languages = wp_get_available_translations_from_api() ) ) {
+			display_header( 'language-chooser' );
+			echo '<form id="setup" method="post" action="?step=1">';
+			wp_install_language_form( $languages );
+			echo '</form>';
+			break;
+		}
+
+		// Deliberately fall through if we can't reach the translations API.
+
+	case 1: // Step 1, direct link or from language chooser.
+		if ( ! empty( $_REQUEST['language'] ) ) {
+			$loaded_language = wp_install_download_language_pack( $_REQUEST['language'] );
+			if ( $loaded_language ) {
+				wp_install_load_language( $loaded_language );
+			}
+		}
+
+		display_header();
 ?>
 <h1><?php _ex( 'Welcome', 'Howdy' ); ?></h1>
 <p><?php printf( __( 'Welcome to the famous five minute WordPress installation process! You may want to browse the <a href="%s">ReadMe documentation</a> at your leisure. Otherwise, just fill in the information below and you&#8217;ll be on your way to using the most extendable and powerful personal publishing platform in the world.' ), '../readme.html' ); ?></p>
@@ -182,6 +209,8 @@ switch($step) {
 		display_setup_form();
 		break;
 	case 2:
+		$loaded_language = wp_install_load_language( $_REQUEST['language'] );
+
 		if ( ! empty( $wpdb->error ) )
 			wp_die( $wpdb->error->get_error_message() );
 
@@ -193,7 +222,8 @@ switch($step) {
 		$admin_password_check = isset($_POST['admin_password2']) ? wp_unslash( $_POST['admin_password2'] ) : '';
 		$admin_email  = isset( $_POST['admin_email']  ) ?trim( wp_unslash( $_POST['admin_email'] ) ) : '';
 		$public       = isset( $_POST['blog_public']  ) ? (int) $_POST['blog_public'] : 0;
-		// check e-mail address
+
+		// Check e-mail address.
 		$error = false;
 		if ( empty( $user_name ) ) {
 			// TODO: poka-yoke
@@ -218,8 +248,7 @@ switch($step) {
 
 		if ( $error === false ) {
 			$wpdb->show_errors();
-			$result = wp_install($weblog_title, $user_name, $admin_email, $public, '', wp_slash( $admin_password ) );
-			extract( $result, EXTR_SKIP );
+			$result = wp_install( $weblog_title, $user_name, $admin_email, $public, '', wp_slash( $admin_password ), $loaded_language );
 ?>
 
 <h1><?php _e( 'Success!' ); ?></h1>
@@ -234,9 +263,10 @@ switch($step) {
 	<tr>
 		<th><?php _e( 'Password' ); ?></th>
 		<td><?php
-		if ( ! empty( $password ) && empty($admin_password_check) )
-			echo '<code>'. esc_html($password) .'</code><br />';
-		echo "<p>$password_message</p>"; ?>
+		if ( ! empty( $result['password'] ) && empty( $admin_password_check ) ): ?>
+			<code><?php echo esc_html( $result['password'] ) ?></code><br />
+		<?php endif ?>
+			<p><?php echo $result['password_message'] ?></p>
 		</td>
 	</tr>
 </table>
@@ -252,5 +282,6 @@ if ( !wp_is_mobile() ) {
 <script type="text/javascript">var t = document.getElementById('weblog_title'); if (t){ t.focus(); }</script>
 <?php } ?>
 <?php wp_print_scripts( 'user-profile' ); ?>
+<?php wp_print_scripts( 'language-chooser' ); ?>
 </body>
 </html>

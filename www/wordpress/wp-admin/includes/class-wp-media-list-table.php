@@ -9,7 +9,17 @@
  */
 class WP_Media_List_Table extends WP_List_Table {
 
-	function __construct( $args = array() ) {
+	/**
+	 * Constructor.
+	 * 
+	 * @since 3.1.0
+	 * @access public
+	 *
+	 * @see WP_List_Table::__construct() for more information on default arguments.
+	 *
+	 * @param array $args An associative array of arguments.
+	 */	
+	public function __construct( $args = array() ) {
 		$this->detached = isset( $_REQUEST['detached'] ) || isset( $_REQUEST['find_detached'] );
 
 		parent::__construct( array(
@@ -18,12 +28,12 @@ class WP_Media_List_Table extends WP_List_Table {
 		) );
 	}
 
-	function ajax_user_can() {
+	public function ajax_user_can() {
 		return current_user_can('upload_files');
 	}
 
-	function prepare_items() {
-		global $lost, $wpdb, $wp_query, $post_mime_types, $avail_post_mime_types;
+	public function prepare_items() {
+		global $lost, $wp_query, $post_mime_types, $avail_post_mime_types, $mode;
 
 		$q = $_REQUEST;
 
@@ -34,6 +44,8 @@ class WP_Media_List_Table extends WP_List_Table {
 
  		$this->is_trash = isset( $_REQUEST['status'] ) && 'trash' == $_REQUEST['status'];
 
+ 		$mode = empty( $_REQUEST['mode'] ) ? 'list' : $_REQUEST['mode'];
+
 		$this->set_pagination_args( array(
 			'total_items' => $wp_query->found_posts,
 			'total_pages' => $wp_query->max_num_pages,
@@ -41,7 +53,7 @@ class WP_Media_List_Table extends WP_List_Table {
 		) );
 	}
 
-	function get_views() {
+	protected function get_views() {
 		global $wpdb, $post_mime_types, $avail_post_mime_types;
 
 		$type_links = array();
@@ -64,7 +76,7 @@ class WP_Media_List_Table extends WP_List_Table {
 			if ( !empty($_GET['post_mime_type']) && wp_match_mime_types($mime_type, $_GET['post_mime_type']) )
 				$class = ' class="current"';
 			if ( !empty( $num_posts[$mime_type] ) )
-				$type_links[$mime_type] = "<a href='upload.php?post_mime_type=$mime_type'$class>" . sprintf( translate_nooped_plural( $label[2], $num_posts[$mime_type] ), number_format_i18n( $num_posts[$mime_type] )) . '</a>';
+				$type_links[$mime_type] = '<a href="upload.php?post_mime_type=' . urlencode( $mime_type ) . '"' . $class . '>' . sprintf( translate_nooped_plural( $label[2], $num_posts[$mime_type] ), number_format_i18n( $num_posts[$mime_type] )) . '</a>';
 		}
 		$type_links['detached'] = '<a href="upload.php?detached=1"' . ( $this->detached ? ' class="current"' : '' ) . '>' . sprintf( _nx( 'Unattached <span class="count">(%s)</span>', 'Unattached <span class="count">(%s)</span>', $total_orphans, 'detached files' ), number_format_i18n( $total_orphans ) ) . '</a>';
 
@@ -74,7 +86,7 @@ class WP_Media_List_Table extends WP_List_Table {
 		return $type_links;
 	}
 
-	function get_bulk_actions() {
+	protected function get_bulk_actions() {
 		$actions = array();
 		$actions['delete'] = __( 'Delete Permanently' );
 		if ( $this->detached )
@@ -83,7 +95,7 @@ class WP_Media_List_Table extends WP_List_Table {
 		return $actions;
 	}
 
-	function extra_tablenav( $which ) {
+	protected function extra_tablenav( $which ) {
 ?>
 		<div class="alignleft actions">
 <?php
@@ -92,7 +104,7 @@ class WP_Media_List_Table extends WP_List_Table {
 
 			/** This action is documented in wp-admin/includes/class-wp-posts-list-table.php */
 			do_action( 'restrict_manage_posts' );
-			submit_button( __( 'Filter' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
+			submit_button( __( 'Filter' ), 'button', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
 		}
 
 		if ( $this->detached ) {
@@ -104,7 +116,7 @@ class WP_Media_List_Table extends WP_List_Table {
 <?php
 	}
 
-	function current_action() {
+	public function current_action() {
 		if ( isset( $_REQUEST['find_detached'] ) )
 			return 'find_detached';
 
@@ -117,23 +129,61 @@ class WP_Media_List_Table extends WP_List_Table {
 		return parent::current_action();
 	}
 
-	function has_items() {
+	public function has_items() {
 		return have_posts();
 	}
 
-	function no_items() {
+	public function no_items() {
 		_e( 'No media attachments found.' );
 	}
 
-	function get_columns() {
+	protected function pagination( $which ) {
+		global $mode;
+
+		parent::pagination( $which );
+
+		$this->view_switcher( $mode );
+	}
+
+	/**
+	 * Display a view switcher
+	 *
+	 * @since 3.1.0
+	 * @access protected
+	 */
+	protected function view_switcher( $current_mode ) {
+		$modes = array(
+			'list'    => __( 'List View' ),
+			'grid' => __( 'Grid View' )
+		);
+
+?>
+		<input type="hidden" name="mode" value="<?php echo esc_attr( $current_mode ); ?>" />
+		<div class="view-switch">
+<?php
+			foreach ( $modes as $mode => $title ) {
+				$classes = array( 'view-' . $mode );
+				if ( $current_mode == $mode )
+					$classes[] = 'current';
+				printf(
+					"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n",
+					esc_url( add_query_arg( 'mode', $mode ) ),
+					implode( ' ', $classes ),
+					$title
+				);
+			}
+		?>
+		</div>
+<?php
+	}
+
+	public function get_columns() {
 		$posts_columns = array();
 		$posts_columns['cb'] = '<input type="checkbox" />';
 		$posts_columns['icon'] = '';
 		/* translators: column name */
 		$posts_columns['title'] = _x( 'File', 'column name' );
 		$posts_columns['author'] = __( 'Author' );
-
-		$taxonomies = array();
 
 		$taxonomies = get_taxonomies_for_attachments( 'objects' );
 		$taxonomies = wp_filter_object_list( $taxonomies, array( 'show_admin_column' => true ), 'and', 'name' );
@@ -182,7 +232,7 @@ class WP_Media_List_Table extends WP_List_Table {
 		return $posts_columns;
 	}
 
-	function get_sortable_columns() {
+	protected function get_sortable_columns() {
 		return array(
 			'title'    => 'title',
 			'author'   => 'author',
@@ -192,7 +242,7 @@ class WP_Media_List_Table extends WP_List_Table {
 		);
 	}
 
-	function display_rows() {
+	public function display_rows() {
 		global $post;
 
 		add_filter( 'the_title','esc_html' );
@@ -209,7 +259,7 @@ class WP_Media_List_Table extends WP_List_Table {
 			$post_owner = ( get_current_user_id() == $post->post_author ) ? 'self' : 'other';
 			$att_title = _draft_or_post_title();
 ?>
-	<tr id='post-<?php echo $post->ID; ?>' class='<?php echo trim( $alt . ' author-' . $post_owner . ' status-' . $post->post_status ); ?>'>
+	<tr id="post-<?php echo $post->ID; ?>" class="<?php echo trim( $alt . ' author-' . $post_owner . ' status-' . $post->post_status ); ?>">
 <?php
 
 list( $columns, $hidden ) = $this->get_column_info();
@@ -236,7 +286,8 @@ foreach ( $columns as $column_name => $column_display_name ) {
 		break;
 
 	case 'icon':
-		$attributes = 'class="column-icon media-icon"' . $style;
+		list( $mime ) = explode( '/', $post->post_mime_type );
+		$attributes = 'class="column-icon media-icon ' . $mime . '-icon"' . $style;
 ?>
 		<td <?php echo $attributes ?>><?php
 			if ( $thumb = wp_get_attachment_image( $post->ID, array( 80, 60 ), true ) ) {
@@ -329,7 +380,7 @@ foreach ( $columns as $column_name => $column_display_name ) {
 			$parent_type = get_post_type_object( $parent->post_type );
 ?>
 			<td <?php echo $attributes ?>><strong>
-				<?php if ( current_user_can( 'edit_post', $post->post_parent ) && $parent_type && $parent_type->show_ui ) { ?>
+				<?php if ( $parent_type && $parent_type->show_ui && current_user_can( 'edit_post', $post->post_parent ) ) { ?>
 					<a href="<?php echo get_edit_post_link( $post->post_parent ); ?>">
 						<?php echo $title ?></a><?php
 				} else {
@@ -377,7 +428,6 @@ foreach ( $columns as $column_name => $column_display_name ) {
 			$taxonomy = false;
 
 		if ( $taxonomy ) {
-			$taxonomy_object = get_taxonomy( $taxonomy );
 			echo '<td ' . $attributes . '>';
 			if ( $terms = get_the_terms( $post->ID, $taxonomy ) ) {
 				$out = array();
@@ -424,7 +474,7 @@ foreach ( $columns as $column_name => $column_display_name ) {
 <?php endwhile;
 	}
 
-	function _get_row_actions( $post, $att_title ) {
+	private function _get_row_actions( $post, $att_title ) {
 		$actions = array();
 
 		if ( $this->detached ) {

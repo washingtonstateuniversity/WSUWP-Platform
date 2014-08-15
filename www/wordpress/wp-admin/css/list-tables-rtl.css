@@ -263,6 +263,10 @@ table.fixed {
 	width: 10%;
 }
 
+.fixed .column-posts {
+    width: 74px;
+}
+
 .fixed .column-comment .comment-author {
 	display: none;
 }
@@ -618,10 +622,6 @@ classes exist in paginate_links() but not seen in list table output. */
 	margin: 5px 8px 0 16px;
 }
 
-.view-switch img {
-	display: none;
-}
-
 .view-switch a {
 	text-decoration: none;
 }
@@ -634,7 +634,6 @@ classes exist in paginate_links() but not seen in list table output. */
 
 .view-switch > a:before {
 	color: #bbb;
-	content: '\f163';
 	display: inline-block;
 	float: right;
 	font: normal 20px/1 'dashicons';
@@ -645,6 +644,10 @@ classes exist in paginate_links() but not seen in list table output. */
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.view-switch > .view-list:before {
+	content: '\f163';
+}
+
 .view-switch a:hover:before {
 	color: #727272;
 }
@@ -653,9 +656,16 @@ classes exist in paginate_links() but not seen in list table output. */
 	color: #0074a2;
 }
 
-.view-switch > a + a:before {
+.view-switch > a + a {
 	margin-right: 5px;
+}
+
+.view-switch > .view-excerpt:before {
 	content: '\f164';
+}
+
+.view-switch > .view-grid:before {
+	content: '\f180';
 }
 
 .filter {
@@ -1205,6 +1215,141 @@ tr.active + tr.plugin-update-tr .plugin-update .update-message {
 	margin: 2.5em 0 8px;
 }
 
+.plugin-install-php .wp-filter {
+	margin-bottom: 0;
+}
+
+/* Plugin card table view */
+.plugin-group {
+	overflow: hidden; /* clearfix */
+	margin-top: 1.5em;
+}
+
+.plugin-group:first-of-type,
+.plugin-group h3 {
+	margin-top: 0;
+}
+
+.plugin-card {
+	float: right;
+	margin: 0 8px 16px;
+	width: 48.5%;
+	width: -webkit-calc( 50% - 8px );
+	width: calc( 50% - 8px );
+	background-color: #fff;
+	border: 1px solid #dedede;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.plugin-card:nth-child(odd) {
+	clear: both;
+	margin-right: 0;
+}
+
+.plugin-card:nth-child(even) {
+	margin-left: 0;
+}
+
+@media screen and ( min-width: 1600px ) {
+	.plugin-card {
+		width: 30%;
+		width: -webkit-calc( 33.1% - 8px );
+		width: calc( 33.1% - 8px );
+	}
+
+	.plugin-card:nth-child(odd) {
+		clear: none;
+		margin-right: 8px;
+	}
+
+	.plugin-card:nth-child(even) {
+		margin-left: 8px;
+	}
+
+	.plugin-card:nth-child(3n+1) {
+		clear: both;
+		margin-right: 0;
+	}
+
+	.plugin-card:nth-child(3n) {
+		margin-left: 0;
+	}
+}
+
+@media screen and ( max-width: 782px ) {
+	.plugin-card {
+		margin-right: 0;
+		margin-left: 0;
+		width: 100%;
+	}
+}
+
+.plugin-card-top {
+	padding: 20px 20px 10px;
+	min-height: 115px; /* 2 lines for the description + author */
+}
+
+div.action-links,
+.plugin-action-buttons {
+	margin: 0; /* Override existing margins */
+}
+
+.plugin-card h4 {
+	float: right;
+	margin: 0 0 12px;
+	font-size: 18px;
+}
+
+.plugin-card .desc {
+	clear: right;
+}
+
+.plugin-action-buttons {
+	float: left;
+	margin-right: 2em;
+	margin-bottom: 1em;
+	text-align: left;
+}
+
+.plugin-action-buttons li {
+	margin-bottom: 10px;
+}
+
+.plugin-card-bottom {
+	clear: both;
+	padding: 12px 20px;
+	background-color: #fafafa;
+	border-top: 1px solid #dedede;
+	overflow: hidden;
+}
+
+.plugin-card-bottom .star-rating {
+	display: inline;
+}
+
+.plugin-card .column-rating {
+	line-height: 23px;
+}
+
+.plugin-card .column-rating,
+.plugin-card .column-updated {
+	margin-bottom: 4px;
+}
+
+.plugin-card .column-rating,
+.plugin-card .column-downloaded {
+	float: right;
+	clear: right;
+}
+
+.plugin-card .column-updated,
+.plugin-card .column-compatibility {
+	float: left;
+	clear: left;
+}
+
 /* ms */
 /* Background Color for Site Status */
 .wp-list-table .site-deleted {
@@ -1416,7 +1561,7 @@ tr.active + tr.plugin-update-tr .plugin-update .update-message {
 
 	/* Taxonomies */
 	.tags .column-posts {
-		width: 50px;
+		width: 74px;
 	}
 
 	.tags .column-slug {

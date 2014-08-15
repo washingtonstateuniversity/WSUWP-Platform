@@ -30,19 +30,19 @@ input[type=radio]:checked:before {
   border-color: #80a583;
   color: white;
   -webkit-box-shadow: inset 0 1px 0 #cbdacc, 0 1px 0 rgba(0, 0, 0, 0.15);
-  box-shadow: inset 0 1px 0 #cbdacc, 0 1px 0 rgba(0, 0, 0, 0.15); }
+          box-shadow: inset 0 1px 0 #cbdacc, 0 1px 0 rgba(0, 0, 0, 0.15); }
   .wp-core-ui .button-primary:hover, .wp-core-ui .button-primary:focus {
     background: #8faf91;
     border-color: #719a74;
     color: white;
     -webkit-box-shadow: inset 0 1px 0 #bccfbd, 0 1px 0 rgba(0, 0, 0, 0.15);
-    box-shadow: inset 0 1px 0 #bccfbd, 0 1px 0 rgba(0, 0, 0, 0.15); }
+            box-shadow: inset 0 1px 0 #bccfbd, 0 1px 0 rgba(0, 0, 0, 0.15); }
   .wp-core-ui .button-primary:active {
     background: #80a583;
     border-color: #719a74;
     color: white;
     -webkit-box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5);
-    box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5); }
+            box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5); }
   .wp-core-ui .button-primary[disabled], .wp-core-ui .button-primary:disabled, .wp-core-ui .button-primary.button-primary-disabled, .wp-core-ui .button-primary.disabled {
     color: #c7d1c8 !important;
     background: #86a988 !important;
@@ -260,12 +260,12 @@ ul#adminmenu a.wp-has-current-submenu:after, ul#adminmenu > li.current > a.curre
 
 .details.attachment {
   -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 5px #9ebaa0;
-  box-shadow: 0 0 0 1px #fff, 0 0 0 5px #9ebaa0; }
+          box-shadow: 0 0 0 1px #fff, 0 0 0 5px #9ebaa0; }
 
 .attachment.details .check {
   background-color: #9ebaa0;
   -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 2px #9ebaa0;
-  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #9ebaa0; }
+          box-shadow: 0 0 0 1px #fff, 0 0 0 2px #9ebaa0; }
 
 /* Themes */
 .theme-browser .theme.active .theme-name, .theme-browser .theme.add-new-theme:hover:after {
@@ -280,11 +280,21 @@ ul#adminmenu a.wp-has-current-submenu:after, ul#adminmenu > li.current > a.curre
 .theme-section.current, .theme-filter.current {
   border-bottom-color: #738e96; }
 
-body.more-filters-opened .more-filters, body.more-filters-opened .more-filters:before {
+body.more-filters-opened .more-filters {
   color: #fff;
   background-color: #738e96; }
 
-body.more-filters-opened .more-filters:hover, body.more-filters-opened .more-filters:focus, body.more-filters-opened .more-filters:hover:before, body.more-filters-opened .more-filters:focus:before {
+body.more-filters-opened .more-filters:before {
+  color: #fff; }
+
+body.more-filters-opened .more-filters:hover, body.more-filters-opened .more-filters:focus {
+  background-color: #9ebaa0;
+  color: #fff; }
+
+body.more-filters-opened .more-filters:hover:before, body.more-filters-opened .more-filters:focus:before {
+  color: #fff; }
+
+.theme-install-overlay .close-full-overlay:hover, .theme-install-overlay .close-full-overlay:focus, .theme-install-overlay .previous-theme:hover, .theme-install-overlay .previous-theme:focus, .theme-install-overlay .next-theme:hover, .theme-install-overlay .next-theme:focus {
   background-color: #9ebaa0;
   color: #fff; }
 
@@ -301,12 +311,16 @@ body.more-filters-opened .more-filters:hover, body.more-filters-opened .more-fil
   background-color: #9ebaa0;
   color: #fff; }
 
+.customize-controls-close:focus, .customize-controls-close:hover, .control-panel-back:focus, .control-panel-back:hover {
+  background-color: #9ebaa0;
+  color: #fff; }
+
 /* jQuery UI Slider */
 .wp-slider .ui-slider-handle, .wp-slider .ui-slider-handle.ui-state-hover, .wp-slider .ui-slider-handle.focus {
   background: #9ebaa0;
   border-color: #80a583;
   -webkit-box-shadow: inset 0 1px 0 #cbdacc, 0 1px 0 rgba(0, 0, 0, 0.15);
-  box-shadow: inset 0 1px 0 #cbdacc, 0 1px 0 rgba(0, 0, 0, 0.15); }
+          box-shadow: inset 0 1px 0 #cbdacc, 0 1px 0 rgba(0, 0, 0, 0.15); }
 
 /* Thickbox: Plugin information */
 #sidemenu a.current {
