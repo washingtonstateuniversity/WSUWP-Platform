@@ -135,7 +135,7 @@ if( $current_blog ) {
 		$current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * from $wpdb->site WHERE id = %d LIMIT 0,1", $site_id ) );
 
 		// Add blog ID after the fact because it is required by both scenarios
-		$current_site->blog_id = $blog_id;
+		$current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s LIMIT 0,1", $current_site->domain, $current_site->path ) );
 
 		wp_cache_add( $site_id, $current_site, 'wsuwp:network', 60 * 60 * 12 );
 	}
