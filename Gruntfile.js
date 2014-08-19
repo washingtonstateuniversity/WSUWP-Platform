@@ -50,6 +50,12 @@ module.exports = function(grunt) {
 						src: ['**', '!README.md'],
 						dest: 'build/wp-content/plugins/',
 						cwd: 'build-plugins/private'
+					},
+					{
+						expand: true,
+						src: ['**', '!README.md'],
+						dest: 'build/wp-content/plugins/',
+						cwd: 'build-plugins/individual'
 					}
 				]
 			},
@@ -66,6 +72,12 @@ module.exports = function(grunt) {
 						src: ['**', '!README.md'],
 						dest: 'build/wp-content/themes/',
 						cwd: 'build-themes/private'
+					},
+					{
+						expand: true,
+						src: ['**', '!README.md'],
+						dest: 'build/wp-content/themes/',
+						cwd: 'build-themes/individual'
 					}
 				]
 			}
