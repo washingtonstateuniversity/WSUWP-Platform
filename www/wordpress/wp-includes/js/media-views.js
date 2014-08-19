@@ -5771,6 +5771,10 @@
 
 			if ( ! this.options.sidebar || 'errors' === this.options.sidebar ) {
 				this.$el.addClass( 'hide-sidebar' );
+
+				if ( 'errors' === this.options.sidebar ) {
+					this.$el.addClass( 'sidebar-for-errors' );
+				}
 			}
 
 			this.collection.on( 'add remove reset', this.updateContent, this );
@@ -5906,7 +5910,7 @@
 						}
 
 						if ( changed.length ) {
-							$.when( changed ).then( function() {
+							$.when.apply( null, changed ).then( function() {
 								library._requery( true );
 							} );
 						}
@@ -5975,7 +5979,7 @@
 			this.uploader = new media.view.UploaderInline({
 				controller: this.controller,
 				status:     false,
-				message:    l10n.noItemsFound,
+				message:    this.controller.isModeActive( 'grid' ) ? '' : l10n.noItemsFound,
 				canClose:   this.controller.isModeActive( 'grid' )
 			});
 
@@ -6007,15 +6011,18 @@
 
 			this.views.add( this.attachments );
 
-			this.attachmentsNoResults = new media.View({
-				controller: this.controller,
-				tagName: 'p'
-			});
 
-			this.attachmentsNoResults.$el.addClass( 'hidden no-media' );
-			this.attachmentsNoResults.$el.html( l10n.noMedia );
+			if ( this.controller.isModeActive( 'grid' ) ) {
+				this.attachmentsNoResults = new media.View({
+					controller: this.controller,
+					tagName: 'p'
+				});
 
-			this.views.add( this.attachmentsNoResults );
+				this.attachmentsNoResults.$el.addClass( 'hidden no-media' );
+				this.attachmentsNoResults.$el.html( l10n.noMedia );
+
+				this.views.add( this.attachmentsNoResults );
+			}
 		},
 
 		createSidebar: function() {

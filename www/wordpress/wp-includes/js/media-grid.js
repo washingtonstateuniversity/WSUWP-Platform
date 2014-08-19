@@ -67,7 +67,7 @@
 
 			this.$window = $( window );
 			this.$adminBar = $( '#wpadminbar' );
-			this.$window.on( 'scroll', _.debounce( _.bind( this.fixPosition, this ), 15 ) );
+			this.$window.on( 'scroll resize', _.debounce( _.bind( this.fixPosition, this ), 15 ) );
 			$( document ).on( 'click', '.add-new-h2', _.bind( this.addNewClickHandler, this ) );
 
 			// Ensure core and media grid view UI is enabled.
@@ -226,7 +226,7 @@
 		},
 
 		sidebarVisibility: function() {
-			this.browserView.$( '.media-sidebar' ).toggle( this.errors.length );
+			this.browserView.$( '.media-sidebar' ).toggle( !! this.errors.length );
 		},
 
 		bindDeferred: function() {
@@ -306,10 +306,20 @@
 
 		// Show the modal with a specific item
 		showItem: function( query ) {
-			var library = media.frame.state().get('library');
+			var library = media.frame.state().get('library'), item;
 
 			// Trigger the media frame to open the correct item
-			media.frame.trigger( 'edit:attachment', library.findWhere( { id: parseInt( query, 10 ) } ) );
+			item = library.findWhere( { id: parseInt( query, 10 ) } );
+			if ( item ) {
+				media.frame.trigger( 'edit:attachment', item );
+			} else {
+				item = media.attachment( query );
+				media.frame.listenTo( item, 'change', function( model ) {
+					media.frame.stopListening( item );
+					media.frame.trigger( 'edit:attachment', model );
+				} );
+				item.fetch();
+			}
 		}
 	});
 
@@ -373,9 +383,6 @@
 
 			if ( this.options.model ) {
 				this.model = this.options.model;
-			} else {
-				// this is a hack
-				this.model = this.library.at( 0 );
 			}
 
 			this.bindHandlers();

@@ -337,7 +337,8 @@ function install_plugin_information() {
 		'a' => array( 'href' => array(), 'title' => array(), 'target' => array() ),
 		'abbr' => array( 'title' => array() ), 'acronym' => array( 'title' => array() ),
 		'code' => array(), 'pre' => array(), 'em' => array(), 'strong' => array(),
-		'div' => array(), 'p' => array(), 'ul' => array(), 'ol' => array(), 'li' => array(),
+		'div' => array( 'class' => array() ), 'span' => array( 'class' => array() ),
+		'p' => array(), 'ul' => array(), 'ol' => array(), 'li' => array(),
 		'h1' => array(), 'h2' => array(), 'h3' => array(), 'h4' => array(), 'h5' => array(), 'h6' => array(),
 		'img' => array( 'src' => array(), 'class' => array(), 'alt' => array() )
 	);
@@ -372,7 +373,7 @@ function install_plugin_information() {
 	}
 
 	iframe_header( __( 'Plugin Install' ) );
-	
+
 	$_with_banner = '';
 
 	if ( ! empty( $api->banners ) && ( ! empty( $api->banners['low'] ) || ! empty( $api->banners['high'] ) ) ) {
@@ -440,7 +441,7 @@ function install_plugin_information() {
 		<?php } if ( ! empty( $api->homepage ) ) { ?>
 			<li><a target="_blank" href="<?php echo esc_url( $api->homepage ); ?>"><?php _e( 'Plugin Homepage &#187;' ); ?></a></li>
 		<?php } if ( ! empty( $api->donate_link ) && empty( $api->contributors ) ) { ?>
-			<li><a target="_blank" href="<?php echo $api->donate_link ?>"><?php _e( 'Donate to this plugin &#187;' ); ?></a></li>
+			<li><a target="_blank" href="<?php echo esc_url( $api->donate_link ); ?>"><?php _e( 'Donate to this plugin &#187;' ); ?></a></li>
 		<?php } ?>
 		</ul>
 		<?php if ( ! empty( $api->rating ) ) { ?>
@@ -457,12 +458,12 @@ function install_plugin_information() {
 				<div class="counter-container">
 					<a href="<?php echo esc_url( self_admin_url( 'plugin-install.php?tab=plugin-information&amp;plugin=' . $api->slug . '&amp;section=reviews' ) ); ?>"
 					   title="<?php echo esc_attr( sprintf( _n( 'Click to see reviews that provided a rating of %d star', 'Click to see reviews that provided a rating of %d stars', $key ), $key ) ); ?>">
-						<span class="counter-label"><?php echo $key; ?> stars</span>
+						<span class="counter-label"><?php printf( _n( '%d star', '%d stars', $key ), $key ); ?></span>
 						<span class="counter-back">
 							<span class="counter-bar" style="width: <?php echo 92 * $_rating; ?>px;"></span>
 						</span>
 					</a>
-					<span class="counter-count"><?php echo $ratecount; ?></span>
+					<span class="counter-count"><?php echo number_format_i18n( $ratecount ); ?></span>
 				</div>
 				<?php
 			}

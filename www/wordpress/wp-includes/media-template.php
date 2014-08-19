@@ -185,9 +185,9 @@ function wp_print_media_templates() {
 
 		<?php else : ?>
 			<div class="upload-ui">
-				<h3 class="upload-instructions drop-instructions"><?php _e( 'Drop files here' ); ?></h3>
+				<h3 class="upload-instructions drop-instructions"><?php _e( 'Drop files anywhere to upload' ); ?></h3>
 				<p class="upload-instructions drop-instructions"><?php _ex( 'or', 'Uploader: Drop files here - or - Select Files' ); ?></p>
-				<a href="#" class="browser button"><?php _e( 'Select Files' ); ?></a>
+				<a href="#" class="browser button button-hero"><?php _e( 'Select Files' ); ?></a>
 			</div>
 
 			<div class="upload-inline-status"></div>
@@ -276,7 +276,7 @@ function wp_print_media_templates() {
 			<div class="thumbnail thumbnail-{{ data.type }}">
 				<# if ( data.uploading ) { #>
 					<div class="media-progress-bar"><div></div></div>
-				<# } else if ( 'image' === data.type ) { #>
+				<# } else if ( 'image' === data.type && data.sizes && data.sizes.full ) { #>
 					<img class="details-image" src="{{ data.sizes.full.url }}" draggable="false" />
 				<# } else if ( -1 === jQuery.inArray( data.type, [ 'audio', 'video' ] ) ) { #>
 					<img class="details-image" src="{{ data.icon }}" class="icon" draggable="false" />
@@ -310,7 +310,7 @@ function wp_print_media_templates() {
 				<# } #>
 
 				<div class="attachment-actions">
-					<# if ( 'image' === data.type && ! data.uploading ) { #>
+					<# if ( 'image' === data.type && ! data.uploading && data.sizes ) { #>
 						<a class="button edit-attachment" href="#"><?php _e( 'Edit Image' ); ?></a>
 					<# } #>
 				</div>
@@ -395,7 +395,11 @@ function wp_print_media_templates() {
 				<# if ( data.uploadedTo ) { #>
 					<label class="setting">
 						<span class="name"><?php _e( 'Uploaded To' ); ?></span>
-						<span class="value"><a href="{{ data.uploadedToLink }}">{{ data.uploadedToTitle }}</a></span>
+						<# if ( data.uploadedToLink ) { #>
+							<span class="value"><a href="{{ data.uploadedToLink }}">{{ data.uploadedToTitle }}</a></span>
+						<# } else { #>
+							<span class="value">{{ data.uploadedToTitle }}</span>
+						<# } #>
 					</label>
 				<# } #>
 				<div class="attachment-compat"></div>
@@ -425,7 +429,7 @@ function wp_print_media_templates() {
 			<div class="thumbnail">
 				<# if ( data.uploading ) { #>
 					<div class="media-progress-bar"><div>
-				<# } else if ( 'image' === data.type ) { #>
+				<# } else if ( 'image' === data.type && data.sizes ) { #>
 					<div class="centered">
 						<img src="{{ data.size.url }}" draggable="false" alt="" />
 					</div>
@@ -481,7 +485,7 @@ function wp_print_media_templates() {
 			<div class="thumbnail thumbnail-{{ data.type }}">
 				<# if ( data.uploading ) { #>
 					<div class="media-progress-bar"><div></div></div>
-				<# } else if ( 'image' === data.type ) { #>
+				<# } else if ( 'image' === data.type && data.sizes ) { #>
 					<img src="{{ data.size.url }}" draggable="false" />
 				<# } else { #>
 					<img src="{{ data.icon }}" class="icon" draggable="false" />
@@ -497,7 +501,7 @@ function wp_print_media_templates() {
 						<div class="dimensions">{{ data.width }} &times; {{ data.height }}</div>
 					<# } #>
 
-					<# if ( data.can.save ) { #>
+					<# if ( data.can.save && data.sizes ) { #>
 						<a class="edit-attachment" href="{{ data.editLink }}&amp;image-editor" target="_blank"><?php _e( 'Edit Image' ); ?></a>
 						<a class="refresh-attachment" href="#"><?php _e( 'Refresh' ); ?></a>
 					<# } #>
@@ -567,8 +571,12 @@ function wp_print_media_templates() {
 			</label>
 		<# if ( data.uploadedTo ) { #>
 			<label class="setting">
-				<span class="name"><?php _e('Uploaded To'); ?></span>
-				<span class="value"><a href="{{ data.uploadedToLink }}">{{ data.uploadedToTitle }}</a></span>
+				<span class="name"><?php _e( 'Uploaded To' ); ?></span>
+				<# if ( data.uploadedToLink ) { #>
+					<span class="value"><a href="{{ data.uploadedToLink }}">{{ data.uploadedToTitle }}</a></span>
+				<# } else { #>
+					<span class="value">{{ data.uploadedToTitle }}</span>
+				<# } #>
 			</label>
 		<# } #>
 	</script>
