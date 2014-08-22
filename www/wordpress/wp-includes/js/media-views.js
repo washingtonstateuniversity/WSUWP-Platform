@@ -595,6 +595,7 @@
 			filterable:         false,
 			sortable:           true,
 
+			autoSelect:         true,
 			describe:           false,
 			// Uses a user setting to override the content mode.
 			contentUserSetting: true,
@@ -751,10 +752,11 @@
 			if ( 'upload' === content.mode() ) {
 				this.frame.content.mode('browse');
 			}
-			this.get('selection').add( attachment );
 
-			// Set focus back to where it goes when an attachment is selected.
-			$( '.attachments-browser .attachments .attachment' ).first().focus();
+			if ( this.get( 'autoSelect' ) ) {
+				this.get('selection').add( attachment );
+				this.frame.trigger( 'library:selection:add' );
+			}
 		},
 
 		/**
@@ -3257,7 +3259,7 @@
 				}
 			}
 
-			$el.find( '.media-modal-close' ).focus();
+			this.$( '.media-modal-close' ).focus();
 
 			return this.propagate('open');
 		},
@@ -4665,9 +4667,14 @@
 		className: 'attachment',
 		template:  media.template('attachment'),
 
-		attributes: {
-			tabIndex: 0,
-			role: 'checkbox'
+		attributes: function() {
+			return {
+				'tabIndex':     0,
+				'role':         'checkbox',
+				'aria-label':   this.model.get( 'title' ),
+				'aria-checked': false,
+				'data-id':      this.model.get( 'id' )
+			};
 		},
 
 		events: {
@@ -4689,11 +4696,6 @@
 				options = _.defaults( this.options, {
 					rerenderOnModelChange: true
 				} );
-			this.$el.attr( {
-				'aria-label'  : this.model.get( 'title' ),
-				'aria-checked': false,
-				'data-id'     : this.model.get( 'id' )
-			} );
 
 			if ( options.rerenderOnModelChange ) {
 				this.model.on( 'change', this.render, this );
@@ -4810,7 +4812,7 @@
 
 			// Catch arrow events
 			if ( 37 === event.keyCode || 38 === event.keyCode || 39 === event.keyCode || 40 === event.keyCode ) {
-				this.arrowEvent(event);
+				this.controller.trigger( 'attachment:keydown:arrow', event );
 				return;
 			}
 
@@ -4851,54 +4853,6 @@
 			event.stopPropagation();
 		},
 		/**
-		 * @param {Object} event
-		 */
-		arrowEvent: function( event ) {
-			var attachment = $('.attachments-browser .attachment'),
-				attachmentsWidth = $('.attachments-browser .attachments').width(),
-				thumbnailWidth = attachment.first().outerWidth(),
-				thumbnailsPerRow = Math.round( attachmentsWidth / thumbnailWidth ),
-				totalThumnails = attachment.length,
-				totalRows = Math.ceil(totalThumnails/thumbnailsPerRow),
-				thisIndex = attachment.filter( ':focus' ).index(),
-				thisIndexAdjusted = thisIndex + 1,
-				thisRow = thisIndexAdjusted <= thumbnailsPerRow ? 1 : Math.ceil(thisIndexAdjusted/thumbnailsPerRow);
-
-				// Left arrow
-				if ( 37 === event.keyCode ) {
-					if ( 0 === thisIndex ) {
-						return;
-					}
-					attachment.eq( thisIndex - 1 ).focus();
-				}
-
-				// Up arrow
-				if ( 38 === event.keyCode ) {
-					if ( 1 === thisRow ) {
-						return;
-					}
-					attachment.eq( thisIndex - thumbnailsPerRow ).focus();
-				}
-
-				// Right arrow
-				if ( 39 === event.keyCode ) {
-					if ( totalThumnails === thisIndex ) {
-						return;
-					}
-					attachment.eq( thisIndex + 1 ).focus();
-				}
-
-				// Down arrow
-				if ( 40 === event.keyCode ) {
-					if ( totalRows === thisRow ) {
-						return;
-					}
-					attachment.eq( thisIndex + thumbnailsPerRow ).focus();
-				}
-
-				return false;
-		},
-		/**
 		 * @param {Object} options
 		 */
 		toggleSelection: function( options ) {
@@ -4934,12 +4888,6 @@
 
 				selection.add( models );
 				selection.single( model );
-
-				// When selecting attachments, focus should be transferred to the right details panel
-				if ( ! isTouchDevice ) {
-					$('.attachment-details input').first().focus();
-				}
-
 				return;
 
 			// If the `method` is set to `toggle`, just flip the selection
@@ -4947,12 +4895,6 @@
 			} else if ( 'toggle' === method ) {
 				selection[ this.selected() ? 'remove' : 'add' ]( model );
 				selection.single( model );
-
-				if ( ! isTouchDevice && this.selected() ) {
-					// When selecting an attachment, focus should be transferred to the right details panel
-					$('.attachment-details input').first().focus();
-				}
-
 				return;
 			} else if ( 'add' === method ) {
 				selection.add( model );
@@ -5009,13 +4951,14 @@
 				return;
 			}
 
-			this.$el.addClass( 'selected' ).attr( 'aria-checked', true )
-					.find( '.check' ).attr( 'tabindex', '0' );
-
-			// When selecting an attachment, focus should be transferred to the right details panel
-			if ( ! isTouchDevice ) {
-				$('.attachment-details input').first().focus();
+			// Bail if the model is already selected.
+			if ( this.$el.hasClass( 'selected' ) ) {
+				return;
 			}
+
+			// Add 'selected' class to model, set aria-checked to true and make the checkbox tabable.
+			this.$el.addClass( 'selected' ).attr( 'aria-checked', true )
+				.find( '.check' ).attr( 'tabindex', '0' );
 		},
 		/**
 		 * @param {Backbone.Model} model
@@ -5031,7 +4974,7 @@
 				return;
 			}
 			this.$el.removeClass( 'selected' ).attr( 'aria-checked', false )
-					.find( '.check' ).attr( 'tabindex', '-1' );
+				.find( '.check' ).attr( 'tabindex', '-1' );
 		},
 		/**
 		 * @param {Backbone.Model} model
@@ -5309,6 +5252,9 @@
 
 			this.collection.on( 'reset', this.render, this );
 
+			this.listenTo( this.controller, 'library:selection:add',    this.attachmentFocus );
+			this.listenTo( this.controller, 'attachment:keydown:arrow', this.arrowEvent );
+
 			// Throttle the scroll handler and bind this.
 			this.scroll = _.chain( this.scroll ).bind( this ).throttle( this.options.refreshSensitivity ).value();
 
@@ -5329,6 +5275,49 @@
 			_.defer( this.setColumns, this );
 		},
 
+		attachmentFocus: function() {
+			this.$( 'li:first' ).focus();
+		},
+
+		arrowEvent: function( event ) {
+			var attachments = this.$el.children( 'li' ),
+				perRow = Math.round( this.$el.width() / attachments.first().outerWidth() ),
+				index = attachments.filter( ':focus' ).index(),
+				row = ( index + 1 ) <= perRow ? 1 : Math.ceil( ( index + 1 ) / perRow );
+
+			// Left arrow
+			if ( 37 === event.keyCode ) {
+				if ( 0 === index ) {
+					return;
+				}
+				attachments.eq( index - 1 ).focus();
+			}
+
+			// Up arrow
+			if ( 38 === event.keyCode ) {
+				if ( 1 === row ) {
+					return;
+				}
+				attachments.eq( index - perRow ).focus();
+			}
+
+			// Right arrow
+			if ( 39 === event.keyCode ) {
+				if ( attachments.length === index ) {
+					return;
+				}
+				attachments.eq( index + 1 ).focus();
+			}
+
+			// Down arrow
+			if ( 40 === event.keyCode ) {
+				if ( Math.ceil( attachments.length / perRow ) === row ) {
+					return;
+				}
+				attachments.eq( index + perRow ).focus();
+			}
+		},
+
 		dispose: function() {
 			this.collection.props.off( null, null, this );
 			$( window ).off( 'resize.media-modal-columns' );
@@ -5344,7 +5333,7 @@
 				width = this.$el.width();
 
 			if ( width ) {
-				this.columns = Math.round( width / this.options.idealColumnWidth ) || 1;
+				this.columns = Math.min( Math.round( width / this.options.idealColumnWidth ), 12 ) || 1;
 
 				if ( ! prev || prev !== this.columns ) {
 					this.$el.attr( 'data-columns', this.columns );
@@ -5719,7 +5708,7 @@
 			};
 
 			if ( media.view.settings.mediaTrash &&
-				this.controller.activeModes.where( { id: 'grid' } ).length ) {
+				this.controller.isModeActive( 'grid' ) ) {
 
 				filters.trash = {
 					text:  l10n.trash,
@@ -5835,7 +5824,7 @@
 			// Feels odd to bring the global media library switcher into the Attachment
 			// browser view. Is this a use case for doAction( 'add:toolbar-items:attachments-browser', this.toolbar );
 			// which the controller can tap into and add this view?
-			if ( this.controller.activeModes.where( { id: 'grid' } ).length ) {
+			if ( this.controller.isModeActive( 'grid' ) ) {
 				LibraryViewSwitcher = media.View.extend({
 					className: 'view-switch media-grid-view-switch',
 					template: media.template( 'media-library-view-switcher')
@@ -5875,7 +5864,7 @@
 					controller: this.controller,
 					priority: -60,
 					click: function() {
-						var model, changed = [],
+						var model, changed = [], self = this,
 							selection = this.controller.state().get( 'selection' ),
 							library = this.controller.state().get( 'library' );
 
@@ -5912,7 +5901,10 @@
 						if ( changed.length ) {
 							$.when.apply( null, changed ).then( function() {
 								library._requery( true );
+								self.controller.trigger( 'selection:action:done' );
 							} );
+						} else {
+							this.controller.trigger( 'selection:action:done' );
 						}
 					}
 				}).render() );
@@ -6496,10 +6488,18 @@
 			this.options = _.defaults( this.options, {
 				rerenderOnModelChange: false
 			});
+
+			this.on( 'ready', this.initialFocus );
 			/**
 			 * call 'initialize' directly on the parent class
 			 */
 			media.view.Attachment.prototype.initialize.apply( this, arguments );
+		},
+
+		initialFocus: function() {
+			if ( ! isTouchDevice ) {
+				this.$( ':input' ).eq( 0 ).focus();
+			}
 		},
 		/**
 		 * @param {Object} event
@@ -6575,12 +6575,16 @@
 		 * @param {Object} event
 		 */
 		toggleSelectionHandler: function( event ) {
-			if ( 'keydown' === event.type && 9 === event.keyCode && event.shiftKey && event.target === $( ':tabbable', this.$el ).filter( ':first' )[0] ) {
-				$('.attachments-browser .details').focus();
+			if ( 'keydown' === event.type && 9 === event.keyCode && event.shiftKey && event.target === this.$( ':tabbable' ).get( 0 ) ) {
+				this.$( ':tabbable' ).eq( 0 ).blur();
 				return false;
 			}
-		}
 
+			if ( 37 === event.keyCode || 38 === event.keyCode || 39 === event.keyCode || 40 === event.keyCode ) {
+				this.controller.trigger( 'attachment:keydown:arrow', event );
+				return;
+			}
+		}
 	});
 
 	/**
@@ -7158,7 +7162,12 @@
 		},
 
 		loadEditor: function() {
-			this.editor.open( this.model.get('id'), this.model.get('nonces').edit, this );
+			var dfd = this.editor.open( this.model.get('id'), this.model.get('nonces').edit, this );
+			dfd.done( _.bind( this.focus, this ) );
+		},
+
+		focus: function() {
+			this.$( '.imgedit-submit .button' ).eq( 0 ).focus();
 		},
 
 		back: function() {

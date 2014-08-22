@@ -135,7 +135,8 @@
 					content:            'browse',
 					toolbar:            'select',
 					contentUserSetting: false,
-					filterable:         'all'
+					filterable:         'all',
+					autoSelect:         false
 				})
 			]);
 		},
@@ -365,8 +366,9 @@
 		regions:   [ 'title', 'content' ],
 
 		events: {
-			'click .left':              'previousMediaItem',
-			'click .right':             'nextMediaItem'
+			'click .left':  'previousMediaItem',
+			'click .right': 'nextMediaItem',
+			'keydown':      'keyEvent'
 		},
 
 		initialize: function() {
@@ -390,9 +392,7 @@
 			this.createModal();
 
 			this.title.mode( 'default' );
-
-			this.options.hasPrevious = this.hasPrevious();
-			this.options.hasNext = this.hasNext();
+			this.toggleNav();
 		},
 
 		bindHandlers: function() {
@@ -500,6 +500,11 @@
 			view.on( 'ready', view.loadEditor );
 		},
 
+		toggleNav: function() {
+			this.$('.left').toggleClass( 'disabled', ! this.hasPrevious() );
+			this.$('.right').toggleClass( 'disabled', ! this.hasNext() );
+		},
+
 		/**
 		 * Rerender the view.
 		 */
@@ -510,8 +515,8 @@
 			} else {
 				this.content.render();
 			}
-			this.$('.left').toggleClass( 'disabled', ! this.hasPrevious() );
-			this.$('.right').toggleClass( 'disabled', ! this.hasNext() );
+
+			this.toggleNav();
 		},
 
 		/**
@@ -519,11 +524,12 @@
 		 */
 		previousMediaItem: function() {
 			if ( ! this.hasPrevious() ) {
+				this.$( '.left' ).blur();
 				return;
 			}
 			this.model = this.library.at( this.getCurrentIndex() - 1 );
-
 			this.rerender();
+			this.$( '.left' ).focus();
 		},
 
 		/**
@@ -531,11 +537,12 @@
 		 */
 		nextMediaItem: function() {
 			if ( ! this.hasNext() ) {
+				this.$( '.right' ).blur();
 				return;
 			}
 			this.model = this.library.at( this.getCurrentIndex() + 1 );
-
 			this.rerender();
+			this.$( '.right' ).focus();
 		},
 
 		getCurrentIndex: function() {
@@ -553,16 +560,8 @@
 		 * Respond to the keyboard events: right arrow, left arrow, escape.
 		 */
 		keyEvent: function( event ) {
-			var $target = $( event.target );
-
-			//Don't go left/right if we are in a textarea or input field
-			if ( $target.is( 'input' ) || $target.is( 'textarea' ) ) {
-				return event;
-			}
-
-			// Escape key, while in the Edit Image mode
-			if ( 27 === event.keyCode ) {
-				this.modal.close();
+			if ( 'INPUT' === event.target.tagName && ! ( event.target.readOnly || event.target.disabled ) ) {
+				return;
 			}
 
 			// The right arrow key
@@ -584,12 +583,17 @@
 		initialize: function() {
 			media.view.Button.prototype.initialize.apply( this, arguments );
 			this.listenTo( this.controller, 'select:activate select:deactivate', this.toggleBulkEditHandler );
+			this.listenTo( this.controller, 'selection:action:done', this.back );
+		},
+
+		back: function () {
+			this.controller.deactivateMode( 'select' ).activateMode( 'edit' );
 		},
 
 		click: function() {
 			media.view.Button.prototype.click.apply( this, arguments );
 			if ( this.controller.isModeActive( 'select' ) ) {
-				this.controller.deactivateMode( 'select' ).activateMode( 'edit' );
+				this.back();
 			} else {
 				this.controller.deactivateMode( 'edit' ).activateMode( 'select' );
 			}

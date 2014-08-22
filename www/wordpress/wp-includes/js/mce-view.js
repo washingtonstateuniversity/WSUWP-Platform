@@ -156,8 +156,20 @@ window.wp = window.wp || {};
 							'<html>' +
 								'<head>' +
 									'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' +
+									'<style>' +
+										'html {' +
+											'background: transparent;' +
+											'padding: 0;' +
+											'margin: 0;' +
+										'}' +
+										'body#wpview-iframe-sandbox {' +
+											'background: transparent;' +
+											'padding: 1px 0;' +
+											'margin: -1px 0 0;' +
+										'}' +
+									'</style>' +
 								'</head>' +
-								'<body data-context="iframe-sandbox" style="padding: 0; margin: 0;" class="' + editor.getBody().className + '">' +
+								'<body id="wpview-iframe-sandbox">' +
 									html +
 								'</body>' +
 							'</html>'
@@ -549,6 +561,8 @@ window.wp = window.wp || {};
 			setNodes: function () {
 				if ( this.parsed ) {
 					this.setIframes( this.parsed );
+				} else if ( this.parsed === false ) {
+					this.setContent( '<p>' + this.original + '</p>', 'replace' );
 				}
 			},
 
@@ -561,6 +575,9 @@ window.wp = window.wp || {};
 						type: this.shortcode.tag,
 						shortcode: this.shortcode.string()
 					}
+				} )
+				.always( function() {
+					self.parsed = false;
 				} )
 				.done( function( response ) {
 					if ( response ) {
