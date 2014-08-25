@@ -1776,12 +1776,6 @@
 			this.activeModes.add( [ { id: mode } ] );
 			// Add a CSS class to the frame so elements can be styled for the mode.
 			this.$el.addClass( 'mode-' + mode );
-			/**
-			 * Frame mode activation event.
-			 *
-			 * @event this#{mode}:activate
-			 */
-			this.trigger( mode + ':activate' );
 
 			return this;
 		},
@@ -2504,9 +2498,7 @@
 
 						// Keep focus inside media modal
 						// after canceling a gallery
-						new media.view.FocusManager({
-							el: this.el
-						}).focus();
+						this.controller.modal.focusManager.focus();
 					}
 				},
 				separateCancel: new media.View({
@@ -2695,9 +2687,7 @@
 
 					// Keep focus inside media modal
 					// after jumping to gallery view
-					new media.view.FocusManager({
-						el: this.el
-					}).focus();
+					this.controller.modal.focusManager.focus();
 				}
 			});
 		},
@@ -2727,9 +2717,7 @@
 
 					// Keep focus inside media modal
 					// after jumping to playlist view
-					new media.view.FocusManager({
-						el: this.el
-					}).focus();
+					this.controller.modal.focusManager.focus();
 				}
 			});
 		},
@@ -2759,9 +2747,7 @@
 
 					// Keep focus inside media modal
 					// after jumping to video playlist view
-					new media.view.FocusManager({
-						el: this.el
-					}).focus();
+					this.controller.modal.focusManager.focus();
 				}
 			});
 		},
@@ -3259,7 +3245,7 @@
 				}
 			}
 
-			this.$( '.media-modal-close' ).focus();
+			this.$el.focus();
 
 			return this.propagate('open');
 		},
@@ -3357,42 +3343,37 @@
 	 * @augments Backbone.View
 	 */
 	media.view.FocusManager = media.View.extend({
+
 		events: {
-			keydown: 'recordTab',
-			focusin: 'updateIndex'
+			'keydown': 'constrainTabbing'
 		},
 
-		focus: function() {
-			// Reset focus on first left menu item
-			$('.media-menu-item').first().focus();
+		focus: function() { // Reset focus on first left menu item
+			this.$('.media-menu-item').first().focus();
 		},
 		/**
 		 * @param {Object} event
 		 */
-		recordTab: function( event ) {
+		constrainTabbing: function( event ) {
+			var tabbables;
+
 			// Look for the tab key.
 			if ( 9 !== event.keyCode ) {
 				return;
 			}
 
+			tabbables = this.$( ':tabbable' );
+
 			// Keep tab focus within media modal while it's open
-			if ( event.target === this.tabbableLast[0] && !event.shiftKey ) {
-				this.tabbableFirst.focus();
+			if ( tabbables.last()[0] === event.target && ! event.shiftKey ) {
+				tabbables.first().focus();
 				return false;
-			} else if ( event.target === this.tabbableFirst[0] && event.shiftKey ) {
-				this.tabbableLast.focus();
+			} else if ( tabbables.first()[0] === event.target && event.shiftKey ) {
+				tabbables.last().focus();
 				return false;
 			}
-		},
-		/**
-		 * @param {Object} event
-		 */
-		updateIndex: function() {
-			// Resets tabbable elements
-			this.tabbables = $( ':tabbable', this.$el );
-			this.tabbableFirst = this.tabbables.filter( ':first' );
-			this.tabbableLast = this.tabbables.filter( ':last' );
 		}
+
 	});
 
 	/**
@@ -4942,7 +4923,8 @@
 		 * @param {Backbone.Collection} collection
 		 */
 		select: function( model, collection ) {
-			var selection = this.options.selection;
+			var selection = this.options.selection,
+				controller = this.controller;
 
 			// Check if a selection exists and if it's the collection provided.
 			// If they're not the same collection, bail; we're in another
@@ -4956,9 +4938,12 @@
 				return;
 			}
 
-			// Add 'selected' class to model, set aria-checked to true and make the checkbox tabable.
-			this.$el.addClass( 'selected' ).attr( 'aria-checked', true )
-				.find( '.check' ).attr( 'tabindex', '0' );
+			// Add 'selected' class to model, set aria-checked to true.
+			this.$el.addClass( 'selected' ).attr( 'aria-checked', true );
+			//  Make the checkbox tabable, except in media grid (bulk select mode).
+			if ( ! ( controller.isModeActive( 'grid' ) && controller.isModeActive( 'select' ) ) ) {
+				this.$( '.check' ).attr( 'tabindex', '0' );
+			}
 		},
 		/**
 		 * @param {Backbone.Model} model
@@ -5253,7 +5238,6 @@
 			this.collection.on( 'reset', this.render, this );
 
 			this.listenTo( this.controller, 'library:selection:add',    this.attachmentFocus );
-			this.listenTo( this.controller, 'attachment:keydown:arrow', this.arrowEvent );
 
 			// Throttle the scroll handler and bind this.
 			this.scroll = _.chain( this.scroll ).bind( this ).throttle( this.options.refreshSensitivity ).value();
@@ -5279,11 +5263,19 @@
 			this.$( 'li:first' ).focus();
 		},
 
+		restoreFocus: function() {
+			this.$( 'li.selected:first' ).focus();
+		},
+
 		arrowEvent: function( event ) {
 			var attachments = this.$el.children( 'li' ),
-				perRow = Math.round( this.$el.width() / attachments.first().outerWidth() ),
+				perRow = this.$el.data( 'columns' ),
 				index = attachments.filter( ':focus' ).index(),
 				row = ( index + 1 ) <= perRow ? 1 : Math.ceil( ( index + 1 ) / perRow );
+
+			if ( index === -1 ) {
+				return;
+			}
 
 			// Left arrow
 			if ( 37 === event.keyCode ) {
@@ -6001,6 +5993,10 @@
 				AttachmentView: this.options.AttachmentView
 			});
 
+			// Add keydown listener to the instance of the Attachments view
+			this.attachments.listenTo( this.controller, 'attachment:keydown:arrow',     this.attachments.arrowEvent );
+			this.attachments.listenTo( this.controller, 'attachment:details:shift-tab', this.attachments.restoreFocus );
+
 			this.views.add( this.attachments );
 
 
@@ -6156,9 +6152,7 @@
 
 			// Keep focus inside media modal
 			// after clear link is selected
-			new media.view.FocusManager({
-				el: this.el
-			}).focus();
+			this.controller.modal.focusManager.focus();
 		}
 	});
 
@@ -6511,9 +6505,7 @@
 				this.model.destroy();
 				// Keep focus inside media modal
 				// after image is deleted
-				new media.view.FocusManager({
-					el: this.el
-				}).focus();
+				this.controller.modal.focusManager.focus();
 			}
 		},
 		/**
@@ -6576,7 +6568,7 @@
 		 */
 		toggleSelectionHandler: function( event ) {
 			if ( 'keydown' === event.type && 9 === event.keyCode && event.shiftKey && event.target === this.$( ':tabbable' ).get( 0 ) ) {
-				this.$( ':tabbable' ).eq( 0 ).blur();
+				this.controller.trigger( 'attachment:details:shift-tab', event );
 				return false;
 			}
 
