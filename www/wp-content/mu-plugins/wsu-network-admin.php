@@ -937,9 +937,15 @@ class WSU_Network_Admin {
 
 		$n = ( isset($_GET['n']) ) ? intval($_GET['n']) : 0;
 
+		// First update each of the networks' DB versions.
 		if ( $n < 20 ) {
 			global $wp_db_version;
-			update_site_option( 'wpmu_upgrade_site', $wp_db_version );
+			$network_ids = wp_list_pluck( wsuwp_get_networks(), 'id' );
+			foreach ( $network_ids as $network_id ) {
+				wsuwp_switch_to_network( $network_id );
+				update_site_option( 'wpmu_upgrade_site', $wp_db_version );
+				wsuwp_restore_current_network();
+			}
 		}
 
 		$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE spam = '0' AND deleted = '0' AND archived = '0' ORDER BY site_id DESC LIMIT {$n}, 20", ARRAY_A );
