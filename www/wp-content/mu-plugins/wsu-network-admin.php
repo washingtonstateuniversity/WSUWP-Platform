@@ -854,7 +854,7 @@ class WSU_Network_Admin {
 	 * handle individual sites at a network level, this processes all sites in the global platform.
 	 */
 	public function handle_platform_db_upgrade() {
-		global $wpdb, $admin_body_class, $current_screen, $parent_file, $wp_version;
+		global $wpdb, $admin_body_class, $wp_version;
 
 		if ( ! isset( $_GET['action'] ) || 'global_upgrade' !== $_GET['action'] ) {
 			return;
