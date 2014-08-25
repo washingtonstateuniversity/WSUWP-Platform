@@ -937,12 +937,12 @@ class WSU_Network_Admin {
 
 		$n = ( isset($_GET['n']) ) ? intval($_GET['n']) : 0;
 
-		if ( $n < 5 ) {
+		if ( $n < 20 ) {
 			global $wp_db_version;
 			update_site_option( 'wpmu_upgrade_site', $wp_db_version );
 		}
 
-		$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE spam = '0' AND deleted = '0' AND archived = '0' ORDER BY site_id DESC LIMIT {$n}, 5", ARRAY_A );
+		$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE spam = '0' AND deleted = '0' AND archived = '0' ORDER BY site_id DESC LIMIT {$n}, 20", ARRAY_A );
 
 		if ( empty( $blogs ) ) {
 			echo '<p>' . __( 'All done!' ) . '</p>';
@@ -980,11 +980,11 @@ class WSU_Network_Admin {
 			}
 			echo '</ul>';
 
-			?><p><?php _e( 'If your browser doesn&#8217;t start loading the next page automatically, click this link:' ); ?> <a class="button" href="upgrade.php?action=global_upgrade&amp;n=<?php echo ($n + 5) ?>"><?php _e("Next Sites"); ?></a></p>
+			?><p><?php _e( 'If your browser doesn&#8217;t start loading the next page automatically, click this link:' ); ?> <a class="button" href="upgrade.php?action=global_upgrade&amp;n=<?php echo ($n + 20) ?>"><?php _e("Next Sites"); ?></a></p>
 			<script type='text/javascript'>
 				<!--
 				function nextpage() {
-					location.href = "upgrade.php?action=global_upgrade&n=<?php echo ($n + 5) ?>";
+					location.href = "upgrade.php?action=global_upgrade&n=<?php echo ($n + 20) ?>";
 				}
 				setTimeout( "nextpage()", 250 );
 				//-->
