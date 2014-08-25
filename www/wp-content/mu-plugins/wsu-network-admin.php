@@ -97,6 +97,10 @@ class WSU_Network_Admin {
 		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
 		add_filter( 'pre_site_option_registration', array( $this, 'set_registration' ), 10, 1 );
 		add_filter( 'pre_site_option_upload_space_check_disabled', array( $this, 'set_upload_space_check_disabled' ), 10, 1 );
+
+		add_action( 'admin_init', array( $this, 'remove_upgrade_notices' ) );
+		add_action( 'admin_notices', array( $this, 'site_admin_notice' ) );
+		add_action( 'network_admin_notices', array( $this, 'site_admin_notice' ) );
 	}
 
 	/**
@@ -811,6 +815,37 @@ class WSU_Network_Admin {
 		$network_options = $this->get_global_network_options();
 
 		return $network_options['upload_space_check_disabled'];
+	}
+
+	/**
+	 * Remove the default site admin notice displayed by WordPress to inform super admins
+	 * of a database upgrade after updating WordPress. We use the same hook to replace this
+	 * functionality.
+	 */
+	public function remove_upgrade_notices() {
+		remove_action( 'admin_notices', 'site_admin_notice' );
+		remove_action( 'network_admin_notices', 'site_admin_notice' );
+	}
+
+	/**
+	 * Display an upgrade notice for global database tables if a difference in database version
+	 * has been detected.
+	 */
+	public function site_admin_notice() {
+		global $wp_db_version;
+
+		if ( ! is_super_admin() ) {
+			return;
+		}
+
+		if ( get_site_option( 'wpmu_upgrade_site' ) != $wp_db_version ) {
+			$primary_network_id = wsuwp_get_primary_network_id();
+			wsuwp_switch_to_network( $primary_network_id );
+			$global_admin_url = esc_url( network_admin_url( '/upgrade.php?action=global_upgrade' ) );
+			wsuwp_restore_current_network();
+
+			echo '<div class="update-nag">Thank you for Updating! Please visit the <a href="' . $global_admin_url . '">Global Upgrade</a> page to upgrade all database tables.</div>';
+		}
 	}
 }
 new WSU_Network_Admin();
