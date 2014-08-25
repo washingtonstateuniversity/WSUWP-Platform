@@ -97,6 +97,11 @@ class WSU_Network_Admin {
 		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
 		add_filter( 'pre_site_option_registration', array( $this, 'set_registration' ), 10, 1 );
 		add_filter( 'pre_site_option_upload_space_check_disabled', array( $this, 'set_upload_space_check_disabled' ), 10, 1 );
+
+		add_action( 'admin_init', array( $this, 'remove_upgrade_notices' ) );
+		add_action( 'admin_notices', array( $this, 'site_admin_notice' ) );
+		add_action( 'network_admin_notices', array( $this, 'site_admin_notice' ) );
+		add_action( 'admin_head-upgrade.php', array( $this, 'handle_platform_db_upgrade' ) );
 	}
 
 	/**
@@ -811,6 +816,185 @@ class WSU_Network_Admin {
 		$network_options = $this->get_global_network_options();
 
 		return $network_options['upload_space_check_disabled'];
+	}
+
+	/**
+	 * Remove the default site admin notice displayed by WordPress to inform super admins
+	 * of a database upgrade after updating WordPress. We use the same hook to replace this
+	 * functionality.
+	 */
+	public function remove_upgrade_notices() {
+		remove_action( 'admin_notices', 'site_admin_notice' );
+		remove_action( 'network_admin_notices', 'site_admin_notice' );
+	}
+
+	/**
+	 * Display an upgrade notice for global database tables if a difference in database version
+	 * has been detected.
+	 */
+	public function site_admin_notice() {
+		global $wp_db_version;
+
+		if ( ! is_super_admin() ) {
+			return;
+		}
+
+		if ( get_site_option( 'wpmu_upgrade_site' ) != $wp_db_version ) {
+			$primary_network_id = wsuwp_get_primary_network_id();
+			wsuwp_switch_to_network( $primary_network_id );
+			$global_admin_url = esc_url( network_admin_url( '/upgrade.php?action=global_upgrade' ) );
+			wsuwp_restore_current_network();
+
+			echo '<div class="update-nag">Thank you for Updating! Please visit the <a href="' . $global_admin_url . '">Global Upgrade</a> page to upgrade all database tables.</div>';
+		}
+	}
+
+	/**
+	 * Provide replacement functionality for the standard database upgrade process. Rather than
+	 * handle individual sites at a network level, this processes all sites in the global platform.
+	 */
+	public function handle_platform_db_upgrade() {
+		global $wpdb, $admin_body_class, $wp_version;
+
+		if ( ! isset( $_GET['action'] ) || 'global_upgrade' !== $_GET['action'] ) {
+			return;
+		}
+
+		if ( ! is_super_admin() ) {
+			return;
+		}
+
+		/**
+		 * Fires in <head> for all admin pages.
+		 *
+		 * @since 2.1.0
+		 */
+		do_action( 'admin_head' );
+
+		if ( get_user_setting('mfold') == 'f' )
+			$admin_body_class .= ' folded';
+
+		if ( !get_user_setting('unfold') )
+			$admin_body_class .= ' auto-fold';
+
+		if ( is_admin_bar_showing() )
+			$admin_body_class .= ' admin-bar';
+
+		if ( is_rtl() )
+			$admin_body_class .= ' rtl';
+
+		$admin_body_class .= ' branch-' . str_replace( array( '.', ',' ), '-', floatval( $wp_version ) );
+		$admin_body_class .= ' version-' . str_replace( '.', '-', preg_replace( '/^([.0-9]+).*/', '$1', $wp_version ) );
+		$admin_body_class .= ' admin-color-' . sanitize_html_class( get_user_option( 'admin_color' ), 'fresh' );
+		$admin_body_class .= ' locale-' . sanitize_html_class( strtolower( str_replace( '_', '-', get_locale() ) ) );
+
+		if ( wp_is_mobile() )
+			$admin_body_class .= ' mobile';
+
+		if ( is_multisite() )
+			$admin_body_class .= ' multisite';
+
+		if ( is_network_admin() )
+			$admin_body_class .= ' network-admin';
+
+		$admin_body_class .= ' no-customize-support no-svg';
+
+		?>
+		</head>
+		<?php
+		/**
+		 * Filter the admin <body> CSS classes.
+		 *
+		 * This filter differs from the post_class or body_class filters in two important ways:
+		 * 1. $classes is a space-separated string of class names instead of an array.
+		 * 2. Not all core admin classes are filterable, notably: wp-admin, wp-core-ui, and no-js cannot be removed.
+		 *
+		 * @since 2.3.0
+		 *
+		 * @param string $classes Space-separated string of CSS classes.
+		 */
+		?>
+		<body class="wp-admin wp-core-ui no-js <?php echo apply_filters( 'admin_body_class', '' ) . " $admin_body_class"; ?>">
+		<script type="text/javascript">document.body.className = document.body.className.replace('no-js','js');</script>
+		<div id="wpwrap">
+		<a tabindex="1" href="#wpbody-content" class="screen-reader-shortcut"><?php _e('Skip to main content'); ?></a>
+		<?php require(ABSPATH . 'wp-admin/menu-header.php'); ?>
+		<div id="wpcontent">
+
+		<?php
+		/**
+		 * Fires at the beginning of the content section in an admin page.
+		 *
+		 * @since 3.0.0
+		 */
+		do_action( 'in_admin_header' );
+		?>
+
+		<div id="wpbody">
+		<div id="wpbody-content" aria-label="<?php esc_attr_e('Main content'); ?>" tabindex="0">
+		<div class="wrap">
+		<h2><?php echo __( 'Upgrade Platform' ); ?></h2><?php
+
+		$n = ( isset($_GET['n']) ) ? intval($_GET['n']) : 0;
+
+		if ( $n < 20 ) {
+			global $wp_db_version;
+			update_site_option( 'wpmu_upgrade_site', $wp_db_version );
+		}
+
+		$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE spam = '0' AND deleted = '0' AND archived = '0' ORDER BY site_id DESC LIMIT {$n}, 20", ARRAY_A );
+
+		if ( empty( $blogs ) ) {
+			echo '<p>' . __( 'All done!' ) . '</p>';
+		} else {
+			echo "<ul>";
+			foreach ( (array) $blogs as $details ) {
+				switch_to_blog( $details['blog_id'] );
+				$siteurl = site_url();
+				$upgrade_url = admin_url( 'upgrade.php?step=upgrade_db' );
+				restore_current_blog();
+
+				echo '<li>' . $siteurl . '</li>';
+
+				$response = wp_remote_get( $upgrade_url, array( 'timeout' => 120, 'httpversion' => '1.1' ) );
+				if ( is_wp_error( $response ) ) {
+					wp_die( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>' ), $siteurl, $response->get_error_message() ) );
+				}
+
+				/**
+				 * Fires after the Multisite DB upgrade for each site is complete.
+				 *
+				 * @since MU
+				 *
+				 * @param array|WP_Error $response The upgrade response array or WP_Error on failure.
+				 */
+				do_action( 'after_mu_upgrade', $response );
+				/**
+				 * Fires after each site has been upgraded.
+				 *
+				 * @since MU
+				 *
+				 * @param int $blog_id The id of the blog.
+				 */
+				do_action( 'wpmu_upgrade_site', $details[ 'blog_id' ] );
+			}
+			echo '</ul>';
+
+			?><p><?php _e( 'If your browser doesn&#8217;t start loading the next page automatically, click this link:' ); ?> <a class="button" href="upgrade.php?action=global_upgrade&amp;n=<?php echo ($n + 20) ?>"><?php _e("Next Sites"); ?></a></p>
+			<script type='text/javascript'>
+				<!--
+				function nextpage() {
+					location.href = "upgrade.php?action=global_upgrade&n=<?php echo ($n + 20) ?>";
+				}
+				setTimeout( "nextpage()", 250 );
+				//-->
+			</script>
+		<?php } ?>
+		</div>
+		<?php
+
+		include( ABSPATH . 'wp-admin/admin-footer.php' );
+		die();
 	}
 }
 new WSU_Network_Admin();
