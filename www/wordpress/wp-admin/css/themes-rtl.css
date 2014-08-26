@@ -188,13 +188,17 @@
 	-webkit-transition: opacity 0.1s ease-in-out;
 	transition: opacity 0.1s ease-in-out;
 }
+
 .theme-browser .theme:focus {
-	outline: 1px dotted #222;
+	border-color: #5b9dd9;
+	-webkit-box-shadow: 0 0 2px rgba( 30, 140, 190, 0.8 );
+	box-shadow: 0 0 2px rgba( 30, 140, 190, 0.8 );
 }
 
 .theme-browser .theme:focus .more-details {
 	opacity: 1;
 }
+
 /* Current theme needs to have its action always on view */
 .theme-browser .theme.active:focus .theme-actions {
 	display: block;
@@ -455,18 +459,25 @@
 	transition: color .1s ease-in-out, background .1s ease-in-out;
 }
 
+.theme-overlay .theme-header .close:focus,
 .theme-overlay .theme-header .close:hover,
-.theme-overlay .theme-header .close:hover:before,
-.theme-overlay .theme-header .close:focus:before,
+.theme-overlay .theme-header .right:focus,
 .theme-overlay .theme-header .right:hover,
+.theme-overlay .theme-header .left:focus,
 .theme-overlay .theme-header .left:hover {
-	color: #2ea2cc;
+	background: #ddd;
+	border-color: #ccc;
+	color: #000;
+}
+
+.theme-overlay .theme-header .close:focus:before,
+.theme-overlay .theme-header .close:hover:before {
+	color: #000;
 }
 
 .theme-overlay .theme-header .close:focus,
 .theme-overlay .theme-header .right:focus,
 .theme-overlay .theme-header .left:focus {
-	color: #2ea2cc;
     -webkit-box-shadow:
     	0 0 0 1px #5b9dd9,
 		0 0 2px 1px rgba(30, 140, 190, .8);
@@ -1398,7 +1409,9 @@ body.full-overlay-active {
 .theme-install-overlay .previous-theme:focus,
 .theme-install-overlay .next-theme:hover,
 .theme-install-overlay .next-theme:focus {
-	color: #2ea2cc;
+	background: #ddd;
+	border-color: #ccc;
+	color: #000;
 	outline: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
@@ -1409,7 +1422,7 @@ body.full-overlay-active {
 	content: "\f335";
 	position: relative;
 	top: 7px;
-	right: 12px;
+	right: 13px;
 }
 
 .theme-install-overlay .previous-theme:before {
@@ -1437,6 +1450,7 @@ body.full-overlay-active {
 	color: #bbb;
 	background: #eee;
 	cursor: default;
+	pointer-events: none;
 }
 
 .rtl .theme-install-overlay .previous-theme:before {

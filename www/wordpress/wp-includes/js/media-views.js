@@ -462,6 +462,7 @@
 				mode = this.get('menu'),
 				view;
 
+			this.frame.$el.toggleClass( 'hide-menu', ! mode );
 			if ( ! mode ) {
 				return;
 			}
@@ -791,7 +792,7 @@
 			title:    l10n.imageDetailsTitle,
 			// Initial region modes.
 			content:  'image-details',
-			menu:     'image-details',
+			menu:     false,
 			router:   false,
 			toolbar:  'image-details',
 
@@ -1244,6 +1245,7 @@
 			filterable:    'uploaded',
 			// Region mode defaults.
 			toolbar:       'replace',
+			menu:          false,
 
 			priority:      60,
 			syncSelection: true
@@ -2969,7 +2971,6 @@
 			this.on( 'menu:create:image-details', this.createMenu, this );
 			this.on( 'content:create:image-details', this.imageDetailsContent, this );
 			this.on( 'content:render:edit-image', this.editImageContent, this );
-			this.on( 'menu:render:image-details', this.renderMenu, this );
 			this.on( 'toolbar:render:image-details', this.renderImageDetailsToolbar, this );
 			// override the select toolbar
 			this.on( 'toolbar:render:replace', this.renderReplaceImageToolbar, this );
@@ -2979,8 +2980,7 @@
 			this.states.add([
 				new media.controller.ImageDetails({
 					image: this.image,
-					editable: false,
-					menu: 'image-details'
+					editable: false
 				}),
 				new media.controller.ReplaceImage({
 					id: 'replace-image',
@@ -2988,7 +2988,6 @@
 					image: this.image,
 					multiple:  false,
 					title:     l10n.imageReplaceTitle,
-					menu: 'image-details',
 					toolbar: 'replace',
 					priority:  80,
 					displaySettings: true
@@ -3023,31 +3022,6 @@
 
 			// after bringing in the frame, load the actual editor via an ajax call
 			view.loadEditor();
-
-		},
-
-		renderMenu: function( view ) {
-			var lastState = this.lastState(),
-				previous = lastState && lastState.id,
-				frame = this;
-
-			view.set({
-				cancel: {
-					text:     l10n.imageDetailsCancel,
-					priority: 20,
-					click:    function() {
-						if ( previous ) {
-							frame.setState( previous );
-						} else {
-							frame.close();
-						}
-					}
-				},
-				separateCancel: new media.View({
-					className: 'separator',
-					priority: 40
-				})
-			});
 
 		},
 
@@ -3937,7 +3911,7 @@
 	 */
 	media.view.Toolbar = media.View.extend({
 		tagName:   'div',
-		className: 'media-toolbar',
+		className: 'media-toolbar wp-filter',
 
 		initialize: function() {
 			var state = this.controller.state(),
@@ -3949,7 +3923,7 @@
 			// The toolbar is composed of two `PriorityList` views.
 			this.primary   = new media.view.PriorityList();
 			this.secondary = new media.view.PriorityList();
-			this.primary.$el.addClass('media-toolbar-primary');
+			this.primary.$el.addClass('media-toolbar-primary search-form');
 			this.secondary.$el.addClass('media-toolbar-secondary');
 
 			this.views.set([ this.secondary, this.primary ]);
@@ -4680,12 +4654,13 @@
 
 			if ( options.rerenderOnModelChange ) {
 				this.model.on( 'change', this.render, this );
+			} else {
+				this.model.on( 'change:percent', this.progress, this );
 			}
 			this.model.on( 'change:title', this._syncTitle, this );
 			this.model.on( 'change:caption', this._syncCaption, this );
 			this.model.on( 'change:artist', this._syncArtist, this );
 			this.model.on( 'change:album', this._syncAlbum, this );
-			this.model.on( 'change:percent', this.progress, this );
 
 			// Update the selection.
 			this.model.on( 'add', this.select, this );
@@ -4753,10 +4728,15 @@
 				options.allowLocalEdits = true;
 			}
 
+			if ( options.uploading && ! options.percent ) {
+				options.percent = 0;
+			}
+
 			this.views.detach();
 			this.$el.html( this.template( options ) );
 
 			this.$el.toggleClass( 'uploading', options.uploading );
+
 			if ( options.uploading ) {
 				this.$bar = this.$('.media-progress-bar div');
 			} else {
@@ -5743,12 +5723,12 @@
 			this.listenTo( this.controller, 'toggle:upload:attachment', _.bind( this.toggleUploader, this ) );
 
 			this.createToolbar();
-			this.createUploader();
-			this.createAttachments();
-			this.updateContent();
 			if ( this.options.sidebar ) {
 				this.createSidebar();
 			}
+			this.createUploader();
+			this.createAttachments();
+			this.updateContent();
 
 			if ( ! this.options.sidebar || 'errors' === this.options.sidebar ) {
 				this.$el.addClass( 'hide-sidebar' );
@@ -6777,7 +6757,7 @@
 		initialize: function() {
 			var self = this;
 
-			this.$input = $('<input id="embed-url-field" type="text" />').val( this.model.get('url') );
+			this.$input = $('<input id="embed-url-field" type="url" />').val( this.model.get('url') );
 			this.input = this.$input[0];
 
 			this.spinner = $('<span class="spinner" />')[0];

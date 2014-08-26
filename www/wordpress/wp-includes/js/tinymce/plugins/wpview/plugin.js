@@ -260,7 +260,8 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 
 	editor.on( 'init', function() {
 		var scrolled = false,
-			selection = editor.selection;
+			selection = editor.selection,
+			MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 		// When a view is selected, ensure content that is being pasted
 		// or inserted is added to a text node (instead of the view).
@@ -333,6 +334,16 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 				scrolled = false;
 			}
 		}, true );
+
+		if ( MutationObserver ) {
+			new MutationObserver( function() {
+				editor.fire( 'wp-body-class-change' );
+			} )
+			.observe( editor.getBody(), {
+				attributes: true,
+				attributeFilter: ['class']
+			} );
+		}
 	});
 
 	editor.on( 'PreProcess', function( event ) {
@@ -354,11 +365,13 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 	});
 
 	// Excludes arrow keys, delete, backspace, enter, space bar.
+	// Ref: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent.keyCode
 	function isSpecialKey( key ) {
 		return ( ( key <= 47 && key !== VK.SPACEBAR && key !== VK.ENTER && key !== VK.DELETE && key !== VK.BACKSPACE && ( key < 37 || key > 40 ) ) ||
-			key === 144 || key === 145 || // Num Lock, Scroll Lock
+			key >= 224 || // OEM or non-printable 
+			( key >= 144 && key <= 150 ) || // Num Lock, Scroll Lock, OEM
 			( key >= 91 && key <= 93 ) || // Windows keys
-			( key >= 112 && key <= 123 ) ); // F keys
+			( key >= 112 && key <= 135 ) ); // F keys
 	}
 
 	// (De)select views when arrow keys are used to navigate the content of the editor.

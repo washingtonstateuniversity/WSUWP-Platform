@@ -232,7 +232,9 @@ body {
 .customize-controls-close:hover,
 .control-panel-back:focus,
 .control-panel-back:hover {
-	color: #2ea2cc;
+	background: #ddd;
+	border-color: #ccc;
+	color: #000;
 	outline: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
@@ -243,14 +245,14 @@ body {
 	content: "\f335";
 	position: relative;
 	top: 7px;
-	left: 12px;
+	left: 13px;
 }
 
 .control-panel-back:before {
 	font: normal 20px/1 dashicons;
 	content: "\f341";
 	position: relative;
-	top: 13px;
+	top: 7px;
 	left: 13px;
 }
 
@@ -258,7 +260,7 @@ body {
 	content: "\f344";
 }
 
-.current-panel .control-panel-back {
+.in-sub-panel .control-panel-back {
 	left: 0;
 }
 
