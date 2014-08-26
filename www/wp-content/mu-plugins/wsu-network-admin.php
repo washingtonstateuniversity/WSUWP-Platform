@@ -938,7 +938,7 @@ class WSU_Network_Admin {
 		$n = ( isset($_GET['n']) ) ? intval($_GET['n']) : 0;
 
 		// First update each of the networks' DB versions.
-		if ( $n < 20 ) {
+		if ( $n < 10 ) {
 			global $wp_db_version;
 			$network_ids = wp_list_pluck( wsuwp_get_networks(), 'id' );
 			foreach ( $network_ids as $network_id ) {
@@ -948,7 +948,7 @@ class WSU_Network_Admin {
 			}
 		}
 
-		$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE spam = '0' AND deleted = '0' AND archived = '0' ORDER BY site_id DESC LIMIT {$n}, 20", ARRAY_A );
+		$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE spam = '0' AND deleted = '0' AND archived = '0' ORDER BY site_id DESC LIMIT {$n}, 10", ARRAY_A );
 
 		if ( empty( $blogs ) ) {
 			echo '<p>' . __( 'All done!' ) . '</p>';
@@ -963,7 +963,7 @@ class WSU_Network_Admin {
 
 				echo '<li>' . $siteurl . '</li>';
 
-				$response = wp_remote_get( $upgrade_url, array( 'timeout' => 120, 'httpversion' => '1.1' ) );
+				$response = wp_remote_get( $upgrade_url, array( 'timeout' => 20, 'httpversion' => '1.1' ) );
 				if ( is_wp_error( $response ) ) {
 					echo '<p>' . sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>' ), $siteurl, $response->get_error_message() ) . '</p>';
 					$auto_next = false;
@@ -988,12 +988,12 @@ class WSU_Network_Admin {
 			}
 			echo '</ul>';
 
-			?><p><?php _e( 'If your browser doesn&#8217;t start loading the next page automatically, click this link:' ); ?> <a class="button" href="upgrade.php?action=global_upgrade&amp;n=<?php echo ($n + 20) ?>"><?php _e("Next Sites"); ?></a></p>
+			?><p><?php _e( 'If your browser doesn&#8217;t start loading the next page automatically, click this link:' ); ?> <a class="button" href="upgrade.php?action=global_upgrade&amp;n=<?php echo ($n + 10) ?>"><?php _e("Next Sites"); ?></a></p>
 			<?php if ( true === $auto_next ) : ?>
 			<script type='text/javascript'>
 				<!--
 				function nextpage() {
-					location.href = "upgrade.php?action=global_upgrade&n=<?php echo ($n + 20) ?>";
+					location.href = "upgrade.php?action=global_upgrade&n=<?php echo ($n + 10) ?>";
 				}
 				setTimeout( "nextpage()", 250 );
 				//-->
