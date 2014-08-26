@@ -24,5 +24,6 @@
 * `current_site->blog_id` should always have the network's main `$blog_id` not the site.
 * New networks now inherit globally active plugins.
 * Globally active plugins can now be deactivated.
+* Site admins can now activate and deactivate plugins.
 
 ## 1.0.0 (June 30, 2014)
