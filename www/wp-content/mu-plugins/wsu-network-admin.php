@@ -954,6 +954,7 @@ class WSU_Network_Admin {
 			echo '<p>' . __( 'All done!' ) . '</p>';
 		} else {
 			echo "<ul>";
+			$auto_next = true;
 			foreach ( (array) $blogs as $details ) {
 				switch_to_blog( $details['blog_id'] );
 				$siteurl = site_url();
@@ -964,7 +965,8 @@ class WSU_Network_Admin {
 
 				$response = wp_remote_get( $upgrade_url, array( 'timeout' => 120, 'httpversion' => '1.1' ) );
 				if ( is_wp_error( $response ) ) {
-					wp_die( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>' ), $siteurl, $response->get_error_message() ) );
+					echo '<p>' . sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>' ), $siteurl, $response->get_error_message() ) . '</p>';
+					$auto_next = false;
 				}
 
 				/**
@@ -987,6 +989,7 @@ class WSU_Network_Admin {
 			echo '</ul>';
 
 			?><p><?php _e( 'If your browser doesn&#8217;t start loading the next page automatically, click this link:' ); ?> <a class="button" href="upgrade.php?action=global_upgrade&amp;n=<?php echo ($n + 20) ?>"><?php _e("Next Sites"); ?></a></p>
+			<?php if ( true === $auto_next ) : ?>
 			<script type='text/javascript'>
 				<!--
 				function nextpage() {
@@ -995,6 +998,7 @@ class WSU_Network_Admin {
 				setTimeout( "nextpage()", 250 );
 				//-->
 			</script>
+			<?php endif; ?>
 		<?php } ?>
 		</div>
 		<?php
