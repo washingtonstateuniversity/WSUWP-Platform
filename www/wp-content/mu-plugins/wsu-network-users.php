@@ -41,6 +41,7 @@ class WSU_Network_Users {
 
 		if ( ! defined( 'WP_CLI' ) ) {
 			add_filter( 'user_has_cap', array( $this, 'user_can_manage_network' ), 10, 4 );
+			add_filter( 'user_has_cap', array( $this, 'user_can_manage_plugins' ), 10, 4 );
 			add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
 			add_filter( 'user_has_cap', array( $this, 'remove_secondary_network_caps' ), 99, 4 );
 		}
@@ -276,6 +277,27 @@ class WSU_Network_Users {
 			$edit_javascript = get_user_meta( $user->ID, 'wsuwp_can_edit_javascript', true );
 			if ( '1' === $edit_javascript ) {
 				$allcaps['edit_javascript'] = true;
+			}
+		}
+
+		return $allcaps;
+	}
+
+	/**
+	 * Individual site administrators should be able to manage plugins on their site.
+	 *
+	 * @param array   $allcaps All capabilities set for the user right now.
+	 * @param array   $caps    The capabilities being checked.
+	 * @param array   $args    Arguments passed with the has_cap() call.
+	 * @param WP_User $user    The current user being checked.
+	 *
+	 * @return array Modified list of capabilities for the user.
+	 */
+	public function user_can_manage_plugins( $allcaps, $caps, $args, $user ) {
+		if ( $user && in_array( 'administrator', $user->roles ) ) {
+			// activate_plugins and manage_network_plugins are tied together here.
+			if ( 'activate_plugins' === $args[0] ) {
+				$allcaps['manage_network_plugins'] = true;
 			}
 		}
 
