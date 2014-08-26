@@ -26,7 +26,7 @@
 function get_locale() {
 	global $locale;
 
-	if ( isset( $locale ) )
+	if ( isset( $locale ) ) {
 		/**
 		 * Filter WordPress install's locale ID.
 		 *
@@ -35,6 +35,7 @@ function get_locale() {
 		 * @param string $locale The locale ID.
 		 */
 		return apply_filters( 'locale', $locale );
+	}
 
 	// WPLANG is defined in wp-config.
 	if ( defined( 'WPLANG' ) )
@@ -48,6 +49,11 @@ function get_locale() {
 
 		if ( $ms_locale !== false )
 			$locale = $ms_locale;
+	} elseif ( ! defined( 'WP_INSTALLING' ) ) {
+		$db_locale = get_option( 'WPLANG' );
+		if ( $db_locale ) {
+			$locale = $db_locale;
+		}
 	}
 
 	if ( empty( $locale ) )
@@ -548,6 +554,8 @@ function load_default_textdomain() {
  * @param string $domain          Unique identifier for retrieving translated strings
  * @param string $deprecated      Use the $plugin_rel_path parameter instead.
  * @param string $plugin_rel_path Optional. Relative path to WP_PLUGIN_DIR where the .mo file resides.
+ *                                Default false.
+ * @return bool True when textdomain is successfully loaded, false otherwise.
  */
 function load_plugin_textdomain( $domain, $deprecated = false, $plugin_rel_path = false ) {
 	$locale = get_locale();
@@ -656,6 +664,8 @@ function load_theme_textdomain( $domain, $path = false ) {
  * @since 2.9.0
  *
  * @param string $domain Text domain. Unique identifier for retrieving translated strings.
+ * @param string $path   Optional. Path to the directory containing the .mo file.
+ *                       Default false.
  * @return bool True when the theme textdomain is successfully loaded, false otherwise.
  */
 function load_child_theme_textdomain( $domain, $path = false ) {
@@ -668,6 +678,8 @@ function load_child_theme_textdomain( $domain, $path = false ) {
  * Return the Translations instance for a text domain.
  *
  * If there isn't one, returns empty Translations instance.
+ *
+ * @since 2.8.0
  *
  * @param string $domain Text domain. Unique identifier for retrieving translated strings.
  * @return Translations A Translations instance.
@@ -684,6 +696,7 @@ function get_translations_for_domain( $domain ) {
  * Whether there are translations for the text domain.
  *
  * @since 3.0.0
+ *
  * @param string $domain Text domain. Unique identifier for retrieving translated strings.
  * @return bool Whether there are translations.
  */
@@ -802,4 +815,29 @@ function wp_get_pomo_file_data( $po_file ) {
 		$headers[ $header ] = preg_replace( '~(\\\n)?"$~', '', $value );
 	}
 	return $headers;
+}
+
+/**
+ * Language selector. More to come.
+ *
+ * @since 4.0.0
+ *
+ * @see get_available_languages()
+ *
+ * @param array $args Optional arguments. Default empty array.
+ */
+function wp_dropdown_languages( $args = array() ) {
+	if ( isset( $args['languages'] ) ) {
+		$languages = $args['languages'];
+	} else {
+		$languages = get_available_languages();
+	}
+
+	printf( '<select name="%s" id="%s">', esc_attr( $args['name'] ), esc_attr( $args['id'] ) );
+	echo '<option value="">en_US</option>';
+	foreach ( $languages as $language ) {
+		$selected = selected( $language, $args['selected'], false );
+		echo '<option value="' . esc_attr( $language ) .'"' . $selected . '>' . $language . '</option>';
+	}
+	echo '</select>';
 }
