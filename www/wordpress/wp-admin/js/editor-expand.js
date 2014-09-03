@@ -31,6 +31,8 @@ jQuery( document ).ready( function($) {
 		fixedSideBottom = false,
 		scrollTimer,
 		lastScrollPosition = 0,
+		visualEditorScrollPosition = 0,
+		textEditorScrollPosition = 0,
 		pageYOffsetAtTop = 130,
 		pinnedToolsTop = 56,
 		sidebarBottom = 20,
@@ -195,6 +197,14 @@ jQuery( document ).ready( function($) {
 				return;
 			}
 
+			// Bail on special keys.
+			if ( key <= 47 && ! ( key === VK.SPACEBAR || key === VK.ENTER || key === VK.DELETE || key === VK.BACKSPACE || key === VK.UP || key === VK.LEFT || key === VK.DOWN || key === VK.UP ) ) {
+				return;
+			// OS keys, function keys, num lock, scroll lock
+			} else if ( ( key >= 91 && key <= 93 ) || ( key >= 112 && key <= 123 ) || key === 144 || key === 145 ) {
+				return;
+			}
+
 			cursorTop = offset.top + editor.iframeElement.getBoundingClientRect().top;
 			cursorBottom = cursorTop + offset.height;
 			cursorTop = cursorTop - buffer;
@@ -216,20 +226,35 @@ jQuery( document ).ready( function($) {
 
 		// Adjust when switching editor modes.
 		function mceShow() {
+			textEditorScrollPosition = window.pageYOffset;
+
 			setTimeout( function() {
+				var top = $contentWrap.offset().top;
+
+				if ( window.pageYOffset > top || visualEditorScrollPosition ) {
+					window.scrollTo( window.pageXOffset, visualEditorScrollPosition ? visualEditorScrollPosition : top - heights.adminBarHeight );
+				}
+
 				editor.execCommand( 'wpAutoResize' );
 				adjust();
 			}, 300 );
+
+			adjust();
 		}
 
 		function mceHide() {
-			var wrapHeight = $( '#wpwrap' ).height();
+			visualEditorScrollPosition = window.pageYOffset;
 
-			textEditorResize();
+			setTimeout( function() {
+				var top = $contentWrap.offset().top;
 
-			if ( wrapHeight && $window.scrollTop() > wrapHeight ) {
-				window.scrollTo( window.pageXOffset, wrapHeight - 1 );
-			}
+				if ( window.pageYOffset > top || textEditorScrollPosition ) {
+					window.scrollTo( window.pageXOffset, textEditorScrollPosition ? textEditorScrollPosition : top - heights.adminBarHeight );
+				}
+
+				textEditorResize();
+				adjust();
+			}, 100 );
 
 			adjust();
 		}
