@@ -176,7 +176,7 @@ function wp_print_media_templates() {
 			<h3 class="upload-message">{{ data.message }}</h3>
 		<# } #>
 		<?php if ( ! _device_can_upload() ) : ?>
-			<h3 class="upload-instructions"><?php printf( __('The web browser on your device cannot be used to upload files. You may be able to use the <a href="%s">native app for your device</a> instead.'), 'https://wordpress.org/mobile/' ); ?></h3>
+			<h3 class="upload-instructions"><?php printf( __('The web browser on your device cannot be used to upload files. You may be able to use the <a href="%s">native app for your device</a> instead.'), 'http://apps.wordpress.org/' ); ?></h3>
 		<?php elseif ( is_multisite() && ! is_upload_space_available() ) : ?>
 			<h3 class="upload-instructions"><?php _e( 'Upload Limit Exceeded' ); ?></h3>
 			<?php
@@ -276,6 +276,8 @@ function wp_print_media_templates() {
 			<div class="thumbnail thumbnail-{{ data.type }}">
 				<# if ( data.uploading ) { #>
 					<div class="media-progress-bar"><div></div></div>
+				<# } else if ( 'image' === data.type && data.sizes && data.sizes.large ) { #>
+					<img class="details-image" src="{{ data.sizes.large.url }}" draggable="false" />
 				<# } else if ( 'image' === data.type && data.sizes && data.sizes.full ) { #>
 					<img class="details-image" src="{{ data.sizes.full.url }}" draggable="false" />
 				<# } else if ( -1 === jQuery.inArray( data.type, [ 'audio', 'video' ] ) ) { #>
