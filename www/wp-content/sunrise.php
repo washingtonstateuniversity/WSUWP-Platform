@@ -65,7 +65,7 @@ if ( '/' !== $requested_path ) {
 	$requested_path = '/' . $requested_path;
 }
 
-if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp:site' ) ) {
+if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path . '-20140908', 'wsuwp:site' ) ) {
 	// Treat www the same as the root URL
 	$alternate_domain = preg_replace( '|^www\.|', '', $requested_domain );
 
