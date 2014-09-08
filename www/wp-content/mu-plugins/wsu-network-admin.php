@@ -102,6 +102,8 @@ class WSU_Network_Admin {
 		add_action( 'admin_notices', array( $this, 'site_admin_notice' ) );
 		add_action( 'network_admin_notices', array( $this, 'site_admin_notice' ) );
 		add_action( 'admin_head-upgrade.php', array( $this, 'handle_platform_db_upgrade' ) );
+
+		add_action( 'refresh_blog_details', array( $this, 'clear_site_request_cache' ) );
 	}
 
 	/**
@@ -1005,6 +1007,21 @@ class WSU_Network_Admin {
 
 		include( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
+	}
+
+	/**
+	 * Clear the cache used to match a requested domain and path with a site record in the database.
+	 *
+	 * @param $blog_id
+	 */
+	public function clear_site_request_cache( $blog_id ) {
+		$site_details = get_blog_details( $blog_id, true );
+
+		// Remove the cache attached to the old domain and path.
+		wp_cache_delete( $site_details->domain . $site_details->path, 'wsuwp:site' );
+
+		// Remove the cache attached to the new domain and path.
+		wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
 	}
 }
 new WSU_Network_Admin();
