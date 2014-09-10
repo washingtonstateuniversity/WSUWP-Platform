@@ -1015,6 +1015,10 @@ class WSU_Network_Admin {
 	 * @param $blog_id
 	 */
 	public function clear_site_request_cache( $blog_id ) {
+		if ( 'site-info-network' !== get_current_screen()->base || ! isset( $_POST['blog'] ) ) {
+			return;
+		}
+
 		$site_details = get_blog_details( $blog_id, true );
 
 		// Remove the cache attached to the old domain and path.
