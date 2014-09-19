@@ -271,6 +271,11 @@ class WSU_Network_Users {
 			if ( 'activate_plugins' === $args[0] ) {
 				$allcaps['manage_network_plugins'] = true;
 			}
+
+			// promote_users is a meta cap, but needs to be added here for our network admin role.
+			if ( 'promote_user' === $args[0] ) {
+				$allcaps['promote_users'] = true;
+			}
 		}
 
 		if ( $user && 'edit_javascript' === $args[0] ) {
@@ -327,6 +332,8 @@ class WSU_Network_Users {
 					$caps[0] = 'edit_users';
 				} elseif ( 'delete_user' === $cap ) {
 					$caps[0] = 'delete_users';
+				} elseif ( 'promote_user' === $cap ) {
+					$caps[0] = 'promote_users';
 				}
 			}
 		}
