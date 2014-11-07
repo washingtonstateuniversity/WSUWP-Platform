@@ -382,7 +382,7 @@ class WSU_Network_Users {
 		/* @var WPDB $wpdb */
 		global $wpdb;
 
-		if ( 'users-network' !== get_current_screen()->id ) {
+		if ( ! is_admin() || 'users-network' !== get_current_screen()->id ) {
 			return;
 		}
 
