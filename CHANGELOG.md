@@ -1,13 +1,13 @@
 # Changelog
 
-## 1.x.x (Unreleased)
+## 1.1.0 (November 20, 2014)
 
 ### Features
 * Provide method for updating DB schema on all sites from global admin.
 * Add new `edit_javascript` capability and user meta for approving users.
 * Add @trepmal plugin to search long site lists
 * Add a global dashboard for memcached stats
-* WordPress 4.0-beta4
+* WordPress 4.0.1
 
 ### Enhancements
 * Individual plugins and themes can now be part of the build process.
@@ -19,6 +19,7 @@
 * Clean up site menus for admins
 * Hide batcache debug info by default
 * Introduce `wsuwp_first_page_template` filter to replace default page template.
+* Network admins can promote users on their networks.
 
 ### Bugs
 * `current_site->blog_id` should always have the network's main `$blog_id` not the site.
