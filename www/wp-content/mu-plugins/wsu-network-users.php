@@ -382,6 +382,10 @@ class WSU_Network_Users {
 		/* @var WPDB $wpdb */
 		global $wpdb;
 
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+		
 		if ( ! is_admin() || 'users-network' !== get_current_screen()->id ) {
 			return;
 		}
