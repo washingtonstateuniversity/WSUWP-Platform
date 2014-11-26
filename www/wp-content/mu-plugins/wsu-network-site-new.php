@@ -200,17 +200,23 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Site Address' ) ?></th>
 						<td>
-							<input name="site[address]" type="text" class="regular-text" style="width:470px;" title="<?php esc_attr_e( 'Address' ) ?>" value="" />
-							<p class="description">This is some explanatory text about what can be put in the above area.</p>
+							<input name="site[address]" type="text" class="regular-text" style="width:500px; height: 40px; font-size: 1.1rem; color: #444;" title="<?php esc_attr_e( 'Address' ) ?>" value="" />
+							<p class="description">Enter the address of the new site. (e.g <code>project.wsu.edu/project-path-name/</code>)</p>
 						</td>
 					</tr>
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Site Title' ) ?></th>
-						<td><input name="site[title]" type="text" class="regular-text" style="width: 470px;" title="<?php esc_attr_e( 'Title' ) ?>"/></td>
+						<td>
+							<input name="site[title]" type="text" class="regular-text" style="width: 500px; height: 40px; font-size: 1.1rem; color: #444;" title="<?php esc_attr_e( 'Title' ) ?>"/>
+							<p class="description">Enter a title for the site. This will appear in areas such as the <code>&lt;title&gt;</code> element on your home page and in the <em>My Networks</em> menu.</p>
+						</td>
 					</tr>
 					<tr class="form-field form-required">
 						<th scope="row"><?php _e( 'Admin Email' ) ?></th>
-						<td><input name="site[email]" type="text" class="regular-text" style="width: 470px;" title="<?php esc_attr_e( 'Email' ) ?>"/></td>
+						<td>
+							<input name="site[email]" type="text" class="regular-text" style="width: 500px; height: 40px; font-size: 1.1rem; color: #444;" title="<?php esc_attr_e( 'Email' ) ?>"/>
+							<p class="description">Enter the email address of the new site's administrator. This should be an existing user.</p>
+						</td>
 					</tr>
 				</table>
 				<?php submit_button( __('Add Site'), 'primary', 'add-network-site' ); ?>
