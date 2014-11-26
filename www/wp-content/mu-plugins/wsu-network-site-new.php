@@ -196,31 +196,53 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 			} ?>
 			<form method="post" action="<?php echo network_admin_url('site-new.php?action=add-network-site'); ?>">
 				<?php wp_nonce_field( 'add-network-site', '_wpnonce_add-network-site' ) ?>
-				<table class="form-table" style="max-width: 720px;">
+				<table class="form-table">
 					<tr class="form-field form-required">
-						<th scope="row"><?php _e( 'Site Address' ) ?></th>
 						<td>
-							<input name="site[address]" type="text" class="regular-text" style="width:500px; height: 40px; font-size: 1.1rem; color: #444;" title="<?php esc_attr_e( 'Address' ) ?>" value="" />
+							<label for="site-address">Site Address</label>
+							<input name="site[address]" type="text" id="site-address" class="regular-text" title="<?php esc_attr_e( 'Address' ) ?>" value="" />
 							<p class="description">Enter the address of the new site. (e.g <code>project.wsu.edu/project-path-name/</code>)</p>
 						</td>
 					</tr>
 					<tr class="form-field form-required">
-						<th scope="row"><?php _e( 'Site Title' ) ?></th>
 						<td>
-							<input name="site[title]" type="text" class="regular-text" style="width: 500px; height: 40px; font-size: 1.1rem; color: #444;" title="<?php esc_attr_e( 'Title' ) ?>"/>
+							<label for="site-title">Site Title</label>
+							<input name="site[title]" type="text" id="site-title" class="regular-text" title="<?php esc_attr_e( 'Title' ) ?>"/>
 							<p class="description">Enter a title for the site. This will appear in areas such as the <code>&lt;title&gt;</code> element on your home page and in the <em>My Networks</em> menu.</p>
 						</td>
 					</tr>
 					<tr class="form-field form-required">
-						<th scope="row"><?php _e( 'Admin Email' ) ?></th>
 						<td>
-							<input name="site[email]" type="text" class="regular-text" style="width: 500px; height: 40px; font-size: 1.1rem; color: #444;" title="<?php esc_attr_e( 'Email' ) ?>"/>
+							<label for="site-email">Admin Email</label>
+							<input name="site[email]" type="text" id="site-email" class="regular-text" title="<?php esc_attr_e( 'Email' ) ?>"/>
 							<p class="description">Enter the email address of the new site's administrator. This should be an existing user.</p>
 						</td>
 					</tr>
 				</table>
 				<?php submit_button( __('Add Site'), 'primary', 'add-network-site' ); ?>
 			</form>
+			<style>
+				.form-table {
+					max-width: 530px;
+				}
+				.form-table label {
+					font-size: 1.1rem;
+					padding-left: 5px;
+				}
+				.form-table input {
+					width: 100%;
+					height: 40px;
+					font-size: 1.1rem;
+					color: #444;
+					margin-top: 5px;
+				}
+				.description {
+					padding-left: 3px;
+				}
+				.submit {
+					padding-left: 12px;
+				}
+			</style>
 		</div>
 		<?php
 		require( ABSPATH . 'wp-admin/admin-footer.php' );
