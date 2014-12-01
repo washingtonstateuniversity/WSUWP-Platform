@@ -101,6 +101,8 @@ class WSUWP_WordPress_Dashboard {
 		$stats = $a->getStats();
 		$stats = $stats['localhost:11211'];
 
+		$cache_hits = $stats['get_hits'];
+		$cache_per = number_format( 100 * ( $cache_hits / $stats['cmd_get'] ), 0 );
 		?>
 		<h4>Cache Data</h4>
 		<ul class="wsuwp-platform-counts wsuwp-count-above">
@@ -110,8 +112,8 @@ class WSUWP_WordPress_Dashboard {
 
 		<h4>Cache Hits</h4>
 		<ul class="wsuwp-platform-counts wsuwp-count-above">
-			<li id="dash-memcached-gets"><?php echo $stats['get_hits']; ?></li>
-			<li id="dash-memcached-getsperc"><?php echo ( number_format( 100 * ( $stats['get_hits'] / $stats['cmd_get'] ), 1 ) ); ?>%</li>
+			<li id="dash-memcached-gets"><?php echo $cache_hits; ?></li>
+			<li id="dash-memcached-getsperc"><?php echo $cache_per; ?>%</li>
 		</ul>
 		<p>The memcached service has been running for <strong><?php echo human_time_diff( time() - $stats['uptime'], time() ); ?></strong> and
 			has handled <strong><?php echo $stats['total_items']; ?> items</strong> over <strong><?php echo $stats['total_connections']; ?> connections</strong>.</p>
