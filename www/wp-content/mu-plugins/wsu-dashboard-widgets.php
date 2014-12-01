@@ -103,6 +103,13 @@ class WSUWP_WordPress_Dashboard {
 
 		$cache_hits = $stats['get_hits'];
 		$cache_per = number_format( 100 * ( $cache_hits / $stats['cmd_get'] ), 0 );
+
+		// Format cache hits to show thousands or millions rather than the long version.
+		if ( $cache_hits >= 1000000 ) {
+			$cache_hits = number_format( $cache_hits / 1000000, 0 ) . 'M';
+		} elseif ( $cache_hits >= 1000 ) {
+			$cache_hits = number_format( $cache_hits / 1000, 0 ) . 'k';
+		}
 		?>
 		<h4>Cache Data</h4>
 		<ul class="wsuwp-platform-counts wsuwp-count-above">
