@@ -1015,7 +1015,7 @@ class WSU_Network_Admin {
 	 * @param $blog_id
 	 */
 	public function clear_site_request_cache( $blog_id ) {
-		if ( ! is_admin() || 'site-info-network' !== get_current_screen()->base || ! isset( $_POST['blog'] ) ) {
+		if ( ! is_admin() || ! get_current_screen() || 'site-info-network' !== get_current_screen()->base || ! isset( $_POST['blog'] ) ) {
 			return;
 		}
 
