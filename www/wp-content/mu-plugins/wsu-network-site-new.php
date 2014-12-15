@@ -137,6 +137,9 @@ class WSUWP_New_Site_Administration {
 			update_user_option( $user_id, 'primary_blog', $id, true );
 		}
 
+		// Clear any stale cache related to this domain and path request. See sunrise.
+		wp_cache_delete( $domain . $path, 'wsuwp:site' );
+
 		$content_mail = sprintf( __( 'New site created by %1$s
 
 Address: %2$s
