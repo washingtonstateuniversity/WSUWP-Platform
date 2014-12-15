@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 (TBD)
+
+### Enhancements
+* Cleanup of styles around new site creation to make it more friendly.
+* Cleanup of memcached dashboard widget number formatting.
+* Set default timezone to America/Los Angeles on new sites.
+
+### Bugs
+* Resolve PHP errors where a screen type was being checked before we knew a screen was there.
+* Clear domain/path request cache on new site creation.
+
 ## 1.1.0 (November 20, 2014)
 
 ### Features
