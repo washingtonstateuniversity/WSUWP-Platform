@@ -129,6 +129,10 @@ function wp_install_defaults( $user_id ) {
 	update_option( 'widget_meta',            array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
 	update_option( 'sidebars_widgets',       array ( 'wp_inactive_widgets' => array (), 'sidebar-1' => array ( 0 => 'search-2', 1 => 'recent-posts-2', 2 => 'recent-comments-2', 3 => 'archives-2', 4 => 'categories-2', 5 => 'meta-2', ), 'sidebar-2' => array (), 'sidebar-3' => array (), 'array_version' => 3 ) );
 
+	// Set a default timezone string with a filter to override.
+	$timezone_string = apply_filters( 'wsuwp_install_default_timezone_string', 'America/Los_Angeles' );
+	update_option( 'timezone_string', $timezone_string );
+
 	// Setup default image sizes, allowing them to be filtered.
 	$default_image_sizes = array(
 		'thumbnail_size_w' => 198,
