@@ -396,7 +396,7 @@ class WSU_Network_Admin {
 	function display_my_networks() {
 		?>
 		<div class="wrap">
-			<h2>My Networks<?php
+			<h2>My Networks</h2><?php
 	}
 
 	/**
