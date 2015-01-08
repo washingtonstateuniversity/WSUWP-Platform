@@ -384,6 +384,9 @@ class WSU_Network_Admin {
 		return $parent_file;
 	}
 
+	/**
+	 * Enqueue styles and scripts to be used in the My Networks dashboard.
+	 */
 	function my_networks_dashboard_scripts() {
 		if ( ! is_admin() || 'dashboard_page_my-networks' !== get_current_screen()->id ) {
 			return;
@@ -391,6 +394,7 @@ class WSU_Network_Admin {
 
 		wp_enqueue_style( 'wsuwp-my-networks', plugins_url( '/css/dashboard-my-networks.css', __FILE__ ), array(), wsuwp_global_version() );
 	}
+
 	/**
 	 * Add a dashboard page to manage all WSU Networks that a user has access to
 	 */
@@ -399,7 +403,8 @@ class WSU_Network_Admin {
 	}
 
 	/**
-	 * Output the dashboard page for WSU Networks
+	 * Output a "My Networks" dashboard page. This should provide an alternative method for
+	 * navigating a lengthy list of networks and their sites.
 	 */
 	function display_my_networks() {
 		?>
@@ -420,8 +425,9 @@ class WSU_Network_Admin {
 				<div class="single-network-url"><strong>URL:</strong> <?php echo esc_url( $network->domain . $network->path ); ?></div>
 				<div class="single-network-admin"><strong>Admin:</strong> <?php echo esc_html( $network->admin_email ); ?></div>
 				<div class="single-network-counts">
-					<div class="single-network-user-count"><?php echo esc_html( $network->user_count ); ?></div>
-					<div class="single-network-site-count"><?php echo esc_html( $network->site_count ); ?></div>
+					<div class="single-network-user-count">Users<br /><?php echo esc_html( $network->user_count ); ?></div>
+					<div class="single-network-site-count">Sites<br /><?php echo esc_html( $network->site_count ); ?></div>
+					<div class="clear"></div>
 				</div>
 				View sites.
 			</div>
