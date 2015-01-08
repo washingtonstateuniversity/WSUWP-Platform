@@ -74,6 +74,7 @@ class WSU_Network_Admin {
 		add_action( 'load-site-info.php',                array( $this, 'network_info_php'           ), 10, 1 );
 		add_filter( 'parent_file',                       array( $this, 'add_master_network_menu'    ), 10, 1 );
 		add_action( 'admin_menu',                        array( $this, 'my_networks_dashboard'      ),  1    );
+		add_action( 'admin_enqueue_scripts', array( $this, 'my_networks_dashboard_scripts' ), 10 );
 		add_filter( 'wpmu_validate_user_signup',         array( $this, 'validate_user_signup'       ), 10, 1 );
 		add_filter( 'plugin_action_links',               array( $this, 'remove_plugin_action_links' ), 10, 2 );
 		add_filter( 'network_admin_plugin_action_links', array( $this, 'remove_plugin_action_links' ), 10, 2 );
@@ -383,6 +384,13 @@ class WSU_Network_Admin {
 		return $parent_file;
 	}
 
+	function my_networks_dashboard_scripts() {
+		if ( ! is_admin() || 'dashboard_page_my-networks' !== get_current_screen()->id ) {
+			return;
+		}
+
+		wp_enqueue_style( 'wsuwp-my-networks', plugins_url( '/css/dashboard-my-networks.css', __FILE__ ), array(), wsuwp_global_version() );
+	}
 	/**
 	 * Add a dashboard page to manage all WSU Networks that a user has access to
 	 */
@@ -397,6 +405,29 @@ class WSU_Network_Admin {
 		?>
 		<div class="wrap">
 			<h2>My Networks</h2><?php
+
+		foreach( wsuwp_get_user_networks() as $network ) {
+			wsuwp_switch_to_network( $network->id );
+			$network->name = get_site_option( 'site_name' );
+			$network->admin_email = get_site_option( 'admin_email' );
+			$network->user_count = get_site_option( 'user_count', 0 );
+			$network->site_count = get_site_option( 'blog_count', 0 );
+			wsuwp_restore_current_network();
+
+			?>
+			<div class="single-network">
+				<h3><a href="<?php echo esc_url( $network->domain . $network->path ); ?>"><?php echo esc_html( $network->name ); ?></a></h3>
+				<div class="single-network-url"><strong>URL:</strong> <?php echo esc_url( $network->domain . $network->path ); ?></div>
+				<div class="single-network-admin"><strong>Admin:</strong> <?php echo esc_html( $network->admin_email ); ?></div>
+				<div class="single-network-counts">
+					<div class="single-network-user-count"><?php echo esc_html( $network->user_count ); ?></div>
+					<div class="single-network-site-count"><?php echo esc_html( $network->site_count ); ?></div>
+				</div>
+				View sites.
+			</div>
+
+			<?php
+		}
 	}
 
 	/**
