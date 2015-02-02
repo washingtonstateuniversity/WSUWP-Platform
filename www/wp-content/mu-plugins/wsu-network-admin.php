@@ -623,6 +623,11 @@ class WSU_Network_Admin {
 			}
 		}
 
+		// Look for a request to apply extended permissions to a network.
+		if ( isset( $_POST['wsuwp_extended_site'] ) && in_array( $_POST['wsuwp_extended_site'], array( '0', 'extended' ) ) ) {
+			update_blog_option( wsuwp_get_current_network()->blog_id, 'wsuwp_extended_site', $_POST['wsuwp_extended_site'] );
+		}
+
 		wsuwp_restore_current_network();
 	}
 
@@ -1062,7 +1067,9 @@ class WSU_Network_Admin {
 		wp_cache_delete( $site_details->domain . $site_details->path, 'wsuwp:site' );
 
 		// Remove the cache attached to the new domain and path.
-		wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
+		if ( isset( $_POST['blog']['domain'] ) && isset( $_POST['blog']['path'] ) ) {
+			wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
+		}
 	}
 }
 new WSU_Network_Admin();
