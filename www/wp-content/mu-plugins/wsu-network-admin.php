@@ -105,6 +105,8 @@ class WSU_Network_Admin {
 		add_action( 'admin_head-upgrade.php', array( $this, 'handle_platform_db_upgrade' ) );
 
 		add_action( 'refresh_blog_details', array( $this, 'clear_site_request_cache' ) );
+
+		add_filter( 'pre_update_site_option_user_count', array( $this, 'update_network_user_count' ) );
 	}
 
 	/**
@@ -1065,6 +1067,27 @@ class WSU_Network_Admin {
 
 		// Remove the cache attached to the new domain and path.
 		wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
+	}
+
+	/**
+	 * Provide a rudimentary filter of the user count for each network by looking at the
+	 * network capabilities meta key instead of relying on the WordPress user count, which
+	 * really only looks for global users.
+	 *
+	 * @param int $value Count of users provided by `wp_update_network_user_counts()`.
+	 *
+	 * @return int Correct count of users for the network.
+	 */
+	public function update_network_user_count( $value ) {
+		global $wpdb;
+
+		if ( $wpdb->siteid == wsuwp_get_primary_network_id() ) {
+			return $value;
+		}
+
+		$meta_key = 'wsuwp_network_' . $wpdb->siteid . '_capabilities';
+		$count = $wpdb->get_var( "SELECT COUNT(user_id) FROM $wpdb->usermeta WHERE meta_key = '$meta_key'" );
+		return $count;
 	}
 }
 new WSU_Network_Admin();
