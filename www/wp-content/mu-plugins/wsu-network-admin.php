@@ -1062,7 +1062,9 @@ class WSU_Network_Admin {
 		wp_cache_delete( $site_details->domain . $site_details->path, 'wsuwp:site' );
 
 		// Remove the cache attached to the new domain and path.
-		wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
+		if ( isset( $_POST['blog']['domain'] ) && isset( $_POST['blog']['path'] ) ) {
+			wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
+		}
 	}
 }
 new WSU_Network_Admin();
