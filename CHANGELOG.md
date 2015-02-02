@@ -6,10 +6,13 @@
 * Cleanup of styles around new site creation to make it more friendly.
 * Cleanup of memcached dashboard widget number formatting.
 * Set default timezone to America/Los Angeles on new sites.
+* New My Networks screen to provide an additional interface to all networks.
 
 ### Bugs
 * Resolve PHP errors where a screen type was being checked before we knew a screen was there.
 * Clear domain/path request cache on new site creation.
+* Allow the extended network option to be set when editing a network.
+* Display the correct value for extended network in some cases.
 
 ## 1.1.0 (November 20, 2014)
 
