@@ -2,6 +2,7 @@
 	float: left;
 	border: 1px solid #bcb;
 	margin-right: 15px;
+	margin-bottom: 15px;
 	padding: 15px;
 	min-width: 300px;
 }
@@ -14,6 +15,8 @@
 
 .single-network-user-count,
 .single-network-site-count {
+	font-weight: 300;
+	font-family: "Open Sans";
 	float: left;
 	width: 50%;
 	text-align: center;

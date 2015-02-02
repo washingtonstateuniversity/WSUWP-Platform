@@ -105,6 +105,8 @@ class WSU_Network_Admin {
 		add_action( 'admin_head-upgrade.php', array( $this, 'handle_platform_db_upgrade' ) );
 
 		add_action( 'refresh_blog_details', array( $this, 'clear_site_request_cache' ) );
+
+		add_filter( 'pre_update_site_option_user_count', array( $this, 'update_network_user_count' ) );
 	}
 
 	/**
@@ -417,11 +419,13 @@ class WSU_Network_Admin {
 			$network->admin_email = get_site_option( 'admin_email' );
 			$network->user_count = get_site_option( 'user_count', 0 );
 			$network->site_count = get_site_option( 'blog_count', 0 );
+			$network->admin_url = network_admin_url();
+			$network->view_sites = network_admin_url( 'sites.php' );
 			wsuwp_restore_current_network();
 
 			?>
 			<div class="single-network">
-				<h3><a href="<?php echo esc_url( $network->domain . $network->path ); ?>"><?php echo esc_html( $network->name ); ?></a></h3>
+				<h3><a href="<?php echo esc_url( $network->admin_url ); ?>"><?php echo esc_html( $network->name ); ?></a></h3>
 				<div class="single-network-url"><strong>URL:</strong> <?php echo esc_url( $network->domain . $network->path ); ?></div>
 				<div class="single-network-admin"><strong>Admin:</strong> <?php echo esc_html( $network->admin_email ); ?></div>
 				<div class="single-network-counts">
@@ -429,7 +433,7 @@ class WSU_Network_Admin {
 					<div class="single-network-site-count">Sites<br /><?php echo esc_html( $network->site_count ); ?></div>
 					<div class="clear"></div>
 				</div>
-				View sites.
+				<a href="<?php echo esc_url( $network->view_sites ); ?>">View sites</a>.
 			</div>
 
 			<?php
@@ -1070,6 +1074,27 @@ class WSU_Network_Admin {
 		if ( isset( $_POST['blog']['domain'] ) && isset( $_POST['blog']['path'] ) ) {
 			wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
 		}
+	}
+
+	/**
+	 * Provide a rudimentary filter of the user count for each network by looking at the
+	 * network capabilities meta key instead of relying on the WordPress user count, which
+	 * really only looks for global users.
+	 *
+	 * @param int $value Count of users provided by `wp_update_network_user_counts()`.
+	 *
+	 * @return int Correct count of users for the network.
+	 */
+	public function update_network_user_count( $value ) {
+		global $wpdb;
+
+		if ( $wpdb->siteid == wsuwp_get_primary_network_id() ) {
+			return $value;
+		}
+
+		$meta_key = 'wsuwp_network_' . $wpdb->siteid . '_capabilities';
+		$count = $wpdb->get_var( "SELECT COUNT(user_id) FROM $wpdb->usermeta WHERE meta_key = '$meta_key'" );
+		return $count;
 	}
 }
 new WSU_Network_Admin();
