@@ -417,11 +417,13 @@ class WSU_Network_Admin {
 			$network->admin_email = get_site_option( 'admin_email' );
 			$network->user_count = get_site_option( 'user_count', 0 );
 			$network->site_count = get_site_option( 'blog_count', 0 );
+			$network->admin_url = network_admin_url();
+			$network->view_sites = network_admin_url( 'sites.php' );
 			wsuwp_restore_current_network();
 
 			?>
 			<div class="single-network">
-				<h3><a href="<?php echo esc_url( $network->domain . $network->path ); ?>"><?php echo esc_html( $network->name ); ?></a></h3>
+				<h3><a href="<?php echo esc_url( $network->admin_url ); ?>"><?php echo esc_html( $network->name ); ?></a></h3>
 				<div class="single-network-url"><strong>URL:</strong> <?php echo esc_url( $network->domain . $network->path ); ?></div>
 				<div class="single-network-admin"><strong>Admin:</strong> <?php echo esc_html( $network->admin_email ); ?></div>
 				<div class="single-network-counts">
@@ -429,7 +431,7 @@ class WSU_Network_Admin {
 					<div class="single-network-site-count">Sites<br /><?php echo esc_html( $network->site_count ); ?></div>
 					<div class="clear"></div>
 				</div>
-				View sites.
+				<a href="<?php echo esc_url( $network->view_sites ); ?>">View sites</a>.
 			</div>
 
 			<?php
