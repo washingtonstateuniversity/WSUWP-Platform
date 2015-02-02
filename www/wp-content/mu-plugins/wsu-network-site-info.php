@@ -22,7 +22,7 @@ class WSU_Network_Site_Info {
 		add_action( 'admin_footer', array( $this, 'display_extended_site' ), 11 );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
-		add_action( 'admin_action_update-site', array( $this, 'update_network' ), 10 );
+		add_action( 'admin_action_update-site', array( $this, 'update_site' ), 10 );
 	}
 
 	/**
@@ -63,14 +63,25 @@ class WSU_Network_Site_Info {
 			return;
 		}
 
-		switch_to_blog( $id );
-		$extended_status = get_option( 'wsuwp_extended_site', '0' );
-		restore_current_blog();
+		$enabled = '';
+		if ( isset( $_GET['network_id'] ) ) {
+			$network_id = absint( $_GET['network_id'] );
+			wsuwp_switch_to_network( $network_id );
+			$extended_status = get_blog_option( wsuwp_get_current_network()->blog_id, 'wsuwp_extended_site', '0' );
+			wsuwp_restore_current_network();
+		} else if ( $id ) {
+			switch_to_blog( $id );
+			$extended_status = get_option( 'wsuwp_extended_site', '0' );
+			restore_current_blog();
+		} else {
+			$extended_status = '0';
+			$enabled = 'disabled="disabled"';
+		}
 
 		?>
 		<table style="display:none;"><tr id="wsuwp-extended-site" class="form-field form-required">
 				<th scope="row"><?php _e( 'Extended' ); ?></th>
-				<td><select name="wsuwp_extended_site">
+				<td><select name="wsuwp_extended_site" <?php echo $enabled; ?>>
 						<option value="0" <?php selected( $extended_status, '0', true ); ?>>Disabled</option>
 						<option value="extended" <?php selected( $extended_status, 'extended', true ); ?>>Extended</option>
 				</select></td>
@@ -91,7 +102,7 @@ class WSU_Network_Site_Info {
 	/**
 	 * Move a site to another network when requested.
 	 */
-	public function update_network() {
+	public function update_site() {
 		if ( 'site-info-network' !== get_current_screen()->id ) {
 			return;
 		}
@@ -104,7 +115,7 @@ class WSU_Network_Site_Info {
 			$current_details = get_blog_details( $id );
 			wp_cache_delete( $current_details->domain . $current_details->path, 'wsuwp:site' );
 
-			// Look for a request to apply extended permissions to a site.
+			// When editing the primary site for a network, look for a request to apply extended permissions to the network.
 			if ( isset( $_POST['wsuwp_extended_site'] ) && in_array( $_POST['wsuwp_extended_site'], array( '0', 'extended' ) ) ) {
 				switch_to_blog( $id );
 				update_option( 'wsuwp_extended_site', $_POST['wsuwp_extended_site'] );

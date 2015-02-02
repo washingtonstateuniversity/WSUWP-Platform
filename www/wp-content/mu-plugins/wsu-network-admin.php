@@ -623,6 +623,11 @@ class WSU_Network_Admin {
 			}
 		}
 
+		// Look for a request to apply extended permissions to a network.
+		if ( isset( $_POST['wsuwp_extended_site'] ) && in_array( $_POST['wsuwp_extended_site'], array( '0', 'extended' ) ) ) {
+			update_blog_option( wsuwp_get_current_network()->blog_id, 'wsuwp_extended_site', $_POST['wsuwp_extended_site'] );
+		}
+
 		wsuwp_restore_current_network();
 	}
 
