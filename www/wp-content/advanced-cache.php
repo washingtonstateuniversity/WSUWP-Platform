@@ -311,8 +311,10 @@ if ( in_array(
 	array(
 		'wp-app.php',
 		'xmlrpc.php',
-	) ) )
+		'wp-cron.php',
+	) ) ) {
 	return;
+}
 
 // Never batcache WP Document Revisions
 if ( preg_match( '/documents\/([0-9]{4})\/([0-9]{1,2})\/([^.]+)\.[A-Za-z0-9]{3,4}\/?$/', $_SERVER['REQUEST_URI'] ) ) {
