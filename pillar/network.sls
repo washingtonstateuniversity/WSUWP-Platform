@@ -11,6 +11,10 @@ network:
 php-config:
   post_max_size: 200M
   upload_max_filesize: 200M
+  pm_max_children: 5
+  pm_start_servers: 2
+  pm_min_spare_servers: 1
+  pm_max_spare_servers: 3
 
 wsuwp-config:
   primary_host: wp.wsu.dev
