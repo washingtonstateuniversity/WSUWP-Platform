@@ -8,6 +8,10 @@ network:
     nameserver 8.8.8.8
     nameserver 8.8.4.4
 
+php-config:
+  post_max_size: 200M
+  upload_max_filesize: 200M
+
 wsuwp-config:
   primary_host: wp.wsu.dev
   primary_email: admin@wp.wsu.dev
