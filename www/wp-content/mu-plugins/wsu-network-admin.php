@@ -796,6 +796,7 @@ class WSU_Network_Admin {
 	 */
 	public function set_mime_types( $mime_types ) {
 		$mime_types['dmg'] = 'application/octet-stream';
+		$mime_types['eps'] = 'application/postscript';
 
 		// global admins can upload exe files.
 		if ( is_super_admin() ) {
