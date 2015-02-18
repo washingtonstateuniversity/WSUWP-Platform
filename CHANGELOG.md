@@ -1,18 +1,23 @@
 # Changelog
 
-## 1.2.0 (TBD)
+## 1.2.0 (February 18, 2015)
 
 ### Enhancements
 * Cleanup of styles around new site creation to make it more friendly.
 * Cleanup of memcached dashboard widget number formatting.
 * Set default timezone to America/Los Angeles on new sites.
 * New My Networks screen to provide an additional interface to all networks.
+* Add `.eps` as an allowed file upload type.
+* VM specific php-fpm configuration for provisioning.
+* Bump default upload size limit to 200MB.
+* Update to WordPress 4.1, then 4.1.1.
 
 ### Bugs
 * Resolve PHP errors where a screen type was being checked before we knew a screen was there.
 * Clear domain/path request cache on new site creation.
 * Allow the extended network option to be set when editing a network.
 * Display the correct value for extended network in some cases.
+* Avoid using Batcache for WP Document Revisions
 
 ## 1.1.0 (November 20, 2014)
 
