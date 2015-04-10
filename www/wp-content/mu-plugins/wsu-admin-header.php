@@ -378,7 +378,7 @@ class WSU_Admin_Header {
 					'href'   => admin_url(),
 				) );
 
-				if ( current_user_can( get_post_type_object( 'post' )->cap->create_posts ) ) {
+				if ( ! is_super_admin() && current_user_can( get_post_type_object( 'post' )->cap->create_posts ) ) {
 					$wp_admin_bar->add_menu( array(
 						'parent' => $menu_id,
 						'id'     => $menu_id . '-n',
@@ -387,7 +387,7 @@ class WSU_Admin_Header {
 					) );
 				}
 
-				if ( current_user_can( 'edit_posts' ) ) {
+				if ( ! is_super_admin() && current_user_can( 'edit_posts' ) ) {
 					$wp_admin_bar->add_menu( array(
 						'parent' => $menu_id,
 						'id'     => $menu_id . '-c',
