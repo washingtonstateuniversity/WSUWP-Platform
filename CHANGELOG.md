@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0 (April 23, 2016)
+
+### Features
+* WordPress 4.2
+
+### Enhancements
+* Remove files for WSU SSL functionality, defer to new WSU TLS plugin.
+* Remove New Post and Manage Comments from admin menu if super admin to reduce HTML size.
+
 ## 1.2.0 (February 18, 2015)
 
 ### Enhancements
