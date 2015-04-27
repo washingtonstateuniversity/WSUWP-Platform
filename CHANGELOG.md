@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.3.0 (April 23, 2016)
+## 1.3.1 (April 27, 2015)
+
+### Enhancements
+
+* WordPress 4.2.1
+
+## 1.3.0 (April 23, 2015)
 
 ### Features
 * WordPress 4.2
