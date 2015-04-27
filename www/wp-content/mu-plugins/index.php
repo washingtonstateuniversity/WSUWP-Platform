@@ -10,7 +10,7 @@
  */
 
 $wsuwp_global_version = '1.3.0';
-$wsuwp_wp_changeset = '32279';
+$wsuwp_wp_changeset = '32311';
 
 add_filter( 'spine_enable_builder_module', '__return_true' );
 
