@@ -344,9 +344,24 @@ class WSU_Network_Admin {
 			ksort( $menu );
 		}
 
-		// Remove the submenu items for 'Settings' in the Network Admin dashboard.
+		// Some network wide plugins will provide a settings menu. We maintain a whitelist and
+		// assume all others should be unset.
+		$allowed_network_submenus = array(
+			'bp-components',
+		);
+
+		// Remove submenu items that have not been whitelisted for 'Settings' in the Network Admin dashboard.
 		if ( is_network_admin() ) {
-			unset ( $submenu['settings.php'] );
+			if ( 2 <= count( $submenu['settings.php'] ) ) {
+				foreach( $submenu['settings.php'] as $k => $submenu_value ) {
+					if ( isset( $submenu_value[2] ) && in_array( $submenu_value[2], $allowed_network_submenus ) ) {
+						continue;
+					}
+					unset( $submenu['settings.php'][ $k ] );
+				}
+			} else {
+				unset ( $submenu['settings.php'] );
+			}
 		}
 	}
 
