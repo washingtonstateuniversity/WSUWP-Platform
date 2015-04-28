@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.2 (April 28, 2015)
+
+### Enhancements
+
+* Add mu-plugin, BP Multi Network, to allow for separate BuddyPress instances on individual networks.
+
+### Bugs
+
+* Add `wsuwp:site` to the global cache group so that it is properly cleared when new sites are created.
+
 ## 1.3.1 (April 27, 2015)
 
 ### Enhancements
