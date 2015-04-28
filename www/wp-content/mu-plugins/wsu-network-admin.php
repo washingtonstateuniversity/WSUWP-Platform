@@ -351,7 +351,7 @@ class WSU_Network_Admin {
 		);
 
 		// Remove submenu items that have not been whitelisted for 'Settings' in the Network Admin dashboard.
-		if ( is_network_admin() ) {
+		if ( is_network_admin() && isset( $submenu['settings.php'] ) ) {
 			if ( 2 <= count( $submenu['settings.php'] ) ) {
 				foreach( $submenu['settings.php'] as $k => $submenu_value ) {
 					if ( isset( $submenu_value[2] ) && in_array( $submenu_value[2], $allowed_network_submenus ) ) {
