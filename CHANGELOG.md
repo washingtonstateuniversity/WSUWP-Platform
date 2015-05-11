@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.3 (May 11, 2015)
+
+### Enhancements
+
+* WordPress 4.2.2
+
 ## 1.3.2 (April 28, 2015)
 
 ### Enhancements
