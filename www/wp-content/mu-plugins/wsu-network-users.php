@@ -488,6 +488,18 @@ function wsuwp_is_network_admin( $user_login, $network_id = 0 ) {
 }
 
 /**
+ * Wrapper function to determine if a user is a global admin.
+ *
+ * @param int $user_id
+ *
+ * @return bool True if the user is a global admin. False if not.
+ */
+function wsuwp_is_global_admin( $user_id ) {
+	global $wsu_network_users;
+	return $wsu_network_users->is_global_admin( $user_id );
+}
+
+/**
  * Email login credentials to a newly-registered user.
  *
  * Plugin function to replace core's wp_new_user_notification
