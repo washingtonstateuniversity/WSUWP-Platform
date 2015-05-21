@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.4 (May 21, 2015)
+
+### Enhancements
+
+* Provide a `wsuwp_is_global_admin()` to determine if a given user is a global (platform wide) admin.
+
 ## 1.3.3 (May 11, 2015)
 
 ### Enhancements
