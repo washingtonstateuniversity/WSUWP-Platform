@@ -27,6 +27,10 @@
 # The wp-config.php file is automatically generated
 /www/wp-config.php
 
+# Munin creates a couple directories when installed.
+/www/cgi-bin
+/www/html
+
 # We don't need to track default plugins and themes here.
 /www/wordpress/wp-content/plugins
 /www/wordpress/wp-content/themes
