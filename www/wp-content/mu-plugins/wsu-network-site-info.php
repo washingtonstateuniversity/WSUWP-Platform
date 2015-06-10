@@ -122,15 +122,47 @@ class WSU_Network_Site_Info {
 				restore_current_blog();
 			}
 
-			// Look for a request to move a site between networks.
+			// Process a request to move a site between networks.
 			if ( isset( $_POST['wsu_network_id'] ) ) {
 				$network_id = absint( $_POST['wsu_network_id'] );
 				if ( 0 === $network_id || 0 === $id ) {
 					return;
 				}
+
 				if ( $network_id != $current_details->site_id ) {
+					// Retrieve all of the user IDs associated with this site.
+					$all_site_users_query = new WP_User_Query( array( 'blog_id' => $id, 'fields' => 'id' ) );
+
+					// Retrieve only users IDs of this site that have existing capabilities on the new network.
+					$new_network_users_query = new WP_User_Query( array( 'blog_id' => $id, 'meta_key' => 'wsuwp_network_' . $network_id . '_capabilities', 'meta_value' => array(), 'fields' => 'id' ) );
+
+					// Which users do not yet have capabilities on the new network.
+					$modify_network_users = array_diff( $all_site_users_query->get_results(), $new_network_users_query->get_results() );
+
+					foreach( $modify_network_users as $user_id ) {
+						// Assign capabilities for basic access to the new network.
+						update_user_meta( $user_id, 'wsuwp_network_' . $network_id . '_capabilities', array() );
+
+						$user_sites = get_blogs_of_user( $user_id, true );
+						$remove_from_network = true;
+
+						// Parse the user's sites for others on this network to see if we can remove this network's capabilities.
+						foreach( $user_sites as $user_site_id => $user_site ) {
+							if ( $user_site->site_id === $current_details->site_id && $user_site_id !== $id ) {
+								$remove_from_network = false;
+								continue;
+							}
+						}
+
+						// Remove capabilities for access to this network if flagged.
+						if ( true === $remove_from_network ) {
+							delete_user_meta( $user_id, 'wsuwp_network_' . $current_details->site_id . '_capabilities' );
+						}
+					}
+
 					$current_details->site_id = $network_id;
 					update_blog_details( $id, $current_details );
+
 					wp_safe_redirect( network_admin_url( 'sites.php') );
 					die();
 				}
