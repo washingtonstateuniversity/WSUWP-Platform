@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.5 (July 23, 2015)
+
+### Enhancements
+
+* WordPress 4.2.3
+* Support *.wsu.edu addresses locally in addition to *.wsu.dev. This should be transitioned out to WSU Web Provisioner in a future release.
+* Add basic munin support locally. This is not fully developed.
+
+### Bugs
+
+* Process user capabilities properly when moving a site between networks.
+
 ## 1.3.4 (May 21, 2015)
 
 ### Enhancements
