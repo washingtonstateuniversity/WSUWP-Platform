@@ -20,6 +20,8 @@ class WP_Customize_Control {
 	 * Used when sorting two instances whose priorities are equal.
 	 *
 	 * @since 4.1.0
+	 *
+	 * @static
 	 * @access protected
 	 * @var int
 	 */
@@ -215,7 +217,7 @@ class WP_Customize_Control {
 	 * @since 4.0.0
 	 * @access public
 	 *
-	 * @return bool Always true.
+	 * @return true Always true.
 	 */
 	public function active_callback() {
 		return true;
@@ -679,6 +681,8 @@ class WP_Customize_Media_Control extends WP_Customize_Control {
 	 * @since 4.2.0 Moved from WP_Customize_Upload_Control.
 	 *
 	 * @param WP_Customize_Manager $manager {@see WP_Customize_Manager} instance.
+	 * @param string $id
+	 * @param array $args
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
 		parent::__construct( $manager, $id, $args );
@@ -1021,6 +1025,9 @@ class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control {
 
 	}
 
+	/**
+	 * @access public
+	 */
 	public function enqueue() {
 		wp_enqueue_media();
 		wp_enqueue_script( 'customize-views' );
@@ -1046,6 +1053,10 @@ class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control {
 		parent::enqueue();
 	}
 
+	/**
+	 *
+	 * @global Custom_Image_Header $custom_image_header
+	 */
 	public function prepare_control() {
 		global $custom_image_header;
 		if ( empty( $custom_image_header ) ) {
@@ -1058,23 +1069,26 @@ class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control {
 		$this->uploaded_headers = $custom_image_header->get_uploaded_header_images();
 	}
 
+	/**
+	 * @access public
+	 */
 	public function print_header_image_template() {
 		?>
 		<script type="text/template" id="tmpl-header-choice">
 			<# if (data.random) { #>
-					<button type="button" class="button display-options random">
-						<span class="dashicons dashicons-randomize dice"></span>
-						<# if ( data.type === 'uploaded' ) { #>
-							<?php _e( 'Randomize uploaded headers' ); ?>
-						<# } else if ( data.type === 'default' ) { #>
-							<?php _e( 'Randomize suggested headers' ); ?>
-						<# } #>
-					</button>
+			<button type="button" class="button display-options random">
+				<span class="dashicons dashicons-randomize dice"></span>
+				<# if ( data.type === 'uploaded' ) { #>
+					<?php _e( 'Randomize uploaded headers' ); ?>
+				<# } else if ( data.type === 'default' ) { #>
+					<?php _e( 'Randomize suggested headers' ); ?>
+				<# } #>
+			</button>
 
 			<# } else { #>
 
 			<# if (data.type === 'uploaded') { #>
-				<div class="dashicons dashicons-no close"></div>
+				<button type="button" class="dashicons dashicons-no close"><span class="screen-reader-text"><?php _e( 'Remove image' ); ?></span></button>
 			<# } #>
 
 			<button type="button" class="choice thumbnail"
@@ -1123,15 +1137,20 @@ class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control {
 		<?php
 	}
 
+	/**
+	 * @return string|void
+	 */
 	public function get_current_image_src() {
 		$src = $this->value();
 		if ( isset( $this->get_url ) ) {
 			$src = call_user_func( $this->get_url, $src );
 			return $src;
 		}
-		return null;
 	}
 
+	/**
+	 * @access public
+	 */
 	public function render_content() {
 		$this->print_header_image_template();
 		$visibility = $this->get_current_image_src() ? '' : ' style="display:none" ';
@@ -1306,6 +1325,9 @@ class WP_Widget_Area_Customize_Control extends WP_Customize_Control {
 		}
 	}
 
+	/**
+	 * @access public
+	 */
 	public function render_content() {
 		?>
 		<span class="button-secondary add-new-widget" tabindex="0">
@@ -1346,6 +1368,10 @@ class WP_Widget_Form_Customize_Control extends WP_Customize_Control {
 		}
 	}
 
+	/**
+	 *
+	 * @global array $wp_registered_widgets
+	 */
 	public function render_content() {
 		global $wp_registered_widgets;
 		require_once ABSPATH . '/wp-admin/includes/widgets.php';
