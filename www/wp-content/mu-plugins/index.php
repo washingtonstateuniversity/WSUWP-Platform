@@ -9,8 +9,8 @@
  * Network: true
  */
 
-$wsuwp_global_version = '1.3.5';
-$wsuwp_wp_changeset = '33401';
+$wsuwp_global_version = '1.3.6';
+$wsuwp_wp_changeset = '33578';
 
 add_filter( 'spine_enable_builder_module', '__return_true' );
 
