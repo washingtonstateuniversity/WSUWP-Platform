@@ -124,6 +124,7 @@ ERRORSS
     cp /tmp/wsu-web/provision/salt/config/local.yum.conf /etc/yum.conf
     rpm -Uvh --force http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
     sed -i 's/mirrorlist=https/mirrorlist=http/' /etc/yum.repos.d/epel.repo
+    yum -y update python
     sh /tmp/wsu-web/provision/bootstrap_salt.sh -K stable
     rm /etc/salt/minion.d/*.conf
     rm /etc/salt/minion_id
