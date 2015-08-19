@@ -5,12 +5,12 @@
  * Description: Controls WSUWP Platform global version
  * Author: washingtonstateuniversity, jeremyfelt
  * Author URI: https://web.wsu.edu/
- * Version: 1.3.2
+ * Version: 1.3.7
  * Network: true
  */
 
-$wsuwp_global_version = '1.3.6';
-$wsuwp_wp_changeset = '33578';
+$wsuwp_global_version = '1.3.7';
+$wsuwp_wp_changeset = '33633';
 
 add_filter( 'spine_enable_builder_module', '__return_true' );
 
