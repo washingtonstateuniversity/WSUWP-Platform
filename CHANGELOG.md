@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.8 (August 21, 2015)
+
+### Bugs
+
+* Remove an unused filter for managing site table action links.
+
 ## 1.3.5 (July 23, 2015)
 
 ### Enhancements
