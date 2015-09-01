@@ -23,6 +23,7 @@ class WSU_Network_Sites_List {
 		add_filter( 'wpmu_blogs_columns', array( $this, 'site_columns' ) );
 		add_filter( 'bulk_actions-sites-network', array( $this, 'manage_bulk_actions' ), 10, 1 );
 		add_action( 'manage_sites_custom_column', array( $this, 'manage_sites_custom_column' ), 10, 2 );
+		add_filter( 'manage_sites_action_links', array( $this, 'manage_sites_action_links' ), 10, 1 );
 	}
 
 	/**
@@ -112,6 +113,22 @@ class WSU_Network_Sites_List {
 		if ( isset( $site_details->registered ) ) {
 			echo $site_details->registered;
 		}
+	}
+
+	/**
+	 * Filter the list of actions available in the Sites list table to only include those
+	 * relevant to our configuration.
+	 *
+	 * @param array $actions
+	 *
+	 * @return array
+	 */
+	public function manage_sites_action_links( $actions ) {
+		unset( $actions['deactivate'] );
+		unset( $actions['archive'] );
+		unset( $actions['spam'] );
+
+		return $actions;
 	}
 }
 new WSU_Network_Sites_List();
