@@ -1,11 +1,11 @@
 <?php
 /*
 * Plugin Name: WSUWP Network Sites List
-* Plugin URI: http://web.wsu.edu
+* Plugin URI: https://web.wsu.edu/
 * Description: Maintains the customized layout for the MS Sites List Table
 * Author: washingtonstateuniversity, jeremyfelt
-* Author URI: http://web.wsu.edu
-* Version: 0.1
+* Author URI: https://web.wsu.edu/
+* Version: 0.2.0
 * Network: true
 */
 
@@ -23,6 +23,7 @@ class WSU_Network_Sites_List {
 		add_filter( 'wpmu_blogs_columns', array( $this, 'site_columns' ) );
 		add_filter( 'bulk_actions-sites-network', array( $this, 'manage_bulk_actions' ), 10, 1 );
 		add_action( 'manage_sites_custom_column', array( $this, 'manage_sites_custom_column' ), 10, 2 );
+		add_filter( 'manage_sites_action_links', array( $this, 'manage_sites_action_links' ), 10, 1 );
 	}
 
 	/**
@@ -44,7 +45,7 @@ class WSU_Network_Sites_List {
 		$site_columns['site_name'] = 'Site Name';
 		$site_columns['site_url'] = 'URL';
 		$site_columns['site_created'] = 'Created';
-		$site_columns['site_users'] = 'Users';
+		$site_columns['users'] = 'Users';
 
 		return $site_columns;
 	}
@@ -62,8 +63,6 @@ class WSU_Network_Sites_List {
 			$this->display_site_url( $site_id );
 		} elseif ( 'site_created' === $column ) {
 			$this->display_site_created( $site_id );
-		} elseif ( 'site_users' === $column ) {
-			$this->display_site_users( $site_id );
 		}
 	}
 
@@ -90,21 +89,6 @@ class WSU_Network_Sites_List {
 		$site_name = esc_html( get_blog_option( $site_id, 'blogname' ) );
 
 		?><a href="<?php echo esc_url( network_admin_url( 'site-info.php?id=' . absint( $site_id ) ) ); ?>" class="edit"><?php echo $site_name; ?></a><?php
-
-		$actions = array();
-
-		$actions['edit']	= '<span class="edit"><a href="' . esc_url( network_admin_url( 'site-info.php?id=' . $site_id ) ) . '">' . __( 'Edit' ) . '</a></span>';
-		$actions['backend']	= "<span class='backend'><a href='" . esc_url( get_admin_url( $site_id ) ) . "' class='edit'>" . __( 'Dashboard' ) . '</a></span>';
-
-		if ( get_current_site()->blog_id != $site_id ) {
-			if ( current_user_can( 'delete_site', $site_id ) ) {
-				$actions['delete']	= '<span class="delete"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=deleteblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to delete the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Delete' ) . '</a></span>';
-			}
-		}
-
-		$actions['visit']	= "<span class='view'><a href='" . esc_url( get_home_url( $site_id, '/' ) ) . "' rel='permalink'>" . __( 'Visit' ) . '</a></span>';
-
-		echo $this->row_actions( $actions );
 	}
 
 	/**
@@ -132,48 +116,19 @@ class WSU_Network_Sites_List {
 	}
 
 	/**
-	 * Display the count of site users.
-	 *
-	 * This count is cached for 12 hours in an attempt to avoid frequent large
-	 * queries.
-	 *
-	 * @param int $site_id ID of row's site.
-	 */
-	private function display_site_users( $site_id ) {
-		switch_to_blog( $site_id );
-		if ( ! $user_count = wp_cache_get( 'user_count_' . $site_id, 'wsuwp:site' ) ) {
-			$user_count = count( get_users() );
-			wp_cache_add( 'user_count_' . $site_id, $user_count, 'wsuwp:site', 43200 );
-		}
-		echo '<a href="site-users.php?id=' . $site_id . '">' . absint( $user_count ) . '</a>';
-		restore_current_blog();
-	}
-
-	/**
-	 * Row actions copied directly from class-wp-list-table so that we can
-	 * use it with our custom column.
+	 * Filter the list of actions available in the Sites list table to only include those
+	 * relevant to our configuration.
 	 *
 	 * @param array $actions
-	 * @param bool  $always_visible
 	 *
-	 * @return string HTML output for row actions.
+	 * @return array
 	 */
-	function row_actions( $actions, $always_visible = false ) {
-		$action_count = count( $actions );
-		$i = 0;
+	public function manage_sites_action_links( $actions ) {
+		unset( $actions['deactivate'] );
+		unset( $actions['archive'] );
+		unset( $actions['spam'] );
 
-		if ( !$action_count )
-			return '';
-
-		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
-		foreach ( $actions as $action => $link ) {
-			++$i;
-			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
-			$out .= "<span class='$action'>$link$sep</span>";
-		}
-		$out .= '</div>';
-
-		return $out;
+		return $actions;
 	}
 }
 new WSU_Network_Sites_List();
