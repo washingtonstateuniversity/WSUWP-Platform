@@ -90,21 +90,6 @@ class WSU_Network_Sites_List {
 		$site_name = esc_html( get_blog_option( $site_id, 'blogname' ) );
 
 		?><a href="<?php echo esc_url( network_admin_url( 'site-info.php?id=' . absint( $site_id ) ) ); ?>" class="edit"><?php echo $site_name; ?></a><?php
-
-		$actions = array();
-
-		$actions['edit']	= '<span class="edit"><a href="' . esc_url( network_admin_url( 'site-info.php?id=' . $site_id ) ) . '">' . __( 'Edit' ) . '</a></span>';
-		$actions['backend']	= "<span class='backend'><a href='" . esc_url( get_admin_url( $site_id ) ) . "' class='edit'>" . __( 'Dashboard' ) . '</a></span>';
-
-		if ( get_current_site()->blog_id != $site_id ) {
-			if ( current_user_can( 'delete_site', $site_id ) ) {
-				$actions['delete']	= '<span class="delete"><a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=confirm&amp;action2=deleteblog&amp;id=' . $site_id . '&amp;msg=' . urlencode( sprintf( __( 'You are about to delete the site %s.' ), $site_name ) ) ), 'confirm') ) . '">' . __( 'Delete' ) . '</a></span>';
-			}
-		}
-
-		$actions['visit']	= "<span class='view'><a href='" . esc_url( get_home_url( $site_id, '/' ) ) . "' rel='permalink'>" . __( 'Visit' ) . '</a></span>';
-
-		echo $this->row_actions( $actions );
 	}
 
 	/**
