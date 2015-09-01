@@ -1,11 +1,11 @@
 <?php
 /*
 * Plugin Name: WSUWP Network Sites List
-* Plugin URI: http://web.wsu.edu
+* Plugin URI: https://web.wsu.edu/
 * Description: Maintains the customized layout for the MS Sites List Table
 * Author: washingtonstateuniversity, jeremyfelt
-* Author URI: http://web.wsu.edu
-* Version: 0.1
+* Author URI: https://web.wsu.edu/
+* Version: 0.2.0
 * Network: true
 */
 
