@@ -44,7 +44,7 @@ class WSU_Network_Sites_List {
 		$site_columns['site_name'] = 'Site Name';
 		$site_columns['site_url'] = 'URL';
 		$site_columns['site_created'] = 'Created';
-		$site_columns['site_users'] = 'Users';
+		$site_columns['users'] = 'Users';
 
 		return $site_columns;
 	}
@@ -62,8 +62,6 @@ class WSU_Network_Sites_List {
 			$this->display_site_url( $site_id );
 		} elseif ( 'site_created' === $column ) {
 			$this->display_site_created( $site_id );
-		} elseif ( 'site_users' === $column ) {
-			$this->display_site_users( $site_id );
 		}
 	}
 
@@ -114,24 +112,6 @@ class WSU_Network_Sites_List {
 		if ( isset( $site_details->registered ) ) {
 			echo $site_details->registered;
 		}
-	}
-
-	/**
-	 * Display the count of site users.
-	 *
-	 * This count is cached for 12 hours in an attempt to avoid frequent large
-	 * queries.
-	 *
-	 * @param int $site_id ID of row's site.
-	 */
-	private function display_site_users( $site_id ) {
-		switch_to_blog( $site_id );
-		if ( ! $user_count = wp_cache_get( 'user_count_' . $site_id, 'wsuwp:site' ) ) {
-			$user_count = count( get_users() );
-			wp_cache_add( 'user_count_' . $site_id, $user_count, 'wsuwp:site', 43200 );
-		}
-		echo '<a href="site-users.php?id=' . $site_id . '">' . absint( $user_count ) . '</a>';
-		restore_current_blog();
 	}
 
 	/**
