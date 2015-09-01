@@ -113,32 +113,5 @@ class WSU_Network_Sites_List {
 			echo $site_details->registered;
 		}
 	}
-
-	/**
-	 * Row actions copied directly from class-wp-list-table so that we can
-	 * use it with our custom column.
-	 *
-	 * @param array $actions
-	 * @param bool  $always_visible
-	 *
-	 * @return string HTML output for row actions.
-	 */
-	function row_actions( $actions, $always_visible = false ) {
-		$action_count = count( $actions );
-		$i = 0;
-
-		if ( !$action_count )
-			return '';
-
-		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
-		foreach ( $actions as $action => $link ) {
-			++$i;
-			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
-			$out .= "<span class='$action'>$link$sep</span>";
-		}
-		$out .= '</div>';
-
-		return $out;
-	}
 }
 new WSU_Network_Sites_List();
