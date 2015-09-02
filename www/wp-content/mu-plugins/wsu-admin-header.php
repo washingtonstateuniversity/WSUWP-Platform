@@ -395,24 +395,6 @@ class WSU_Admin_Header {
 					'href'   => admin_url(),
 				) );
 
-				if ( ! is_super_admin() && current_user_can( get_post_type_object( 'post' )->cap->create_posts ) ) {
-					$wp_admin_bar->add_menu( array(
-						'parent' => $menu_id,
-						'id'     => $menu_id . '-n',
-						'title'  => __( 'New Post' ),
-						'href'   => admin_url( 'post-new.php' ),
-					) );
-				}
-
-				if ( ! is_super_admin() && current_user_can( 'edit_posts' ) ) {
-					$wp_admin_bar->add_menu( array(
-						'parent' => $menu_id,
-						'id'     => $menu_id . '-c',
-						'title'  => __( 'Manage Comments' ),
-						'href'   => admin_url( 'edit-comments.php' ),
-					) );
-				}
-
 				$wp_admin_bar->add_menu( array(
 					'parent' => $menu_id,
 					'id'     => $menu_id . '-v',
