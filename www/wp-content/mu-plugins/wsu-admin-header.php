@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: WSU Admin Bar
-Plugin URI: http://web.wsu.edu/
+Plugin URI: https://web.wsu.edu/
 Description: Modifies the WordPress admin bar.
 Author: washingtonstateuniversity, jeremyfelt
-Version: 0.1
+Version: 0.2.0
 */
 
 class WSU_Admin_Header {
