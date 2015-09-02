@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.9 (September 2, 2015)
+
+### Enhancements
+
+* Attempt to speed up admin bar generation for users who belong to many sites.
+* Remove custom handling of user count in MS Sites list table now that WordPress core includes this.
+
+### Bugs
+
+* Remove duplicate row actions in MS Sites list table after changes in WordPress 4.3.
+
 ## 1.3.8 (August 21, 2015)
 
 ### Bugs
