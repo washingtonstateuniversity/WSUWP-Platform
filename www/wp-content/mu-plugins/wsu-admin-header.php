@@ -87,7 +87,24 @@ class WSU_Admin_Header {
 			return;
 		}
 
-		$user_sites = wsuwp_get_user_sites( get_current_user_id() );
+		$user_meta_keys = get_user_meta( get_current_user_id() );
+		$user_meta_keys = array_keys( $user_meta_keys );
+
+		$user_sites = 0;
+
+		foreach( $user_meta_keys as $key ) {
+			if ( 'capabilities' !== substr( $key, -12 ) ) {
+				continue;
+			}
+
+			// Increase the site count by one if a caps key is found.
+			$user_sites++;
+
+			// Bail once we know we're over 1 site.
+			if ( 2 >= $user_sites ) {
+				break;
+			}
+		}
 
 		/**
 		 * If the user is a member of only one site, we can assume they are also a member of
