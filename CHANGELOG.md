@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.10 (Spetember 9, 2015)
+
+### Enhancements
+
+* Increase page cache max age to 10 minutes.
+* Update PECL memcached drop in
+
+### Bugs
+
+* Upstream hotfix: Fix a reversal in parameters in WordPress when batch splitting terms. See https://core.trac.wordpress.org/changeset/33647
+
 ## 1.3.9 (September 2, 2015)
 
 ### Enhancements
