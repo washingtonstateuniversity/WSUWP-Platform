@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.3.10 (Spetember 9, 2015)
+## 1.3.11 (September 15, 2015)
+
+### Enhancements
+
+* WordPress 4.3.1
+
+## 1.3.10 (September 9, 2015)
 
 ### Enhancements
 
