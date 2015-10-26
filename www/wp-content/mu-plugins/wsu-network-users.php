@@ -376,17 +376,18 @@ class WSU_Network_Users {
 	/**
 	 * Rewrite user queries for networks when showing the network users list table.
 	 *
+	 * @global wpdb $wpdb
+	 *
 	 * @param WP_User_Query $query The current user query.
 	 */
 	public function pre_user_query( $query ) {
-		/* @var WPDB $wpdb */
 		global $wpdb;
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return;
 		}
-		
-		if ( ! is_admin() || 'users-network' !== get_current_screen()->id ) {
+
+		if ( ! is_admin() || ! function_exists( 'get_current_screen' ) || 'users-network' !== get_current_screen()->id ) {
 			return;
 		}
 
