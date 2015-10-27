@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.3.14 (October 27, 2015)
+
+### Enhancements
+
+* Update Batcache from upstream, introduces `$use_stale` configuration.
+
+### Bugs
+
+* Protect against the possibility of `get_current_screent()` not being available on a specific admin view.
+
+## 1.3.13 (October 11, 2015)
+
+### Enhancements
+
+* Preview of upstream WP #20104 adjustment to network plugin views at the site admin level.
+
+## 1.3.12 (October 2, 2015)
+
+### Bugs
+
+* Resolve rewrite rules with hotfix via https://core.trac.wordpress.org/changeset/34672
+
 ## 1.3.11 (September 15, 2015)
 
 ### Enhancements
