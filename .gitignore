@@ -10,6 +10,9 @@
 # Ignore PHPStorm project files.
 /.idea
 
+# Ignore the local WP-CLI config.
+wp-cli.local.yml
+
 # Ignore node modules created by NPM
 /node_modules
 
