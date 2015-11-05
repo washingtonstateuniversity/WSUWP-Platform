@@ -50,6 +50,9 @@ function batcache_clear_url($url) {
 	wp_cache_add("{$url_key}_version", 0, $batcache->group);
 	$retval = wp_cache_incr("{$url_key}_version", 1, $batcache->group);
 
+	// This exists upstream in Automattic's repository, but I can't find any info on an object cache
+	// layer that actually supports no_remote_groups.
+	/*
 	$batcache_no_remote_group_key = array_search( $batcache->group, (array) $wp_object_cache->no_remote_groups );
 	if ( false !== $batcache_no_remote_group_key ) {
 		// The *_version key needs to be replicated remotely, otherwise invalidation won't work.
@@ -57,7 +60,7 @@ function batcache_clear_url($url) {
 		unset( $wp_object_cache->no_remote_groups[ $batcache_no_remote_group_key ] );
 		$retval = wp_cache_set( "{$url_key}_version", $retval, $batcache->group );
 		$wp_object_cache->no_remote_groups[ $batcache_no_remote_group_key ] = $batcache->group;
-	}
+	}*/
 
 	return $retval;
 }
