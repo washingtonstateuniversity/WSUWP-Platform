@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.15 (November 5, 2015)
+
+### Bugs
+
+* Re-fix an issue with WP Document Revisions and Batcache.
+
 ## 1.3.14 (October 27, 2015)
 
 ### Enhancements
