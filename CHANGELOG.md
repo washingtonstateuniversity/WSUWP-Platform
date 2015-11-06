@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.16 (November 5, 2015)
+
+### Enhancements
+
+* Clean up old build process (Grunt) now that a different deploy strategy is in place. This was too opinionated previously.
+
+### Bugs
+
+* Remove an area of Advanced Batcache that uses `no_remote_groups`, which is not part of our object cache object.
+
 ## 1.3.15 (November 5, 2015)
 
 ### Bugs
