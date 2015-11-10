@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.17 (November 10, 2015)
+
+### Enhancements
+
+* Provide `SERVER_PROTOCOL` specific versions of page cache.
+
 ## 1.3.16 (November 5, 2015)
 
 ### Enhancements
