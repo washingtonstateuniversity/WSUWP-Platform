@@ -394,6 +394,11 @@ header('Vary: Cookie', false);
 if ( isset( $_SERVER['QUERY_STRING'] ) )
 	parse_str($_SERVER['QUERY_STRING'], $batcache->query);
 
+// Build different versions for HTTP/1.1 and HTTP/2.0
+if ( isset( $_SERVER['SERVER_PROTOCOL'] ) ) {
+	$batcache->unique['server_protocol'] = $_SERVER['SERVER_PROTOCOL'];
+}
+
 $batcache->keys = array(
 	'host' => $_SERVER['HTTP_HOST'],
 	'method' => $_SERVER['REQUEST_METHOD'],
