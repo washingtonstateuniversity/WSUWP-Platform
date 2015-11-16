@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.18 (November 16, 2015)
+
+### Enhancements
+
+* Port page and media taxonomy registration to WSUWP Admin plugin
+* Remove unused `wsuwp_switch_to_site`, `wsuwp_restore_current_site`
+* Remove `wsuwp_get_primary_network_id()`, use `get_main_network_id()` instead.
+
 ## 1.3.17 (November 10, 2015)
 
 ### Enhancements
