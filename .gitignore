@@ -52,3 +52,9 @@ wp-cli.local.yml
 
 # Ignore all themes in the wp-content directory by default. We'll explicitly allow those we track here.
 /www/wp-content/themes/*/
+
+# Ignore optional webgrind directory for local development.
+/www/webgrind
+
+# Ignore WSU Spine when in www for local development.
+/www/wsu-spine
