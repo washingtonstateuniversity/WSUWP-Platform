@@ -331,7 +331,7 @@ function wsuwp_activate_global_plugin( $plugin ) {
 		wsuwp_restore_current_network();
 	}
 
-	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	wsuwp_switch_to_network( get_main_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	$current_global[ $plugin ] = time();
 	update_site_option( 'active_global_plugins', $current_global );
@@ -353,7 +353,7 @@ function wsuwp_deactivate_global_plugin( $plugin ) {
 		wsuwp_restore_current_network();
 	}
 
-	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	wsuwp_switch_to_network( get_main_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	unset( $current_global[ $plugin ] );
 	update_site_option( 'active_global_plugins', $current_global );
@@ -388,44 +388,11 @@ function wsuwp_get_active_global_plugins() {
 	if ( ! wsuwp_is_multi_network() )
 		return false;
 
-	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	wsuwp_switch_to_network( get_main_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );
 	wsuwp_restore_current_network();
 
 	return $current_global;
-}
-
-/**
- * Retrieve the primary network id.
- *
- * If a multinetwork setup, retrieve the primary network ID. If a multisite
- * setup, return 1. If a standard WordPress installation, return 1.
- *
- * @return int The primary network id.
- */
-function wsuwp_get_primary_network_id() {
-	global $current_site, $wpdb;
-
-	$current_network_id = (int) $current_site->id;
-
-	if ( ! is_multisite() || ! wsuwp_is_multi_network() )
-		return 1;
-
-	if ( defined( 'PRIMARY_NETWORK_ID' ) )
-		return PRIMARY_NETWORK_ID;
-
-	if ( 1 === $current_network_id )
-		return 1;
-
-	$primary_network_id = (int) wp_cache_get( 'primary_network_id', 'site-options' );
-
-	if ( $primary_network_id )
-		return $primary_network_id;
-
-	$primary_network_id = (int) $wpdb->get_var( "SELECT id FROM $wpdb->site ORDER BY id LIMIT 1" );
-	wp_cache_add( 'primary_network_id', $primary_network_id, 'site-options' );
-
-	return $primary_network_id;
 }
 
 /**
@@ -525,7 +492,7 @@ function wsuwp_network_user_count( $network_id = 0 ) {
 function wsuwp_global_site_count() {
 	global $wpdb;
 
-	wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+	wsuwp_switch_to_network( get_main_network_id() );
 	$global_site_data = get_site_option( 'global_site_data', array( 'count' => 0, 'updated' => 0 ) );
 
 	if ( empty( $global_site_data['count'] ) || empty( $global_site_data['updated'] ) || ( time() - 1800 ) > absint( $global_site_data['updated'] ) ) {

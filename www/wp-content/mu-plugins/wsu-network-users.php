@@ -70,7 +70,7 @@ class WSU_Network_Users {
 	 * @return array List of global admins.
 	 */
 	public function get_global_admins() {
-		wsuwp_switch_to_network( wsuwp_get_primary_network_id() );
+		wsuwp_switch_to_network( get_main_network_id() );
 		$global_admins = get_site_option( 'site_admins', array() );
 		wsuwp_restore_current_network();
 
@@ -392,7 +392,7 @@ class WSU_Network_Users {
 		}
 
 		// The primary network (global) should show all users.
-		if ( wsuwp_get_primary_network_id() == wsuwp_get_current_network()->id ) {
+		if ( get_main_network_id() == wsuwp_get_current_network()->id ) {
 			return;
 		}
 
