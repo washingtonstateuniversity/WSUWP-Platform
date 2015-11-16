@@ -904,7 +904,7 @@ class WSU_Network_Admin {
 		}
 
 		if ( get_site_option( 'wpmu_upgrade_site' ) != $wp_db_version ) {
-			$primary_network_id = wsuwp_get_primary_network_id();
+			$primary_network_id = get_main_network_id();
 			wsuwp_switch_to_network( $primary_network_id );
 			$global_admin_url = esc_url( network_admin_url( '/upgrade.php?action=global_upgrade' ) );
 			wsuwp_restore_current_network();
@@ -1104,7 +1104,7 @@ class WSU_Network_Admin {
 	public function update_network_user_count( $value ) {
 		global $wpdb;
 
-		if ( $wpdb->siteid == wsuwp_get_primary_network_id() ) {
+		if ( $wpdb->siteid == get_main_network_id() ) {
 			return $value;
 		}
 
