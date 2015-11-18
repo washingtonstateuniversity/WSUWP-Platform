@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin name: Batcache Manager
+Plugin name: Batcache Manager [WSU Fork]
 Plugin URI: http://wordpress.org/extend/plugins/batcache/
 Description: This optional plugin improves Batcache.
 Author: Andy Skelton
