@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.19 (November 19, 2015)
+
+### Bugs
+
+* Use the provided post object when clearing a trashed page's cache.
+
 ## 1.3.18 (November 16, 2015)
 
 ### Enhancements
