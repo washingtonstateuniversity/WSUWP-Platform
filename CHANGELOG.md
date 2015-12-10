@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.20 (December 10, 2015)
+
+### Enhancements
+
+* Upgrade WordPress 4.4.0
+
 ## 1.3.19 (November 19, 2015)
 
 ### Bugs
