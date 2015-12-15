@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.21 (December 15, 2015)
+
+### Enhancements
+
+* Remove some cruft from Batcache.
+
 ## 1.3.20 (December 10, 2015)
 
 ### Enhancements
