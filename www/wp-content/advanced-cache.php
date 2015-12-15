@@ -358,27 +358,6 @@ wp_cache_init(); // Note: wp-settings.php calls wp_cache_init() which clobbers t
 if ( ! is_object( $wp_object_cache ) )
 	return;
 
-// Now that the defaults are set, you might want to use different settings under certain conditions.
-
-/* Example: if your documents have a mobile variant (a different document served by the same URL) you must tell batcache about the variance. Otherwise you might accidentally cache the mobile version and serve it to desktop users, or vice versa.
-$batcache->unique['mobile'] = is_mobile_user_agent();
-*/
-
-/* Example: never batcache for this host
-if ( $_SERVER['HTTP_HOST'] == 'do-not-batcache-me.com' )
-	return;
-*/
-
-/* Example: batcache everything on this host regardless of traffic level
-if ( $_SERVER['HTTP_HOST'] == 'always-batcache-me.com' )
-	return;
-*/
-
-/* Example: If you sometimes serve variants dynamically (e.g. referrer search term highlighting) you probably don't want to batcache those variants. Remember this code is run very early in wp-settings.php so plugins are not yet loaded. You will get a fatal error if you try to call an undefined function. Either include your plugin now or define a test function in this file.
-if ( include_once( 'plugins/searchterm-highlighter.php') && referrer_has_search_terms() )
-	return;
-*/
-
 // Disabled
 if ( $batcache->max_age < 1 )
 	return;
