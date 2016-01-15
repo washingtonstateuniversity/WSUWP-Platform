@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.23 (January 15, 2016)
+
+### Bugs
+
+* Fix an issue where only a maximum of 100 sites would be used to determine what sites a user belongs to.
+
+## 1.3.22 (January 8, 2016)
+
+### Enhancements
+
+* Upgrade WordPress 4.4.1
+
 ## 1.3.21 (December 15, 2015)
 
 ### Enhancements
