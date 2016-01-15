@@ -352,7 +352,7 @@ class WSU_Admin_Header {
 				),
 			));
 
-			$sites = wp_get_sites( array( 'network_id' => $network->id ) );
+			$sites = wp_get_sites( array( 'network_id' => $network->id, 'limit' => 200 ) );
 			$network_sites_added = 0;
 
 			// Add a unique site search menu for each network to aid with long lists.
