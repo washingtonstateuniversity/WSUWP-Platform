@@ -117,9 +117,9 @@ ERRORSS
 
   $script =<<SCRIPT
     cd /tmp && rm -fr wsu-web
-    cd /tmp && curl -o wsu-web.zip -L https://github.com/washingtonstateuniversity/wsu-web-provisioner/archive/openssl-url.zip
+    cd /tmp && curl -o wsu-web.zip -L https://github.com/washingtonstateuniversity/wsu-web-provisioner/archive/master.zip
     cd /tmp && unzip wsu-web.zip
-    cd /tmp && mv WSU-Web-Provisioner-openssl-url wsu-web
+    cd /tmp && mv WSU-Web-Provisioner-master wsu-web
     cp -fr /tmp/wsu-web/provision/salt /srv/
     cp /tmp/wsu-web/provision/salt/config/local.yum.conf /etc/yum.conf
     rpm -Uvh --force http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
