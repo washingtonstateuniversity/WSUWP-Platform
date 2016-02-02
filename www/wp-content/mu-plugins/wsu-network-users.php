@@ -133,7 +133,8 @@ class WSU_Network_Users {
 	 * @param WP_User $profile_user User currently being edited.
 	 */
 	public function toggle_capabilities( $profile_user ) {
-		if ( is_network_admin() && $this->is_global_admin() && ! $this->is_global_admin( $profile_user->ID ) ) {
+		$user = wp_get_current_user();
+		if ( is_network_admin() && wsuwp_is_network_admin( $user->user_login ) && ! $this->is_global_admin( $profile_user->ID ) ) {
 			?>
 			<table class="form-table">
 				<tr>
@@ -161,17 +162,19 @@ class WSU_Network_Users {
 	 * @param int $user_id ID of the user being saved.
 	 */
 	public function toggle_capabilities_update( $user_id ) {
-		if ( ! $this->is_global_admin() ) {
-			return;
-		}
+		$user = wp_get_current_user();
 
 		// Process network admin assignment at the network level.
-		if ( is_network_admin() && $this->is_global_admin() ) {
+		if ( is_network_admin() && wsuwp_is_network_admin( $user->user_login) && ! $this->is_global_admin( $user_id ) ) {
 			if ( empty( $_POST['network_admin'] ) ) {
 				$this->revoke_super_admin( $user_id );
 			} elseif ( 'on' === $_POST['network_admin'] ) {
 				$this->grant_super_admin( $user_id );
 			}
+		}
+
+		if ( ! $this->is_global_admin() ) {
+			return;
 		}
 
 		// Process Javascript editor assigment at any level.
@@ -188,7 +191,8 @@ class WSU_Network_Users {
 	 * @param int $user_id User ID being demoted.
 	 */
 	public function revoke_super_admin( $user_id ) {
-		if ( ! $this->is_global_admin() ) {
+		$user = wp_get_current_user();
+		if ( ! $this->is_global_admin() && ! wsuwp_is_network_admin( $user->user_login ) ) {
 			return;
 		}
 
@@ -206,7 +210,8 @@ class WSU_Network_Users {
 	 * @param int $user_id User ID being promoted.
 	 */
 	public function grant_super_admin( $user_id ) {
-		if ( ! $this->is_global_admin() ) {
+		$user = wp_get_current_user();
+		if ( ! $this->is_global_admin() && ! wsuwp_is_network_admin( $user->user_login ) ) {
 			return;
 		}
 
