@@ -54,17 +54,6 @@ class WSU_Network_Admin {
 	);
 
 	/**
-	 * These options are applied to sites that are marked to receive extended
-	 * permissions.
-	 *
-	 * @var array List of extended network options.
-	 */
-	private $extended_network_options = array(
-		'fileupload_maxk' => 200000,
-		'upload_filetypes' => 'dmg zip',
-	);
-
-	/**
 	 * Add the filters and actions used
 	 */
 	public function __construct() {
@@ -760,15 +749,6 @@ class WSU_Network_Admin {
 	}
 
 	/**
-	 * Apply the extended value for max upload size.
-	 *
-	 * @return int Size in KB
-	 */
-	public function set_extended_fileupload_maxk() {
-		return $this->extended_network_options['fileupload_maxk'];
-	}
-
-	/**
 	 * Return the default value for total site upload space.
 	 *
 	 * @return int Size in MB
@@ -812,19 +792,6 @@ class WSU_Network_Admin {
 		}
 
 		return $mime_types;
-	}
-
-	/**
-	 * Add extended filetypes to the default list allowed for networks.
-	 *
-	 * @param string $upload_filetypes Space delimited list of allowed filetypes.
-	 *
-	 * @return string Modified list of allowed filetypes.
-	 */
-	public function set_extended_upload_filetypes( $upload_filetypes ) {
-		$upload_filetypes = trim( $upload_filetypes ) . ' ' . $this->extended_network_options['upload_filetypes'];
-
-		return $upload_filetypes;
 	}
 
 	/**
