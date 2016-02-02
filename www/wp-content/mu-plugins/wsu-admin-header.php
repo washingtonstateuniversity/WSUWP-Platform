@@ -101,7 +101,7 @@ class WSU_Admin_Header {
 			$user_sites++;
 
 			// Bail once we know we're over 1 site.
-			if ( 2 >= $user_sites ) {
+			if ( 1 < $user_sites ) {
 				break;
 			}
 		}
@@ -115,7 +115,7 @@ class WSU_Admin_Header {
 		 * but does not have access to any individual site yet. At that point, a blank
 		 * admin bar will be displayed.
 		 */
-		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= count( $user_sites ) ) {
+		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= $user_sites ) {
 			$wp_admin_bar->remove_menu( 'my-sites' );
 			return;
 		}
