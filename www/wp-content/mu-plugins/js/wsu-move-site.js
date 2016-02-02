@@ -6,11 +6,6 @@
 (function($){
 	var form_table = $('.form-table');
 	var move_site = $('#wsu-move-site');
-	var extend_site = $('#wsuwp-extended-site');
-
-	form_table.prepend( extend_site );
 	form_table.prepend( move_site );
-
-	extend_site.show();
 	move_site.show();
 }(jQuery));
