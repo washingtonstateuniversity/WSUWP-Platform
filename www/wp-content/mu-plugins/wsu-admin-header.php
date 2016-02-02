@@ -142,6 +142,7 @@ class WSU_Admin_Header {
 		 * menu items so that we can use them when reordering.
 		 */
 		$node_edit        = $wp_admin_bar->get_node( 'edit' );
+		$node_preview     = $wp_admin_bar->get_node( 'preview' );
 		$node_view        = $wp_admin_bar->get_node( 'view' );
 		$node_site_name   = $wp_admin_bar->get_node( 'site-name'   );
 
@@ -164,6 +165,7 @@ class WSU_Admin_Header {
 		 * Remove the default menu items that we will be reordering.
 		 */
 		$wp_admin_bar->remove_menu( 'edit' );
+		$wp_admin_bar->remove_menu( 'preview' );
 		$wp_admin_bar->remove_menu( 'view' );
 		$wp_admin_bar->remove_menu( 'site-name'   );
 
@@ -301,6 +303,10 @@ class WSU_Admin_Header {
 
 		if ( $node_edit ) {
 			$wp_admin_bar->add_menu( $node_edit );
+		}
+
+		if ( $node_preview ) {
+			$wp_admin_bar->add_menu( $node_preview );
 		}
 
 		if ( $node_view ) {
