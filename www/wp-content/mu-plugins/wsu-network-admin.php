@@ -90,7 +90,6 @@ class WSU_Network_Admin {
 
 		add_filter( 'pre_site_option_upload_filetypes', array( $this, 'set_upload_filetypes' ), 10, 1 );
 		add_filter( 'upload_mimes', array( $this, 'set_mime_types' ), 10, 1 );
-		add_filter( 'wsuwp_extended_upload_filetypes', array( $this, 'set_extended_upload_filetypes' ), 10, 1 );
 
 		add_filter( 'pre_site_option_add_new_users', array( $this, 'set_add_new_users' ), 10, 1 );
 		add_filter( 'pre_site_option_registrationnotification', array( $this, 'set_registrationnotification' ), 10, 1 );
@@ -788,9 +787,9 @@ class WSU_Network_Admin {
 	public function set_upload_filetypes() {
 		$network_options = $this->get_global_network_options();
 
-		// Sites with extended permissions are allowed a different fileset.
-		if ( 'extended' === get_option( 'wsuwp_extended_site', false ) ) {
-			$network_options['upload_filetypes'] = apply_filters( 'wsuwp_extended_upload_filetypes', $network_options['upload_filetypes'] );
+		// Global admins can upload EXE files.
+		if ( is_super_admin() ) {
+			$network_options['upload_filetypes'] .= ' exe';
 		}
 
 		return $network_options['upload_filetypes'];
@@ -824,10 +823,6 @@ class WSU_Network_Admin {
 	 */
 	public function set_extended_upload_filetypes( $upload_filetypes ) {
 		$upload_filetypes = trim( $upload_filetypes ) . ' ' . $this->extended_network_options['upload_filetypes'];
-
-		if ( is_super_admin() ) {
-			$upload_filetypes .= ' exe';
-		}
 
 		return $upload_filetypes;
 	}
