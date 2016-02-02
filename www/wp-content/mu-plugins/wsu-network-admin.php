@@ -91,6 +91,7 @@ class WSU_Network_Admin {
 		add_action( 'admin_head-upgrade.php', array( $this, 'handle_platform_db_upgrade' ) );
 
 		add_action( 'refresh_blog_details', array( $this, 'clear_site_request_cache' ) );
+		add_action( 'delete_blog', array( $this, 'clear_site_request_cache' ) );
 
 		add_filter( 'pre_update_site_option_user_count', array( $this, 'update_network_user_count' ) );
 	}
@@ -1028,17 +1029,13 @@ class WSU_Network_Admin {
 	 * @param $blog_id
 	 */
 	public function clear_site_request_cache( $blog_id ) {
-		if ( ! is_admin() || ! get_current_screen() || 'site-info-network' !== get_current_screen()->base || ! isset( $_POST['blog'] ) ) {
-			return;
-		}
-
 		$site_details = get_blog_details( $blog_id, true );
 
 		// Remove the cache attached to the old domain and path.
 		wp_cache_delete( $site_details->domain . $site_details->path, 'wsuwp:site' );
 
-		// Remove the cache attached to the new domain and path.
-		if ( isset( $_POST['blog']['domain'] ) && isset( $_POST['blog']['path'] ) ) {
+		// Remove the cache attached to the new domain and path when updating a site.
+		if ( isset( $_POST['blog'] ) && isset( $_POST['blog']['domain'] ) && isset( $_POST['blog']['path'] ) ) {
 			wp_cache_delete( $_POST['blog']['domain'] . $_POST['blog']['path'], 'wsuwp:site' );
 		}
 	}
