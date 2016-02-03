@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.4.0 (TBD)
+
+### Enhancements
+
+* Upgrade WordPress 4.4.2
+* Allow network admins to promote users of their network to network admins.
+* Search site URL as well as site name in each network's quick search under My Networks.
+* Enable `zip` file uploads for all sites. "Extended" networks are no longer used.
+
+### Bugs
+
+* Clear the `wsuwp:site` cache key for a domain/path when a site is deleted.
+* Ensure the "View" link is consistently places in the admin header when editing a post/page.
+* Fix logic to determine if My Networks menu should be shown. Users of multiple networks will now see My Networks.
+* Fix mistyped branch used for provisioning in `Vagrantfile`.
+
 ## 1.3.23 (January 15, 2016)
 
 ### Bugs
