@@ -45,6 +45,12 @@ class WSU_User_Management {
 	 * Output inline scripts in the footer to help with messaging on user management pages.
 	 */
 	public function print_footer_scripts() {
+		if ( 'user-network' === get_current_screen()->id && is_main_network() ) {
+			?><script>(function($){ $( "#add-new-user" ).text( "Add New Global User" ); }(jQuery)); </script><?php
+		} elseif ( 'user-network' === get_current_screen()->id ) {
+			?><script>(function($){ $( "#add-new-user" ).text( "Add New Network User" ); }(jQuery)); </script><?php
+		}
+
 		// On the new network user screen, we replace the messaging to indicate no notification will be sent.
 		if ( 'user-network' === get_current_screen()->id ) {
 			?><script>
