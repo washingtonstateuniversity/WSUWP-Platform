@@ -56,9 +56,9 @@ class WSU_User_Management {
 			</script><?php
 		}
 
-		// On the new site user screen, we replace "E-mail" with "E-mail or username" to aid in adding users.
+		// On the new site user screen, we replace "Email" with "Email or username" to aid in adding users.
 		if ( 'user' === get_current_screen()->id ) {
-			?><script>(function($){ $("label[for='adduser-email']").first().html('E-mail or Username'); }(jQuery));</script><?php
+			?><script>(function($){ $("label[for='adduser-email']").first().html('Email or Username'); }(jQuery));</script><?php
 		}
 	}
 
