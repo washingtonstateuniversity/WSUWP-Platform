@@ -31,6 +31,7 @@ class WSU_Network_Users {
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_network' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'add_user_to_network' ) );
 		add_action( 'added_existing_user', array( $this, 'add_user_to_network' ) );
+		add_action( 'admin_action_add-user', array( $this, 'add_existing_global_user_to_network' ) );
 
 		add_action( 'wpmu_new_user',            array( $this, 'add_user_to_global' ) );
 		add_action( 'personal_options_update',  array( $this, 'add_user_to_global' ) );
@@ -122,6 +123,46 @@ class WSU_Network_Users {
 	 */
 	public function add_user_to_global( $user_id ) {
 		add_user_meta( $user_id, 'wsuwp_global_capabilities', array(), true );
+	}
+
+	/**
+	 * Allow an existing global user to be added as a network user rather than returning
+	 * a "user already exists" error.
+	 */
+	public function add_existing_global_user_to_network() {
+		// Does not impact adding users at the global or site level.
+		if ( is_main_network() || ! is_network_admin() ) {
+			return;
+		}
+
+		// Only process the add-user action from the new network user screen.
+		if ( 'user-network' !== get_current_screen()->id ) {
+			return;
+		}
+
+		check_admin_referer( 'add-user', '_wpnonce_add-user' );
+
+		if ( ! current_user_can( 'manage_network_users' ) ) {
+			wp_die( __( 'You do not have permission to access this page.' ), 403 );
+		}
+
+		if ( ! is_array( $_POST['user'] ) ) {
+			wp_die( __( 'Cannot create an empty user.' ) );
+		}
+
+		$user = wp_unslash( $_POST['user'] );
+
+		$username = preg_replace( '/\s+/', '', sanitize_user( $user['username'], true ) );
+		$user_id = username_exists( $username );
+
+		if ( $user_id ) {
+			$this->add_user_to_network( $user_id );
+			wp_redirect( add_query_arg( array( 'update' => 'added' ), 'user-new.php' ) );
+			exit;
+		}
+
+		// Allow WordPress to continue processing the normal action.
+		return;
 	}
 
 	/**
