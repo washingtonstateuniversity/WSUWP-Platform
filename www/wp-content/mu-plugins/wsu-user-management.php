@@ -45,20 +45,29 @@ class WSU_User_Management {
 	 * Output inline scripts in the footer to help with messaging on user management pages.
 	 */
 	public function print_footer_scripts() {
-		// On the new network user screen, we replace the messaging to indicate no notification will be sent.
-		if ( 'user-network' === get_current_screen()->id ) {
-			?><script>
-				(function($){
-					$('.form-table' ).find('td').last().html('<p class="description" style="max-width:640px;">Creating a new user on ' +
-						'this page does not send any notification email. Please communicate with the new user as appropriate. If you ' +
-						'would like a notification to be generated automatically, create the user at an individual site level.</p>');
-				}(jQuery));
-			</script><?php
+		if ( 'user-network' === get_current_screen()->id && is_main_network() ) {
+			?><script>(function($){
+					$( "#add-new-user" ).text( "Add New Global User" );
+
+					$('.form-table' ).find('td').last().html('<p class="description" style="max-width:640px;">Global users can be added ' +
+						'through this interface. This process does not send any notification email or add the user to any other sites or' +
+						'networks. Please communicate with the user as appropriate.</p>');
+				}(jQuery)); </script><?php
+		} elseif ( 'user-network' === get_current_screen()->id ) {
+			// On the new network user screen, we replace the messaging to indicate no notification will be sent.
+			?><script>(function($){
+					$( "#add-new-user" ).text( "Add New Network User" );
+
+					$('.form-table' ).find('td').last().html('<p class="description" style="max-width:640px;">Adding a new user to ' +
+						'this network will also ensure the user exists as a global user. This process does not send any notification email or' +
+						'add the user to any individual sites. Please communicate with the new user as appropriate. If you would like a ' +
+						'notification to be sent, create the user in the admin of an individual site.</p>');
+				}(jQuery));</script><?php
 		}
 
-		// On the new site user screen, we replace "E-mail" with "E-mail or username" to aid in adding users.
+		// On the new site user screen, we replace "Email" with "Email or username" to aid in adding users.
 		if ( 'user' === get_current_screen()->id ) {
-			?><script>(function($){ $("label[for='adduser-email']").first().html('E-mail or Username'); }(jQuery));</script><?php
+			?><script>(function($){ $("label[for='adduser-email']").first().html('Email or Username'); }(jQuery));</script><?php
 		}
 	}
 
