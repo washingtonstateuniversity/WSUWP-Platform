@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.0 (TBD)
+## 1.4.0 (February 2, 2016)
 
 ### Enhancements
 
