@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.1 (February 3, 2016)
+
+### Enhancements
+
+* Apply patch for WordPress core ticket [#34395](https://core.trac.wordpress.org/ticket/34359) to cache the output of `wp_upload_dir()`.
+
+### Bugs
+
+* Allow for an existing global user to be added as a new network user in that network's admin.
+
 ## 1.4.0 (February 2, 2016)
 
 ### Enhancements
