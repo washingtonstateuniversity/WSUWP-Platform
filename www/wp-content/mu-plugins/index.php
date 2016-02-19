@@ -12,8 +12,6 @@
 $wsuwp_global_version = '1.4.1';
 $wsuwp_wp_changeset = '36463-forked';
 
-add_filter( 'spine_enable_builder_module', '__return_true' );
-
 /**
  * Returns the current deployment version of WSUWP Platform
  *
