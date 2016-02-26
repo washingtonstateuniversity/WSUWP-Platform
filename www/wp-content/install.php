@@ -120,6 +120,9 @@ function wp_install_defaults( $user_id ) {
 	update_option( 'page_on_front',  2     );
 	update_option( 'page_for_posts', 3     );
 
+	$site_description = apply_filters( 'wsuwp_install_site_description', 'Just another WordPress site' );
+	update_option( 'blogdescription', $site_description );
+
 	// Set up default widgets for default theme.
 	update_option( 'widget_search',          array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
 	update_option( 'widget_recent-posts',    array ( 2 => array ( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
