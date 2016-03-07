@@ -46,7 +46,7 @@ class WSU_Network_Admin {
 	private $global_network_options = array(
 		'fileupload_maxk' => 200000,
 		'blog_upload_space' => 2000,
-		'upload_filetypes' => 'jpg jpeg png gif mp3 webp oga ogg ogv webm mp4 pdf ai psd eps doc ppt xls csv key numbers pages dmg zip txt',
+		'upload_filetypes' => 'jpg jpeg png gif mp3 webp oga ogg ogv webm mp4 pdf ai psd eps doc ppt xls csv key numbers pages dmg zip txt mat',
 		'add_new_users' => 1,
 		'registrationnotification' => 'no',
 		'registration' => 'none',
@@ -782,6 +782,7 @@ class WSU_Network_Admin {
 		$mime_types['dmg'] = 'application/octet-stream';
 		$mime_types['eps'] = 'application/postscript';
 		$mime_types['txt'] = 'text/plain';
+		$mime_types['mat'] = 'application/x-matlab-data';
 
 		// global admins can upload exe files.
 		if ( is_super_admin() ) {
