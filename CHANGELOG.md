@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.4.4 (March 7, 2016)
+
+### Enhancements
+
+* Add MatLab files as an allowed uploat type.
+
+## 1.4.3 (February 26, 2016)
+
+### Enhancements
+
+* Add `wsuwp_install_site_description` filter to allow the default site description to be filtered when a new site is created.
+* Remove the use of the `spine_enable_builder_module` filter, which was specific to the Spine Parent Theme and is no longer needed.
+
+## 1.4.2 (February 25, 2016)
+
+### Enhancements
+
+* Allow users to upload `.txt` files with a mime type of `text/plain`.
+
 ## 1.4.1 (February 3, 2016)
 
 ### Enhancements
