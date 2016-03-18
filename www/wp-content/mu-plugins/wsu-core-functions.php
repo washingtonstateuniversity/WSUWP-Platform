@@ -234,6 +234,8 @@ function wsuwp_create_network( $args ) {
 	$wpdb->insert( $wpdb->site, array( 'domain' => $args['domain'], 'path' => $args['path'] ) );
 	$network_id = $wpdb->insert_id;
 
+	wp_cache_delete( 'networks', 'wsuwp' );
+
 	// Assume the current network's admins will have access
 	$network_admins = get_site_option( 'site_admins' );
 
