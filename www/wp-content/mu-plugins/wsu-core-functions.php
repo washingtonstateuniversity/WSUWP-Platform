@@ -162,7 +162,12 @@ function wsuwp_get_networks( $args = array() ) {
 		return array();
 	}
 
-	$network_results = (array) $wpdb->get_results( "SELECT * FROM $wpdb->site" );
+	$network_results = wp_cache_get( 'networks', 'wsuwp' );
+
+	if ( ! $network_results ) {
+		$network_results = (array) $wpdb->get_results( "SELECT * FROM $wpdb->site" );
+		wp_cache_add( 'networks', $network_results, 'wsuwp', 86400 );
+	}
 
 	if ( isset( $args['network_id'] ) ) {
 		$network_id = (array) $args['network_id'];
