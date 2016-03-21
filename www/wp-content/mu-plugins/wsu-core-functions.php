@@ -162,7 +162,12 @@ function wsuwp_get_networks( $args = array() ) {
 		return array();
 	}
 
-	$network_results = (array) $wpdb->get_results( "SELECT * FROM $wpdb->site" );
+	$network_results = wp_cache_get( 'networks', 'wsuwp' );
+
+	if ( ! $network_results ) {
+		$network_results = (array) $wpdb->get_results( "SELECT * FROM $wpdb->site" );
+		wp_cache_add( 'networks', $network_results, 'wsuwp', 86400 );
+	}
 
 	if ( isset( $args['network_id'] ) ) {
 		$network_id = (array) $args['network_id'];
@@ -228,6 +233,8 @@ function wsuwp_create_network( $args ) {
 
 	$wpdb->insert( $wpdb->site, array( 'domain' => $args['domain'], 'path' => $args['path'] ) );
 	$network_id = $wpdb->insert_id;
+
+	wp_cache_delete( 'networks', 'wsuwp' );
 
 	// Assume the current network's admins will have access
 	$network_admins = get_site_option( 'site_admins' );
