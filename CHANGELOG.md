@@ -1,6 +1,11 @@
 # Changelog
 
-## 1.4.5 (TBD)
+## 1.4.5 (March 22, 2016)
+
+### Enhancements
+
+* Add caching to `wsuwp_get_networks()`.
+* Add an `.editorconfig` file.
 
 ## 1.4.4 (March 7, 2016)
 
