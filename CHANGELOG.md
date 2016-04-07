@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.6 (April 7, 2016)
+
+### Bugs
+
+* Fix an issue where the admin menu would be collapsed when viewing a submenu page from that section. This has been around since the beginning! Props @philcable for the spot.
+
 ## 1.4.5 (March 22, 2016)
 
 ### Enhancements
