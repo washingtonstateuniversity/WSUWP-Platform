@@ -300,8 +300,12 @@ class WSU_Network_Admin {
 
 	/**
 	 * Add a top level menu item for 'Networks' to the network administration sidebar
+	 *
+	 * @param string $parent_file
+	 *
+	 * @return string Unmodified parent file.
 	 */
-	function add_master_network_menu() {
+	function add_master_network_menu( $parent_file ) {
 		global $menu, $submenu;
 
 		if ( is_network_admin() && is_main_network() ) {
@@ -350,6 +354,8 @@ class WSU_Network_Admin {
 				unset ( $submenu['settings.php'] );
 			}
 		}
+
+		return $parent_file;
 	}
 
 	/**
