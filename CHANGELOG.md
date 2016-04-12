@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.8 (April 12, 2016)
+
+### Enhancements
+
+* Remove custom global DB upgrade process.
+
 ## 1.4.7 (April 12, 2016)
 
 ### Enhancements
