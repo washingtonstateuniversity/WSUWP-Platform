@@ -83,9 +83,9 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	$suppression = $wpdb->suppress_errors();
 
 	if ( $requested_domain !== $alternate_domain ) {
-		$domain_where = $wpdb->prepare( "domain IN ( %s, %s )", $requested_domain, $alternate_domain );
+		$domain_where = $wpdb->prepare( 'domain IN ( %s, %s )', $requested_domain, $alternate_domain );
 	} else {
-		$domain_where = $wpdb->prepare( "domain = %s", $requested_domain );
+		$domain_where = $wpdb->prepare( 'domain = %s', $requested_domain );
 	}
 
 	/**
@@ -93,16 +93,14 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * will only help us with subdomain networks if it is a root visit with an empty path. If
 	 * this returns null, we'll want to go to a backup.
 	 */
-	$query = $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where AND path = %s", $requested_path );
-	$found_site_id = $wpdb->get_var( $query );
+	$found_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where AND path = %s", $requested_path ) ); // WPCS: unprepared SQL OK.
 
 	/**
 	 * If the query for domain and path has failed, then we'll assume this is a site that has
 	 * no path assigned and search for that accordingly.
 	 */
 	if ( ! $found_site_id ) {
-		$query = "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where and path = '/' ";
-		$found_site_id = $wpdb->get_var( $query );
+		$found_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where and path = '/' " ) ); // WPCS: unprepared SQL OK.
 	}
 
 	//reset error suppression setting
