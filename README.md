@@ -1,5 +1,7 @@
 # WSUWP Platform
 
+[![Build Status](https://travis-ci.org/washingtonstateuniversity/WSUWP-Platform.svg?branch=master)](https://travis-ci.org/washingtonstateuniversity/WSUWP-Platform)
+
 A central publishing platform built on WordPress at Washington State University.
 
 ## Overview
