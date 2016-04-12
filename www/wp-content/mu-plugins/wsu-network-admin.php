@@ -86,8 +86,6 @@ class WSU_Network_Admin {
 		add_filter( 'pre_site_option_upload_space_check_disabled', array( $this, 'set_upload_space_check_disabled' ), 10, 1 );
 
 		add_action( 'admin_init', array( $this, 'remove_upgrade_notices' ) );
-		add_action( 'admin_notices', array( $this, 'site_admin_notice' ) );
-		add_action( 'network_admin_notices', array( $this, 'site_admin_notice' ) );
 		add_action( 'admin_head-upgrade.php', array( $this, 'handle_platform_db_upgrade' ) );
 
 		add_action( 'refresh_blog_details', array( $this, 'clear_site_request_cache' ) );
@@ -850,27 +848,6 @@ class WSU_Network_Admin {
 	public function remove_upgrade_notices() {
 		remove_action( 'admin_notices', 'site_admin_notice' );
 		remove_action( 'network_admin_notices', 'site_admin_notice' );
-	}
-
-	/**
-	 * Display an upgrade notice for global database tables if a difference in database version
-	 * has been detected.
-	 */
-	public function site_admin_notice() {
-		global $wp_db_version;
-
-		if ( ! is_super_admin() ) {
-			return;
-		}
-
-		if ( get_site_option( 'wpmu_upgrade_site' ) != $wp_db_version ) {
-			$primary_network_id = get_main_network_id();
-			wsuwp_switch_to_network( $primary_network_id );
-			$global_admin_url = esc_url( network_admin_url( '/upgrade.php?action=global_upgrade' ) );
-			wsuwp_restore_current_network();
-
-			echo '<div class="update-nag">Thank you for Updating! Please visit the <a href="' . $global_admin_url . '">Global Upgrade</a> page to upgrade all database tables.</div>';
-		}
 	}
 
 	/**
