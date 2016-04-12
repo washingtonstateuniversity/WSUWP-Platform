@@ -112,7 +112,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * it all together in the $current_site, $current_blog, $site_id, and $blog_id globals so
 	 * that it is available for the remaining operations on this page request.
 	 */
-	if( $found_site_id ) {
+	if ( $found_site_id ) {
 		$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d LIMIT 1", $found_site_id ) );
 	}
 
@@ -133,7 +133,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	}
 }
 
-if( $current_blog ) {
+if ( $current_blog ) {
 	//set the blog_id and site_id globals that WordPress expects
 	$blog_id = $current_blog->blog_id;
 	$site_id = $current_blog->site_id;
