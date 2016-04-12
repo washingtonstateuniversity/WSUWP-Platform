@@ -103,7 +103,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * it all together in the $current_site, $current_blog, $site_id, and $blog_id globals so
 	 * that it is available for the remaining operations on this page request.
 	 */
-	if( $found_site_id ) {
+	if ( $found_site_id ) {
 		$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d LIMIT 1", $found_site_id ) );
 	}
 
@@ -124,7 +124,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	}
 }
 
-if( $current_blog ) {
+if ( $current_blog ) {
 	//set the blog_id and site_id globals that WordPress expects
 	$blog_id = $current_blog->blog_id;
 	$site_id = $current_blog->site_id;
@@ -179,9 +179,9 @@ if( $current_blog ) {
 
 	/** @todo think about sanitizing this properly as esc_url() and wp_redirect() are not available yet */
 	if ( $redirect_site_id ) {
-		header( "Location: http://" . $redirect_domain, true, 301 );
+		header( 'Location: http://' . $redirect_domain, true, 301 );
 	} else {
-		header( "Location: http://wp.wsu.edu/", true, 301 );
+		header( 'Location: http://wp.wsu.edu/', true, 301 );
 	}
 
 	die();
