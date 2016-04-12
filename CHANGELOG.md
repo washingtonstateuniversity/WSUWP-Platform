@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.7 (April 12, 2016)
+
+### Enhancements
+
+* Upgrade WordPress 4.5
+* Disable the default multisite database upgrade routine.
+
 ## 1.4.6 (April 7, 2016)
 
 ### Bugs
