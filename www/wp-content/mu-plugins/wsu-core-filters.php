@@ -17,6 +17,13 @@ add_filter( 'pre_option_ms_files_rewriting', '__return_false' );
  */
 add_filter( 'pre_option_uploads_use_yearmonth_folders', '__return_true' );
 
+/**
+ * Disable the multisite database upgrade routine.
+ *
+ * @see wp-admin/admin.php
+ */
+add_filter( 'do_mu_upgrade', '__return_false' );
+
 add_filter( 'upload_dir', 'wsuwp_upload_dir' );
 /**
  * @param array $uploads Data associated with the upload URL. We assume the subdir key is correct.
