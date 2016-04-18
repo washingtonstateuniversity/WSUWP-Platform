@@ -91,7 +91,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * no path assigned and search for that accordingly.
 	 */
 	if ( ! $found_site_id ) {
-		$found_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where and path = '/' " ) ); // WPCS: unprepared SQL OK.
+		$found_site_id = $wpdb->get_var( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where and path = '/' " ); // WPCS: unprepared SQL OK.
 	}
 
 	//reset error suppression setting
