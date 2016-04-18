@@ -74,9 +74,9 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	$suppression = $wpdb->suppress_errors();
 
 	if ( $requested_domain !== $alternate_domain ) {
-		$domain_where = $wpdb->prepare( "domain IN ( %s, %s )", $requested_domain, $alternate_domain );
+		$domain_where = $wpdb->prepare( 'domain IN ( %s, %s )', $requested_domain, $alternate_domain );
 	} else {
-		$domain_where = $wpdb->prepare( "domain = %s", $requested_domain );
+		$domain_where = $wpdb->prepare( 'domain = %s', $requested_domain );
 	}
 
 	/**
@@ -84,16 +84,14 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * will only help us with subdomain networks if it is a root visit with an empty path. If
 	 * this returns null, we'll want to go to a backup.
 	 */
-	$query = $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where AND path = %s", $requested_path );
-	$found_site_id = $wpdb->get_var( $query );
+	$found_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where AND path = %s", $requested_path ) ); // WPCS: unprepared SQL OK.
 
 	/**
 	 * If the query for domain and path has failed, then we'll assume this is a site that has
 	 * no path assigned and search for that accordingly.
 	 */
 	if ( ! $found_site_id ) {
-		$query = "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where and path = '/' ";
-		$found_site_id = $wpdb->get_var( $query );
+		$found_site_id = $wpdb->get_var( "SELECT blog_id FROM $wpdb->blogs WHERE $domain_where and path = '/' " ); // WPCS: unprepared SQL OK.
 	}
 
 	//reset error suppression setting
@@ -105,7 +103,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	 * it all together in the $current_site, $current_blog, $site_id, and $blog_id globals so
 	 * that it is available for the remaining operations on this page request.
 	 */
-	if( $found_site_id ) {
+	if ( $found_site_id ) {
 		$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d LIMIT 1", $found_site_id ) );
 	}
 
@@ -126,7 +124,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 	}
 }
 
-if( $current_blog ) {
+if ( $current_blog ) {
 	//set the blog_id and site_id globals that WordPress expects
 	$blog_id = $current_blog->blog_id;
 	$site_id = $current_blog->site_id;
@@ -181,9 +179,9 @@ if( $current_blog ) {
 
 	/** @todo think about sanitizing this properly as esc_url() and wp_redirect() are not available yet */
 	if ( $redirect_site_id ) {
-		header( "Location: http://" . $redirect_domain, true, 301 );
+		header( 'Location: http://' . $redirect_domain, true, 301 );
 	} else {
-		header( "Location: http://wp.wsu.edu/", true, 301 );
+		header( 'Location: http://wp.wsu.edu/', true, 301 );
 	}
 
 	die();

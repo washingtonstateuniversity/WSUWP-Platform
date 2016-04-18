@@ -1,6 +1,13 @@
 # Because OSX
 .DS_Store
 
+# Ignore files added by npm
+node_modules
+
+# Ignore composer files
+vendor
+composer.lock
+
 # Ignore Sublime project files.
 *.sublime*
 
