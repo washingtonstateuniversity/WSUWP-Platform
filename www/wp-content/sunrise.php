@@ -179,10 +179,15 @@ if( $current_blog ) {
 	// Check to see if this redirect domain is a site that we can handle
 	$redirect_site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s", $redirect_domain ) );
 
+	// Over sanitize the requested domain for output in the logs.
+	$requested_domain = preg_replace( '|[^a-z0-9 _.\-@]|i', '', $requested_domain );
+
 	/** @todo think about sanitizing this properly as esc_url() and wp_redirect() are not available yet */
 	if ( $redirect_site_id ) {
+		error_log( 'Sunrise: Redirecting invalid domain one level up - ' . $requested_domain );
 		header( "Location: http://" . $redirect_domain, true, 301 );
 	} else {
+		error_log( 'Sunrise: Redirecting invalid domain to default site - ' . $requested_domain );
 		header( "Location: http://wp.wsu.edu/", true, 301 );
 	}
 
