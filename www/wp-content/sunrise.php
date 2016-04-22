@@ -50,9 +50,18 @@ if ( defined( 'COOKIE_DOMAIN' ) ) {
 	die( 'The constant "COOKIE_DOMAIN" is defined (probably in wp-config.php). Please remove or comment out that define() line.' );
 }
 
-//Capture the domain and path from the current request
-$requested_domain    = $_SERVER['HTTP_HOST'];
+// Capture the domain and path from the current request
+$requested_domain = strtolower( $_SERVER['HTTP_HOST'] );
 $requested_uri       = trim( $_SERVER['REQUEST_URI'], '/' );
+
+// Strip any port numbers from the HTTP_HOST data.
+if ( substr( $requested_domain, -3 ) == ':80' ) {
+	$requested_domain = substr( $requested_domain, 0, -3 );
+	$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -3 );
+} elseif ( substr( $requested_domain, -4 ) == ':443' ) {
+	$requested_domain = substr( $requested_domain, 0, -4 );
+	$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -4 );
+}
 
 // We currently support one subdirectory deep, and therefore only look at the first path level
 $requested_uri_parts = explode( '/', $requested_uri );
