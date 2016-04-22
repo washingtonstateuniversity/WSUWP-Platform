@@ -197,7 +197,7 @@ if( $current_blog ) {
 		header( "Location: http://" . $redirect_domain, true, 301 );
 	} else {
 		error_log( 'Sunrise: Redirecting invalid domain to default site - ' . $requested_domain );
-		header( "Location: http://wp.wsu.edu/", true, 301 );
+		header( "Location: https://wp.wsu.edu/", true, 301 );
 	}
 
 	die();
