@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.9 (April 25, 2016)
+
+* Add logging for invalid domains in sunrise.
+* Strip port numbers from requests that include them.
+
 ## 1.4.8 (April 12, 2016)
 
 ### Enhancements
