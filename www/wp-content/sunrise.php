@@ -55,10 +55,10 @@ $requested_domain = strtolower( $_SERVER['HTTP_HOST'] );
 $requested_uri       = trim( $_SERVER['REQUEST_URI'], '/' );
 
 // Strip any port numbers from the HTTP_HOST data.
-if ( substr( $requested_domain, -3 ) == ':80' ) {
+if ( ':80' === substr( $requested_domain, -3 ) ) {
 	$requested_domain = substr( $requested_domain, 0, -3 );
 	$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -3 );
-} elseif ( substr( $requested_domain, -4 ) == ':443' ) {
+} elseif ( ':443' === substr( $requested_domain, -4 ) ) {
 	$requested_domain = substr( $requested_domain, 0, -4 );
 	$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -4 );
 }
