@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.10 (April 26, 2016)
+
+### Enhancements
+
+* Upgrade WordPress 4.5.1
+
 ## 1.4.9 (April 25, 2016)
 
 * Add logging for invalid domains in sunrise.
