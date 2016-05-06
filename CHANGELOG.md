@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.11 (May 6, 2016)
+
+* Upgrade WordPress 4.5.2
+
 ## 1.4.10 (April 26, 2016)
 
 ### Enhancements
