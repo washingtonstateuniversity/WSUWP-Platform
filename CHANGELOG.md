@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.12 (May 19, 2016)
+
+* Add `WP_Site_Query` work to help test for inclusion in WordPress core.
+
 ## 1.4.11 (May 6, 2016)
 
 * Upgrade WordPress 4.5.2
