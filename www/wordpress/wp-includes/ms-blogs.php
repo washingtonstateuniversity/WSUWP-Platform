@@ -454,6 +454,114 @@ function clean_blog_cache( $blog ) {
 	wp_cache_delete( 'current_blog_' . $blog->domain . $blog->path, 'site-options' );
 	wp_cache_delete( 'get_id_from_blogname_' . trim( $blog->path, '/' ), 'blog-details' );
 	wp_cache_delete( $domain_path_key, 'blog-id-cache' );
+
+	$last_changed = microtime();
+	wp_cache_set( 'last_changed', $last_changed, 'sites' );
+
+	/**
+	 * Fires immediately after a site has been removed from the object cache.
+	 *
+	 * @since 4.6.0
+	 *
+	 * @param int     $id Blog ID.
+	 * @param WP_Site $blog
+	 * @param string  $domain_path_key md5 hash of domain and path.
+	 */
+	do_action( 'clean_site_cache', $blog_id, $blog, $domain_path_key );
+}
+
+/**
+ * Retrieves site data given a site ID or site object.
+ *
+ * If an object is passed then the site data will be cached and then returned
+ * after being passed through a filter. If the site is empty, then the global
+ * site variable will be used, if it is set.
+ *
+ * @since 4.6.0
+ *
+ * @global WP_Site $site
+ *
+ * @param WP_Site|string|int $site Site to retrieve.
+ * @param string $output Optional. OBJECT or ARRAY_A or ARRAY_N constants.
+ * @return WP_Site|array|null Depends on $output value.
+ */
+function get_site( &$site = null, $output = OBJECT ) {
+	global $current_blog;
+	if ( empty( $site ) && isset( $current_blog ) ) {
+		$site = $current_blog;
+	}
+
+	if ( $site instanceof WP_Site ) {
+		$_site = $site;
+	} elseif ( is_object( $site ) ) {
+		$_site = new WP_Site( $site );
+	} else {
+		$_site = WP_Site::get_instance( $site );
+	}
+
+	if ( ! $_site ) {
+		return null;
+	}
+
+	/**
+	 * Fires after a site is retrieved.
+	 *
+	 * @since 4.6.0
+	 *
+	 * @param mixed $_site Site data.
+	 */
+	$_site = apply_filters( 'get_site', $_site );
+
+	if ( $output == OBJECT ) {
+		return $_site;
+	} elseif ( $output == ARRAY_A ) {
+		return $_site->to_array();
+	} elseif ( $output == ARRAY_N ) {
+		return array_values( $_site->to_array() );
+	}
+
+	return $_site;
+}
+
+/**
+ * Adds any sites from the given ids to the cache that do not already exist in cache
+ *
+ * @since 4.6.0
+ * @access private
+ *
+ * @see update_site_cache()
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param array $ids ID list.
+ */
+function _prime_site_caches( $ids ) {
+	global $wpdb;
+
+	$non_cached_ids = _get_non_cached_ids( $ids, 'sites' );
+	if ( ! empty( $non_cached_ids ) ) {
+		$fresh_sites = $wpdb->get_results( sprintf( "SELECT * FROM $wpdb->blogs WHERE blog_id IN (%s)", join( ",", $non_cached_ids ) ) );
+
+		update_site_cache( $fresh_sites );
+	}
+}
+
+/**
+ * Updates sites in cache.
+ *
+ * @since 4.6.0
+ *
+ * @param array $sites Array of site objects, passed by reference.
+ */
+function update_site_cache( &$sites ) {
+	if ( ! $sites ) {
+		return;
+	}
+
+	foreach ( $sites as $site ) {
+		wp_cache_add( $site->blog_id, $site, 'sites' );
+		wp_cache_add( $site->blog_id . 'short', $site, 'blog-details' );
+	}
 }
 
 /**
