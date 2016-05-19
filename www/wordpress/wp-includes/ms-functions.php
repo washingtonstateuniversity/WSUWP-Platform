@@ -308,18 +308,22 @@ function get_blog_id_from_url( $domain, $path = '/' ) {
 	global $wpdb;
 
 	$domain = strtolower( $domain );
-	$path = strtolower( $path );
-	$id = wp_cache_get( md5( $domain . $path ), 'blog-id-cache' );
+	$path   = strtolower( $path );
+	$id     = wp_cache_get( md5( $domain . $path ), 'blog-id-cache' );
 
-	if ( $id == -1 ) // blog does not exist
+	if ( $id == - 1 ) // blog does not exist
+	{
 		return 0;
-	elseif ( $id )
+	} elseif ( $id ) {
 		return (int) $id;
+	}
 
-	$id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s and path = %s /* get_blog_id_from_url */", $domain, $path ) );
-
+	$args   = array( 'domain' => $domain, 'path' => $path, 'fields' => 'ids' );
+	$result = get_sites( $args );
+	$id     = array_shift( $result );
 	if ( ! $id ) {
-		wp_cache_set( md5( $domain . $path ), -1, 'blog-id-cache' );
+		wp_cache_set( md5( $domain . $path ), - 1, 'blog-id-cache' );
+
 		return 0;
 	}
 
@@ -1255,21 +1259,29 @@ Disable these notifications: %3$s'), $user->user_login, wp_unslash( $_SERVER['RE
  * @return int
  */
 function domain_exists($domain, $path, $site_id = 1) {
-	global $wpdb;
 	$path = trailingslashit( $path );
-	$result = $wpdb->get_var( $wpdb->prepare("SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s AND site_id = %d", $domain, $path, $site_id) );
+
+	$result = get_sites( array(
+		'path'    => $path,
+		'domain'  => $domain,
+		'network_id' => $site_id,
+		'number'  => 1,
+		'fields'  => 'ids'
+	) );
+
+	$site = array_shift( $result );
 
 	/**
 	 * Filter whether a blogname is taken.
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param int|null $result  The blog_id if the blogname exists, null otherwise.
+	 * @param int|null $site  The blog_id if the blogname exists, null otherwise.
 	 * @param string   $domain  Domain to be checked.
 	 * @param string   $path    Path to be checked.
 	 * @param int      $site_id Site ID. Relevant only on multi-network installs.
 	 */
-	return apply_filters( 'domain_exists', $result, $domain, $path, $site_id );
+	return apply_filters( 'domain_exists', $site, $domain, $path, $site_id );
 }
 
 /**
@@ -2246,13 +2258,21 @@ function wp_maybe_update_network_user_counts() {
  * Update the network-wide site count.
  *
  * @since 3.7.0
+ * @since 4.6.0 Converted to use get_sites()
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
 function wp_update_network_site_counts() {
 	global $wpdb;
 
-	$count = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(blog_id) as c FROM $wpdb->blogs WHERE site_id = %d AND spam = '0' AND deleted = '0' and archived = '0'", $wpdb->siteid) );
+	$count = get_sites( array(
+		'network_id' => $wpdb->siteid,
+		'spam'       => 0,
+		'deleted'    => 0,
+		'archived'   => 0,
+		'count'      => true
+	) );
+
 	update_site_option( 'blog_count', $count );
 }
 
@@ -2408,6 +2428,7 @@ function wp_is_large_network( $using = 'sites' ) {
  * Return an array of sites for a network or networks.
  *
  * @since 3.7.0
+ * @since 4.6.0 Converted to use get_sites()
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -2432,9 +2453,6 @@ function wp_is_large_network( $using = 'sites' ) {
 function wp_get_sites( $args = array() ) {
 	global $wpdb;
 
-	if ( wp_is_large_network() )
-		return array();
-
 	$defaults = array(
 		'network_id' => $wpdb->siteid,
 		'public'     => null,
@@ -2448,38 +2466,29 @@ function wp_get_sites( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$query = "SELECT * FROM $wpdb->blogs WHERE 1=1 ";
-
-	if ( isset( $args['network_id'] ) && ( is_array( $args['network_id'] ) || is_numeric( $args['network_id'] ) ) ) {
-		$network_ids = implode( ',', wp_parse_id_list( $args['network_id'] ) );
-		$query .= "AND site_id IN ($network_ids) ";
+	// Backwards compatibility
+	if( is_array( $args['network_id'] ) ){
+		$args['network__in'] = $args['network_id'];
+		$args['network_id'] = null;
 	}
 
-	if ( isset( $args['public'] ) )
-		$query .= $wpdb->prepare( "AND public = %d ", $args['public'] );
-
-	if ( isset( $args['archived'] ) )
-		$query .= $wpdb->prepare( "AND archived = %d ", $args['archived'] );
-
-	if ( isset( $args['mature'] ) )
-		$query .= $wpdb->prepare( "AND mature = %d ", $args['mature'] );
-
-	if ( isset( $args['spam'] ) )
-		$query .= $wpdb->prepare( "AND spam = %d ", $args['spam'] );
-
-	if ( isset( $args['deleted'] ) )
-		$query .= $wpdb->prepare( "AND deleted = %d ", $args['deleted'] );
-
-	if ( isset( $args['limit'] ) && $args['limit'] ) {
-		if ( isset( $args['offset'] ) && $args['offset'] )
-			$query .= $wpdb->prepare( "LIMIT %d , %d ", $args['offset'], $args['limit'] );
-		else
-			$query .= $wpdb->prepare( "LIMIT %d ", $args['limit'] );
+	if( is_numeric( $args['limit'] ) ){
+		$args['number'] = $args['limit'];
+		$args['limit'] = null;
 	}
 
-	$site_results = $wpdb->get_results( $query, ARRAY_A );
+	// Make sure count is disabled.
+	$args['count'] = false;
 
-	return $site_results;
+	$_sites  = get_sites( $args );
+
+	$results = array();
+
+	foreach ( $_sites as $_site ) {
+		$results[] = get_site( $_site, ARRAY_A );
+	}
+
+	return $results;
 }
 
 /**

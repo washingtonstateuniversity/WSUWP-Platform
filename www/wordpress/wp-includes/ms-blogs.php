@@ -565,6 +565,67 @@ function update_site_cache( &$sites ) {
 }
 
 /**
+ *
+ * Retrieve list of sites matching criteria.
+ *
+ * The defaults are as follows:
+ *
+ * @since 4.6.0
+ *
+ * @see WP_Site_Query::parse_query()
+ *
+ * @param string|array $args {
+ *     Optional. Array or query string of site query parameters. Default empty.
+ *
+ *     @type array        $site__in         Array of site IDs to include. Default empty.
+ *     @type array        $site__not_in     Array of site IDs to exclude. Default empty.
+ *     @type bool         $count            Whether to return a site count (true) or array of site objects.
+ *                                          Default false.
+ *     @type array        $date_query       Date query clauses to limit sites by. See WP_Date_Query.
+ *                                          Default null.
+ *     @type string       $fields           Site fields to return. Accepts 'ids' for site IDs only or empty
+ *                                          for all fields. Default empty.
+ *     @type int          $ID               Currently unused.
+ *     @type int          $number           Maximum number of sites to retrieve. Default null (no limit).
+ *     @type int          $offset           Number of sites to offset the query. Used to build LIMIT clause.
+ *                                          Default 0.
+ *     @type bool         $no_found_rows    Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
+ *     @type string|array $orderby          Site status or array of statuses. To use 'meta_value' or
+ *                                          'meta_value_num', `$meta_key` must also be defined. To sort by a
+ *                                          specific `$meta_query` clause, use that clause's array key. Accepts
+ *                                          'site_agent', 'site_approved', 'site_author', 'site_author_email',
+ *                                          'site_author_IP', 'site_author_url', 'site_content', 'site_date',
+ *                                          'site_date_gmt', 'blog_id', 'site_karma', 'site_parent', 'site_id',
+ *                                          'site_type', 'user_id', 'site__in', 'meta_value', 'meta_value_num',
+ *                                          the value of $meta_key, and the array keys of `$meta_query`. Also
+ *                                          accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
+ *                                          Default 'site_date_gmt'.
+ *     @type string       $order            How to order retrieved sites. Accepts 'ASC', 'DESC'. Default 'DESC'.
+ *     @type string       $domain           Limit results to those affiliated with a given network ID.
+ *                                          Default current network ID.
+ *     @type array        $domain__in       Array of domains to include affiliated sites for. Default empty.
+ *     @type array        $domain__not_in   Array of domains to exclude affiliated sites for. Default empty.
+ *     @type string       $path             Limit results to those affiliated with a given network ID.
+ *                                          Default current network ID.
+ *     @type array        $path__in         Array of paths to include affiliated sites for. Default empty.
+ *     @type array        $path__not_in     Array of paths to exclude affiliated sites for. Default empty.
+ *     @type int          $network_id       Limit results to those affiliated with a given network ID.
+ *                                          Default current network ID.
+ *     @type array        $network__in      Array of network IDs to include affiliated sites for. Default empty.
+ *     @type array        $network__not_in  Array of network IDs to exclude affiliated sites for. Default empty.
+ *     @type string       $search           Search term(s) to retrieve matching sites for. Default empty.
+ *     @type bool         $update_site_cache Whether to prime the cache for site networks. Default false.
+ * }
+ * @return array List of sites.
+ */
+function get_sites( $args = array() ) {
+	$query = new WP_Site_Query();
+
+	return $query->query( $args );
+}
+
+
+/**
  * Retrieve option value for a given blog id based on name of option.
  *
  * If the option does not exist or does not have a value, then the return value
