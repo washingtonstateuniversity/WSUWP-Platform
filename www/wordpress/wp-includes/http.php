@@ -598,6 +598,7 @@ function allowed_http_request_hosts( $is_external, $host ) {
  * Attached to the http_request_host_is_external filter.
  *
  * @since 3.6.0
+ * @since 4.6.0 Converted to use get_sites()
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  * @staticvar array $queried
@@ -615,7 +616,14 @@ function ms_allowed_http_request_hosts( $is_external, $host ) {
 		return true;
 	if ( isset( $queried[ $host ] ) )
 		return $queried[ $host ];
-	$queried[ $host ] = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT domain FROM $wpdb->blogs WHERE domain = %s LIMIT 1", $host ) );
+
+	$result = get_sites( array(
+		'domain' => $host,
+		'count'  => true
+	) );
+
+	$queried[ $host ] = (bool) $result;
+
 	return $queried[ $host ];
 }
 
