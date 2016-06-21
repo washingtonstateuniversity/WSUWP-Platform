@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.13 (June 21, 2016)
+
+* Update WordPress 4.5.3
+* Provide a local Nginx configuration for WSU Spine development.
+
 ## 1.4.12 (May 19, 2016)
 
 * Add `WP_Site_Query` work to help test for inclusion in WordPress core.
