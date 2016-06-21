@@ -491,7 +491,7 @@ class WP_Date_Query {
 		$valid_columns = array(
 			'post_date', 'post_date_gmt', 'post_modified',
 			'post_modified_gmt', 'comment_date', 'comment_date_gmt',
-			'user_registered', 'registered', 'last_updated',
+			'user_registered',
 		);
 
 		// Attempt to detect a table prefix.
@@ -524,10 +524,6 @@ class WP_Date_Query {
 				),
 				$wpdb->users => array(
 					'user_registered',
-				),
-				$wpdb->blogs => array(
-					'registered',
-					'last_updated',
 				),
 			);
 
