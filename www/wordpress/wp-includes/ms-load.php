@@ -154,7 +154,6 @@ function wp_get_network( $network ) {
  * Retrieve a site object by its domain and path.
  *
  * @since 3.9.0
- * @since 4.6.0 Converted to use get_sites()
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -232,28 +231,27 @@ function get_site_by_path( $domain, $path, $segments = null ) {
 	$domains = array( $domain );
 	if ( 'www.' === substr( $domain, 0, 4 ) ) {
 		$domains[] = substr( $domain, 4 );
+		$search_domains = "'" . implode( "', '", $wpdb->_escape( $domains ) ) . "'";
 	}
 
-	$args = array(
-		'path__in'   => $paths,
-		'domain__in' => $domains,
-		'number'     => 1
-	);
+	if ( count( $paths ) > 1 ) {
+		$search_paths = "'" . implode( "', '", $wpdb->_escape( $paths ) ) . "'";
+	}
 
 	if ( count( $domains ) > 1 && count( $paths ) > 1 ) {
-		$args['orderby'] = 'domain_length path_length';
-		$args['order']   = 'DESC DESC';
+		$site = $wpdb->get_row( "SELECT * FROM $wpdb->blogs WHERE domain IN ($search_domains) AND path IN ($search_paths) ORDER BY CHAR_LENGTH(domain) DESC, CHAR_LENGTH(path) DESC LIMIT 1" );
 	} elseif ( count( $domains ) > 1 ) {
-		$args['orderby'] = 'domain_length';
-		$args['order']   = 'DESC';
+		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE path = %s", $paths[0] );
+		$sql .= " AND domain IN ($search_domains) ORDER BY CHAR_LENGTH(domain) DESC LIMIT 1";
+		$site = $wpdb->get_row( $sql );
 	} elseif ( count( $paths ) > 1 ) {
-		$args['orderby'] = 'path_length';
-		$args['order']   = 'DESC';
+		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE domain = %s", $domains[0] );
+		$sql .= " AND path IN ($search_paths) ORDER BY CHAR_LENGTH(path) DESC LIMIT 1";
+		$site = $wpdb->get_row( $sql );
+	} else {
+		$site = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE domain = %s AND path = %s", $domains[0], $paths[0] ) );
 	}
 
-	$result = get_sites( $args );
-
-	$site   = array_shift( $result );
 	if ( $site ) {
 		// @todo get_blog_details()
 		return $site;
