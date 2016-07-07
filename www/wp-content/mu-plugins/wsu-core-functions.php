@@ -12,7 +12,6 @@
 /**
  * Return a list of networks that the user is a member of.
  *
- * @uses wsuwp_get_networks
  * @param null $user_id Optional. Defaults to the current user.
  *
  * @return array containing list of user's networks
@@ -27,7 +26,7 @@ function wsuwp_get_user_networks( $user_id = null ) {
 
 	// Global admins should see every network.
 	if ( is_super_admin() ) {
-		return wsuwp_get_networks();
+		return get_networks();
 	}
 
 	$user_id = absint( $user_id );
@@ -42,7 +41,7 @@ function wsuwp_get_user_networks( $user_id = null ) {
 		}
 	}
 
-	return wsuwp_get_networks( array( 'network_id' => $user_network_ids ) );
+	return get_networks( array( 'network__in' => $user_network_ids ) );
 }
 
 /**
@@ -327,7 +326,7 @@ We hope you enjoy your new site. Thanks!
  * @param string $plugin Slug of the plugin to be activated.
  */
 function wsuwp_activate_global_plugin( $plugin ) {
-	$networks = wsuwp_get_networks();
+	$networks = get_networks();
 	foreach ( $networks as $network ) {
 		wsuwp_switch_to_network( $network->id );
 		$current = get_site_option( 'active_sitewide_plugins', array() );
@@ -349,7 +348,7 @@ function wsuwp_activate_global_plugin( $plugin ) {
  * @param string $plugin Slug of the plugin to be deactivated.
  */
 function wsuwp_deactivate_global_plugin( $plugin ) {
-	$networks = wsuwp_get_networks();
+	$networks = get_networks();
 	foreach ( $networks as $network ) {
 		wsuwp_switch_to_network( $network->id );
 		$current = get_site_option( 'active_sitewide_plugins', array() );
@@ -440,7 +439,7 @@ function wsuwp_validate_path( $path ) {
  * @return int The number of networks currently configured.
  */
 function wsuwp_network_count() {
-	$network_count = count( wsuwp_get_networks() );
+	$network_count = get_networks( array( 'count' => true ) );
 	return $network_count;
 }
 
