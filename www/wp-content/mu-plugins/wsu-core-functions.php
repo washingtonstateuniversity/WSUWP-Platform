@@ -1,10 +1,10 @@
 <?php
 /*
  * Plugin Name: WSU Core Functions
- * Plugin URI: http://web.wsu.edu
+ * Plugin URI: https://web.wsu.edu
  * Description: Functions that perform some core functionality that we would love to live inside of WordPress one day.
  * Author: washingtonstateuniversity, jeremyfelt
- * Author URI: http://web.wsu.edu
+ * Author URI: https://web.wsu.edu
  * Version: 0.1
  * Network: true
  */
@@ -12,12 +12,12 @@
 /**
  * Return a list of networks that the user is a member of.
  *
- * @param null $user_id Optional. Defaults to the current user.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
- * @return array containing list of user's networks
+ * @param int|null $user_id Optional. Defaults to the current user.
+ * @return array Array containing a list of the user's networks.
  */
 function wsuwp_get_user_networks( $user_id = null ) {
-	/* @var WPDB $wpdb */
 	global $wpdb;
 
 	if ( ! $user_id ) {
