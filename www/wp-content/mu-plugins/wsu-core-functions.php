@@ -471,7 +471,7 @@ function wsuwp_network_user_count( $network_id = 0 ) {
 	global $wpdb;
 
 	if ( 0 === $network_id ) {
-		$network_id = wsuwp_get_current_network()->id;
+		$network_id = get_current_network_id();
 	}
 
 	wsuwp_switch_to_network( $network_id );

@@ -107,7 +107,7 @@ class WSU_Network_Users {
 	 * @param int $user_id User ID of a new user added to a network.
 	 */
 	public function add_user_to_network( $user_id ) {
-		$network_id = absint( wsuwp_get_current_network()->id );
+		$network_id = absint( get_current_network_id() );
 		if ( 0 < $network_id ) {
 			add_user_meta( $user_id, 'wsuwp_network_' . $network_id . '_capabilities', array(), true );
 		}
@@ -180,7 +180,7 @@ class WSU_Network_Users {
 			<table class="form-table">
 				<tr>
 					<th><?php _e( 'Network Admin' ); ?></th>
-					<td><p><label><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', wsuwp_get_current_network()->id ) ); ?> /><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
+					<td><p><label><input type="checkbox" id="network_admin"  name="network_admin" <?php checked( user_can( $profile_user->ID, 'manage_network', get_current_network_id() ) ); ?> /><?php _e( 'Grant this user admin privileges for the Network.' ); ?></label></p></td>
 				</tr>
 			</table>
 		<?php
@@ -277,7 +277,7 @@ class WSU_Network_Users {
 	 */
 	public function is_network_admin( $user_login, $network_id = 0 ) {
 		if ( 0 === absint( $network_id ) ) {
-			$network_id = wsuwp_get_current_network()->id;
+			$network_id = get_current_network_id();
 		}
 
 		$network_id = absint( $network_id );
@@ -438,7 +438,7 @@ class WSU_Network_Users {
 		}
 
 		// The primary network (global) should show all users.
-		if ( get_main_network_id() == wsuwp_get_current_network()->id ) {
+		if ( get_main_network_id() == get_current_network_id() ) {
 			return;
 		}
 
@@ -450,7 +450,7 @@ class WSU_Network_Users {
 
 		wp_enqueue_script( 'wsuwp-network-users', plugins_url( '/js/wsuwp-network-users.js', __FILE__ ), array( 'jquery' ), wsuwp_global_version(), true );
 
-		$network_id = absint( wsuwp_get_current_network()->id );
+		$network_id = absint( get_current_network_id() );
 
 		$query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON (wp_users.ID = wp_usermeta.user_id)';
 		$query->query_where = "WHERE 1=1 AND (wp_usermeta.meta_key = 'wsuwp_network_" . $network_id . "_capabilities' )";
