@@ -494,13 +494,11 @@ function wsuwp_network_user_count( $network_id = 0 ) {
  * @return int Count of sites on the global platform.
  */
 function wsuwp_global_site_count() {
-	global $wpdb;
-
 	wsuwp_switch_to_network( get_main_network_id() );
 	$global_site_data = get_site_option( 'global_site_data', array( 'count' => 0, 'updated' => 0 ) );
 
 	if ( empty( $global_site_data['count'] ) || empty( $global_site_data['updated'] ) || ( time() - 1800 ) > absint( $global_site_data['updated'] ) ) {
-		$count = $wpdb->get_var( "SELECT COUNT(blog_id) as c FROM $wpdb->blogs WHERE spam = '0' AND deleted = '0' and archived = '0'" );
+		$count = get_sites( array( 'number' => '', 'spam' => 0, 'deleted' => 0, 'archived' => 0, 'count' => true ) );
 		$global_site_data = array( 'count' => absint( $count ), 'updated' => time() );
 		update_site_option( 'global_site_data', $global_site_data );
 	}
