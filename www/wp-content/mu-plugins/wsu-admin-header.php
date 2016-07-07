@@ -358,7 +358,7 @@ class WSU_Admin_Header {
 				),
 			));
 
-			$sites = wp_get_sites( array( 'network_id' => $network->id, 'limit' => 200 ) );
+			$sites = get_sites( array( 'network_id' => $network->id ) );
 			$network_sites_added = 0;
 
 			// Add a unique site search menu for each network to aid with long lists.
@@ -374,23 +374,21 @@ class WSU_Admin_Header {
 
 			// Add each of the user's sites from this specific network to the menu
 			foreach( $sites as $site ) {
-				switch_to_blog( $site['blog_id'] );
+				switch_to_blog( $site->id );
 
 				if ( ! current_user_can( 'manage_network', $network->id ) && ! is_user_member_of_blog() ) {
 					restore_current_blog();
 					continue;
 				}
 
-				$site_details = get_blog_details();
-
 				$blavatar = '<div class="blavatar"></div>';
 
-				$menu_id  = 'site-' . $site['blog_id'];
+				$menu_id  = 'site-' . $site->id;
 
 				$wp_admin_bar->add_menu( array(
 					'parent'    => 'network-' . $network->id . '-list',
 					'id'        => $menu_id,
-					'title'     => $blavatar . $site_details->blogname,
+					'title'     => $blavatar . $site->blogname,
 					'href'      => admin_url(),
 				) );
 
