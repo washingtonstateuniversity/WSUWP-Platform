@@ -499,7 +499,7 @@ class WSU_Network_Users {
 				$search = trim( $search, '*' );
 			}
 
-			$query->query_where .= $query->get_search_sql( $search, $search, $wild );
+			$query->query_where .= $query->get_search_sql( $search, array( 'user_login', 'user_nicename', 'user_email' ), $wild );
 		}
 	}
 
