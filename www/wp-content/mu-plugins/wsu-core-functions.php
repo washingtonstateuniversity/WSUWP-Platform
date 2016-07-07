@@ -77,12 +77,13 @@ function wsuwp_get_current_site() {
  *     - site_name
  *     - cookie_domain (?)
  *
- * @param int $network_id Network ID to switch to.
+ * @global WP_Network $current_site The current network.
+ * @global wpdb       $wpdb         WordPress database abstraction object.
  *
+ * @param int $network_id Network ID to switch to.
  * @return bool
  */
 function wsuwp_switch_to_network( $network_id ) {
-	/** @type WPDB $wpdb */
 	global $current_site, $wpdb;
 
 	if ( ! $network_id ) {
@@ -101,10 +102,12 @@ function wsuwp_switch_to_network( $network_id ) {
 /**
  * Restore the last network that was in use before switching.
  *
+ * @global WP_Network $current_site The current network.
+ * @global wpdb       $wpdb         WordPress database abstraction object.
+ *
  * @return bool False if there were no networks to switch back to. True if a stack was available.
  */
 function wsuwp_restore_current_network() {
-	/** @type WPDB $wpdb */
 	global $current_site, $wpdb;
 
 	if ( empty( $GLOBALS['_wsuwp_switched_stack'] ) ) {
@@ -121,6 +124,8 @@ function wsuwp_restore_current_network() {
 
 /**
  * Checks to see if there is more than one network defined in the site table
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @return bool
  */
@@ -147,9 +152,10 @@ function wsuwp_is_multi_network() {
 /**
  * Get an array of data on requested networks
  *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
  * @param array $args Optional.
  *     - 'network_id' a single network ID or an array of network IDs
- *
  * @return array containing network data
  */
 function wsuwp_get_networks( $args = array() ) {
@@ -178,8 +184,15 @@ function wsuwp_get_networks( $args = array() ) {
 	return array_values( $network_results );
 }
 
+/**
+ * Create a network.
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param $args
+ * @return int
+ */
 function wsuwp_create_network( $args ) {
-	/** @type WPDB $wpdb */
 	global $wpdb;
 
 	$errors = new WP_Error();
@@ -250,8 +263,16 @@ function wsuwp_create_network( $args ) {
 	return $network_id; // maybe even a network object
 }
 
+/**
+ * Populate a new network's meta information.
+ *
+ * @global wpdb   $wpdb          WordPress database abstraction object.
+ * @global string $wp_db_version
+ *
+ * @param $network_id
+ * @param $network_meta
+ */
 function wsuwp_populate_network_meta( $network_id, $network_meta ) {
-	/** @type WPDB $wpdb */
 	global $wpdb, $wp_db_version;
 
 	$welcome_email = __( 'Dear User,
@@ -463,8 +484,9 @@ function wsuwp_global_user_count() {
  * This data will be generated every 30 minutes. Generation is initiated via
  * an attempt to use the function.
  *
- * @param int $network_id Network ID
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
+ * @param int $network_id Network ID
  * @return int Count of users on the network
  */
 function wsuwp_network_user_count( $network_id = 0 ) {
