@@ -34,7 +34,7 @@ class WSU_Network_Site_Info {
 			return;
 		}
 
-		$site_network_id = get_blog_details( $id )->site_id;
+		$site_network_id = get_site( $id )->network_id;
 		?>
 		<table style="display:none;"><tr id="wsu-move-site" class="form-field form-required">
 			<th scope="row"><?php _e( 'Network' ) ?></th>
@@ -74,7 +74,7 @@ class WSU_Network_Site_Info {
 
 			// Lookup the current site and clear site bootstrap cache for it.
 			$id = absint( $_REQUEST['id'] );
-			$current_details = get_blog_details( $id );
+			$current_details = get_site( $id );
 			wp_cache_delete( $current_details->domain . $current_details->path, 'wsuwp:site' );
 
 			// Process a request to move a site between networks.

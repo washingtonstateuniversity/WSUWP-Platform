@@ -107,7 +107,7 @@ class WSU_Network_Sites_List {
 	 */
 	private function display_site_created( $site_id ) {
 		switch_to_blog( $site_id );
-		$site_details = get_blog_details();
+		$site_details = get_site();
 		restore_current_blog();
 
 		if ( isset( $site_details->registered ) ) {

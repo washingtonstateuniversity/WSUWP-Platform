@@ -855,7 +855,7 @@ class WSU_Network_Admin {
 	 * @param $blog_id
 	 */
 	public function clear_site_request_cache( $blog_id ) {
-		$site_details = get_blog_details( $blog_id, true );
+		$site_details = get_site( $blog_id );
 
 		// Remove the cache attached to the old domain and path.
 		wp_cache_delete( $site_details->domain . $site_details->path, 'wsuwp:site' );
