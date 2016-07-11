@@ -41,6 +41,13 @@ The server configuration provisioned on the virtual machine is provided by the [
 1. `vagrant provision` will process provisioning again and ensure the proper services are started.
 1. `vagrant reload` will act as a system reboot for the virtual machine. Data will persist.
 
+### Sync Production Files
+
+**Note:** To use the following commands, access to the production server is required.
+
+* `bin/pull_plugins` will retrieve all plugins in production and sync them with those that are local. Any local plugins with a `.git` file will be ignored. Any local plugins listed in `www/wp-content/plugins/exclude.txt` will be ignored.
+* `bin/pull_site_uploads ID_1 ID_2` will retrieve all uploads for a site in production. `ID_1` should be the ID of the site in production. `ID_2` should be the ID of the site locally.
+
 ## Documentation
 
 Additional documentation on specific pieces of the WSUWP Platform can be found in our `docs/` directory.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.x (TBD)
+
+* Add a script to sync production plugins locally.
+* Add a script to sync production uploads locally.
+
 ## 1.4.13 (June 21, 2016)
 
 * Update WordPress 4.5.3
