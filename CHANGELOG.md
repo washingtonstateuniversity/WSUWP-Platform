@@ -4,6 +4,7 @@
 
 * Add a script to sync production plugins locally.
 * Add a script to sync production uploads locally.
+* Add a script to sync production db tables locally.
 
 ## 1.4.13 (June 21, 2016)
 
