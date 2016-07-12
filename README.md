@@ -41,12 +41,29 @@ The server configuration provisioned on the virtual machine is provided by the [
 1. `vagrant provision` will process provisioning again and ensure the proper services are started.
 1. `vagrant reload` will act as a system reboot for the virtual machine. Data will persist.
 
-### Sync Production Files
+### Sync Production
 
-**Note:** To use the following commands, access to the production server is required.
+To use the following commands, access to the production server is required. The nightly WP-CLI release should be installed on your local machine so that aliases for WSUWP and your local environment can be used.
 
 * `bin/pull_plugins` will retrieve all plugins in production and sync them with those that are local. Any local plugins with a `.git` file will be ignored. Any local plugins listed in `www/wp-content/plugins/exclude.txt` will be ignored.
-* `bin/pull_site_uploads ID_1 ID_2` will retrieve all uploads for a site in production. `ID_1` should be the ID of the site in production. `ID_2` should be the ID of the site locally.
+
+#### Site Specific Data
+
+1. Note the ID of the production site either through the dashboard or via a `wp` command.
+  * `wp @wsuwp site list | grep web.wsu.edu`
+1. Create a new site in your local environment through the network dashboard. Note the ID of the site.
+1. Export a copy of the database tables for a specific site from production and then copy it to your local environment:
+  * `wp @wsuwp db export web-wsu.sql --tables=$(wp @wsuwp db tables --url=web.wsu.edu --scope=blog --format=csv)`
+  * `scp wsuwp-prod-01:web-wsu.sql ./www/`
+1. Use the `prep_local_db` command to replace prefixed table names from production with that of the local site and then import the SQL into the local database.
+  * `bin/prep_local_db 7 9 web-wsu.sql`
+1. Search and replace the production URL with the local URL, uses of HTTPS for that URL, and the site ID in the uploads directory.
+  * `wp @local search-replace "web.wsu.edu" "dev.web.wsu.edu" --url=dev.web.wsu.edu`
+  * `wp @local search-replace "https://dev.web.wsu.edu" "http://dev.web.wsu.edu" --url=dev.web.wsu.edu`
+  * `wp @local search-replace "sites/7/" "sites/9/" --url=dev.web.wsu.edu`
+  * `wp @local cache flush`
+1. Sync uploads from production to the local environment, specifying the remote site ID first and the local site ID second.
+  * `bin/pull_site_uploads 7 9`
 
 ## Documentation
 

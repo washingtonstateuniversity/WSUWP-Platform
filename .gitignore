@@ -28,6 +28,10 @@ wp-cli.local.yml
 /www/cgi-bin
 /www/html
 
+# Ignore any production SQL that we've imported locally.
+www/*.sql
+www/*.sql.bak
+
 # We don't need to track default plugins and themes here.
 /www/wordpress/wp-content/plugins
 /www/wordpress/wp-content/themes
