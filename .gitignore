@@ -13,9 +13,9 @@
 # Ignore the local WP-CLI config.
 wp-cli.local.yml
 
-# Ignore build files for plugins and themes
-/build-plugins/**/
-/build-themes/**/
+# Ignore old build directories for plugins and themes.
+/build-plugins/*
+/build-themes/*
 
 # Ignore any custom hosts definitions.
 /*-wsuwp-hosts
