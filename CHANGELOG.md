@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.14 (August 1, 2016)
+
+### Enhancements
+
+* Update WordPress 4.6-RC1
+* Update internals to use new functions provided by WordPress 4.6.
+* Remove old build directories for plugins/themes.
+
+### Bugs
+
+* Fix an issue where user searches outside of the main network would not work.
+
 ## 1.4.13 (June 21, 2016)
 
 * Update WordPress 4.5.3
@@ -54,7 +66,7 @@
 
 ### Enhancements
 
-* Add MatLab files as an allowed uploat type.
+* Add MatLab files as an allowed upload type.
 
 ## 1.4.3 (February 26, 2016)
 
