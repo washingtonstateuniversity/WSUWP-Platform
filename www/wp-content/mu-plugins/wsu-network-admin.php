@@ -667,7 +667,7 @@ class WSU_Network_Admin {
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
 
-		$network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
+		$network = get_network( $network_id );
 
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->sitemeta} WHERE site_id = %d", $network_id );
 		$network_data = $wpdb->get_results( $query, ARRAY_A );
@@ -684,7 +684,7 @@ class WSU_Network_Admin {
 		);
 		?>
 		<div class="wrap">
-			<h2 id="edit-network"><?php _e( 'Edit Network' ); ?>: <?php echo $network[0]->domain; ?></h2>
+			<h2 id="edit-network"><?php _e( 'Edit Network' ); ?>: <?php echo $network->domain; ?></h2>
 			<?php
 			$display_output = '';
 			$edit_output = '';
@@ -710,14 +710,14 @@ class WSU_Network_Admin {
 						<th scope="row">
 							<label for="network[domain]">Network Domain:</label>
 						</th>
-						<td><input class="wide-text" type="text" name="network[domain]" value="<?php echo esc_attr( $network[0]->domain ); ?>">
+						<td><input class="wide-text" type="text" name="network[domain]" value="<?php echo esc_attr( $network->domain ); ?>">
 						<p class="description">Changing the domain or path of an existing network may have severe consequences.</p></td>
 					</tr>
 					<tr class="form-field">
 						<th scope="row">
 							<label for="network[path]">Network Path:</label>
 						</th>
-						<td><input class="wide-text" type="text" name="network[path]" value="<?php echo esc_attr( $network[0]->path ); ?>"></td>
+						<td><input class="wide-text" type="text" name="network[path]" value="<?php echo esc_attr( $network->path ); ?>"></td>
 					</tr>
 					<?php echo $edit_output; ?>
 					<tr class="form-field">
@@ -855,7 +855,7 @@ class WSU_Network_Admin {
 	 * @param $blog_id
 	 */
 	public function clear_site_request_cache( $blog_id ) {
-		$site_details = get_blog_details( $blog_id, true );
+		$site_details = get_site( $blog_id );
 
 		// Remove the cache attached to the old domain and path.
 		wp_cache_delete( $site_details->domain . $site_details->path, 'wsuwp:site' );

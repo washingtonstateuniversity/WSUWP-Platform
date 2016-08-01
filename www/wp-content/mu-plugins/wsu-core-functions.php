@@ -1,10 +1,10 @@
 <?php
 /*
  * Plugin Name: WSU Core Functions
- * Plugin URI: http://web.wsu.edu
+ * Plugin URI: https://web.wsu.edu
  * Description: Functions that perform some core functionality that we would love to live inside of WordPress one day.
  * Author: washingtonstateuniversity, jeremyfelt
- * Author URI: http://web.wsu.edu
+ * Author URI: https://web.wsu.edu
  * Version: 0.1
  * Network: true
  */
@@ -12,13 +12,12 @@
 /**
  * Return a list of networks that the user is a member of.
  *
- * @uses wsuwp_get_networks
- * @param null $user_id Optional. Defaults to the current user.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
- * @return array containing list of user's networks
+ * @param int|null $user_id Optional. Defaults to the current user.
+ * @return array Array containing a list of the user's networks.
  */
 function wsuwp_get_user_networks( $user_id = null ) {
-	/* @var WPDB $wpdb */
 	global $wpdb;
 
 	if ( ! $user_id ) {
@@ -27,7 +26,7 @@ function wsuwp_get_user_networks( $user_id = null ) {
 
 	// Global admins should see every network.
 	if ( is_super_admin() ) {
-		return wsuwp_get_networks();
+		return get_networks();
 	}
 
 	$user_id = absint( $user_id );
@@ -42,7 +41,7 @@ function wsuwp_get_user_networks( $user_id = null ) {
 		}
 	}
 
-	return wsuwp_get_networks( array( 'network_id' => $user_network_ids ) );
+	return get_networks( array( 'network__in' => $user_network_ids ) );
 }
 
 /**
@@ -63,7 +62,7 @@ function wsuwp_get_current_network() {
  * @return object with current site information
  */
 function wsuwp_get_current_site() {
-	return get_blog_details();
+	return get_site();
 }
 
 /**
@@ -78,12 +77,13 @@ function wsuwp_get_current_site() {
  *     - site_name
  *     - cookie_domain (?)
  *
- * @param int $network_id Network ID to switch to.
+ * @global WP_Network $current_site The current network.
+ * @global wpdb       $wpdb         WordPress database abstraction object.
  *
+ * @param int $network_id Network ID to switch to.
  * @return bool
  */
 function wsuwp_switch_to_network( $network_id ) {
-	/** @type WPDB $wpdb */
 	global $current_site, $wpdb;
 
 	if ( ! $network_id ) {
@@ -93,10 +93,8 @@ function wsuwp_switch_to_network( $network_id ) {
 	// Create a backup of $current_site in the global scope.
 	$GLOBALS['_wsuwp_switched_stack'][] = array( 'network' => $current_site, 'blog_id' => $wpdb->blogid, 'site_id' => $wpdb->siteid );
 
-	$new_network = wsuwp_get_networks( array( 'network_id' => $network_id ) );
-	$current_site = array_shift( $new_network );
-	$current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s", $current_site->domain, $current_site->path ) );
-	$wpdb->set_blog_id( $current_site->blog_id, $current_site->id );
+	$current_site = get_network( $network_id );
+	$wpdb->set_blog_id( $current_site->site_id, $current_site->id );
 
 	return true;
 }
@@ -104,10 +102,12 @@ function wsuwp_switch_to_network( $network_id ) {
 /**
  * Restore the last network that was in use before switching.
  *
+ * @global WP_Network $current_site The current network.
+ * @global wpdb       $wpdb         WordPress database abstraction object.
+ *
  * @return bool False if there were no networks to switch back to. True if a stack was available.
  */
 function wsuwp_restore_current_network() {
-	/** @type WPDB $wpdb */
 	global $current_site, $wpdb;
 
 	if ( empty( $GLOBALS['_wsuwp_switched_stack'] ) ) {
@@ -124,6 +124,8 @@ function wsuwp_restore_current_network() {
 
 /**
  * Checks to see if there is more than one network defined in the site table
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @return bool
  */
@@ -150,9 +152,10 @@ function wsuwp_is_multi_network() {
 /**
  * Get an array of data on requested networks
  *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
  * @param array $args Optional.
  *     - 'network_id' a single network ID or an array of network IDs
- *
  * @return array containing network data
  */
 function wsuwp_get_networks( $args = array() ) {
@@ -181,8 +184,15 @@ function wsuwp_get_networks( $args = array() ) {
 	return array_values( $network_results );
 }
 
+/**
+ * Create a network.
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param $args
+ * @return int
+ */
 function wsuwp_create_network( $args ) {
-	/** @type WPDB $wpdb */
 	global $wpdb;
 
 	$errors = new WP_Error();
@@ -253,8 +263,16 @@ function wsuwp_create_network( $args ) {
 	return $network_id; // maybe even a network object
 }
 
+/**
+ * Populate a new network's meta information.
+ *
+ * @global wpdb   $wpdb          WordPress database abstraction object.
+ * @global string $wp_db_version
+ *
+ * @param $network_id
+ * @param $network_meta
+ */
 function wsuwp_populate_network_meta( $network_id, $network_meta ) {
-	/** @type WPDB $wpdb */
 	global $wpdb, $wp_db_version;
 
 	$welcome_email = __( 'Dear User,
@@ -329,7 +347,7 @@ We hope you enjoy your new site. Thanks!
  * @param string $plugin Slug of the plugin to be activated.
  */
 function wsuwp_activate_global_plugin( $plugin ) {
-	$networks = wsuwp_get_networks();
+	$networks = get_networks();
 	foreach ( $networks as $network ) {
 		wsuwp_switch_to_network( $network->id );
 		$current = get_site_option( 'active_sitewide_plugins', array() );
@@ -351,7 +369,7 @@ function wsuwp_activate_global_plugin( $plugin ) {
  * @param string $plugin Slug of the plugin to be deactivated.
  */
 function wsuwp_deactivate_global_plugin( $plugin ) {
-	$networks = wsuwp_get_networks();
+	$networks = get_networks();
 	foreach ( $networks as $network ) {
 		wsuwp_switch_to_network( $network->id );
 		$current = get_site_option( 'active_sitewide_plugins', array() );
@@ -442,7 +460,7 @@ function wsuwp_validate_path( $path ) {
  * @return int The number of networks currently configured.
  */
 function wsuwp_network_count() {
-	$network_count = count( wsuwp_get_networks() );
+	$network_count = get_networks( array( 'count' => true ) );
 	return $network_count;
 }
 
@@ -466,15 +484,16 @@ function wsuwp_global_user_count() {
  * This data will be generated every 30 minutes. Generation is initiated via
  * an attempt to use the function.
  *
- * @param int $network_id Network ID
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
+ * @param int $network_id Network ID
  * @return int Count of users on the network
  */
 function wsuwp_network_user_count( $network_id = 0 ) {
 	global $wpdb;
 
 	if ( 0 === $network_id ) {
-		$network_id = wsuwp_get_current_network()->id;
+		$network_id = get_current_network_id();
 	}
 
 	wsuwp_switch_to_network( $network_id );
@@ -497,13 +516,11 @@ function wsuwp_network_user_count( $network_id = 0 ) {
  * @return int Count of sites on the global platform.
  */
 function wsuwp_global_site_count() {
-	global $wpdb;
-
 	wsuwp_switch_to_network( get_main_network_id() );
 	$global_site_data = get_site_option( 'global_site_data', array( 'count' => 0, 'updated' => 0 ) );
 
 	if ( empty( $global_site_data['count'] ) || empty( $global_site_data['updated'] ) || ( time() - 1800 ) > absint( $global_site_data['updated'] ) ) {
-		$count = $wpdb->get_var( "SELECT COUNT(blog_id) as c FROM $wpdb->blogs WHERE spam = '0' AND deleted = '0' and archived = '0'" );
+		$count = get_sites( array( 'number' => '', 'spam' => 0, 'deleted' => 0, 'archived' => 0, 'count' => true ) );
 		$global_site_data = array( 'count' => absint( $count ), 'updated' => time() );
 		update_site_option( 'global_site_data', $global_site_data );
 	}
