@@ -1,0 +1,42 @@
+# !/bin/bash
+#
+# Use this script on an OSX or Linux machine to sync plugings on WSUWP with
+# your local environment. This requires access to wsuwp-prod-01 and matching
+# SSH configuration.
+#
+
+re='^[0-9]+$'
+if ! [[ $1 =~ $re ]] ; then
+  echo "Remote site ID is not a number" >&2; exit 1
+fi
+
+if [[ ! $2 =~ $re ]]; then
+  echo "Local site ID is not a number" >&2; exit 1
+fi
+
+if ! test $(which wp)
+then
+  echo "WP-CLI is required." >&2; exit 1
+fi
+
+if [[ -f 'pull_plugins' ]]; then
+  LOCAL_DB='../www/'
+elif [[ -f 'Vagrantfile' ]]; then
+  LOCAL_DB='www/'
+else
+  echo "Error: Run from the project root or bin directory"
+  exit
+fi
+
+wp @wsuwp db export $3.sql --tables=$(wp @wsuwp db tables --url=$3 --scope=blog --format=csv)
+scp wsuwp-prod-01:$3.sql $LOCAL_DB
+
+sed -i.bak s/wp_$1_/wp_$2_/g $LOCAL_DB$3.sql
+echo "Replaced wp_$1 with wp_$2 in $3.sql"
+
+wp @local db import /var/www/$3.sql
+
+wp @local search-replace "$3" "$4" --url=$4
+wp @local search-replace "https://$4" "http://$4" --url=$4
+wp @local search-replace "sites/$1/" "sites/$2/" --url=$4
+wp @local cache flush

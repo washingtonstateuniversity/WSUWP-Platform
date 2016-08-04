@@ -1,0 +1,24 @@
+# !/bin/bash
+#
+# Use this script on an OSX or Linux machine to sync plugings on WSUWP with
+# your local environment. This requires access to wsuwp-prod-01 and matching
+# SSH configuration.
+#
+
+if [[ -f 'pull_plugins' ]]; then
+  LOCAL_PLUGINS='../www/wp-content/plugins'
+elif [[ -f 'Vagrantfile' ]]; then
+  LOCAL_PLUGINS='www/wp-content/plugins'
+else
+  echo "Error: Run from the project root or bin directory"
+  exit
+fi
+
+cd $LOCAL_PLUGINS
+
+rm exclude-auto.txt
+for GIT_DIR in $(find . -maxdepth 2 -name '.git'); do
+    echo $(basename $(dirname $GIT_DIR)) >> exclude-auto.txt
+done
+
+rsync -avz --delete --exclude-from 'exclude-auto.txt' --exclude-from 'exclude.txt' --exclude 'exclude-auto.txt' --exclude 'exclude.txt' wsuwp-prod-01:/var/www/wp-content/plugins/ ./

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.x (TBD)
+
+* Add a script to sync production plugins locally.
+* Add a script to sync production uploads locally.
+* Add a script to sync production db tables locally.
+
 ## 1.4.14 (August 1, 2016)
 
 ### Enhancements

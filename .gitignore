@@ -28,6 +28,10 @@ wp-cli.local.yml
 /www/cgi-bin
 /www/html
 
+# Ignore any production SQL that we've imported locally.
+www/*.sql
+www/*.sql.bak
+
 # We don't need to track default plugins and themes here.
 /www/wordpress/wp-content/plugins
 /www/wordpress/wp-content/themes
@@ -43,6 +47,9 @@ wp-cli.local.yml
 
 # Ignore all plugins in the wp-content directory by default. We'll explicitly allow those we track here.
 /www/wp-content/plugins/*/
+
+# Ignore the rsync exclude files in the plugin directory.
+/www/wp-content/plugins/exclude*.txt
 
 # Ignore all uploads in the wp-content directory by default.
 /www/wp-content/uploads

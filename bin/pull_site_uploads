@@ -1,0 +1,28 @@
+# !/bin/bash
+#
+# Use this script on an OSX or Linux machine to sync plugings on WSUWP with
+# your local environment. This requires access to wsuwp-prod-01 and matching
+# SSH configuration.
+#
+
+re='^[0-9]+$'
+if ! [[ $1 =~ $re ]] ; then
+  echo "Remote site ID is not a number" >&2; exit 1
+fi
+
+if [[ ! $2 =~ $re ]]; then
+  echo "Local site ID is not a number" >&2; exit 1
+fi
+
+if [[ -f 'pull_plugins' ]]; then
+  LOCAL_UPLOADS=../www/wp-content/uploads/sites
+elif [[ -f 'Vagrantfile' ]]; then
+  LOCAL_UPLOADS=www/wp-content/uploads/sites
+else
+  echo "Error: Run from the project root or bin directory"
+  exit
+fi
+
+cd $LOCAL_UPLOADS
+
+rsync -avz --delete wsuwp-prod-01:/var/www/wp-content/uploads/sites/$1/ ./$2
