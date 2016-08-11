@@ -5,12 +5,12 @@
  * Description: Controls WSUWP Platform global version
  * Author: washingtonstateuniversity, jeremyfelt
  * Author URI: https://web.wsu.edu/
- * Version: 1.4.14
+ * Version: 1.4.15
  * Network: true
  */
 
-$wsuwp_global_version = '1.4.14';
-$wsuwp_wp_changeset = '38175';
+$wsuwp_global_version = '1.4.15';
+$wsuwp_wp_changeset = '38247';
 
 /**
  * Returns the current deployment version of WSUWP Platform

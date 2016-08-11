@@ -1,7 +1,8 @@
 # Changelog
 
-## 1.4.x (TBD)
+## 1.4.15 (August 11, 2016)
 
+* Update WordPress 4.6-RC2
 * Add a script to sync production plugins locally.
 * Add a script to sync production uploads locally.
 * Add a script to sync production db tables locally.
