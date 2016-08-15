@@ -86,7 +86,7 @@ function wsuwp_get_current_site() {
 function wsuwp_switch_to_network( $network_id ) {
 	global $current_site, $wpdb;
 
-	if ( ! $network_id ) {
+	if ( ! $network_id || ! is_multisite() ) {
 		return false;
 	}
 
@@ -110,7 +110,7 @@ function wsuwp_switch_to_network( $network_id ) {
 function wsuwp_restore_current_network() {
 	global $current_site, $wpdb;
 
-	if ( empty( $GLOBALS['_wsuwp_switched_stack'] ) ) {
+	if ( empty( $GLOBALS['_wsuwp_switched_stack'] ) || ! is_multisite() ) {
 		return false;
 	}
 
