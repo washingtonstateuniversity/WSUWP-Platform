@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.17 (August 15, 2016)
+
+* Update WordPress 4.6-RC4
+
 ## 1.4.16 (August 13, 2016)
 
 * Update WordPress 4.6-RC3
