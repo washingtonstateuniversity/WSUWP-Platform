@@ -151,41 +151,6 @@ function wsuwp_is_multi_network() {
 }
 
 /**
- * Get an array of data on requested networks
- *
- * @global wpdb $wpdb WordPress database abstraction object.
- *
- * @param array $args Optional.
- *     - 'network_id' a single network ID or an array of network IDs
- * @return array containing network data
- */
-function wsuwp_get_networks( $args = array() ) {
-	global $wpdb;
-
-	if ( ! is_multisite() ) {
-		return array();
-	}
-
-	$network_results = wp_cache_get( 'networks', 'wsuwp' );
-
-	if ( ! $network_results ) {
-		$network_results = (array) $wpdb->get_results( "SELECT * FROM $wpdb->site" );
-		wp_cache_add( 'networks', $network_results, 'wsuwp', 86400 );
-	}
-
-	if ( isset( $args['network_id'] ) ) {
-		$network_id = (array) $args['network_id'];
-		foreach ( $network_results as $key => $network ) {
-			if ( ! in_array( $network->id, $network_id ) ) {
-				unset( $network_results[ $key ] );
-			}
-		}
-	}
-
-	return array_values( $network_results );
-}
-
-/**
  * Create a network.
  *
  * @global wpdb $wpdb WordPress database abstraction object.
