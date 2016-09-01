@@ -682,7 +682,7 @@ class WSU_Network_Admin {
 		$network = get_network( $network_id );
 
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->sitemeta} WHERE site_id = %d", $network_id );
-		$network_data = $wpdb->get_results( $query, ARRAY_A );
+		$network_data = $wpdb->get_results( $query, ARRAY_A ); // WPCS: unprepared SQL OK.
 
 		$network_display_fields = array(
 			'blog_count',
@@ -895,7 +895,7 @@ class WSU_Network_Admin {
 		}
 
 		$meta_key = 'wsuwp_network_' . $wpdb->siteid . '_capabilities';
-		$count = $wpdb->get_var( "SELECT COUNT(user_id) FROM $wpdb->usermeta WHERE meta_key = '$meta_key'" );
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM $wpdb->usermeta WHERE meta_key = %s", $meta_key ) );
 		return $count;
 	}
 }

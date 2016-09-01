@@ -30,7 +30,8 @@ function wsuwp_get_user_networks( $user_id = null ) {
 	}
 
 	$user_id = absint( $user_id );
-	$network_keys = $wpdb->get_col( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = $user_id AND meta_key LIKE 'wsuwp_network_%_capabilities'" );
+	$sql = $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = %d AND meta_key LIKE 'wsuwp_network_%_capabilities'", $user_id );
+	$network_keys = $wpdb->get_col( $sql ); // WPCS: unprepared SQL OK.
 
 	$user_network_ids = array();
 
@@ -345,7 +346,7 @@ We hope you enjoy your new site. Thanks!
 
 		$insert .= $wpdb->prepare( '( %d, %s, %s )', $network_id, $meta_key, $meta_value );
 	}
-	$wpdb->query( "INSERT INTO $wpdb->sitemeta ( site_id, meta_key, meta_value ) VALUES " . $insert );
+	$wpdb->query( "INSERT INTO $wpdb->sitemeta ( site_id, meta_key, meta_value ) VALUES " . $insert ); // WPCS: unprepared SQL OK.
 }
 
 /**
