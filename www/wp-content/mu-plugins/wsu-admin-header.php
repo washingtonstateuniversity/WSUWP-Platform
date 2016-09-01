@@ -15,8 +15,8 @@ class WSU_Admin_Header {
 	public function __construct() {
 		add_action( 'admin_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'wp_head', array( $this, 'admin_bar_css' ), 10 );
-		add_action( 'admin_bar_init',        array( $this, 'set_user_networks'            ),  10 );
-		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu'             ), 210 );
+		add_action( 'admin_bar_init',        array( $this, 'set_user_networks' ),  10 );
+		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu' ), 210 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 	}
@@ -92,7 +92,7 @@ class WSU_Admin_Header {
 
 		$user_sites = 0;
 
-		foreach( $user_meta_keys as $key ) {
+		foreach ( $user_meta_keys as $key ) {
 			if ( 'capabilities' !== substr( $key, -12 ) ) {
 				continue;
 			}
@@ -144,7 +144,7 @@ class WSU_Admin_Header {
 		$node_edit        = $wp_admin_bar->get_node( 'edit' );
 		$node_preview     = $wp_admin_bar->get_node( 'preview' );
 		$node_view        = $wp_admin_bar->get_node( 'view' );
-		$node_site_name   = $wp_admin_bar->get_node( 'site-name'   );
+		$node_site_name   = $wp_admin_bar->get_node( 'site-name' );
 
 		// Children of the site-name node. Null if not is_admin()
 		$node_view_site   = $wp_admin_bar->get_node( 'view-site' );
@@ -158,7 +158,7 @@ class WSU_Admin_Header {
 		$node_widgets    = $wp_admin_bar->get_node( 'widgets' );
 		$node_menus      = $wp_admin_bar->get_node( 'menus' );
 
-		$node_comments    = $wp_admin_bar->get_node( 'comments'    );
+		$node_comments    = $wp_admin_bar->get_node( 'comments' );
 		$node_new_content = $wp_admin_bar->get_node( 'new-content' );
 
 		/**
@@ -167,7 +167,7 @@ class WSU_Admin_Header {
 		$wp_admin_bar->remove_menu( 'edit' );
 		$wp_admin_bar->remove_menu( 'preview' );
 		$wp_admin_bar->remove_menu( 'view' );
-		$wp_admin_bar->remove_menu( 'site-name'   );
+		$wp_admin_bar->remove_menu( 'site-name' );
 
 		// Remove children of the site-name node.
 		if ( is_admin() ) {
@@ -182,7 +182,7 @@ class WSU_Admin_Header {
 			$wp_admin_bar->remove_menu( 'menus' );
 		}
 
-		$wp_admin_bar->remove_menu( 'comments'    );
+		$wp_admin_bar->remove_menu( 'comments' );
 		$wp_admin_bar->remove_menu( 'new-content' );
 
 		/**
@@ -257,7 +257,7 @@ class WSU_Admin_Header {
 					'id' => 'customize',
 					'title' => __( 'Customize' ),
 					'parent' => 'appearance',
-					'href' =>  add_query_arg( 'url', urlencode( $current_url ), wp_customize_url() ),
+					'href' => add_query_arg( 'url', urlencode( $current_url ), wp_customize_url() ),
 				);
 				$node_customize = $this->_set_node( $node_customize );
 
@@ -283,7 +283,7 @@ class WSU_Admin_Header {
 		 * Add the original menu items back to the admin bar now that we have our my-networks
 		 * item in place.
 		 */
-		$wp_admin_bar->add_menu( $node_site_name   );
+		$wp_admin_bar->add_menu( $node_site_name );
 
 		// Add the children of the site-name menu.
 		if ( is_admin() ) {
@@ -298,7 +298,7 @@ class WSU_Admin_Header {
 			$wp_admin_bar->add_menu( $node_menus );
 		}
 
-		$wp_admin_bar->add_menu( $node_comments    );
+		$wp_admin_bar->add_menu( $node_comments );
 		$wp_admin_bar->add_menu( $node_new_content );
 
 		if ( $node_edit ) {
@@ -326,7 +326,7 @@ class WSU_Admin_Header {
 		));
 
 		// Add each of the user's networks as a menu item
-		foreach( (array) $wp_admin_bar->user->networks as $network ) {
+		foreach ( (array) $wp_admin_bar->user->networks as $network ) {
 			wsuwp_switch_to_network( $network->id );
 
 			$wp_admin_bar->add_menu( array(
@@ -366,14 +366,14 @@ class WSU_Admin_Header {
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'network-' . $network->id . '-list',
 				'id'     => 'network-' . $network->id . '-search',
-				'title'  => '<input type="text" placeholder="'. __( 'Search sites', 'wsuwp' ) .'" />',
+				'title'  => '<input type="text" placeholder="' . __( 'Search sites', 'wsuwp' ) . '" />',
 				'meta'   => array(
-					'class' => 'ms-sites-search hide-if-no-js'
-				)
+					'class' => 'ms-sites-search hide-if-no-js',
+				),
 			) );
 
 			// Add each of the user's sites from this specific network to the menu
-			foreach( $sites as $site ) {
+			foreach ( $sites as $site ) {
 				switch_to_blog( $site->id );
 
 				if ( ! current_user_can( 'manage_network', $network->id ) && ! is_user_member_of_blog() ) {

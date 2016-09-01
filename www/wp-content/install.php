@@ -57,7 +57,7 @@ function wp_install_defaults( $user_id ) {
 		'comment_count'         => 1,
 		'to_ping'               => '',
 		'pinged'                => '',
-		'post_content_filtered' => ''
+		'post_content_filtered' => '',
 	));
 	$wpdb->insert( $wpdb->term_relationships, array( 'term_taxonomy_id' => $cat_tt_id, 'object_id' => 1 ) );
 
@@ -73,7 +73,7 @@ function wp_install_defaults( $user_id ) {
 		$page_template = 'default';
 	}
 
-	$first_post_guid = get_option('home') . '/?page_id=2';
+	$first_post_guid = get_option( 'home' ) . '/?page_id=2';
 
 	$wpdb->insert( $wpdb->posts, array(
 		'post_author'           => $user_id,
@@ -117,20 +117,20 @@ function wp_install_defaults( $user_id ) {
 	 * and for the news view.
 	 */
 	update_option( 'show_on_front', 'page' );
-	update_option( 'page_on_front',  2     );
-	update_option( 'page_for_posts', 3     );
+	update_option( 'page_on_front',  2 );
+	update_option( 'page_for_posts', 3 );
 
 	$site_description = apply_filters( 'wsuwp_install_site_description', 'Just another WordPress site' );
 	update_option( 'blogdescription', $site_description );
 
 	// Set up default widgets for default theme.
-	update_option( 'widget_search',          array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
-	update_option( 'widget_recent-posts',    array ( 2 => array ( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
-	update_option( 'widget_recent-comments', array ( 2 => array ( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
-	update_option( 'widget_archives',        array ( 2 => array ( 'title' => '', 'count' => 0, 'dropdown' => 0 ), '_multiwidget' => 1 ) );
-	update_option( 'widget_categories',      array ( 2 => array ( 'title' => '', 'count' => 0, 'hierarchical' => 0, 'dropdown' => 0 ), '_multiwidget' => 1 ) );
-	update_option( 'widget_meta',            array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
-	update_option( 'sidebars_widgets',       array ( 'wp_inactive_widgets' => array (), 'sidebar-1' => array ( 0 => 'search-2', 1 => 'recent-posts-2', 2 => 'recent-comments-2', 3 => 'archives-2', 4 => 'categories-2', 5 => 'meta-2', ), 'sidebar-2' => array (), 'sidebar-3' => array (), 'array_version' => 3 ) );
+	update_option( 'widget_search',          array( 2 => array( 'title' => '' ), '_multiwidget' => 1 ) );
+	update_option( 'widget_recent-posts',    array( 2 => array( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
+	update_option( 'widget_recent-comments', array( 2 => array( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
+	update_option( 'widget_archives',        array( 2 => array( 'title' => '', 'count' => 0, 'dropdown' => 0 ), '_multiwidget' => 1 ) );
+	update_option( 'widget_categories',      array( 2 => array( 'title' => '', 'count' => 0, 'hierarchical' => 0, 'dropdown' => 0 ), '_multiwidget' => 1 ) );
+	update_option( 'widget_meta',            array( 2 => array( 'title' => '' ), '_multiwidget' => 1 ) );
+	update_option( 'sidebars_widgets',       array( 'wp_inactive_widgets' => array(), 'sidebar-1' => array( 0 => 'search-2', 1 => 'recent-posts-2', 2 => 'recent-comments-2', 3 => 'archives-2', 4 => 'categories-2', 5 => 'meta-2' ), 'sidebar-2' => array(), 'sidebar-3' => array(), 'array_version' => 3 ) );
 
 	// Set a default timezone string with a filter to override.
 	$timezone_string = apply_filters( 'wsuwp_install_default_timezone_string', 'America/Los_Angeles' );
@@ -161,15 +161,15 @@ function wp_install_defaults( $user_id ) {
 	$wp_rewrite->init();
 	$wp_rewrite->flush_rules();
 
-	$user = new WP_User($user_id);
-	$wpdb->update( $wpdb->options, array('option_value' => $user->user_email), array('option_name' => 'admin_email') );
+	$user = new WP_User( $user_id );
+	$wpdb->update( $wpdb->options, array( 'option_value' => $user->user_email ), array( 'option_name' => 'admin_email' ) );
 
 	// Remove all perms except for the login user.
-	$wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix.'user_level') );
-	$wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix.'capabilities') );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix . 'user_level' ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix . 'capabilities' ) );
 
 	// Delete any caps that snuck into the previously active blog. (Hardcoded to blog 1 for now.) TODO: Get previous_blog_id.
-	if ( !is_super_admin( $user_id ) && $user_id != 1 ) {
-		$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id , 'meta_key' => $wpdb->base_prefix.'1_capabilities' ) );
+	if ( ! is_super_admin( $user_id ) && $user_id != 1 ) {
+		$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id, 'meta_key' => $wpdb->base_prefix . '1_capabilities' ) );
 	}
 }

@@ -18,9 +18,9 @@ class WSUWP_New_Site_Administration {
 		add_action( 'load-site-new.php',        array( $this, 'site_new_php' ) );
 
 		add_filter( 'wsuwp_first_post_content', array( $this, 'first_post_content' ), 10, 1 );
-		add_filter( 'wsuwp_first_post_title',   array( $this, 'first_post_title'   ), 10, 1 );
+		add_filter( 'wsuwp_first_post_title',   array( $this, 'first_post_title' ), 10, 1 );
 		add_filter( 'wsuwp_first_page_content', array( $this, 'first_page_content' ), 10, 1 );
-		add_filter( 'wsuwp_first_page_title',   array( $this, 'first_page_title'   ), 10, 1 );
+		add_filter( 'wsuwp_first_page_title',   array( $this, 'first_page_title' ), 10, 1 );
 	}
 
 	/**
@@ -105,7 +105,7 @@ class WSUWP_New_Site_Administration {
 
 		$subdirectory_reserved_names = apply_filters( 'subdirectory_reserved_names', array( 'page', 'comments', 'blog', 'files', 'feed', 'wsu', 'documents' ) );
 		if ( in_array( $path, $subdirectory_reserved_names ) ) {
-			wp_die( sprintf( __('The following words are reserved for use by WordPress functions and cannot be used as blog names: <code>%s</code>' ), implode( '</code>, <code>', $subdirectory_reserved_names ) ) );
+			wp_die( sprintf( __( 'The following words are reserved for use by WordPress functions and cannot be used as blog names: <code>%s</code>' ), implode( '</code>, <code>', $subdirectory_reserved_names ) ) );
 		}
 
 		$existing = get_site_by_path( $domain, $path );
@@ -119,10 +119,10 @@ class WSUWP_New_Site_Administration {
 		if ( ! $user_id ) { // Create a new user with a random password
 			$password = wp_generate_password( 12, false );
 			$user_id = wpmu_create_user( $domain, $password, $email );
-			if ( false == $user_id )
+			if ( false == $user_id ) {
 				wp_die( __( 'There was an error creating the user.' ) );
-			else
-				wp_new_user_notification( $user_id, $password );
+			} else { wp_new_user_notification( $user_id, $password );
+			}
 		}
 
 		$wpdb->hide_errors();
@@ -144,7 +144,7 @@ class WSUWP_New_Site_Administration {
 
 Address: %2$s
 Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unslash( $site['title'] ) );
-		wp_mail( get_site_option('admin_email'), sprintf( __( '[%s] New Site Created' ), get_current_site()->site_name ), $content_mail, 'From: "Site Admin" <' . get_site_option( 'admin_email' ) . '>' );
+		wp_mail( get_site_option( 'admin_email' ), sprintf( __( '[%s] New Site Created' ), get_current_site()->site_name ), $content_mail, 'From: "Site Admin" <' . get_site_option( 'admin_email' ) . '>' );
 		wpmu_welcome_notification( $id, $user_id, $password, $site['title'], array( 'public' => 1 ) );
 		wp_redirect( add_query_arg( array( 'update' => 'added', 'id' => $id ), 'site-new.php' ) );
 
@@ -175,14 +175,14 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 			$this->_create_new_site( $_POST['site'] );
 		}
 
-		if ( isset($_GET['update']) ) {
+		if ( isset( $_GET['update'] ) ) {
 			$messages = array();
 			if ( 'added' == $_GET['update'] ) {
 				$messages[] = sprintf( __( 'Site added. <a href="%1$s">Visit Dashboard</a> or <a href="%2$s">Edit Site</a>' ), esc_url( get_admin_url( absint( $_GET['id'] ) ) ), network_admin_url( 'site-info.php?id=' . absint( $_GET['id'] ) ) );
 			}
 		}
 
-		$title = __('Add New Site');
+		$title = __( 'Add New Site' );
 		$parent_file = 'sites.php';
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
@@ -190,14 +190,14 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 		?>
 
 		<div class="wrap">
-			<h2 id="add-new-site"><?php _e('Add New Site') ?></h2>
+			<h2 id="add-new-site"><?php _e( 'Add New Site' ) ?></h2>
 			<?php
 			if ( ! empty( $messages ) ) {
 				foreach ( $messages as $msg ) {
 					echo '<div id="message" class="updated"><p>' . $msg . '</p></div>';
 				}
 			} ?>
-			<form method="post" action="<?php echo network_admin_url('site-new.php?action=add-network-site'); ?>">
+			<form method="post" action="<?php echo network_admin_url( 'site-new.php?action=add-network-site' ); ?>">
 				<?php wp_nonce_field( 'add-network-site', '_wpnonce_add-network-site' ) ?>
 				<table class="form-table">
 					<tr class="form-field form-required">
@@ -222,7 +222,7 @@ Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unsla
 						</td>
 					</tr>
 				</table>
-				<?php submit_button( __('Add Site'), 'primary', 'add-network-site' ); ?>
+				<?php submit_button( __( 'Add Site' ), 'primary', 'add-network-site' ); ?>
 			</form>
 			<style>
 				.form-table {

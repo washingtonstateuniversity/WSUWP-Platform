@@ -57,22 +57,22 @@ class WSU_Network_Admin {
 	 * Add the filters and actions used
 	 */
 	public function __construct() {
-		add_action( 'load-sites.php',                    array( $this, 'networks_php'               ), 10, 1 );
+		add_action( 'load-sites.php',                    array( $this, 'networks_php' ), 10, 1 );
 		// Load at 9 for now until we sort our conflict with wsu-network-site-new.php
-		add_action( 'load-site-new.php',                 array( $this, 'network_new_php'            ),  9, 1 );
-		add_action( 'load-site-info.php',                array( $this, 'network_info_php'           ), 10, 1 );
-		add_filter( 'parent_file',                       array( $this, 'add_master_network_menu'    ), 10, 1 );
-		add_action( 'admin_menu',                        array( $this, 'my_networks_dashboard'      ),  1    );
+		add_action( 'load-site-new.php',                 array( $this, 'network_new_php' ),  9, 1 );
+		add_action( 'load-site-info.php',                array( $this, 'network_info_php' ), 10, 1 );
+		add_filter( 'parent_file',                       array( $this, 'add_master_network_menu' ), 10, 1 );
+		add_action( 'admin_menu',                        array( $this, 'my_networks_dashboard' ),  1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'my_networks_dashboard_scripts' ), 10 );
-		add_filter( 'wpmu_validate_user_signup',         array( $this, 'validate_user_signup'       ), 10, 1 );
+		add_filter( 'wpmu_validate_user_signup',         array( $this, 'validate_user_signup' ), 10, 1 );
 		add_filter( 'plugin_action_links',               array( $this, 'remove_plugin_action_links' ), 10, 2 );
 		add_filter( 'network_admin_plugin_action_links', array( $this, 'remove_plugin_action_links' ), 10, 2 );
-		add_filter( 'network_admin_plugin_action_links', array( $this, 'plugin_action_links'        ), 15, 2 );
-		add_action( 'activate_plugin',                   array( $this, 'activate_global_plugin'     ), 10, 1 );
+		add_filter( 'network_admin_plugin_action_links', array( $this, 'plugin_action_links' ), 15, 2 );
+		add_action( 'activate_plugin',                   array( $this, 'activate_global_plugin' ), 10, 1 );
 		add_action( 'deactivate_plugin', array( $this, 'deactivate_global_plugin' ), 10, 1 );
-		add_filter( 'views_plugins-network',             array( $this, 'add_plugin_table_views',    ), 10, 1 );
-		add_filter( 'all_plugins',                       array( $this, 'all_plugins',               ), 10, 1 );
-		add_filter( 'parent_file',                       array( $this, 'parent_file',               ), 10, 1 );
+		add_filter( 'views_plugins-network',             array( $this, 'add_plugin_table_views' ), 10, 1 );
+		add_filter( 'all_plugins',                       array( $this, 'all_plugins' ), 10, 1 );
+		add_filter( 'parent_file',                       array( $this, 'parent_file' ), 10, 1 );
 
 		add_filter( 'pre_site_option_fileupload_maxk', array( $this, 'set_fileupload_maxk' ), 10, 1 );
 		add_filter( 'pre_site_option_blog_upload_space', array( $this, 'set_blog_upload_space' ), 10, 1 );
@@ -115,13 +115,15 @@ class WSU_Network_Admin {
 	 * @return array Modified list of installed plugins.
 	 */
 	public function all_plugins( $plugins ) {
-		if ( ! wsuwp_is_multi_network() || is_main_network() )
+		if ( ! wsuwp_is_multi_network() || is_main_network() ) {
 			return $plugins;
+		}
 
 		$global_plugins = wsuwp_get_active_global_plugins();
-		foreach( $plugins as $k => $v ) {
-			if ( isset( $global_plugins[ $k ] ) )
+		foreach ( $plugins as $k => $v ) {
+			if ( isset( $global_plugins[ $k ] ) ) {
 				unset( $plugins[ $k ] );
+			}
 		}
 		return $plugins;
 	}
@@ -134,13 +136,14 @@ class WSU_Network_Admin {
 	 * @return array Modified list of view links.
 	 */
 	public function add_plugin_table_views( $views ) {
-		if ( ! is_main_network() )
+		if ( ! is_main_network() ) {
 			return $views;
+		}
 
 		$global_plugins = wsuwp_get_active_global_plugins();
 
 		$count = count( $global_plugins );
-		$url = add_query_arg('plugin_status', 'global', 'plugins.php');
+		$url = add_query_arg( 'plugin_status', 'global', 'plugins.php' );
 		$views['global'] = '<a href="' . $url . '">Global <span class="count">(' . $count . ')</span></a>';
 
 		return $views;
@@ -178,7 +181,7 @@ class WSU_Network_Admin {
 				$actions['global'] = 'Activated Globally';
 			}
 			return $actions;
-		} elseif( is_main_network() && wsuwp_is_plugin_active_for_global( $plugin_file ) ) {
+		} elseif ( is_main_network() && wsuwp_is_plugin_active_for_global( $plugin_file ) ) {
 			unset( $actions['deactivate'] );
 			unset( $actions['activate'] );
 		}
@@ -201,8 +204,9 @@ class WSU_Network_Admin {
 	 */
 	public function activate_global_plugin( $plugin ) {
 
-		if ( ! isset( $_GET['wsu-activate-global'] ) || ! is_main_network() )
+		if ( ! isset( $_GET['wsu-activate-global'] ) || ! is_main_network() ) {
 			return null;
+		}
 
 		wsuwp_activate_global_plugin( $plugin );
 	}
@@ -241,50 +245,56 @@ class WSU_Network_Admin {
 		$result['errors'] = new WP_Error();
 
 		// User login cannot be empty
-		if( empty( $user_login ) )
+		if ( empty( $user_login ) ) {
 			$result['errors']->add( 'user_name', __( 'Please enter a username.' ) );
+		}
 
 		// User login must be at least 3 characters
-		if ( strlen( $user_login ) < 3 )
+		if ( strlen( $user_login ) < 3 ) {
 			$result['errors']->add( 'user_name',  __( 'Username must be at least 3 characters.' ) );
+		}
 
 		// Strip any whitespace and then match against case insensitive characters a-z 0-9 _ . - @
 		$user_login = preg_replace( '/\s+/', '', sanitize_user( $user_login, true ) );
 
 		// If the previous operation generated a different value, the username is invalid
-		if ( $user_login !== $original_user_login )
+		if ( $user_login !== $original_user_login ) {
 			$result['errors']->add( 'user_name', __( '<strong>ERROR</strong>: This username is invalid because it uses illegal characters. Please enter a valid username.' ) );
+		}
 
 		// Check the user_login against an array of illegal names
 		$illegal_names = get_site_option( 'illegal_names' );
 		if ( false == is_array( $illegal_names ) ) {
-			$illegal_names = array(  'www', 'web', 'root', 'admin', 'main', 'invite', 'administrator' );
+			$illegal_names = array( 'www', 'web', 'root', 'admin', 'main', 'invite', 'administrator' );
 			add_site_option( 'illegal_names', $illegal_names );
 		}
 
-		if ( true === in_array( $user_login, $illegal_names ) )
+		if ( true === in_array( $user_login, $illegal_names ) ) {
 			$result['errors']->add( 'user_name',  __( 'That username is not allowed.' ) );
+		}
 
 		// User login must have at least one letter
-		if ( preg_match( '/^[0-9]*$/', $user_login ) )
+		if ( preg_match( '/^[0-9]*$/', $user_login ) ) {
 			$result['errors']->add( 'user_name', __( 'Sorry, usernames must have letters too!' ) );
+		}
 
 		// Check if the username has been used already.
-		if ( username_exists( $user_login ) )
+		if ( username_exists( $user_login ) ) {
 			$result['errors']->add( 'user_name', __( 'Sorry, that username already exists!' ) );
+		}
 
 		if ( is_multisite() ) {
 			// Is a signup already pending for this user login?
 			$signup = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->signups WHERE user_login = %s ", $user_login ) );
 			if ( $signup != null ) {
-				$registered_at =  mysql2date( 'U', $signup->registered );
+				$registered_at = mysql2date( 'U', $signup->registered );
 				$now = current_time( 'timestamp', true );
 				$diff = $now - $registered_at;
 				// If registered more than two days ago, cancel registration and let this signup go through.
-				if ( $diff > 2 * DAY_IN_SECONDS )
+				if ( $diff > 2 * DAY_IN_SECONDS ) {
 					$wpdb->delete( $wpdb->signups, array( 'user_login' => $user_login ) );
-				else
-					$result['errors']->add( 'user_name', __( 'That username is currently reserved but may be available in a couple of days.' ) );
+				} else { $result['errors']->add( 'user_name', __( 'That username is currently reserved but may be available in a couple of days.' ) );
+				}
 			}
 		}
 
@@ -341,14 +351,14 @@ class WSU_Network_Admin {
 		// Remove submenu items that have not been whitelisted for 'Settings' in the Network Admin dashboard.
 		if ( is_network_admin() && isset( $submenu['settings.php'] ) ) {
 			if ( 2 <= count( $submenu['settings.php'] ) ) {
-				foreach( $submenu['settings.php'] as $k => $submenu_value ) {
+				foreach ( $submenu['settings.php'] as $k => $submenu_value ) {
 					if ( isset( $submenu_value[2] ) && in_array( $submenu_value[2], $allowed_network_submenus ) ) {
 						continue;
 					}
 					unset( $submenu['settings.php'][ $k ] );
 				}
 			} else {
-				unset ( $submenu['settings.php'] );
+				unset( $submenu['settings.php'] );
 			}
 		}
 
@@ -418,18 +428,18 @@ class WSU_Network_Admin {
 		<div class="wrap">
 			<h2>My Networks</h2><?php
 
-		foreach( wsuwp_get_user_networks() as $network ) {
-			wsuwp_switch_to_network( $network->id );
-			$network->name = get_site_option( 'site_name' );
-			$network->admin_email = get_site_option( 'admin_email' );
-			$network->user_count = get_site_option( 'user_count', 0 );
-			$network->site_count = get_site_option( 'blog_count', 0 );
-			$network->admin_url = network_admin_url();
-			$network->view_sites = network_admin_url( 'sites.php' );
-			wsuwp_restore_current_network();
+			foreach ( wsuwp_get_user_networks() as $network ) {
+				wsuwp_switch_to_network( $network->id );
+				$network->name = get_site_option( 'site_name' );
+				$network->admin_email = get_site_option( 'admin_email' );
+				$network->user_count = get_site_option( 'user_count', 0 );
+				$network->site_count = get_site_option( 'blog_count', 0 );
+				$network->admin_url = network_admin_url();
+				$network->view_sites = network_admin_url( 'sites.php' );
+				wsuwp_restore_current_network();
 
-			?>
-			<div class="single-network">
+				?>
+				<div class="single-network">
 				<h3><a href="<?php echo esc_url( $network->admin_url ); ?>"><?php echo esc_html( $network->name ); ?></a></h3>
 				<div class="single-network-url"><strong>URL:</strong> <?php echo esc_url( $network->domain . $network->path ); ?></div>
 				<div class="single-network-admin"><strong>Admin:</strong> <?php echo esc_html( $network->admin_email ); ?></div>
@@ -439,10 +449,10 @@ class WSU_Network_Admin {
 					<div class="clear"></div>
 				</div>
 				<a href="<?php echo esc_url( $network->view_sites ); ?>">View sites</a>.
-			</div>
+				</div>
 
-			<?php
-		}
+				<?php
+			}
 	}
 
 	/**
@@ -455,7 +465,7 @@ class WSU_Network_Admin {
 			return;
 		}
 
-		$title = __('Networks');
+		$title = __( 'Networks' );
 		$parent_file = 'sites.php?display=network';
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
@@ -469,13 +479,13 @@ class WSU_Network_Admin {
 
 				echo $title;
 
-				if ( current_user_can( 'create_sites') ) {
-					?> <a href="<?php echo network_admin_url( 'site-new.php?display=network' ); ?>" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'network' ); ?></a><?php
-				}
+			if ( current_user_can( 'create_sites' ) ) {
+				?> <a href="<?php echo network_admin_url( 'site-new.php?display=network' ); ?>" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'network' ); ?></a><?php
+			}
 
-				if ( isset( $_REQUEST['s'] ) && $_REQUEST['s'] ) {
-					printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;' ) . '</span>', esc_html( $_REQUEST['s'] ) );
-				}
+			if ( isset( $_REQUEST['s'] ) && $_REQUEST['s'] ) {
+				printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;' ) . '</span>', esc_html( $_REQUEST['s'] ) );
+			}
 			?></h2>
 			<form action="" method="get" id="ms-search">
 				<?php $wsuwp_networks->search_box( __( 'Search Networks' ), 'network' ); ?>
@@ -528,21 +538,22 @@ class WSU_Network_Admin {
 		if ( isset( $_GET['action'] ) && 'add-network' === $_GET['action'] ) {
 			check_admin_referer( 'add-network', '_wpnonce_add-network' );
 
-			if ( ! is_array( $_POST['network'] ) )
+			if ( ! is_array( $_POST['network'] ) ) {
 				wp_die( __( 'Can&#8217;t create an empty network.' ) );
+			}
 
 			$this->_create_new_network( $_POST['network'] );
 		}
 
-		$title = __('Add New Network');
+		$title = __( 'Add New Network' );
 		$parent_file = 'sites.php?display=network';
 
 		require( ABSPATH . 'wp-admin/admin-header.php' );
 
 		?>
 		<div class="wrap">
-			<h2 id="add-new-site"><?php _e('Add New Network') ?></h2>
-			<form method="post" action="<?php echo network_admin_url('site-new.php?display=network&action=add-network'); ?>">
+			<h2 id="add-new-site"><?php _e( 'Add New Network' ) ?></h2>
+			<form method="post" action="<?php echo network_admin_url( 'site-new.php?display=network&action=add-network' ); ?>">
 				<?php wp_nonce_field( 'add-network', '_wpnonce_add-network' ) ?>
 				<table class="form-table">
 					<tr class="form-field form-required">
@@ -562,7 +573,7 @@ class WSU_Network_Admin {
 						<td><input name="network[email]" type="text" class="regular-text" title="<?php esc_attr_e( 'Email' ) ?>"/></td>
 					</tr>
 				</table>
-				<?php submit_button( __('Add Network'), 'primary', 'add-network' ); ?>
+				<?php submit_button( __( 'Add Network' ), 'primary', 'add-network' ); ?>
 			</form>
 		</div>
 		<?php
@@ -618,7 +629,7 @@ class WSU_Network_Admin {
 				$site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s AND site_id = %d", $network->domain, $network->path, $network_id ) );
 
 				// Update the domain and path of the network.
-				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->site SET domain = %s, path = %s WHERE id = %d", $domain, $path, $network_id  ) );
+				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->site SET domain = %s, path = %s WHERE id = %d", $domain, $path, $network_id ) );
 
 				// Update the domain and path of the site.
 				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->blogs SET domain = %s, path = %s WHERE blog_id = %d", $domain, $path, $site_id ) );
@@ -655,13 +666,14 @@ class WSU_Network_Admin {
 		if ( isset( $_GET['action'] ) && 'update-network' === $_GET['action'] ) {
 			check_admin_referer( 'update-network', '_wpnonce_update-network' );
 
-			if ( ! is_array( $_POST['network'] ) )
+			if ( ! is_array( $_POST['network'] ) ) {
 				wp_die( __( 'Can&#8217;t edit a network without information.' ) );
+			}
 
 			$this->_update_network( $network_id, $_POST['network'] );
 		}
 
-		$title = __('Edit Network');
+		$title = __( 'Edit Network' );
 		$parent_file = 'sites.php?display=network';
 		$submenu_file = 'sites.php?display=network';
 
@@ -688,12 +700,12 @@ class WSU_Network_Admin {
 			<?php
 			$display_output = '';
 			$edit_output = '';
-			foreach( $network_data as $item ) {
+			foreach ( $network_data as $item ) {
 				if ( array_key_exists( $item['meta_key'], $this->network_meta_edit ) ) {
 					$edit_output .= '<tr class="form-field"><th scope="row"><label for="network[' . esc_attr( $item['meta_key'] ) . ']">' . esc_html( $this->network_meta_edit[ $item['meta_key'] ]['label'] ) . '</label></th>';
 					if ( 'text' === $this->network_meta_edit[ $item['meta_key'] ]['input'] ) {
 						$edit_output .= '<td><input class="wide-text" type="text" name="network[' . esc_attr( $item['meta_key'] ) . ']" value="' . esc_attr( $item['meta_value'] ) . '" /></td></tr>';
-					} else if ( 'textarea' === $this->network_meta_edit[ $item['meta_key'] ]['input'] ) {
+					} elseif ( 'textarea' === $this->network_meta_edit[ $item['meta_key'] ]['input'] ) {
 						$edit_output .= '<td><textarea name="network[' . esc_attr( $item['meta_key'] ) . ']" rows="' . esc_attr( $this->network_meta_edit[ $item['meta_key'] ]['rows'] ) . '">' . esc_textarea( $item['meta_value'] ) . '</textarea></td></tr>';
 					}
 				}
@@ -722,7 +734,7 @@ class WSU_Network_Admin {
 					<?php echo $edit_output; ?>
 					<tr class="form-field">
 						<th scope="row"></th>
-						<td><span style="display: block;width: 125px;"><?php submit_button( __('Update Network'), 'primary', 'update-network' ); ?></span></td>
+						<td><span style="display: block;width: 125px;"><?php submit_button( __( 'Update Network' ), 'primary', 'update-network' ); ?></span></td>
 					<tr class="form-field">
 						<th scope="row">Additional Network Information:</th>
 						<td><table><?php echo $display_output; ?></table></td>
