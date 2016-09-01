@@ -23,7 +23,7 @@ add_action( 'clean_post_cache', 'batcache_post', 10, 2 );
  * @param $post
  */
 function batcache_post( $post_id, $post ) {
-	if ( $post->post_type == 'revision' || ! in_array( get_post_status( $post_id ), array( 'publish', 'trash' ) ) ) {
+	if ( 'revision' === $post->post_type || ! in_array( get_post_status( $post_id ), array( 'publish', 'trash' ) ) ) {
 		return;
 	}
 

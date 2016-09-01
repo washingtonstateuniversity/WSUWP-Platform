@@ -149,7 +149,7 @@ class WSU_User_Management {
 		$username = $user_details->user_login;
 		$user_id = $user_details->ID;
 
-		if ( ( $username != null && ! is_super_admin( $user_id ) ) && ( array_key_exists( $blog_id, get_blogs_of_user( $user_id ) ) ) ) {
+		if ( ( null != $username && ! is_super_admin( $user_id ) ) && ( array_key_exists( $blog_id, get_blogs_of_user( $user_id ) ) ) ) {
 			// "That user is already a member of this site."
 			$redirect = $redirect_member;
 		} else {

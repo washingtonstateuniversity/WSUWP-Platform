@@ -9,7 +9,6 @@
         <exclude name="WordPress.PHP.StrictComparisons" />
         <exclude name="WordPress.PHP.StrictInArray" />
         <exclude name="WordPress.CSRF.NonceVerification" />
-        <exclude name="WordPress.PHP.YodaConditions" />
         <exclude name="Generic.PHP.NoSilencedErrors" />
     </rule>
 </ruleset>

@@ -286,7 +286,7 @@ class WSU_Network_Admin {
 		if ( is_multisite() ) {
 			// Is a signup already pending for this user login?
 			$signup = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->signups WHERE user_login = %s ", $user_login ) );
-			if ( $signup != null ) {
+			if ( null != $signup ) {
 				$registered_at = mysql2date( 'U', $signup->registered );
 				$now = current_time( 'timestamp', true );
 				$diff = $now - $registered_at;
@@ -890,7 +890,7 @@ class WSU_Network_Admin {
 	public function update_network_user_count( $value ) {
 		global $wpdb;
 
-		if ( $wpdb->siteid == get_main_network_id() ) {
+		if ( get_main_network_id() == $wpdb->siteid ) {
 			return $value;
 		}
 
