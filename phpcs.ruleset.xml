@@ -3,7 +3,6 @@
     <description>Sniffs for the coding standards of the WSUWP Platform</description>
 
     <rule ref="WordPress-Extra">
-        <exclude name="WordPress.NamingConventions.ValidFunctionName" />
         <exclude name="WordPress.XSS.EscapeOutput" />
         <exclude name="WordPress.Variables.GlobalVariables" />
         <exclude name="WordPress.PHP.StrictComparisons" />
