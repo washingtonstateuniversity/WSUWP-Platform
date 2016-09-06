@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0 (September 6, 2016)
+
+* Remove unused `wp_get_networks()`.
+* Add `edit_pages` and `upload_files` caps to author role.
+* Add PHPCS configuration, connect with Travis.
+
 ## 1.4.19 (September 1, 2016)
 
 * Update WordPress 4.6.1-RC1
