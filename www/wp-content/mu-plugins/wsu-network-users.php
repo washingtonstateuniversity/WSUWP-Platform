@@ -512,7 +512,7 @@ class WSU_Network_Users {
 	 *
 	 * @return array Array of search columns
 	 */
-	public function user_search_columns( $search_columns  ) {
+	public function user_search_columns( $search_columns ) {
 		$this->is_user_search = true;
 
 		return $search_columns;

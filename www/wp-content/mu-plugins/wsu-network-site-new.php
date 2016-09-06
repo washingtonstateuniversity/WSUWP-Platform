@@ -28,7 +28,7 @@ class WSUWP_New_Site_Administration {
 	 *
 	 * @param array $site POST site information. Contains address, path, email, title.
 	 */
-	private function _create_new_site( $site  ) {
+	private function _create_new_site( $site ) {
 		global $wpdb;
 
 		if ( empty( $site['address'] ) ) {
