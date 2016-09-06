@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WSU Roles and Capabilities
-Plugin URI: http://web.wsu.edu/
+Plugin URI: https://web.wsu.edu/
 Description: Implements the roles and capabilities required by WSU
 Author: washingtonstateuniversity, jeremyfelt
 Version: 0.1
@@ -20,6 +20,7 @@ class WSU_Roles_And_Capabilities {
 	 */
 	private function __construct() {
 		add_action( 'init',           array( $this, 'modify_editor_capabilities' ), 10 );
+		add_action( 'init', array( $this, 'modify_author_capabilities' ), 10 );
 		add_action( 'init', array( $this, 'modify_contributor_capabilities' ), 10 );
 		add_filter( 'editable_roles', array( $this, 'editable_roles' ), 10, 1 );
 		add_filter( 'map_meta_cap',   array( $this, 'map_meta_cap' ), 10, 4 );
@@ -51,6 +52,29 @@ class WSU_Roles_And_Capabilities {
 		if ( null !== $editor ) {
 			$editor->add_cap( 'create_users' );
 			$editor->add_cap( 'promote_users' );
+		}
+	}
+
+	/**
+	 * Modifies the default capabilities assigned to the author role.
+	 *
+	 * @since 1.5.0
+	 *
+	 * Add the 'upload_files' capability so that authors can access media while
+	 * working with posts and pages.
+	 *
+	 * Add the 'edit_pages' capability so that authors can be assigned as editors
+	 * through the Editorial Access Manager plugin. Without EAM enabled authors
+	 * can create pages, but only to submit them for review, in a workflow similar
+	 * to posts.
+	 *
+	 */
+	public function modify_author_capabilities() {
+		$author = get_role( 'author' );
+
+		if ( null !== $author ) {
+			$author->add_cap( 'edit_pages' );
+			$author->add_cap( 'upload_files' );
 		}
 	}
 
