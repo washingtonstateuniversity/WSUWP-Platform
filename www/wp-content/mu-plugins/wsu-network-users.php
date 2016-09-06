@@ -206,7 +206,7 @@ class WSU_Network_Users {
 		$user = wp_get_current_user();
 
 		// Process network admin assignment at the network level.
-		if ( is_network_admin() && wsuwp_is_network_admin( $user->user_login) && ! $this->is_global_admin( $user_id ) ) {
+		if ( is_network_admin() && wsuwp_is_network_admin( $user->user_login ) && ! $this->is_global_admin( $user_id ) ) {
 			if ( empty( $_POST['network_admin'] ) ) {
 				$this->revoke_super_admin( $user_id );
 			} elseif ( 'on' === $_POST['network_admin'] ) {
@@ -443,7 +443,7 @@ class WSU_Network_Users {
 		}
 
 		$global_admin_ids = array();
-		foreach( $this->get_global_admins() as $global_admin ) {
+		foreach ( $this->get_global_admins() as $global_admin ) {
 			$user = get_user_by( 'login', $global_admin );
 			$global_admin_ids[] = $user->ID;
 		}
@@ -457,7 +457,7 @@ class WSU_Network_Users {
 
 		if ( isset( $_REQUEST['role'] ) && 'super' === $_REQUEST['role'] ) {
 			$network_admins = get_site_option( 'site_admins', array() );
-			foreach( $network_admins as $network_admin ) {
+			foreach ( $network_admins as $network_admin ) {
 				$network_admin = get_user_by( 'login', $network_admin );
 				$query->query_vars['include'][] = $network_admin->ID;
 			}
@@ -512,7 +512,7 @@ class WSU_Network_Users {
 	 *
 	 * @return array Array of search columns
 	 */
-	public function user_search_columns( $search_columns  ) {
+	public function user_search_columns( $search_columns ) {
 		$this->is_user_search = true;
 
 		return $search_columns;
@@ -559,13 +559,13 @@ function wp_new_user_notification( $user_id, $plaintext_pass = '' ) {
 
 	// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 	// we want to reverse this for the plain text arena of emails.
-	$blogname = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
+	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 
 	$message  = sprintf( __( 'A new user has been added to %s:' ), $blogname ) . "\r\n\r\n";
 	$message .= sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n";
 	$message .= sprintf( __( 'E-mail: %s' ), $user->user_email ) . "\r\n\r\n";
-	$message .= "No action is necessary. This message is purely informative." . "\r\n\r\n";
-	$message .= "- WSUWP Platform (wp.wsu.edu)";
+	$message .= 'No action is necessary. This message is purely informative.' . "\r\n\r\n";
+	$message .= '- WSUWP Platform (wp.wsu.edu)';
 
 	@wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] New User Added' ), $blogname ), $message );
 }

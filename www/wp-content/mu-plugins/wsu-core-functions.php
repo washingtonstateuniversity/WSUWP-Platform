@@ -30,11 +30,12 @@ function wsuwp_get_user_networks( $user_id = null ) {
 	}
 
 	$user_id = absint( $user_id );
-	$network_keys = $wpdb->get_col( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = $user_id AND meta_key LIKE 'wsuwp_network_%_capabilities'" );
+	$sql = $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = %d AND meta_key LIKE 'wsuwp_network_%_capabilities'", $user_id );
+	$network_keys = $wpdb->get_col( $sql ); // WPCS: unprepared SQL OK.
 
 	$user_network_ids = array();
 
-	foreach( $network_keys as $network_key ) {
+	foreach ( $network_keys as $network_key ) {
 		$network_id = explode( '_', $network_key );
 		if ( isset( $network_id[2] ) ) {
 			$user_network_ids[] = absint( $network_id[2] );
@@ -141,7 +142,7 @@ function wsuwp_is_multi_network() {
 	}
 
 	if ( false === ( $is_multi_network = get_transient( 'wsuwp_is_multi_network' ) ) ) {
-		$rows = (array) $wpdb->get_col("SELECT DISTINCT id FROM $wpdb->site LIMIT 2");
+		$rows = (array) $wpdb->get_col( "SELECT DISTINCT id FROM $wpdb->site LIMIT 2" );
 		$is_multi_network = 1 < count( $rows ) ? 1 : 0;
 		set_transient( 'wsuwp_is_multi_network', $is_multi_network );
 	}
@@ -174,7 +175,7 @@ function wsuwp_get_networks( $args = array() ) {
 
 	if ( isset( $args['network_id'] ) ) {
 		$network_id = (array) $args['network_id'];
-		foreach( $network_results as $key => $network ) {
+		foreach ( $network_results as $key => $network ) {
 			if ( ! in_array( $network->id, $network_id ) ) {
 				unset( $network_results[ $key ] );
 			}
@@ -208,31 +209,38 @@ function wsuwp_create_network( $args ) {
 	);
 	$args = wp_parse_args( $args, $default );
 
-	if ( '' === trim( $args['domain'] ) )
+	if ( '' === trim( $args['domain'] ) ) {
 		$errors->add( 'empty_domain', __( 'You must provide a domain name.' ) );
+	}
 
-	if ( '' === trim( $args['network_name'] ) )
+	if ( '' === trim( $args['network_name'] ) ) {
 		$errors->add( 'empty_sitename', __( 'You must provide a name for your network of sites.' ) );
+	}
 
-	if ( ! $site_user = get_user_by( 'id', $args['user_id'] ) )
+	if ( ! $site_user = get_user_by( 'id', $args['user_id'] ) ) {
 		$errors->add( 'invalid_user', __( 'You must provide a valid user to be set as network admin.' ) );
+	}
 
-	if ( $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $wpdb->site WHERE domain = %s AND path = %s", $args['domain'], $args['path'] ) ) )
+	if ( $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $wpdb->site WHERE domain = %s AND path = %s", $args['domain'], $args['path'] ) ) ) {
 		$errors->add( 'network_exists', __( 'The network already exists.' ) );
+	}
 
-	if ( $errors->get_error_codes() )
+	if ( $errors->get_error_codes() ) {
 		return $errors;
+	}
 
 	// Get the main site's values for template and stylesheet
 	// @todo this can use get_site_option() to duplicate the efforts of another network
-	$template   = sanitize_key( get_option( 'template'   ) );
+	$template   = sanitize_key( get_option( 'template' ) );
 	$stylesheet = sanitize_key( get_option( 'stylesheet' ) );
 
 	$allowed_themes = array( $stylesheet => true );
-	if ( $template !== $stylesheet )
+	if ( $template !== $stylesheet ) {
 		$allowed_themes[ $template ] = true;
-	if ( WP_DEFAULT_THEME !== $stylesheet && WP_DEFAULT_THEME !== $template )
+	}
+	if ( WP_DEFAULT_THEME !== $stylesheet && WP_DEFAULT_THEME !== $template ) {
 		$allowed_themes[ WP_DEFAULT_THEME ] = true;
+	}
 
 	/// Pull current globally active plugins and set them as active for the new network.
 	$active_global_plugins = wsuwp_get_active_global_plugins();
@@ -327,7 +335,7 @@ We hope you enjoy your new site. Thanks!
 	$network_meta = apply_filters( 'populate_network_meta', $network_meta, $network_id );
 
 	$insert = '';
-	foreach( $network_meta as $meta_key => $meta_value ) {
+	foreach ( $network_meta as $meta_key => $meta_value ) {
 		if ( is_array( $meta_value ) ) {
 			$meta_value = serialize( $meta_value );
 		}
@@ -336,9 +344,9 @@ We hope you enjoy your new site. Thanks!
 			$insert .= ', ';
 		}
 
-		$insert .= $wpdb->prepare( "( %d, %s, %s )", $network_id, $meta_key, $meta_value );
+		$insert .= $wpdb->prepare( '( %d, %s, %s )', $network_id, $meta_key, $meta_value );
 	}
-	$wpdb->query( "INSERT INTO $wpdb->sitemeta ( site_id, meta_key, meta_value ) VALUES " . $insert );
+	$wpdb->query( "INSERT INTO $wpdb->sitemeta ( site_id, meta_key, meta_value ) VALUES " . $insert ); // WPCS: unprepared SQL OK.
 }
 
 /**
@@ -393,13 +401,15 @@ function wsuwp_deactivate_global_plugin( $plugin ) {
  * @return bool True if plugin is globally activated. False if not.
  */
 function wsuwp_is_plugin_active_for_global( $plugin ) {
-	if ( ! wsuwp_is_multi_network() )
+	if ( ! wsuwp_is_multi_network() ) {
 		return false;
+	}
 
 	$current_global = wsuwp_get_active_global_plugins();
 
-	if ( isset( $current_global[ $plugin ] ) )
+	if ( isset( $current_global[ $plugin ] ) ) {
 		return true;
+	}
 
 	return false;
 }
@@ -410,8 +420,9 @@ function wsuwp_is_plugin_active_for_global( $plugin ) {
  * @return bool|array Current globally activated plugins.
  */
 function wsuwp_get_active_global_plugins() {
-	if ( ! wsuwp_is_multi_network() )
+	if ( ! wsuwp_is_multi_network() ) {
 		return false;
+	}
 
 	wsuwp_switch_to_network( get_main_network_id() );
 	$current_global = get_site_option( 'active_global_plugins', array() );

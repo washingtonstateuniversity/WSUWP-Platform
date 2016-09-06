@@ -39,10 +39,10 @@ class WSUWP_WordPress_Dashboard {
 		remove_meta_box( 'dashboard_incoming_links' , 'dashboard', 'normal' );
 		remove_meta_box( 'tribe_dashboard_widget'   , 'dashboard', 'normal' );
 		remove_meta_box( 'dashboard_plugins'        , 'dashboard', 'normal' );
-		remove_meta_box( 'dashboard_primary'        , 'dashboard', 'side'   );
-		remove_meta_box( 'dashboard_secondary'      , 'dashboard', 'side'   );
-		remove_meta_box( 'dashboard_quick_press'    , 'dashboard', 'side'   );
-		remove_meta_box( 'dashboard_recent_drafts'  , 'dashboard', 'side'   );
+		remove_meta_box( 'dashboard_primary'        , 'dashboard', 'side' );
+		remove_meta_box( 'dashboard_secondary'      , 'dashboard', 'side' );
+		remove_meta_box( 'dashboard_quick_press'    , 'dashboard', 'side' );
+		remove_meta_box( 'dashboard_recent_drafts'  , 'dashboard', 'side' );
 
 		remove_action( 'welcome_panel', 'wp_welcome_panel' );
 	}
@@ -52,8 +52,8 @@ class WSUWP_WordPress_Dashboard {
 	 */
 	public function remove_network_dashboard_widgets() {
 		remove_meta_box( 'dashboard_plugins'          , 'dashboard-network', 'normal' );
-		remove_meta_box( 'dashboard_primary'          , 'dashboard-network', 'side'   );
-		remove_meta_box( 'dashboard_secondary'        , 'dashboard-network', 'side'   );
+		remove_meta_box( 'dashboard_primary'          , 'dashboard-network', 'side' );
+		remove_meta_box( 'dashboard_secondary'        , 'dashboard-network', 'side' );
 
 		if ( get_main_network_id() == get_current_network_id() ) {
 			$count_title = 'WSUWP Platform Counts';
@@ -97,7 +97,7 @@ class WSUWP_WordPress_Dashboard {
 	 */
 	public function global_memcached_stats() {
 		$a = new Memcached();
-		$a->addServer('localhost', 11211);
+		$a->addServer( 'localhost', 11211 );
 		$stats = $a->getStats();
 		$stats = $stats['localhost:11211'];
 
@@ -159,7 +159,7 @@ class WSUWP_WordPress_Dashboard {
 	 * @return string
 	 */
 	public function admin_footer_text() {
-		$wp_text = sprintf( __( 'Thank you for creating with <a href="%s">WordPress</a> at <a href="%s">Washington State University</a>.' ), __( 'https://wordpress.org/' ), 'http://wsu.edu' );
+		$wp_text = sprintf( __( 'Thank you for creating with <a href="%1$s">WordPress</a> at <a href="%1$s">Washington State University</a>.' ), __( 'https://wordpress.org/' ), 'http://wsu.edu' );
 		$text = '<span id="footer-thankyou">' . $wp_text . '</span>';
 
 		return $text;

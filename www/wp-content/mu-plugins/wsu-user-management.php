@@ -22,9 +22,9 @@ class WSU_User_Management {
 	 * @var array
 	 */
 	var $role_data = array(
-		'Subscriber'    => array( 'a' => 'a'  ),
+		'Subscriber'    => array( 'a' => 'a' ),
 		'Author'        => array( 'a' => 'an' ),
-		'Contributor'   => array( 'a' => 'a'  ),
+		'Contributor'   => array( 'a' => 'a' ),
 		'Editor'        => array( 'a' => 'an' ),
 		'Administrator' => array( 'a' => 'an' ),
 	);
@@ -84,7 +84,7 @@ class WSU_User_Management {
 		}
 
 		if ( ! current_user_can( 'create_users' ) ) {
-			wp_die(__('You do not have sufficient permissions to add users to this network.'));
+			wp_die( __( 'You do not have sufficient permissions to add users to this network.' ) );
 		}
 
 		check_admin_referer( 'add-user', '_wpnonce_add-user' );
@@ -112,7 +112,7 @@ class WSU_User_Management {
 		} else {
 			$blog_id = get_current_blog_id();
 
-			if ( isset( $_REQUEST['email'] ) && false !== strpos($_REQUEST['email'], '@') ) {
+			if ( isset( $_REQUEST['email'] ) && false !== strpos( $_REQUEST['email'], '@' ) ) {
 				$user_details = get_user_by( 'email', $_REQUEST['email'] );
 			} elseif ( isset( $_REQUEST['email'] ) ) {
 				$user_details = get_user_by( 'login', $_REQUEST['email'] );
@@ -149,7 +149,7 @@ class WSU_User_Management {
 		$username = $user_details->user_login;
 		$user_id = $user_details->ID;
 
-		if ( ( $username != null && ! is_super_admin( $user_id ) ) && ( array_key_exists( $blog_id, get_blogs_of_user( $user_id ) ) ) ) {
+		if ( ( null != $username && ! is_super_admin( $user_id ) ) && ( array_key_exists( $blog_id, get_blogs_of_user( $user_id ) ) ) ) {
 			// "That user is already a member of this site."
 			$redirect = $redirect_member;
 		} else {
@@ -180,10 +180,10 @@ class WSU_User_Management {
 		check_admin_referer( 'create-user', '_wpnonce_create-user' );
 
 		// Adding a new user to this site
-		$user_details = wpmu_validate_user_signup( $_REQUEST[ 'user_login' ], $_REQUEST[ 'email' ] );
+		$user_details = wpmu_validate_user_signup( $_REQUEST['user_login'], $_REQUEST['email'] );
 
-		if ( is_wp_error( $user_details[ 'errors' ] ) && !empty( $user_details[ 'errors' ]->errors ) ) {
-			$add_user_errors = $user_details[ 'errors' ];
+		if ( is_wp_error( $user_details['errors'] ) && ! empty( $user_details['errors']->errors ) ) {
+			$add_user_errors = $user_details['errors'];
 		} else {
 			/**
 			 * Filter the user_login, also known as the username, before it is added to the site.

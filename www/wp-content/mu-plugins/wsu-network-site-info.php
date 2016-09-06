@@ -41,7 +41,7 @@ class WSU_Network_Site_Info {
 			<td><select name="wsu_network_id">
 		<?php
 		$networks = get_networks();
-		foreach( $networks as $network ) {
+		foreach ( $networks as $network ) {
 			echo '<option value="' . $network->id . '" ' . selected( $site_network_id, $network->id, false ) . '>' . $network->domain . $network->path . '</option>';
 		}
 		?>
@@ -69,7 +69,7 @@ class WSU_Network_Site_Info {
 			return;
 		}
 
-		if ( isset($_REQUEST['action']) && 'update-site' == $_REQUEST['action'] ) {
+		if ( isset( $_REQUEST['action'] ) && 'update-site' == $_REQUEST['action'] ) {
 			check_admin_referer( 'edit-site' );
 
 			// Lookup the current site and clear site bootstrap cache for it.
@@ -94,7 +94,7 @@ class WSU_Network_Site_Info {
 					// Which users do not yet have capabilities on the new network.
 					$modify_network_users = array_diff( $all_site_users_query->get_results(), $new_network_users_query->get_results() );
 
-					foreach( $modify_network_users as $user_id ) {
+					foreach ( $modify_network_users as $user_id ) {
 						// Assign capabilities for basic access to the new network.
 						update_user_meta( $user_id, 'wsuwp_network_' . $network_id . '_capabilities', array() );
 
@@ -102,7 +102,7 @@ class WSU_Network_Site_Info {
 						$remove_from_network = true;
 
 						// Parse the user's sites for others on this network to see if we can remove this network's capabilities.
-						foreach( $user_sites as $user_site_id => $user_site ) {
+						foreach ( $user_sites as $user_site_id => $user_site ) {
 							if ( $user_site->site_id === $current_details->site_id && $user_site_id !== $id ) {
 								$remove_from_network = false;
 								continue;
@@ -118,7 +118,7 @@ class WSU_Network_Site_Info {
 					$current_details->site_id = $network_id;
 					update_blog_details( $id, $current_details );
 
-					wp_safe_redirect( network_admin_url( 'sites.php') );
+					wp_safe_redirect( network_admin_url( 'sites.php' ) );
 					die();
 				}
 			}

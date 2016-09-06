@@ -27,7 +27,7 @@ Author URI: http://ronandandrea.com/
 function ra_bp_multinetwork_filter( $prefix ) {
 	global $wpdb;
 
-	if( $wpdb->siteid > 1 && $prefix == $wpdb->base_prefix ) {
+	if ( $wpdb->siteid > 1 && $prefix == $wpdb->base_prefix ) {
 		$current_site = get_current_site();
 		return $wpdb->get_blog_prefix( $current_site->blog_id );
 	}
@@ -55,17 +55,18 @@ function ra_bp_multinetwork_meta_key_filter( $key ) {
 		'closed_notices' => false,
 		'profile_last_updated' => false,
 		'notification_activity_new_mention' => false,
-		'notification_activity_new_reply' => false
+		'notification_activity_new_reply' => false,
 	);
 
-	if( $wpdb->siteid < 2 || !isset( $user_meta_keys[$key] ) )
+	if ( $wpdb->siteid < 2 || ! isset( $user_meta_keys[ $key ] ) ) {
 		return $key;
-
-	if( !$user_meta_keys[$key] ) {
-		$current_site = get_current_site();
-		$user_meta_keys[$key] = $wpdb->get_blog_prefix( $current_site->blog_id ) . $key;
 	}
 
-	return $user_meta_keys[$key];
+	if ( ! $user_meta_keys[ $key ] ) {
+		$current_site = get_current_site();
+		$user_meta_keys[ $key ] = $wpdb->get_blog_prefix( $current_site->blog_id ) . $key;
+	}
+
+	return $user_meta_keys[ $key ];
 }
 add_filter( 'bp_get_user_meta_key', 'ra_bp_multinetwork_meta_key_filter' );
