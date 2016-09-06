@@ -63,11 +63,9 @@ class WSU_Roles_And_Capabilities {
 	 * Add the 'upload_files' capability so that authors can access media while
 	 * working with posts and pages.
 	 *
-	 * Add the 'edit_pages' capability so that authors can be assigned as editors
-	 * through the Editorial Access Manager plugin. Without EAM enabled authors
-	 * can create pages, but only to submit them for review, in a workflow similar
-	 * to posts.
-	 *
+	 * Add the 'edit_pages' capability so that authors can submit pages for review
+	 * in a workflow similar to posts. If the Editorial Access Manager plugin is
+	 * enabled, then authors can be assigned as editors of individual pages.
 	 */
 	public function modify_author_capabilities() {
 		$author = get_role( 'author' );
@@ -79,11 +77,16 @@ class WSU_Roles_And_Capabilities {
 	}
 
 	/**
-	 * Modify the contributor role.
+	 * Modifies the default capabilities assigned to the contributor role.
 	 *
-	 * Allow contributors to access other portions of the editing process.
-	 *     - Add 'upload_files' capability so that media can be accessed.
-	 *     - Add 'edit_pages' capability so that editors can edit pages assigned to them.
+	 * @since 1.1.0
+	 *
+	 * Add the 'upload_files' capability so that contributors can access media while
+	 * working with posts and pages.
+	 *
+	 * Add the 'edit_pages' capability so that contributors can submit pages for
+	 * review in a workflow similar to posts. If the Editorial Access Manager plugin
+	 * is enabled, then authors can be assigned as editors of individual pages.
 	 */
 	function modify_contributor_capabilities() {
 		$contributor = get_role( 'contributor' );
