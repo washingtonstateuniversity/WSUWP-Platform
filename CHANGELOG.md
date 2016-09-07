@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1 (September 7, 2016)
+
+* Update WordPress 4.6.1 (final)
+
 ## 1.5.0 (September 6, 2016)
 
 * Remove unused `wp_get_networks()`.
