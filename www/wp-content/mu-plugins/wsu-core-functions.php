@@ -56,17 +56,6 @@ function wsuwp_get_current_network() {
 }
 
 /**
- * A wrapper with a better name for get_blog_details(). Returns what WordPress knows
- * as the current blog (by not passing any arguments), which in reality is the
- * current site.
- *
- * @return object with current site information
- */
-function wsuwp_get_current_site() {
-	return get_site();
-}
-
-/**
  * Switch to another network by backing up the $current_site global so that we can run
  * various queries and functions while impersonating it.
  *
