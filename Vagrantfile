@@ -27,6 +27,8 @@ Vagrant.configure("2") do |config|
   config.vm.box     = "centos-64-x64-puppetlabs"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box"
 
+  config.ssh.forward_agent = false
+
   # Set the default hostname and IP address for the virtual machine. If you have any other
   # Vagrant environments on the 10.10.50.x subnet, you may want to consider modifying this.
   config.vm.hostname = "wsuwp"
