@@ -256,7 +256,7 @@ We hope you enjoy your new site. Thanks!
 		'admin_email' => null,
 		'admin_user_id' => null,
 		'registration' => 'none',
-		'upload_filetypes' => 'jpg jpeg png gif mp3 webp oga ogg ogv webm mp4 pdf ai psd eps doc ppt xls csv key numbers pages',
+		'upload_filetypes' => 'jpg jpeg png gif mp3 webp oga ogg ogv webm mp4 pdf ai psd eps doc ppt xls csv key numbers pages vtt',
 		'blog_upload_space' => 2000,
 		'fileupload_maxk' => 200000,
 		'illegal_names' => array( 'www', 'web', 'root', 'admin', 'main', 'invite', 'administrator', 'files' ),
