@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.2 (November 4, 2016)
+
+* Allow uploads of VTT files.
+
 ## 1.5.1 (September 7, 2016)
 
 * Update WordPress 4.6.1 (final)
