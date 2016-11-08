@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.3 (November 8, 2016)
+
+* Add .pub to the list of allowed upload filetypes.
+* Add .sav to the list of allowed upload filetypes.
+
 ## 1.5.2 (November 4, 2016)
 
 * Allow uploads of VTT files.
