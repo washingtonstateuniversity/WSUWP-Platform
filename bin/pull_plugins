@@ -16,7 +16,16 @@ fi
 
 cd $LOCAL_PLUGINS
 
-rm exclude-auto.txt
+if [[ ! -f 'exclude.txt' ]]; then
+  touch exclude.txt
+fi
+
+if [[ -f 'exclude-auto.txt' ]]; then
+  rm exclude-auto.txt
+fi
+
+touch exclude-auto.txt
+
 for GIT_DIR in $(find . -maxdepth 2 -name '.git'); do
     echo $(basename $(dirname $GIT_DIR)) >> exclude-auto.txt
 done

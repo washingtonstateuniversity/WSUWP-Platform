@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
 
   # Settings specific to VirtualBox
   config.vm.provider :virtualbox do |v|
-    v.customize ["modifyvm", :id, "--memory", 512]
+    v.customize ["modifyvm", :id, "--memory", 1024]
     v.name = "wsuwp_dev_vm"
   end
 
@@ -26,6 +26,8 @@ Vagrant.configure("2") do |config|
   # Provides a fairly bare-bones CentOS box created by Puppet Labs.
   config.vm.box     = "centos-64-x64-puppetlabs"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box"
+
+  config.ssh.forward_agent = false
 
   # Set the default hostname and IP address for the virtual machine. If you have any other
   # Vagrant environments on the 10.10.50.x subnet, you may want to consider modifying this.
