@@ -72,3 +72,6 @@ www/*.sql.bak
 
 # Ignore WSU Spine when in www for local development.
 /www/wsu-spine
+
+# Ignore the local WP-CLI.
+/www/wp-cli
