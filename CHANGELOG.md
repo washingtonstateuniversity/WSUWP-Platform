@@ -9,6 +9,7 @@
 * Ensure exclude files properly exist
 * Use the www-data owner and group to sync `www/`
 * Ignore the www/wp-cli directory
+* Update Batcache to revision dba956
 
 ## 1.5.3 (November 8, 2016)
 
