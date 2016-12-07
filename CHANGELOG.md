@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.4 (December 6, 2016)
+
+* Update WordPress 4.7
+* Re-add support to WP 4.7 REST API for filter argument
+* Disable SSH agent forwarding
+* Bump virtual machine size to 1GB
+* Ensure exclude files properly exist
+* Use the www-data owner and group to sync `www/`
+* Ignore the www/wp-cli directory
+* Update Batcache to revision dba956
+
 ## 1.5.3 (November 8, 2016)
 
 * Add .pub to the list of allowed upload filetypes.
