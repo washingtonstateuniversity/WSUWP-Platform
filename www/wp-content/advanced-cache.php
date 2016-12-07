@@ -67,7 +67,7 @@ class batcache {
 	var $genlock = false;
 	var $do = false;
 
-	function batcache( $settings ) {
+	function __construct( $settings ) {
 		if ( is_array( $settings ) ) foreach ( $settings as $k => $v )
 			$this->$k = $v;
 	}
@@ -178,7 +178,7 @@ class batcache {
 		// Construct and save the batcache
 		$this->cache = array(
 			'output' => $output,
-			'time' => time(),
+			'time' => isset( $_SERVER['REQUEST_TIME'] ) ? $_SERVER['REQUEST_TIME'] : time(),
 			'timer' => $this->timer_stop(false, 3),
 			'headers' => array(),
 			'status_header' => $this->status_header,
@@ -334,10 +334,8 @@ if ( preg_match( '/documents\/([0-9]{4})\/([0-9]{1,2})\/([^.]+)\.[A-Za-z0-9]{3,4
 if ( strstr( $_SERVER['SCRIPT_FILENAME'], 'wp-includes/js' ) )
 	return;
 
-// Never batcache a POST request.
-if ( ! empty( $GLOBALS['HTTP_RAW_POST_DATA'] ) || ! empty( $_POST ) ||
-	( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === $_SERVER['REQUEST_METHOD'] ) )
-{
+// Only cache HEAD and GET requests.
+if ((isset($_SERVER['REQUEST_METHOD']) && !in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')))) {
 	return;
 }
 
@@ -413,7 +411,7 @@ if ( isset( $batcache->cache['version'] ) && $batcache->cache['version'] != $bat
 		$batcache->requests = wp_cache_incr($batcache->req_key, 1, $batcache->group);
 
 		if ( $batcache->requests >= $batcache->times &&
-			time() >= $batcache->cache['time'] + $batcache->cache['max_age']
+		     time() >= $batcache->cache['time'] + $batcache->cache['max_age']
 		) {
 			wp_cache_delete( $batcache->req_key, $batcache->group );
 			$batcache->do = true;
@@ -428,11 +426,11 @@ if ( $batcache->do )
 	$batcache->genlock = wp_cache_add("{$batcache->url_key}_genlock", 1, $batcache->group, 10);
 
 if ( isset( $batcache->cache['time'] ) && // We have cache
-	! $batcache->genlock &&            // We have not obtained cache regeneration lock
-	(
-		time() < $batcache->cache['time'] + $batcache->cache['max_age'] || // Batcached page that hasn't expired ||
-		( $batcache->do && $batcache->use_stale )                          // Regenerating it in another request and can use stale cache
-	)
+     ! $batcache->genlock &&            // We have not obtained cache regeneration lock
+     (
+	     time() < $batcache->cache['time'] + $batcache->cache['max_age'] || // Batcached page that hasn't expired ||
+	     ( $batcache->do && $batcache->use_stale )                          // Regenerating it in another request and can use stale cache
+     )
 ) {
 	// Issue redirect if cached and enabled
 	if ( $batcache->cache['redirect_status'] && $batcache->cache['redirect_location'] && $batcache->cache_redirects ) {
@@ -515,8 +513,14 @@ if ( isset( $batcache->cache['time'] ) && // We have cache
 if ( ! $batcache->do || ! $batcache->genlock )
 	return;
 
-$wp_filter['status_header'][10]['batcache'] = array( 'function' => array(&$batcache, 'status_header'), 'accepted_args' => 2 );
-$wp_filter['wp_redirect_status'][10]['batcache'] = array( 'function' => array(&$batcache, 'redirect_status'), 'accepted_args' => 2 );
+//WordPress 4.7 changes how filters are hooked. Since WordPress 4.6 add_filter can be used in advanced-cache.php. Previous behaviour is kept for backwards compatability with WP < 4.6
+if ( function_exists( 'add_filter' ) ) {
+	add_filter( 'status_header', array( &$batcache, 'status_header' ), 10, 2 );
+	add_filter( 'wp_redirect_status', array( &$batcache, 'redirect_status' ), 10, 2 );
+} else {
+	$wp_filter['status_header'][10]['batcache'] = array( 'function' => array(&$batcache, 'status_header'), 'accepted_args' => 2 );
+	$wp_filter['wp_redirect_status'][10]['batcache'] = array( 'function' => array(&$batcache, 'redirect_status'), 'accepted_args' => 2 );
+}
 
 ob_start(array(&$batcache, 'ob'));
 
