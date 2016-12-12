@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 22, host: 2200, auto_correct: true
 
   # Mount this project's working directory as /var/www inside the virtual machine.
-  config.vm.synced_folder "./www", "/var/www", :owner => "www-data", :group => "www-data"
+  config.vm.synced_folder "./www", "/var/www", :mount_options => [ "uid=510,gid=510", "dmode=775", "fmode=774" ]
 
   # Mount the local project's pillar/ directory as /srv/pillar inside the virtual machine. This allows
   # us to pass arbitrary data to Salt during provisioning.
@@ -119,7 +119,7 @@ ERRORSS
 
   $script =<<SCRIPT
     cd /tmp && rm -fr wsu-web
-    cd /tmp && curl -o wsu-web.zip -L https://github.com/washingtonstateuniversity/wsu-web-provisioner/archive/master.zip
+    cd /tmp && curl -k -o wsu-web.zip -L https://github.com/washingtonstateuniversity/wsu-web-provisioner/archive/master.zip
     cd /tmp && unzip wsu-web.zip
     cd /tmp && mv WSU-Web-Provisioner-master wsu-web
     cp -fr /tmp/wsu-web/provision/salt /srv/
