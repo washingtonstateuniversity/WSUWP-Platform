@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.6 (January 11, 2017)
+
+* Update WordPress 4.7.1
+
+## 1.5.5 (January 3, 2017)
+
+* Update PHPMailer in WordPress to 5.2.21
+
 ## 1.5.4 (December 6, 2016)
 
 * Update WordPress 4.7
