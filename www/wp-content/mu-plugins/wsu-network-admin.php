@@ -605,7 +605,7 @@ class WSU_Network_Admin {
 		}
 
 		if ( isset( $network_meta['domain'] ) || isset( $network_meta['path'] ) ) {
-			$network = wp_get_network( $network_id );
+			$network = get_network( $network_id );
 
 			$domain = untrailingslashit( $network_meta['domain'] );
 			if ( false === wsuwp_validate_domain( $domain ) ) {
