@@ -16,6 +16,8 @@ class WSU_Admin_Header {
 		add_action( 'admin_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'wp_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks' ),  10 );
+		add_action( 'admin_init', array( $this, 'remove_my_sites_menu' ), 11 );
+		add_action( 'template_redirect', array( $this, 'remove_my_sites_menu' ), 11 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu' ), 210 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
@@ -74,92 +76,51 @@ class WSU_Admin_Header {
 	}
 
 	/**
-	 * Create a custom version of the WordPress admin bar
+	 * Removes the default My Sites menu rendering performed by WordPress core. WSUWP
+	 * re-renders this menu and this avoids doubling the effort.
 	 *
-	 * @param WP_Admin_Bar $wp_admin_bar The wp_admin_bar global, no need to return once modified
+	 * @since 1.5.7
 	 */
-	public function my_networks_menu( $wp_admin_bar ) {
-		/**
-		 * This is really only useful to installations with multiple networks. If it is not
-		 * a multi network setup, then we should leave the admin bar alone.
-		 */
-		if ( ! wsuwp_is_multi_network() ) {
-			return;
-		}
+	public function remove_my_sites_menu() {
+		remove_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
+	}
 
-		$user_meta_keys = get_user_meta( get_current_user_id() );
-		$user_meta_keys = array_keys( $user_meta_keys );
-
-		$user_sites = 0;
-
-		foreach ( $user_meta_keys as $key ) {
-			if ( 'capabilities' !== substr( $key, -12 ) ) {
-				continue;
-			}
-
-			// Increase the site count by one if a caps key is found.
-			$user_sites++;
-
-			// Bail once we know we're over 1 site.
-			if ( 1 < $user_sites ) {
-				break;
-			}
-		}
-
-		/**
-		 * If the user is a member of only one site, we can assume they are also a member of
-		 * only one network. If this is the case *and* they are not an admin of this network,
-		 * then we remove the My Sites menu entirely and return without creating a My Networks menu.
-		 *
-		 * This also catches a case in which a user has been added as a member of a network,
-		 * but does not have access to any individual site yet. At that point, a blank
-		 * admin bar will be displayed.
-		 */
-		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= $user_sites ) {
-			$wp_admin_bar->remove_menu( 'my-sites' );
-			return;
-		}
-
-		$user_networks = wsuwp_get_user_networks( get_current_user_id() );
-
-		/**
-		 * If a user is a member of only one network and they are not a super admin of that
-		 * network—implied by the current page load, do not remove the My Sites menu or show
-		 * the My Networks menu.
-		 */
-		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= count( $user_networks ) ) {
-			return;
-		}
-
-		/**
-		 * Remove the default My Sites menu, as we will be grouping sites under networks
-		 * in a custom menu.
-		 */
-		$wp_admin_bar->remove_menu( 'my-sites' );
+	/**
+	 * Captures a current site's menu nodes from the admin bar and returns
+	 * them so that the menu can be regenerated at a later time.
+	 *
+	 * @since 1.5.7
+	 *
+	 * @param WP_Admin_Bar $wp_admin_bar
+	 *
+	 * @return array
+	 */
+	public function remove_single_site_menu( $wp_admin_bar ) {
+		$node = array();
 
 		/**
 		 * Cache each of the existing nodes that represent the current default admin
 		 * menu items so that we can use them when reordering.
 		 */
-		$node_edit        = $wp_admin_bar->get_node( 'edit' );
-		$node_preview     = $wp_admin_bar->get_node( 'preview' );
-		$node_view        = $wp_admin_bar->get_node( 'view' );
-		$node_site_name   = $wp_admin_bar->get_node( 'site-name' );
+		$node['edit'] = $wp_admin_bar->get_node( 'edit' );
+		$node['preview'] = $wp_admin_bar->get_node( 'preview' );
+		$node['view'] = $wp_admin_bar->get_node( 'view' );
+		$node['site_name'] = $wp_admin_bar->get_node( 'site-name' );
 
 		// Children of the site-name node. Null if not is_admin()
-		$node_view_site   = $wp_admin_bar->get_node( 'view-site' );
-		$node_edit_site   = $wp_admin_bar->get_node( 'edit-site' );
+		$node['view_site'] = $wp_admin_bar->get_node( 'view-site' );
+		$node['edit_site'] = $wp_admin_bar->get_node( 'edit-site' );
 
 		// Children of the site-name node. Null if is_admin()
-		$node_dashboard  = $wp_admin_bar->get_node( 'dashboard' );
-		$node_appearance = $wp_admin_bar->get_node( 'appearance' );
-		$node_themes     = $wp_admin_bar->get_node( 'themes' );
-		$node_customize  = $wp_admin_bar->get_node( 'customize' );
-		$node_widgets    = $wp_admin_bar->get_node( 'widgets' );
-		$node_menus      = $wp_admin_bar->get_node( 'menus' );
+		$node['dashboard'] = $wp_admin_bar->get_node( 'dashboard' );
+		$node['appearance'] = $wp_admin_bar->get_node( 'appearance' );
+		$node['themes'] = $wp_admin_bar->get_node( 'themes' );
+		$node['customize'] = $wp_admin_bar->get_node( 'customize' );
+		$node['widgets'] = $wp_admin_bar->get_node( 'widgets' );
+		$node['menus'] = $wp_admin_bar->get_node( 'menus' );
 
-		$node_comments    = $wp_admin_bar->get_node( 'comments' );
-		$node_new_content = $wp_admin_bar->get_node( 'new-content' );
+		$node['comments'] = $wp_admin_bar->get_node( 'comments' );
+		$node['new_content'] = $wp_admin_bar->get_node( 'new-content' );
 
 		/**
 		 * Remove the default menu items that we will be reordering.
@@ -185,6 +146,113 @@ class WSU_Admin_Header {
 		$wp_admin_bar->remove_menu( 'comments' );
 		$wp_admin_bar->remove_menu( 'new-content' );
 
+		return $node;
+	}
+
+	/**
+	 * Adds a menu for the current site to the admin bar given a previously
+	 * stored set of node data.
+	 *
+	 * @since 1.5.7
+	 *
+	 * @param WP_Admin_Bar $wp_admin_bar
+	 * @param array        $node
+	 */
+	public function add_single_site_menu( $wp_admin_bar, $node ) {
+		/**
+		 * Add the original menu items back to the admin bar now that we have our my-networks
+		 * item in place.
+		 */
+		$wp_admin_bar->add_menu( $node['site_name'] );
+
+		// Add the children of the site-name menu.
+		if ( is_admin() ) {
+			$wp_admin_bar->add_menu( $node['view_site'] );
+			$wp_admin_bar->add_menu( $node['edit_site'] );
+		} else {
+			$wp_admin_bar->add_menu( $node['dashboard'] );
+			$wp_admin_bar->add_menu( $node['appearance'] );
+			$wp_admin_bar->add_menu( $node['themes'] );
+			$wp_admin_bar->add_menu( $node['customize'] );
+			$wp_admin_bar->add_menu( $node['widgets'] );
+			$wp_admin_bar->add_menu( $node['menus'] );
+		}
+
+		$wp_admin_bar->add_menu( $node['comments'] );
+		$wp_admin_bar->add_menu( $node['new_content'] );
+
+		if ( $node['edit'] ) {
+			$wp_admin_bar->add_menu( $node['edit'] );
+		}
+
+		if ( $node['preview'] ) {
+			$wp_admin_bar->add_menu( $node['preview'] );
+		}
+
+		if ( $node['view'] ) {
+			$wp_admin_bar->add_menu( $node['view'] );
+		}
+	}
+
+	/**
+	 * Create a custom version of the WordPress admin bar
+	 *
+	 * @param WP_Admin_Bar $wp_admin_bar The wp_admin_bar global, no need to return once modified
+	 */
+	public function my_networks_menu( $wp_admin_bar ) {
+		/**
+		 * This is really only useful to installations with multiple networks. If it is not
+		 * a multi network setup, then we should leave the admin bar alone.
+		 */
+		if ( ! wsuwp_is_multi_network() ) {
+			return;
+		}
+
+		$user_meta_keys = get_user_meta( get_current_user_id() );
+		$user_meta_keys = array_keys( $user_meta_keys );
+
+		$user_sites = 0;
+
+		foreach ( $user_meta_keys as $key ) {
+			if ( 'capabilities' !== substr( $key, -12 ) || strpos( $key, 'network' ) !== false || strpos( $key, 'global' ) !== false  ) {
+				continue;
+			}
+
+			// Increase the site count by one if a caps key is found.
+			$user_sites++;
+
+			// Bail once we know we're over 1 site.
+			if ( 1 < $user_sites ) {
+				break;
+			}
+		}
+
+		/**
+		 * If the user is a member of only one site, we can assume they are also a member of
+		 * only one network. If this is the case *and* they are not an admin of this network,
+		 * then we remove the My Sites menu entirely and return without creating a My Networks menu.
+		 *
+		 * This also catches a case in which a user has been added as a member of a network,
+		 * but does not have access to any individual site yet. At that point, a blank
+		 * admin bar will be displayed.
+		 */
+		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= $user_sites ) {
+			return;
+		}
+
+		$node_data = $this->remove_single_site_menu( $wp_admin_bar );
+
+		/**
+		 * If a user is a member of only one network and they are not a super admin of that
+		 * network—implied by the current page load, do not remove the My Sites menu or show
+		 * the My Networks menu.
+		 */
+		if ( ! wsuwp_is_network_admin( wp_get_current_user()->user_login ) && 1 >= count( $wp_admin_bar->user->networks ) ) {
+			wp_admin_bar_my_sites_menu( $wp_admin_bar );
+			$this->add_single_site_menu( $wp_admin_bar, $node_data );
+			return;
+		}
+
 		/**
 		 * Insert a new menu item 'My {$name} Networks' on the left of the admin bar that will
 		 * provide access to each of the user's networks. This title can be altered through the
@@ -200,17 +268,17 @@ class WSU_Admin_Header {
 		 * Overwrite the previously set network name to remove the 'Network Admin:' text.
 		 */
 		if ( is_network_admin() ) {
-			$node_site_name->title = get_current_site()->site_name;
+			$node_data['site_name']->title = get_current_site()->site_name;
 		}
 
 		// If the site name node is null, normally because we do not have access, rebuild the pieces.
-		if ( null === $node_site_name && wsuwp_is_network_admin( wp_get_current_user()->user_login ) ) {
+		if ( null === $node_data['site_name'] && wsuwp_is_network_admin( wp_get_current_user()->user_login ) ) {
 			$node_site_name = array(
 				'id' => 'site-name',
 				'title' => get_option( 'blogname' ),
 				'href' => home_url(),
 			);
-			$node_site_name = $this->_set_node( $node_site_name );
+			$node_data['site_name'] = $this->_set_node( $node_site_name );
 
 			if ( is_admin() ) {
 				$node_view_site = array(
@@ -219,7 +287,7 @@ class WSU_Admin_Header {
 					'parent' => 'site-name',
 					'href' => home_url(),
 				);
-				$node_view_site = $this->_set_node( $node_view_site );
+				$node_data['view_site'] = $this->_set_node( $node_view_site );
 
 				$node_edit_site = array(
 					'id' => 'edit-site',
@@ -227,7 +295,7 @@ class WSU_Admin_Header {
 					'parent' => 'site-name',
 					'href' => network_admin_url( 'site-info.php?id=' . get_current_blog_id() ),
 				);
-				$node_edit_site = $this->_set_node( $node_edit_site );
+				$node_data['edit_site'] = $this->_set_node( $node_edit_site );
 			} else {
 				$node_dashboard = array(
 					'id' => 'dashboard',
@@ -235,14 +303,14 @@ class WSU_Admin_Header {
 					'parent' => 'site-name',
 					'href' => admin_url(),
 				);
-				$node_dashboard = $this->_set_node( $node_dashboard );
+				$node_data['dashboard'] = $this->_set_node( $node_dashboard );
 
 				$node_appearance = array(
 					'id' => 'appearance',
 					'parent' => 'site-name',
 					'group' => true,
 				);
-				$node_appearance = $this->_set_node( $node_appearance );
+				$node_data['appearance'] = $this->_set_node( $node_appearance );
 
 				$node_themes = array(
 					'id' => 'themes',
@@ -250,7 +318,7 @@ class WSU_Admin_Header {
 					'parent' => 'appearance',
 					'href' => admin_url( 'themes.php' ),
 				);
-				$node_themes = $this->_set_node( $node_themes );
+				$node_data['themes'] = $this->_set_node( $node_themes );
 
 				$current_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 				$node_customize = array(
@@ -259,7 +327,7 @@ class WSU_Admin_Header {
 					'parent' => 'appearance',
 					'href' => add_query_arg( 'url', urlencode( $current_url ), wp_customize_url() ),
 				);
-				$node_customize = $this->_set_node( $node_customize );
+				$node_data['customize'] = $this->_set_node( $node_customize );
 
 				$node_widgets = array(
 					'id'     => 'widgets',
@@ -267,7 +335,7 @@ class WSU_Admin_Header {
 					'parent' => 'appearance',
 					'href'   => admin_url( 'widgets.php' ),
 				);
-				$node_widgets = $this->_set_node( $node_widgets );
+				$node_data['widgets'] = $this->_set_node( $node_widgets );
 
 				$node_menus = array(
 					'id' => 'menus',
@@ -275,7 +343,7 @@ class WSU_Admin_Header {
 					'parent' => 'appearance',
 					'href' => admin_url( 'nav-menus.php' ),
 				);
-				$node_menus = $this->_set_node( $node_menus );
+				$node_data['menus'] = $this->_set_node( $node_menus );
 			}
 		}
 
@@ -283,35 +351,7 @@ class WSU_Admin_Header {
 		 * Add the original menu items back to the admin bar now that we have our my-networks
 		 * item in place.
 		 */
-		$wp_admin_bar->add_menu( $node_site_name );
-
-		// Add the children of the site-name menu.
-		if ( is_admin() ) {
-			$wp_admin_bar->add_menu( $node_view_site );
-			$wp_admin_bar->add_menu( $node_edit_site );
-		} else {
-			$wp_admin_bar->add_menu( $node_dashboard );
-			$wp_admin_bar->add_menu( $node_appearance );
-			$wp_admin_bar->add_menu( $node_themes );
-			$wp_admin_bar->add_menu( $node_customize );
-			$wp_admin_bar->add_menu( $node_widgets );
-			$wp_admin_bar->add_menu( $node_menus );
-		}
-
-		$wp_admin_bar->add_menu( $node_comments );
-		$wp_admin_bar->add_menu( $node_new_content );
-
-		if ( $node_edit ) {
-			$wp_admin_bar->add_menu( $node_edit );
-		}
-
-		if ( $node_preview ) {
-			$wp_admin_bar->add_menu( $node_preview );
-		}
-
-		if ( $node_view ) {
-			$wp_admin_bar->add_menu( $node_view );
-		}
+		$this->add_single_site_menu( $wp_admin_bar, $node_data );
 
 		/**
 		 * Now that we have a My Networks menu, we should generate a list of networks to output
