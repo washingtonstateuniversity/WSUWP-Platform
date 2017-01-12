@@ -16,6 +16,8 @@ class WSU_Admin_Header {
 		add_action( 'admin_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'wp_head', array( $this, 'admin_bar_css' ), 10 );
 		add_action( 'admin_bar_init',        array( $this, 'set_user_networks' ),  10 );
+		add_action( 'admin_init', array( $this, 'remove_my_sites_menu' ), 11 );
+		add_action( 'template_redirect', array( $this, 'remove_my_sites_menu' ), 11 );
 		add_action( 'admin_bar_menu',        array( $this, 'my_networks_menu' ), 210 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
@@ -71,6 +73,16 @@ class WSU_Admin_Header {
 		if ( ! isset( $wp_admin_bar->user->networks ) ) {
 			$wp_admin_bar->user->networks = wsuwp_get_user_networks();
 		}
+	}
+
+	/**
+	 * Removes the default My Sites menu rendering performed by WordPress core. WSUWP
+	 * re-renders this menu and this avoids doubling the effort.
+	 *
+	 * @since 1.5.7
+	 */
+	public function remove_my_sites_menu() {
+		remove_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
 	}
 
 	/**
