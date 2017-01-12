@@ -628,6 +628,10 @@ class WSU_Network_Admin {
 				// Find the network's primary site to change it's domain and path as well.
 				$site_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s AND site_id = %d", $network->domain, $network->path, $network_id ) );
 
+				if ( ! $site_id ) {
+					wp_die( __( 'A matching site was not found. The network domain and path cannot be updated.' ) );
+				}
+
 				// Update the domain and path of the network.
 				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->site SET domain = %s, path = %s WHERE id = %d", $domain, $path, $network_id ) );
 
