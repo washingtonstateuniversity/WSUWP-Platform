@@ -208,6 +208,9 @@ function wsuwp_create_network( $args ) {
 
 	wp_cache_delete( 'networks', 'wsuwp' );
 
+	$last_changed = microtime();
+	wp_cache_set( 'last_changed', $last_changed, 'networks' );
+
 	// Assume the current network's admins will have access
 	$network_admins = get_site_option( 'site_admins' );
 
