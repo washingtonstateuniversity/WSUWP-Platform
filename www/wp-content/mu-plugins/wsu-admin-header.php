@@ -93,7 +93,7 @@ class WSU_Admin_Header {
 		$user_sites = 0;
 
 		foreach ( $user_meta_keys as $key ) {
-			if ( 'capabilities' !== substr( $key, -12 ) ) {
+			if ( 'capabilities' !== substr( $key, -12 ) || strpos( $key, 'network' ) !== false || strpos( $key, 'global' ) !== false  ) {
 				continue;
 			}
 
