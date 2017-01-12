@@ -30,7 +30,10 @@ function wsuwp_get_user_networks( $user_id = null ) {
 	}
 
 	$user_id = absint( $user_id );
-	$sql = $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = %d AND meta_key LIKE 'wsuwp_network_%_capabilities'", $user_id );
+
+	$sql = $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = %d", $user_id );
+	$sql .= " AND meta_key LIKE 'wsuwp_network_%_capabilities'";
+
 	$network_keys = $wpdb->get_col( $sql ); // WPCS: unprepared SQL OK.
 
 	$user_network_ids = array();
