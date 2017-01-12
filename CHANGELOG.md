@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.5.7 (January 12, 2017)
+
+* Skip network and global capabilities when counting sites
+* Correct the query used to retrieve a user's networks
+* Prevent WordPress from rendering an unused My Sites menu
+* Store and capture a current site menu for proper placement
+* Use `get_network()` instead of deprecated `wp_get_network()`
+* Show an error when updating a network without a matching site
+* Clear the global networks cache when a network is updated
+* Update the networks last_changed cache group on network creation
+* Remove unused `wsuwp_get_current_network()`.
+* Remove unit testing script from Travis, bump to PHP 7.0
+* Stick to the latest 2.7.x branch for PHPCS
+
 ## 1.5.6 (January 11, 2017)
 
 * Update WordPress 4.7.1
