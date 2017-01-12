@@ -70,6 +70,10 @@ class WSU_Admin_Header {
 	public function set_user_networks() {
 		global $wp_admin_bar;
 
+		if ( wsuwp_is_global_admin( wp_get_current_user()->ID ) ) {
+			return;
+		}
+
 		if ( ! isset( $wp_admin_bar->user->networks ) ) {
 			$wp_admin_bar->user->networks = wsuwp_get_user_networks();
 		}
@@ -225,6 +229,11 @@ class WSU_Admin_Header {
 			if ( 1 < $user_sites ) {
 				break;
 			}
+		}
+
+		// Disable the My Sites and My Networks menu for global admins.
+		if ( wsuwp_is_global_admin( wp_get_current_user()->ID ) ) {
+			return;
 		}
 
 		/**
