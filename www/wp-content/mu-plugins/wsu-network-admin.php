@@ -644,6 +644,7 @@ class WSU_Network_Admin {
 
 				// Using update_blog_option above clears the site level cache. We need to clear the network level cache.
 				wp_cache_delete( $network_id, 'wsuwp:network' );
+				wp_cache_delete( $network_id, 'networks' );
 			}
 		}
 
