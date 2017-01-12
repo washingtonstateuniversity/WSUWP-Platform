@@ -49,16 +49,6 @@ function wsuwp_get_user_networks( $user_id = null ) {
 }
 
 /**
- * A wrapper with a better name for get_current_site(). Returns what WordPress knows
- * as the current site, which in reality is the current network.
- *
- * @return object with current network information
- */
-function wsuwp_get_current_network() {
-	return get_current_site();
-}
-
-/**
  * Switch to another network by backing up the $current_site global so that we can run
  * various queries and functions while impersonating it.
  *
