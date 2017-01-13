@@ -9,7 +9,7 @@
  * Network: true
  */
 
-$wsuwp_global_version = '1.5.7';
+$wsuwp_global_version = '1.5.8';
 $wsuwp_wp_changeset = '39871';
 
 /**
