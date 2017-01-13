@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.8 (January 12, 2017)
+
+* Disable My Sites and My Networks menus for global admins.
+
 ## 1.5.7 (January 12, 2017)
 
 * Skip network and global capabilities when counting sites
