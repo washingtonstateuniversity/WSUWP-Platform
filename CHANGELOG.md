@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.9 (January 26, 2017)
+
+* Update WordPress 4.7.2
+
 ## 1.5.8 (January 12, 2017)
 
 * Disable My Sites and My Networks menus for global admins.
