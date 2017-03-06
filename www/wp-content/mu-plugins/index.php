@@ -10,7 +10,7 @@
  */
 
 $wsuwp_global_version = '1.5.10';
-$wsuwp_wp_changeset = '39997';
+$wsuwp_wp_changeset = '40123';
 
 /**
  * Returns the current deployment version of WSUWP Platform
