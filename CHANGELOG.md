@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.11 (March 6, 2017)
+
+* Update WordPress 4.7.3
+
 ## 1.5.10 (February 2, 2017)
 
 * Allow `.mobi` and `.epub` uploads.
