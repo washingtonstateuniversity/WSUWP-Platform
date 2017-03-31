@@ -7,13 +7,6 @@ Author: washingtonstateuniversity, jeremyfelt
 Version: 0.1
 */
 
-/**
- * Disable the multisite database upgrade routine.
- *
- * @see wp-admin/admin.php
- */
-add_filter( 'do_mu_upgrade', '__return_false' );
-
 add_filter( 'upload_dir', 'wsuwp_upload_dir' );
 /**
  * @param array $uploads Data associated with the upload URL. We assume the subdir key is correct.
