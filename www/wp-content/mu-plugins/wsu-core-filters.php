@@ -8,16 +8,6 @@ Version: 0.1
 */
 
 /**
- * ms_files_rewriting should never be enabled.
- */
-add_filter( 'pre_option_ms_files_rewriting', '__return_false' );
-
-/**
- * We should always use yearmonth folders for uploads.
- */
-add_filter( 'pre_option_uploads_use_yearmonth_folders', '__return_true' );
-
-/**
  * Disable the multisite database upgrade routine.
  *
  * @see wp-admin/admin.php
