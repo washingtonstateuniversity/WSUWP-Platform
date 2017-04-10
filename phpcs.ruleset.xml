@@ -3,11 +3,6 @@
     <description>Sniffs for the coding standards of the WSUWP Platform</description>
 
     <rule ref="WordPress-Extra">
-        <exclude name="WordPress.XSS.EscapeOutput" />
-        <exclude name="WordPress.Variables.GlobalVariables" />
         <exclude name="WordPress.PHP.StrictComparisons" />
-        <exclude name="WordPress.PHP.StrictInArray" />
-        <exclude name="WordPress.CSRF.NonceVerification" />
-        <exclude name="Generic.PHP.NoSilencedErrors" />
     </rule>
 </ruleset>
