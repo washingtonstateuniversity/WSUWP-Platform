@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0 (TBD)
+
+* Move individual `mu-plugins` into their own repositories.
+* Provide a method for including an `mu-plugin` after deployment.
+* Update PHPCS and WPCS packages.
+
 ## 1.5.11 (March 6, 2017)
 
 * Update WordPress 4.7.3
