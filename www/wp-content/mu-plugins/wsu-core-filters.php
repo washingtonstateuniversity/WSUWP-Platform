@@ -84,3 +84,30 @@ function wsuwp_filter_admin_menu() {
 	global $submenu;
 	unset( $submenu['options-general.php'][40] );
 }
+
+add_filter( 'update_footer', 'wsuwp_update_footer_text', 11 );
+/**
+ * Displays WSUWP Platform and WordPress version information in the admin footer.
+ *
+ * @since 1.6.0
+ *
+ * @return string
+ */
+function wsuwp_update_footer_text() {
+	global $wsuwp_global_version, $wsuwp_wp_changeset;
+
+	$version = ltrim( get_bloginfo( 'version' ), '(' );
+	$version = rtrim( $version, ')' );
+	$version = explode( '-', $version );
+
+	$text = 'WSUWP Platform <a target=_blank href="https://github.com/washingtonstateuniversity/WSUWP-Platform/tree/v' . $wsuwp_global_version . '">' . $wsuwp_global_version . '</a> | ';
+	$text .= 'WordPress ' . $version[0];
+
+	if ( isset( $version[1] ) ) {
+		$text .= ' ' . ucwords( $version[1] );
+	}
+
+	$text .= ' [<a target=_blank href="https://core.trac.wordpress.org/changeset/' . $wsuwp_wp_changeset . '">' . $wsuwp_wp_changeset . '</a>]';
+
+	return $text;
+}
