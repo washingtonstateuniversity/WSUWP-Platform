@@ -21,3 +21,24 @@ function wsuwp_global_version() {
 	global $wsuwp_global_version, $wsuwp_wp_changeset;
 	return $wsuwp_global_version . '-' . $wsuwp_wp_changeset;
 }
+
+/**
+ * Loads additional, white-listed, must use plugins.
+ *
+ * This allows mu-plugins in individual directories to be deployed and then
+ * activated separately. This in turn makes the WSUWP Platform slimmer and
+ * more flexible as more code can be managed in individual repositories.
+ *
+ * @since 1.6.0
+ */
+if ( file_exists( __DIR__ . '/wsuwp-load-mu-plugins/wsuwp-load-mu-plugins.php' ) ) {
+	require_once __DIR__ . '/wsuwp-load-mu-plugins/wsuwp-load-mu-plugins.php';
+}
+$wsuwp_mu_plugins = apply_filters( 'wsuwp_load_mu_plugins', array() );
+
+foreach ( $wsuwp_mu_plugins as $wsuwp_mu_plugin ) {
+	require_once __DIR__ . '/' . $wsuwp_mu_plugin;
+}
+
+unset( $wsuwp_mu_plugins );
+unset( $wsuwp_mu_plugin );
