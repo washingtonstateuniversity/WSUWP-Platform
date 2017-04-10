@@ -28,8 +28,20 @@ function wp_install_defaults( $user_id ) {
 
 	$cat_id = 1;
 
-	$wpdb->insert( $wpdb->terms, array( 'term_id' => $cat_id, 'name' => $cat_name, 'slug' => $cat_slug, 'term_group' => 0 ) );
-	$wpdb->insert( $wpdb->term_taxonomy, array( 'term_id' => $cat_id, 'taxonomy' => 'category', 'description' => '', 'parent' => 0, 'count' => 1 ) );
+	$wpdb->insert( $wpdb->terms, array(
+		'term_id' => $cat_id,
+		'name' => $cat_name,
+		'slug' => $cat_slug,
+		'term_group' => 0,
+	) );
+
+	$wpdb->insert( $wpdb->term_taxonomy, array(
+		'term_id' => $cat_id,
+		'taxonomy' => 'category',
+		'description' => '',
+		'parent' => 0,
+		'count' => 1,
+	) );
 
 	$cat_tt_id = $wpdb->insert_id;
 
@@ -59,7 +71,10 @@ function wp_install_defaults( $user_id ) {
 		'pinged'                => '',
 		'post_content_filtered' => '',
 	));
-	$wpdb->insert( $wpdb->term_relationships, array( 'term_taxonomy_id' => $cat_tt_id, 'object_id' => 1 ) );
+	$wpdb->insert( $wpdb->term_relationships, array(
+		'term_taxonomy_id' => $cat_tt_id,
+		'object_id' => 1,
+	) );
 
 	$page_content = 'Use the <code>wsuwp_first_page_content</code> filter to modify this content.';
 	$page_content = apply_filters( 'wsuwp_first_page_content', $page_content );
@@ -93,7 +108,11 @@ function wp_install_defaults( $user_id ) {
 		'pinged'                => '',
 		'post_content_filtered' => '',
 	));
-	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 2, 'meta_key' => '_wp_page_template', 'meta_value' => $page_template ) );
+	$wpdb->insert( $wpdb->postmeta, array(
+		'post_id' => 2,
+		'meta_key' => '_wp_page_template',
+		'meta_value' => $page_template,
+	) );
 
 	// Insert a placeholder page with a slug to be used as the posts view.
 	$wpdb->insert( $wpdb->posts, array(
@@ -109,7 +128,11 @@ function wp_install_defaults( $user_id ) {
 		'comment_status'    => 'closed',
 		'ping_status'       => 'closed',
 	));
-	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 3, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
+	$wpdb->insert( $wpdb->postmeta, array(
+		'post_id' => 3,
+		'meta_key' => '_wp_page_template',
+		'meta_value' => 'default',
+	) );
 
 	/**
 	 * Set the page on front to be static by default and use
@@ -123,6 +146,7 @@ function wp_install_defaults( $user_id ) {
 	$site_description = apply_filters( 'wsuwp_install_site_description', 'Just another WordPress site' );
 	update_option( 'blogdescription', $site_description );
 
+	// @codingStandardsIgnoreStart
 	// Set up default widgets for default theme.
 	update_option( 'widget_search',          array( 2 => array( 'title' => '' ), '_multiwidget' => 1 ) );
 	update_option( 'widget_recent-posts',    array( 2 => array( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
@@ -131,6 +155,7 @@ function wp_install_defaults( $user_id ) {
 	update_option( 'widget_categories',      array( 2 => array( 'title' => '', 'count' => 0, 'hierarchical' => 0, 'dropdown' => 0 ), '_multiwidget' => 1 ) );
 	update_option( 'widget_meta',            array( 2 => array( 'title' => '' ), '_multiwidget' => 1 ) );
 	update_option( 'sidebars_widgets',       array( 'wp_inactive_widgets' => array(), 'sidebar-1' => array( 0 => 'search-2', 1 => 'recent-posts-2', 2 => 'recent-comments-2', 3 => 'archives-2', 4 => 'categories-2', 5 => 'meta-2' ), 'sidebar-2' => array(), 'sidebar-3' => array(), 'array_version' => 3 ) );
+	// @codingStandardsIgnoreEnd
 
 	// Set a default timezone string with a filter to override.
 	$timezone_string = apply_filters( 'wsuwp_install_default_timezone_string', 'America/Los_Angeles' );
@@ -162,7 +187,14 @@ function wp_install_defaults( $user_id ) {
 	$wp_rewrite->flush_rules();
 
 	$user = new WP_User( $user_id );
-	$wpdb->update( $wpdb->options, array( 'option_value' => $user->user_email ), array( 'option_name' => 'admin_email' ) );
+	$wpdb->update( $wpdb->options,
+		array(
+			'option_value' => $user->user_email,
+		),
+		array(
+			'option_name' => 'admin_email',
+		)
+	);
 
 	// Remove all perms except for the login user.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix . 'user_level' ) );
@@ -170,6 +202,9 @@ function wp_install_defaults( $user_id ) {
 
 	// Delete any caps that snuck into the previously active blog. (Hardcoded to blog 1 for now.) TODO: Get previous_blog_id.
 	if ( ! is_super_admin( $user_id ) && 1 != $user_id ) {
-		$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id, 'meta_key' => $wpdb->base_prefix . '1_capabilities' ) );
+		$wpdb->delete( $wpdb->usermeta, array(
+			'user_id' => $user_id,
+			'meta_key' => $wpdb->base_prefix . '1_capabilities',
+		) );
 	}
 }
