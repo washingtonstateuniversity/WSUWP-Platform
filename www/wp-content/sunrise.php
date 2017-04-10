@@ -131,7 +131,7 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 
 		wp_cache_add( $requested_domain . $requested_path, $current_blog, 'wsuwp:site', 60 * 60 * 12 );
 	}
-}
+} // End if().
 
 if ( $current_blog ) {
 	//set the blog_id and site_id globals that WordPress expects
@@ -199,4 +199,4 @@ if ( $current_blog ) {
 	}
 
 	die();
-}
+} // End if().

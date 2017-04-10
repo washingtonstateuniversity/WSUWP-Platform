@@ -4,5 +4,6 @@
 
     <rule ref="WordPress-Extra">
         <exclude name="WordPress.PHP.StrictComparisons" />
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments" />
     </rule>
 </ruleset>
