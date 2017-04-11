@@ -45,11 +45,14 @@ The server configuration provisioned on the virtual machine is provided by the [
 
 ### Sync Production
 
-To use the following commands, access to the production server is required. The nightly WP-CLI release should be installed on your local machine so that aliases for WSUWP and your local environment can be used.
+The `bin/pull_plugins` and `bin/pull_mu_plugins` scripts will retrieve all plugins in production and sync them with your local environment. To use these commands, access to the production server via a valid SSH key is required.
 
-* `bin/pull_plugins` will retrieve all plugins in production and sync them with those that are local. Any local plugins with a `.git` file will be ignored. Any local plugins listed in `www/wp-content/plugins/exclude.txt` will be ignored.
+* Any local plugin directories that are git repositories will be ignored.
+* Any plugin directories listed in `www/wp-conent/plugins/exclude.txt` or `www/wp-content/mu-plugins/exclude.txt` will be ignored.
 
 #### Site Specific Data
+
+The nightly WP-CLI release should be installed on your local machine so that aliases for WSUWP and your local environment can be used.
 
 1. Note the ID of the production site either through the dashboard or via a `wp` command.
   * `wp @wsuwp site list | grep web.wsu.edu`
