@@ -58,6 +58,7 @@ www/*.sql.bak
 
 # Ignore the rsync exclude files in the plugin directory.
 /www/wp-content/plugins/exclude*.txt
+/www/wp-content/mu-plugins/mu-exclude*.txt
 
 # Ignore all uploads in the wp-content directory by default.
 /www/wp-content/uploads
