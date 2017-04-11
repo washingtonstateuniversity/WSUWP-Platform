@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.0 (TBD)
+## 1.6.0 (April 10, 2017)
 
 * Move individual `mu-plugins` into their own repositories.
 * Provide a method for including an `mu-plugin` after deployment.

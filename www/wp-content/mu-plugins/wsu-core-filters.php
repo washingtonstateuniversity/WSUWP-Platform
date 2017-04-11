@@ -4,7 +4,7 @@ Plugin Name: WSU Core Filters
 Plugin URI: http://web.wsu.edu/
 Description: Various filters used to modify core data.
 Author: washingtonstateuniversity, jeremyfelt
-Version: 0.1
+Version: 1.6.0
 */
 
 add_filter( 'upload_dir', 'wsuwp_upload_dir' );

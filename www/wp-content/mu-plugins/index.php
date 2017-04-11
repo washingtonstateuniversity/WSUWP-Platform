@@ -1,15 +1,15 @@
 <?php
 /*
  * Plugin Name: WSUWP Platform Global
- * Plugin URI: https://web.wsu.edu/
+ * Plugin URI: https://github.com/washingtonstateuniversity/WSUWP-Platform
  * Description: Controls WSUWP Platform global version
  * Author: washingtonstateuniversity, jeremyfelt
  * Author URI: https://web.wsu.edu/
- * Version: 1.5.11
+ * Version: 1.6.0
  * Network: true
  */
 
-$wsuwp_global_version = '1.5.11';
+$wsuwp_global_version = '1.6.0';
 $wsuwp_wp_changeset = '40123';
 
 /**
