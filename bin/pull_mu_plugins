@@ -30,4 +30,4 @@ for GIT_DIR in $(find . -maxdepth 2 -name '.git'); do
     echo $(basename $(dirname $GIT_DIR)) >> mu-exclude-auto.txt
 done
 
-rsync -avz --delete --exclude-from 'mu-exclude-auto.txt' --exclude-from 'mu-exclude.txt' --exclude '*.php' --exclude 'mu-exclude-auto.txt' --exclude 'mu-exclude.txt' wsuwp-prod-01:/var/www/wp-content/mu-plugins/ ./
+rsync -avz --delete --exclude-from 'mu-exclude-auto.txt' --exclude-from 'mu-exclude.txt' --exclude './*.php' --exclude 'mu-exclude-auto.txt' --exclude 'mu-exclude.txt' wsuwp-prod-01:/var/www/wp-content/mu-plugins/ ./
