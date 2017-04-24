@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.1 (April 24, 2017)
+
+* Update WordPress 4.7.4
+
 ## 1.6.0 (April 10, 2017)
 
 * Move individual `mu-plugins` into their own repositories.
