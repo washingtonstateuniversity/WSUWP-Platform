@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.2 (May 8, 2017)
+
+* Update advanced-cache to treat REST API requests differently.
+
 ## 1.6.1 (April 24, 2017)
 
 * Update WordPress 4.7.4
