@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.4 (June 15, 2017)
+
+* Update WordPress 4.8
+
 ## 1.6.3 (May 16, 2017)
 
 * Update WordPress 4.7.5
