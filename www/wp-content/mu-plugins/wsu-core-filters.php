@@ -39,39 +39,6 @@ function wsuwp_cje_capability() {
 	return 'edit_javascript';
 }
 
-add_filter( 'pre_option_permalink_structure', 'wsuwp_filter_permalink_structure' );
-/**
- * Provide a default permalink structure of year/month/day/post-slug/ to avoid the
- * default '/blog/' prefix on every network's main site.
- *
- * @return string Modified permalink structure.
- */
-function wsuwp_filter_permalink_structure() {
-	return '/%year%/%monthnum%/%day%/%postname%/';
-}
-
-add_filter( 'pre_option_category_base', 'wsuwp_filter_category_base' );
-/**
- * Force the category base to '/category/' to avoid the default '/blog/' prefix on
- * every network's main site.
- *
- * @return string Modified category base structure.
- */
-function wsuwp_filter_category_base() {
-	return '/category';
-}
-
-add_filter( 'pre_option_tag_base', 'wsuwp_filter_tag_base' );
-/**
- * Force the tag base to '/tag/' to avoid the default '/blog/' prefix on every
- * network's main site.
- *
- * @return string Modified tag base structure.
- */
-function wsuwp_filter_tag_base() {
-	return '/tag';
-}
-
 add_action( '_admin_menu', 'wsuwp_filter_admin_menu' );
 /**
  * Permalinks can impact so much in strange ways. It's best to disable this now until
