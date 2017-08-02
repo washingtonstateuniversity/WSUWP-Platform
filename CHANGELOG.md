@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.6 (August 2, 2017)
+
+* Update WordPress 4.8.1
+
 ## 1.6.5 (July 31, 2017)
 
 * Remove permalink restrictions.
