@@ -118,20 +118,35 @@ ERRORSS
   end
 
   $script =<<SCRIPT
+    # Update everything required for a successful HTTPS transaction.
+    yum update ca-certificates curl openssl
+
+    # Retrieve the latest web provisioner.
     cd /tmp && rm -fr wsu-web
     cd /tmp && curl -k -o wsu-web.zip -L https://github.com/washingtonstateuniversity/wsu-web-provisioner/archive/master.zip
     cd /tmp && unzip wsu-web.zip
     cd /tmp && mv WSU-Web-Provisioner-master wsu-web
+
+    # Setup the VM's Salt configuration.
     cp -fr /tmp/wsu-web/provision/salt /srv/
     cp /tmp/wsu-web/provision/salt/config/local.yum.conf /etc/yum.conf
-    rpm -Uvh --force http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-    sed -i 's/mirrorlist=https/mirrorlist=http/' /etc/yum.repos.d/epel.repo
-    yum -y update python
+
+    # Bootstrap Salt.
     sh /tmp/wsu-web/provision/bootstrap_salt.sh -K stable
+
+    # Setup the environment to properly handle MySQL in Salt.
+    # See https://github.com/saltstack/salt/issues/42979
+    yum install -y mysql-community-devel python27-devel
+    curl https://bootstrap.pypa.io/get-pip.py | python2.7 -
+    pip2.7 install MySQL-python
+
+    # Configure Salt.
     rm /etc/salt/minion.d/*.conf
     rm /etc/salt/minion_id
     echo "wsuwp-dev" > /etc/salt/minion_id
     cp /tmp/wsu-web/provision/salt/minions/wsuwp.conf /etc/salt/minion.d/
+
+    # Run Salt to establish an initial state.
     salt-call --local --log-level=info --config-dir=/etc/salt state.highstate
 SCRIPT
 
