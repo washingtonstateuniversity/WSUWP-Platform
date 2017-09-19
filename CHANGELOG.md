@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.7 (September 19, 2017)
+
+* Update WordPress 4.8.2
+* Update `ca-certificates`, `curl`, and `openssl` in inline provisioner.
+* Add packages required by newer versions of Salt to inline provisioner (`MySQL-python`).
+
 ## 1.6.6 (August 2, 2017)
 
 * Update WordPress 4.8.1
