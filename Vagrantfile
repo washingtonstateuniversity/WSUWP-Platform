@@ -119,7 +119,7 @@ ERRORSS
 
   $script =<<SCRIPT
     # Update everything required for a successful HTTPS transaction.
-    yum update ca-certificates curl openssl
+    yum update -y ca-certificates curl openssl
 
     # Retrieve the latest web provisioner.
     cd /tmp && rm -fr wsu-web
