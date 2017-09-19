@@ -1,9 +1,32 @@
 <?xml version="1.0"?>
 <ruleset name="WSUWP Platform">
-    <description>Sniffs for the coding standards of the WSUWP Platform</description>
+
+    <!-- Config flags for PHPCS
+		 s flag: Show sniff codes in all reports.
+		 v flag: Print verbose output.
+	-->
+    <arg value="sv"/>
+
+    <!-- Check only PHP files -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Check all files in this directory and the directories below it. -->
+    <file>.</file>
+
+    <description>Sniffs for PHP coding standards used by the WSUWP Platform</description>
 
     <rule ref="WordPress-Extra">
-        <exclude name="WordPress.PHP.StrictComparisons" />
-        <exclude name="Squiz.PHP.DisallowMultipleAssignments" />
+        <exclude name="WordPress.NamingConventions.ValidFunctionName" />
+        <exclude name="WordPress.Files.FileName" />
+        <exclude name="Squiz.PHP.EmbeddedPhp.NoSemicolon" />
+        <exclude name="Squiz.PHP.EmbeddedPhp.ContentBeforeEnd" />
+        <exclude name="Squiz.PHP.EmbeddedPhp.ContentBeforeOpen" />
+        <exclude name="Squiz.PHP.EmbeddedPhp.ContentAfterOpen" />
+        <exclude name="Squiz.PHP.EmbeddedPhp.ContentAfterEnd" />
+        <exclude name="Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace" />
+
+        <!-- Custom rules for WSUWP Platform -->
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments.Found" />
+        <exclude name="WordPress.PHP.StrictComparisons.LooseComparison" />
     </rule>
 </ruleset>
