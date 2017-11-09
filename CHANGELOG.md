@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.9 (November 9, 2017)
+
+* Hotfix WordPress core to avoid extraneous PHP errors on S3 stream resources.
+
 ## 1.6.8 (October 31, 2017)
 
 * Update WordPress 4.8.3
