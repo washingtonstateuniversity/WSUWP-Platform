@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.10 (November 13, 2017)
+
+* Stop page caching REST API requests.
+
 ## 1.6.9 (November 9, 2017)
 
 * Hotfix WordPress core to avoid extraneous PHP errors on S3 stream resources.
