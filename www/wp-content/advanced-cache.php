@@ -330,6 +330,11 @@ if ( preg_match( '/documents\/([0-9]{4})\/([0-9]{1,2})\/([^.]+)\.[A-Za-z0-9]{3,4
 	return;
 }
 
+// Never batcache REST API content
+if ( preg_match( '/wp-json\//', $_SERVER['REQUEST_URI'] ) ) {
+	return;
+}
+
 // Never batcache WP javascript generators
 if ( strstr( $_SERVER['SCRIPT_FILENAME'], 'wp-includes/js' ) )
 	return;
@@ -389,12 +394,7 @@ if ( $batcache->is_ssl() )
 
 // Recreate the permalink from the URL
 $batcache->permalink = 'http://' . $batcache->keys['host'] . $batcache->keys['path'] . ( isset($batcache->keys['query']['p']) ? "?p=" . $batcache->keys['query']['p'] : '' );
-
-if ( preg_match( '/wp-json\/wp\//', $_SERVER['REQUEST_URI'] ) ) {
-	$batcache->url_key = md5( 'rest-api' );
-} else {
-	$batcache->url_key = md5( $batcache->permalink );
-}
+$batcache->url_key = md5( $batcache->permalink );
 
 $batcache->configure_groups();
 $batcache->url_version = (int) wp_cache_get("{$batcache->url_key}_version", $batcache->group);
