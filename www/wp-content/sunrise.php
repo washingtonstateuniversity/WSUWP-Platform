@@ -191,10 +191,16 @@ if ( $current_blog ) {
 
 	/** @todo think about sanitizing this properly as esc_url() and wp_redirect() are not available yet */
 	if ( $redirect_site_id ) {
-		error_log( 'Sunrise: Redirecting invalid domain one level up - ' . $requested_domain ); // @codingStandardsIgnoreLine
+		if ( defined( 'WSUWP_DEBUG' ) && WSUWP_DEBUG ) {
+			error_log( 'Sunrise: Redirecting invalid domain one level up - ' . $requested_domain ); // @codingStandardsIgnoreLine
+		}
+
 		header( 'Location: http://' . $redirect_domain, true, 301 );
 	} else {
-		error_log( 'Sunrise: Redirecting invalid domain to default site - ' . $requested_domain ); // @codingStandardsIgnoreLine
+		if ( defined( 'WSUWP_DEBUG' ) && WSUWP_DEBUG ) {
+			error_log( 'Sunrise: Redirecting invalid domain to default site - ' . $requested_domain ); // @codingStandardsIgnoreLine
+		}
+
 		header( 'Location: https://wp.wsu.edu/', true, 301 );
 	}
 
