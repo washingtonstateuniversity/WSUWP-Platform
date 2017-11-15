@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.11 (November 15, 2017)
+
+* Transfer some debugging code to actual debugging code. Now requires `WSUWP_DEBUG` to be set.
+* Remove detection of SSL configured sites, this is handled in Nginx.
+
 ## 1.6.10 (November 13, 2017)
 
 * Stop page caching REST API requests.
