@@ -118,17 +118,6 @@ if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp
 
 	// If a row was found, set it in cache for future lookups
 	if ( $current_blog ) {
-		// Start with the assumption that SSL is available for this domain.
-		$current_blog->ssl_enabled = true;
-
-		// We're looking for a base option name of foo.bar.com_ssl_disabled
-		$ssl_domain_check = $requested_domain . '_ssl_disabled';
-		$non_ssl_domain = $wpdb->get_row( $wpdb->prepare( "SELECT option_id FROM {$wpdb->base_prefix}options WHERE option_name = %s", $ssl_domain_check ) );
-
-		if ( is_object( $non_ssl_domain ) ) {
-			$current_blog->ssl_enabled = false;
-		}
-
 		wp_cache_add( $requested_domain . $requested_path, $current_blog, 'wsuwp:site', 60 * 60 * 12 );
 	}
 } // End if().
@@ -146,11 +135,6 @@ if ( $current_blog ) {
 		$current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE domain = %s AND path = %s LIMIT 0,1", $current_site->domain, $current_site->path ) );
 
 		wp_cache_add( $site_id, $current_site, 'wsuwp:network', 60 * 60 * 12 );
-	}
-
-	if ( isset( $current_blog->ssl_enabled ) && true === $current_blog->ssl_enabled && false === WSU_LOCAL_CONFIG ) {
-		define( 'FORCE_SSL_ADMIN', true );
-		define( 'FORCE_SSL_LOGIN', true );
 	}
 
 	/**
