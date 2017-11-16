@@ -2,6 +2,10 @@
 
 ## 1.6.11 (November 15, 2017)
 
+* Update WordPress 4.9
+
+## 1.6.11 (November 15, 2017)
+
 * Transfer some debugging code to actual debugging code. Now requires `WSUWP_DEBUG` to be set.
 * Remove detection of SSL configured sites, this is handled in Nginx.
 
