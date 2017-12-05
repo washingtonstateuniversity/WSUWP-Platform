@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.6.11 (November 15, 2017)
+## 1.6.13 (December 5, 2017)
+
+* Update WordPress 4.9.1
+
+## 1.6.12 (November 15, 2017)
 
 * Update WordPress 4.9
 
