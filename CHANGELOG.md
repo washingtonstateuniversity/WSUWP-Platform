@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0 (December 6, 2017)
+
+* Remove our `install.php` drop-in replacement of `wp_install_defaults()`.
+
 ## 1.6.13 (December 5, 2017)
 
 * Update WordPress 4.9.1
