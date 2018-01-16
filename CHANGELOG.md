@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.1 (January 16, 2018)
+
+* Update WordPress 4.9.2
+* Update plugin sync scripts with new server.
+
 ## 1.7.0 (December 6, 2017)
 
 * Remove our `install.php` drop-in replacement of `wp_install_defaults()`.
