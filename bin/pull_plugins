@@ -30,4 +30,4 @@ for GIT_DIR in $(find . -maxdepth 2 -name '.git'); do
     echo $(basename $(dirname $GIT_DIR)) >> exclude-auto.txt
 done
 
-rsync -avz --delete --exclude-from 'exclude-auto.txt' --exclude-from 'exclude.txt' --exclude 'exclude-auto.txt' --exclude 'exclude.txt' wsuwp-prod-01:/var/www/wp-content/plugins/ ./
+rsync -avz --delete --exclude-from 'exclude-auto.txt' --exclude-from 'exclude.txt' --exclude 'exclude-auto.txt' --exclude 'exclude.txt' wsuwpa-p2n01.web.wsu.edu:/var/www/wp-content/plugins/ ./
