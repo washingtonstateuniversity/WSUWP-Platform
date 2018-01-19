@@ -43,3 +43,57 @@ cp "${VVV_PATH_TO_SITE}/provision/wp-config.php" "${VVV_PATH_TO_SITE}/www/wp-con
 
 cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
 sed -i "s#{{DOMAINS_HERE}}#${DOMAINS}#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
+
+if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/themes/spine ]]; then
+	noroot wp theme install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-spine-parent-theme/archive/master.zip
+	mv ${VVV_PATH_TO_SITE}/www/wp-content/themes/WSUWP-spine-parent-theme ${VVV_PATH_TO_SITE}/www/wp-content/themes/spine
+	noroot wp theme enable spine --network --path=${VVV_PATH_TO_SITE}/www/wordpress
+	noroot wp theme activate spine --url=wp.wsu.test --path=${VVV_PATH_TO_SITE}
+fi
+
+wget -P ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins https://github.com/washingtonstateuniversity/WSUWP-MU-Plugin-Collection/archive/master.zip
+unzip ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/master.zip
+
+rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/bp-multi-network
+rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade
+rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade-runner
+rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/rest-filter
+
+mv ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/WSUWP-MU-Plugin-Collection/* rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/
+rm -rf rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/WSUWP-MU-Plugin-Collection
+
+if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults/.git" ]]; then
+	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-New-Site-Defaults/archive/master.zip
+	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults
+	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-MU-New-Site-Defaults ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults
+fi
+
+if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-simple-filters/.git" ]]; then
+	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Simple-Filters/archive/master.zip
+	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-simple-filters
+	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-MU-Simple-Filters ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-simple-filters
+fi
+
+if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-multiple-networks/.git" ]]; then
+	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-Multiple-Networks/archive/master.zip
+	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-multiple-networks
+	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-Multiple-Networks ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-multiple-networks
+fi
+
+if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-extended-batcache/.git" ]]; then
+	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Extended-Batcache/archive/master.zip
+	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-extended-batcache
+	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-MU-Extended-Batcache ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-extended-batcache
+fi
+
+if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard/.git" ]]; then
+	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-WSUWP-Dashboard/archive/master.zip
+	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard
+	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-WSUWP-Dashboard ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard
+fi
+
+if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-load-mu-plugins/.git" ]]; then
+	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-Load-MU-Plugins/archive/master.zip
+	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-load-mu-plugins
+	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-Load-MU-Plugins ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-load-mu-plugins
+fi
