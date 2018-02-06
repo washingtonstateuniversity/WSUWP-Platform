@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.2 (February 6, 2018)
+
+* Update WordPress 4.9.4
+
 ## 1.7.1 (January 16, 2018)
 
 * Update WordPress 4.9.2
