@@ -75,7 +75,8 @@ if ( '/' !== $requested_path ) {
 	$requested_path = '/' . $requested_path;
 }
 
-if ( ! $current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp:site' ) ) {
+$current_blog = wp_cache_get( $requested_domain . $requested_path, 'wsuwp:site' );
+if ( ! $current_blog ) {
 	// Treat www the same as the root URL
 	$alternate_domain = preg_replace( '|^www\.|', '', $requested_domain );
 
@@ -128,7 +129,8 @@ if ( $current_blog ) {
 	$site_id = $current_blog->site_id;
 
 	// setup the current_site global that WordPress expects
-	if ( ! $current_site = wp_cache_get( $site_id, 'wsuwp:network' ) ) {
+	$current_site = wp_cache_get( $site_id, 'wsuwp:network' );
+	if ( ! $current_site ) {
 		$current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * from $wpdb->site WHERE id = %d LIMIT 0,1", $site_id ) );
 
 		// Add blog ID after the fact because it is required by both scenarios

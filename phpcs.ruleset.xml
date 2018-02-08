@@ -28,5 +28,6 @@
         <!-- Custom rules for WSUWP Platform -->
         <exclude name="Squiz.PHP.DisallowMultipleAssignments.Found" />
         <exclude name="WordPress.PHP.StrictComparisons.LooseComparison" />
+        <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
     </rule>
 </ruleset>
