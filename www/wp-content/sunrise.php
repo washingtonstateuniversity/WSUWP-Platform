@@ -52,7 +52,7 @@ if ( defined( 'COOKIE_DOMAIN' ) ) {
 
 // Capture the domain and path from the current request
 $requested_domain = strtolower( $_SERVER['HTTP_HOST'] );
-$requested_uri       = trim( $_SERVER['REQUEST_URI'], '/' );
+$requested_uri    = stripslashes( $_SERVER['REQUEST_URI'] );
 
 // Strip any port numbers from the HTTP_HOST data.
 if ( ':80' === substr( $requested_domain, -3 ) ) {
@@ -62,6 +62,12 @@ if ( ':80' === substr( $requested_domain, -3 ) ) {
 	$requested_domain = substr( $requested_domain, 0, -4 );
 	$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -4 );
 }
+
+// Strip any query variables from the path so that site.wsu.edu/sub-site?q=1 will work.
+list( $requested_uri ) = explode( '?', $requested_uri );
+
+// Remove / from both sides of the path.
+$requested_uri = trim( $requested_uri, '/' );
 
 // We currently support one subdirectory deep, and therefore only look at the first path level
 $requested_uri_parts = explode( '/', $requested_uri );
