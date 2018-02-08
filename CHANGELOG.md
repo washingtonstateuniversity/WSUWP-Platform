@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.3 (February 8, 2018)
+
+* Fix bug in path detection when a query parameter is present in the URL.
+
 ## 1.7.2 (February 6, 2018)
 
 * Update WordPress 4.9.4
