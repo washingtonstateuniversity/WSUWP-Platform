@@ -76,7 +76,7 @@ fi
 
 if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard ]]; then
 	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-WSUWP-Dashboard/archive/master.zip
-	rmdir --ignore-fail-on-non-empty ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard
+	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard
 	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-WSUWP-Dashboard ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard
 fi
 
