@@ -8,15 +8,7 @@ A central publishing platform built on WordPress at Washington State University.
 
 ## Local Development
 
-This repository is configured to work alongside [Varying Vagrant Vagrants](https://varyingvagrantvagrants.org/) for local development.
-
-### Basic Requirements
-
-1. Install [VirtualBox](http://virtualbox.org)
-1. Install [Vagrant](http://vagrantup.com)
-1. Install the [vagrant-hostsupdater](https://github.com/cogitatio/vagrant-hostsupdater) plugin
-    * `vagrant plugin install vagrant-hostsupdater`
-1. Install [VVV](https://varyingvagrantvagrants.org/docs/en-US/installation/software-requirements/)
+This repository is configured to work alongside [Varying Vagrant Vagrants](https://varyingvagrantvagrants.org/) for local development. Please see [VVV's getting started guide](https://varyingvagrantvagrants.org/docs/en-US/installation/software-requirements/) for initial setup.
 
 ### VVV Configuration
 
