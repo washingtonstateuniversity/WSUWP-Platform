@@ -51,6 +51,7 @@ if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/themes/spine ]]; then
 	noroot wp theme activate spine --url=wp.wsu.test --path=${VVV_PATH_TO_SITE}
 fi
 
+rm -rf WSUWP-MU-Plugin-Collection-master
 wget -P ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins https://github.com/washingtonstateuniversity/WSUWP-MU-Plugin-Collection/archive/master.zip
 unzip ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/master.zip
 
@@ -59,8 +60,9 @@ rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade
 rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade-runner
 rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/rest-filter
 
-mv ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/WSUWP-MU-Plugin-Collection/* rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/
-rm -rf rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/WSUWP-MU-Plugin-Collection
+mv WSUWP-MU-Plugin-Collection-master/* ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/
+rm -rf WSUWP-MU-Plugin-Collection-master
+rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/master.zip
 
 if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults/.git" ]]; then
 	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-New-Site-Defaults/archive/master.zip
