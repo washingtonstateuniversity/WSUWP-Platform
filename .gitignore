@@ -8,6 +8,9 @@ node_modules
 vendor
 composer.lock
 
+# Ignore the log directory.
+log/
+
 # Ignore Sublime project files.
 *.sublime*
 
@@ -80,4 +83,3 @@ www/*.sql.bak
 
 # Ignore local development of WP-CLI packages.
 /www/wp-cli-packages
-
