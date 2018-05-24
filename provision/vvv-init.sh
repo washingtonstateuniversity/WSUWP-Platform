@@ -36,6 +36,8 @@ if [[ -f "${VVV_PATH_TO_SITE}/www/wordpress/wp-config.php" ]]; then
 fi
 
 # Always replace the config file from the provision directory.
+sed -i "s#{{DOMAIN_HERE}}#${DOMAIN}#" "${VVV_PATH_TO_SITE}/provision/wp-config.php"
+sed -i "s#{{DB_NAME_HERE}}#${DB_NAME}#" "${VVV_PATH_TO_SITE}/provision/wp-config.php"
 cp "${VVV_PATH_TO_SITE}/provision/wp-config.php" "${VVV_PATH_TO_SITE}/www/wp-config.php"
 
 cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
