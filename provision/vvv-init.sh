@@ -27,7 +27,7 @@ fi
 
 if ! $(noroot wp core --path=${VVV_PATH_TO_SITE}/www/wordpress is-installed); then
   echo "Installing WordPress Stable..."
-  noroot wp core multisite-install --path=${VVV_PATH_TO_SITE}/www/wordpress/ --url=wp.wsu.test --title="WSUWP Platform Development" --admin_user="admin" --admin_password="password" --admin_email="admin@local.test" --quiet
+  noroot wp core multisite-install --path=${VVV_PATH_TO_SITE}/www/wordpress/ --url="${DOMAIN}" --title="WSUWP Platform Development" --admin_user="admin" --admin_password="password" --admin_email="admin@local.test" --quiet
 fi
 
 # After initial multisite installation, remove the default config file.
