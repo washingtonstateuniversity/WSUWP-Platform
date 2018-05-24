@@ -60,6 +60,7 @@ rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade
 rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade-runner
 rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/rest-filter
 
+rm -rf WSUWP-MU-Plugin-Collection-master/README.md
 mv WSUWP-MU-Plugin-Collection-master/* ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/
 rm -rf WSUWP-MU-Plugin-Collection-master
 rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/master.zip
