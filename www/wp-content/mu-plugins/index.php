@@ -37,7 +37,9 @@ if ( file_exists( __DIR__ . '/wsuwp-load-mu-plugins/wsuwp-load-mu-plugins.php' )
 $wsuwp_mu_plugins = apply_filters( 'wsuwp_load_mu_plugins', array() );
 
 foreach ( $wsuwp_mu_plugins as $wsuwp_mu_plugin ) {
-	require_once __DIR__ . '/' . $wsuwp_mu_plugin;
+	if ( file_exists( __DIR__ . '/' . $wsuwp_mu_plugin ) ) {
+		require_once __DIR__ . '/' . $wsuwp_mu_plugin;
+	}
 }
 
 unset( $wsuwp_mu_plugins );

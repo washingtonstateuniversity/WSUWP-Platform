@@ -18,9 +18,6 @@ mkdir -p ${VVV_PATH_TO_SITE}/log
 touch ${VVV_PATH_TO_SITE}/log/error.log
 touch ${VVV_PATH_TO_SITE}/log/access.log
 
-cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
-sed -i "s#{{DOMAINS_HERE}}#${DOMAINS}#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
-
 if [[ ! -f "${VVV_PATH_TO_SITE}/www/wp-config.php" ]]; then
   echo "Copying temporary configuration..."
   noroot wp core config --path=${VVV_PATH_TO_SITE}/www/wordpress/ --dbname="${DB_NAME}" --dbuser=wp --dbpass=wp --quiet --extra-php <<PHP
@@ -30,7 +27,7 @@ fi
 
 if ! $(noroot wp core --path=${VVV_PATH_TO_SITE}/www/wordpress is-installed); then
   echo "Installing WordPress Stable..."
-  noroot wp core multisite-install --path=${VVV_PATH_TO_SITE}/www/wordpress/ --url=wp.wsu.test --title="WSUWP Platform Development" --admin_user="admin" --admin_password="password" --admin_email="admin@local.test" --quiet
+  noroot wp core multisite-install --path=${VVV_PATH_TO_SITE}/www/wordpress/ --url="${DOMAIN}" --title="WSUWP Platform Development" --admin_user="admin" --admin_password="password" --admin_email="admin@local.test" --quiet
 fi
 
 # After initial multisite installation, remove the default config file.
@@ -39,6 +36,8 @@ if [[ -f "${VVV_PATH_TO_SITE}/www/wordpress/wp-config.php" ]]; then
 fi
 
 # Always replace the config file from the provision directory.
+sed -i "s#{{DOMAIN_HERE}}#${DOMAIN}#" "${VVV_PATH_TO_SITE}/provision/wp-config.php"
+sed -i "s#{{DB_NAME_HERE}}#${DB_NAME}#" "${VVV_PATH_TO_SITE}/provision/wp-config.php"
 cp "${VVV_PATH_TO_SITE}/provision/wp-config.php" "${VVV_PATH_TO_SITE}/www/wp-config.php"
 
 cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
@@ -51,49 +50,38 @@ if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/themes/spine ]]; then
 	noroot wp theme activate spine --url=wp.wsu.test --path=${VVV_PATH_TO_SITE}
 fi
 
-wget -P ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins https://github.com/washingtonstateuniversity/WSUWP-MU-Plugin-Collection/archive/master.zip
-unzip ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/master.zip
-
-rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/bp-multi-network
-rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade
-rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/cavalcade-runner
-rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/rest-filter
-
-mv ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/WSUWP-MU-Plugin-Collection/* rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/
-rm -rf rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/WSUWP-MU-Plugin-Collection
-
-if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults/.git" ]]; then
-	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-New-Site-Defaults/archive/master.zip
+if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults ]]; then
+	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-New-Site-Defaults/archive/master.zip
 	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults
 	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-MU-New-Site-Defaults ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-new-site-defaults
 fi
 
-if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-simple-filters/.git" ]]; then
-	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Simple-Filters/archive/master.zip
+if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-simple-filters ]]; then
+	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Simple-Filters/archive/master.zip
 	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-simple-filters
 	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-MU-Simple-Filters ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-simple-filters
 fi
 
-if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-multiple-networks/.git" ]]; then
-	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-Multiple-Networks/archive/master.zip
+if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-multiple-networks ]]; then
+	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-Multiple-Networks/archive/master.zip
 	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-multiple-networks
 	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-Multiple-Networks ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-multiple-networks
 fi
 
-if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-extended-batcache/.git" ]]; then
-	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Extended-Batcache/archive/master.zip
+if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-extended-batcache ]]; then
+	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Extended-Batcache/archive/master.zip
 	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-extended-batcache
 	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-MU-Extended-Batcache ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-mu-extended-batcache
 fi
 
-if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard/.git" ]]; then
-	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-WSUWP-Dashboard/archive/master.zip
+if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard ]]; then
+	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-WSUWP-Dashboard/archive/master.zip
 	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard
 	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-WSUWP-Dashboard ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-wordpress-dashboard
 fi
 
-if [[ ! -d "${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-load-mu-plugins/.git" ]]; then
-	wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-Load-MU-Plugins/archive/master.zip
+if [[ ! -d ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-load-mu-plugins ]]; then
+	noroot wp plugin install --path=${VVV_PATH_TO_SITE}/www/wordpress/ https://github.com/washingtonstateuniversity/WSUWP-Plugin-Load-MU-Plugins/archive/master.zip
 	rm -rf ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-load-mu-plugins
 	mv ${VVV_PATH_TO_SITE}/www/wp-content/plugins/WSUWP-Plugin-Load-MU-Plugins ${VVV_PATH_TO_SITE}/www/wp-content/mu-plugins/wsuwp-load-mu-plugins
 fi

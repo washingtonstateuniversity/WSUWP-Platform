@@ -5,13 +5,13 @@
 
 // If this is a wp-cli request, manually set the HTTP host
 if ( ! isset( $_SERVER['HTTP_HOST'] ) ) {
-	$_SERVER['HTTP_HOST'] = 'wp.wsu.test';
+	$_SERVER['HTTP_HOST'] = '{{DOMAIN_HERE}}';
 }
 
 // The database name, username, password, and host for MySQL
 // ** MySQL settings ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'wsuwp' );
+define( 'DB_NAME', '{{DB_NAME_HERE}}' );
 
 /** MySQL database username */
 define( 'DB_USER', 'wp' );
@@ -52,14 +52,14 @@ define( 'WSUWP_COOKIE_DOMAIN', 'auto' );
  define('NONCE_SALT',       's1utQ<)h=lq6g73abFjG5R:-nt0xU1SS&D7r(alr=|pI(h[8u$Vz/3|4`%pMWtFO');
 
 // URLs
-define( 'WP_HOME',        'wp.wsu.test' );
-define( 'WP_SITEURL',     'wp.wsu.test' );
+define( 'WP_HOME',        '{{DOMAIN_HERE}}' );
+define( 'WP_SITEURL',     '{{DOMAIN_HERE}}' );
 
 // Load wp-content from parent directory
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 
 // Define a salt for cache keys to avoid collisions and errors.
-define( 'WP_CACHE_KEY_SALT', 'wsuwp-dev' );
+define( 'WP_CACHE_KEY_SALT', '{{DB_NAME_HERE}}-dev' );
 
 // @todo add batcache config
 

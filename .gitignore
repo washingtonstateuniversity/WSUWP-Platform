@@ -31,6 +31,9 @@ wp-cli.local.yml
 /*-wsuwp-hosts
 !/default-wsuwp-hosts
 
+# Ignore files generated during provisioning
+provision/vvv-nginx.conf
+
 # The wp-config.php file is automatically generated
 /www/wp-config.php
 
