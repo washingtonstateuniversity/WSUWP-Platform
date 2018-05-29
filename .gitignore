@@ -20,6 +20,9 @@ log/
 # Ignore PHPStorm project files.
 /.idea
 
+# Ignore VS Code project files.
+/.vscode
+
 # Ignore the local WP-CLI config.
 wp-cli.local.yml
 
