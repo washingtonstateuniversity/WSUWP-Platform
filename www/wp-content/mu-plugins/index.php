@@ -9,8 +9,8 @@
  * Network: true
  */
 
-$wsuwp_global_version = '1.7.7';
-$wsuwp_wp_changeset = '43553';
+$wsuwp_global_version = '1.7.9';
+$wsuwp_wp_changeset = '44092';
 
 /**
  * Returns the current deployment version of WSUWP Platform
