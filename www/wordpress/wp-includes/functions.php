@@ -1656,6 +1656,15 @@ function wp_mkdir_p( $target ) {
  * @return bool True if path is absolute, false is not absolute.
  */
 function path_is_absolute( $path ) {
+
+	/*
+	 * Check to see if the path is a stream and check to see if its an actual
+	 * path or file as realpath() does not support streamwrappers.
+	*/
+	if (wp_is_stream($path) && (is_dir($path) || is_file($path))) {
+		return true;
+	}
+
 	/*
 	 * This is definitive if true but fails if $path does not exist or contains
 	 * a symbolic link.
@@ -2372,7 +2381,7 @@ function wp_check_filetype_and_ext( $file, $filename, $mimes = null ) {
 		} else {
 			if ( $type !== $real_mime ) {
 				/*
-				 * Everything else including image/* and application/*: 
+				 * Everything else including image/* and application/*:
 				 * If the real content type doesn't match the file extension, assume it's dangerous.
 				 */
 				$type = $ext = false;
@@ -2381,7 +2390,7 @@ function wp_check_filetype_and_ext( $file, $filename, $mimes = null ) {
 		}
 	}
 
-	// The mime type must be allowed 
+	// The mime type must be allowed
 	if ( $type ) {
 		$allowed = get_allowed_mime_types();
 
@@ -2861,11 +2870,11 @@ function _default_wp_die_handler( $message, $title = '', $args = array() ) {
 		}
 		a:focus {
 			color: #124964;
-		    -webkit-box-shadow:
-		    	0 0 0 1px #5b9dd9,
+			-webkit-box-shadow:
+				0 0 0 1px #5b9dd9,
 				0 0 2px 1px rgba(30, 140, 190, .8);
-		    box-shadow:
-		    	0 0 0 1px #5b9dd9,
+			box-shadow:
+				0 0 0 1px #5b9dd9,
 				0 0 2px 1px rgba(30, 140, 190, .8);
 			outline: none;
 		}
@@ -3427,7 +3436,7 @@ function smilies_init() {
 		  ':arrow:' => "\xe2\x9e\xa1",
 		  ':shock:' => "\xf0\x9f\x98\xaf",
 		  ':smile:' => "\xf0\x9f\x99\x82",
-		    ':???:' => "\xf0\x9f\x98\x95",
+			':???:' => "\xf0\x9f\x98\x95",
 		   ':cool:' => "\xf0\x9f\x98\x8e",
 		   ':evil:' => "\xf0\x9f\x91\xbf",
 		   ':grin:' => "\xf0\x9f\x98\x80",
@@ -3436,36 +3445,36 @@ function smilies_init() {
 		   ':razz:' => "\xf0\x9f\x98\x9b",
 		   ':roll:' => "\xf0\x9f\x99\x84",
 		   ':wink:' => "\xf0\x9f\x98\x89",
-		    ':cry:' => "\xf0\x9f\x98\xa5",
-		    ':eek:' => "\xf0\x9f\x98\xae",
-		    ':lol:' => "\xf0\x9f\x98\x86",
-		    ':mad:' => "\xf0\x9f\x98\xa1",
-		    ':sad:' => "\xf0\x9f\x99\x81",
-		      '8-)' => "\xf0\x9f\x98\x8e",
-		      '8-O' => "\xf0\x9f\x98\xaf",
-		      ':-(' => "\xf0\x9f\x99\x81",
-		      ':-)' => "\xf0\x9f\x99\x82",
-		      ':-?' => "\xf0\x9f\x98\x95",
-		      ':-D' => "\xf0\x9f\x98\x80",
-		      ':-P' => "\xf0\x9f\x98\x9b",
-		      ':-o' => "\xf0\x9f\x98\xae",
-		      ':-x' => "\xf0\x9f\x98\xa1",
-		      ':-|' => "\xf0\x9f\x98\x90",
-		      ';-)' => "\xf0\x9f\x98\x89",
+			':cry:' => "\xf0\x9f\x98\xa5",
+			':eek:' => "\xf0\x9f\x98\xae",
+			':lol:' => "\xf0\x9f\x98\x86",
+			':mad:' => "\xf0\x9f\x98\xa1",
+			':sad:' => "\xf0\x9f\x99\x81",
+			  '8-)' => "\xf0\x9f\x98\x8e",
+			  '8-O' => "\xf0\x9f\x98\xaf",
+			  ':-(' => "\xf0\x9f\x99\x81",
+			  ':-)' => "\xf0\x9f\x99\x82",
+			  ':-?' => "\xf0\x9f\x98\x95",
+			  ':-D' => "\xf0\x9f\x98\x80",
+			  ':-P' => "\xf0\x9f\x98\x9b",
+			  ':-o' => "\xf0\x9f\x98\xae",
+			  ':-x' => "\xf0\x9f\x98\xa1",
+			  ':-|' => "\xf0\x9f\x98\x90",
+			  ';-)' => "\xf0\x9f\x98\x89",
 		// This one transformation breaks regular text with frequency.
 		//     '8)' => "\xf0\x9f\x98\x8e",
-		       '8O' => "\xf0\x9f\x98\xaf",
-		       ':(' => "\xf0\x9f\x99\x81",
-		       ':)' => "\xf0\x9f\x99\x82",
-		       ':?' => "\xf0\x9f\x98\x95",
-		       ':D' => "\xf0\x9f\x98\x80",
-		       ':P' => "\xf0\x9f\x98\x9b",
-		       ':o' => "\xf0\x9f\x98\xae",
-		       ':x' => "\xf0\x9f\x98\xa1",
-		       ':|' => "\xf0\x9f\x98\x90",
-		       ';)' => "\xf0\x9f\x98\x89",
-		      ':!:' => "\xe2\x9d\x97",
-		      ':?:' => "\xe2\x9d\x93",
+			   '8O' => "\xf0\x9f\x98\xaf",
+			   ':(' => "\xf0\x9f\x99\x81",
+			   ':)' => "\xf0\x9f\x99\x82",
+			   ':?' => "\xf0\x9f\x98\x95",
+			   ':D' => "\xf0\x9f\x98\x80",
+			   ':P' => "\xf0\x9f\x98\x9b",
+			   ':o' => "\xf0\x9f\x98\xae",
+			   ':x' => "\xf0\x9f\x98\xa1",
+			   ':|' => "\xf0\x9f\x98\x90",
+			   ';)' => "\xf0\x9f\x98\x89",
+			  ':!:' => "\xe2\x9d\x97",
+			  ':?:' => "\xe2\x9d\x93",
 		);
 	}
 
