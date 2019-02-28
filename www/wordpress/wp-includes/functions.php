@@ -5576,10 +5576,16 @@ function wp_delete_file( $file ) {
  * @return bool True on success, false on failure.
  */
 function wp_delete_file_from_directory( $file, $directory ) {
-	$real_file = realpath( wp_normalize_path( $file ) );
-	$real_directory = realpath( wp_normalize_path( $directory ) );
 
-	if ( false === $real_file || false === $real_directory || strpos( wp_normalize_path( $real_file ), trailingslashit( wp_normalize_path( $real_directory ) ) ) !== 0 ) {
+	if ( wp_is_stream($file) ) {
+		$real_file = wp_normalize_path($file);
+		$real_directory = wp_normalize_path($directory);
+	} else {
+		$real_file = realpath( wp_normalize_path($file) );
+		$real_directory = realpath ( wp_normalize_path($directory) );
+	}
+
+	if ( false === $real_file || false === $real_directory || strpos( $real_file, trailingslashit( $real_directory ) ) !== 0 ) {
 		return false;
 	}
 
