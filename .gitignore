@@ -5,7 +5,7 @@
 node_modules
 
 # Ignore composer files
-vendor
+# vendor WordPress has a vendor file in the js/distr directory
 composer.lock
 
 # Ignore the log directory.
