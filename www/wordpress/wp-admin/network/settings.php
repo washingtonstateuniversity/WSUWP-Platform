@@ -148,7 +148,7 @@ if ( isset( $_GET['updated'] ) ) {
 	<form method="post" action="settings.php" novalidate="novalidate">
 		<?php wp_nonce_field( 'siteoptions' ); ?>
 		<h2><?php _e( 'Operational Settings' ); ?></h2>
-		<table class="form-table">
+		<table class="form-table" role="presentation">
 			<tr>
 				<th scope="row"><label for="site_name"><?php _e( 'Network Title' ); ?></label></th>
 				<td>
@@ -171,7 +171,7 @@ if ( isset( $_GET['updated'] ) ) {
 						<p>
 						<?php
 							printf(
-								/* translators: %s: new network admin email */
+								/* translators: %s: New network admin email. */
 								__( 'There is a pending change of the network admin email to %s.' ),
 								'<code>' . esc_html( $new_admin_email ) . '</code>'
 							);
@@ -188,7 +188,7 @@ if ( isset( $_GET['updated'] ) ) {
 			</tr>
 		</table>
 		<h2><?php _e( 'Registration Settings' ); ?></h2>
-		<table class="form-table">
+		<table class="form-table" role="presentation">
 			<tr>
 				<th scope="row"><?php _e( 'Allow new registrations' ); ?></th>
 				<?php
@@ -207,8 +207,8 @@ if ( isset( $_GET['updated'] ) ) {
 					<?php
 					if ( is_subdomain_install() ) {
 						echo '<p class="description">';
-						/* translators: 1: NOBLOGREDIRECT, 2: wp-config.php */
 						printf(
+							/* translators: 1: NOBLOGREDIRECT, 2: wp-config.php */
 							__( 'If registration is disabled, please set %1$s in %2$s to a URL you will redirect visitors to if they visit a non-existent site.' ),
 							'<code>NOBLOGREDIRECT</code>',
 							'<code>wp-config.php</code>'
@@ -277,7 +277,7 @@ if ( isset( $_GET['updated'] ) ) {
 
 		</table>
 		<h2><?php _e( 'New Site Settings' ); ?></h2>
-		<table class="form-table">
+		<table class="form-table" role="presentation">
 
 			<tr>
 				<th scope="row"><label for="welcome_email"><?php _e( 'Welcome Email' ); ?></label></th>
@@ -358,11 +358,19 @@ if ( isset( $_GET['updated'] ) ) {
 			</tr>
 		</table>
 		<h2><?php _e( 'Upload Settings' ); ?></h2>
-		<table class="form-table">
+		<table class="form-table" role="presentation">
 			<tr>
 				<th scope="row"><?php _e( 'Site upload space' ); ?></th>
 				<td>
-					<label><input type="checkbox" id="upload_space_check_disabled" name="upload_space_check_disabled" value="0"<?php checked( (bool) get_site_option( 'upload_space_check_disabled' ), false ); ?>/> <?php printf( __( 'Limit total size of files uploaded to %s MB' ), '</label><label><input name="blog_upload_space" type="number" min="0" style="width: 100px" id="blog_upload_space" aria-describedby="blog-upload-space-desc" value="' . esc_attr( get_site_option( 'blog_upload_space', 100 ) ) . '" />' ); ?></label><br />
+					<label><input type="checkbox" id="upload_space_check_disabled" name="upload_space_check_disabled" value="0"<?php checked( (bool) get_site_option( 'upload_space_check_disabled' ), false ); ?>/>
+						<?php
+						printf(
+							/* translators: %s: Number of megabytes to limit uploads to. */
+							__( 'Limit total size of files uploaded to %s MB' ),
+							'</label><label><input name="blog_upload_space" type="number" min="0" style="width: 100px" id="blog_upload_space" aria-describedby="blog-upload-space-desc" value="' . esc_attr( get_site_option( 'blog_upload_space', 100 ) ) . '" />'
+						);
+						?>
+					</label><br />
 					<p class="screen-reader-text" id="blog-upload-space-desc">
 						<?php _e( 'Size in megabytes' ); ?>
 					</p>
@@ -384,7 +392,7 @@ if ( isset( $_GET['updated'] ) ) {
 				<td>
 					<?php
 						printf(
-							/* translators: %s: File size in kilobytes */
+							/* translators: %s: File size in kilobytes. */
 							__( '%s KB' ),
 							'<input name="fileupload_maxk" type="number" min="0" style="width: 100px" id="fileupload_maxk" aria-describedby="fileupload-maxk-desc" value="' . esc_attr( get_site_option( 'fileupload_maxk', 300 ) ) . '" />'
 						);
@@ -402,7 +410,7 @@ if ( isset( $_GET['updated'] ) ) {
 		if ( ! empty( $languages ) || ! empty( $translations ) ) {
 			?>
 			<h2><?php _e( 'Language Settings' ); ?></h2>
-			<table class="form-table">
+			<table class="form-table" role="presentation">
 				<tr>
 					<th><label for="WPLANG"><?php _e( 'Default Language' ); ?></label></th>
 					<td>
@@ -452,16 +460,15 @@ if ( isset( $_GET['updated'] ) ) {
 			 *
 			 * @param string[] $admin_menus Associative array of the menu items available.
 			 */
-			$menu_items   = apply_filters( 'mu_menu_items', array( 'plugins' => __( 'Plugins' ) ) );
-			$fieldset_end = '';
-			if ( count( (array) $menu_items ) > 1 ) {
-				echo '<fieldset><legend class="screen-reader-text">' . __( 'Enable menus' ) . '</legend>';
-				$fieldset_end = '</fieldset>';
-			}
+			$menu_items = apply_filters( 'mu_menu_items', array( 'plugins' => __( 'Plugins' ) ) );
+
+			echo '<fieldset><legend class="screen-reader-text">' . __( 'Enable menus' ) . '</legend>';
+
 			foreach ( (array) $menu_items as $key => $val ) {
 				echo "<label><input type='checkbox' name='menu_items[" . $key . "]' value='1'" . ( isset( $menu_perms[ $key ] ) ? checked( $menu_perms[ $key ], '1', false ) : '' ) . ' /> ' . esc_html( $val ) . '</label><br/>';
 			}
-			echo $fieldset_end;
+
+			echo '</fieldset>';
 			?>
 				</td>
 			</tr>

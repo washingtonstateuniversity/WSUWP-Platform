@@ -544,6 +544,7 @@
 			var menuItem,
 				itemName = $( '#custom-menu-item-name' ),
 				itemUrl = $( '#custom-menu-item-url' ),
+				url = itemUrl.val().trim(),
 				urlRegex;
 
 			if ( ! this.currentMenuControl ) {
@@ -567,14 +568,14 @@
 			if ( '' === itemName.val() ) {
 				itemName.addClass( 'invalid' );
 				return;
-			} else if ( ! urlRegex.test( itemUrl.val() ) ) {
+			} else if ( ! urlRegex.test( url ) ) {
 				itemUrl.addClass( 'invalid' );
 				return;
 			}
 
 			menuItem = {
 				'title': itemName.val(),
-				'url': itemUrl.val(),
+				'url': url,
 				'type': 'custom',
 				'type_label': api.Menus.data.l10n.custom_label,
 				'object': 'custom'
@@ -583,7 +584,7 @@
 			this.currentMenuControl.addItemToMenu( menuItem );
 
 			// Reset the custom link form.
-			itemUrl.val( 'http://' );
+			itemUrl.val( '' ).attr( 'placeholder', 'https://' );
 			itemName.val( '' );
 		},
 
@@ -1920,7 +1921,6 @@
 			control.params.target = settingValue.target;
 			control.params.attr_title = settingValue.attr_title;
 			control.params.classes = _.isArray( settingValue.classes ) ? settingValue.classes.join( ' ' ) : settingValue.classes;
-			control.params.attr_title = settingValue.attr_title;
 			control.params.xfn = settingValue.xfn;
 			control.params.description = settingValue.description;
 			control.params.parent = settingValue.menu_item_parent;
@@ -3455,7 +3455,7 @@
 	 */
 	function displayNavMenuName( name ) {
 		name = name || '';
-		name = $( '<div>' ).text( name ).html(); // Emulate esc_html() which is used in wp-admin/nav-menus.php.
+		name = wp.sanitize.stripTagsAndEncodeText( name ); // Remove any potential tags from name.
 		name = $.trim( name );
 		return name || api.Menus.data.l10n.unnamed;
 	}

@@ -179,7 +179,7 @@ if ( $action ) {
 			check_admin_referer( 'bulk-users' );
 			$userids = $_REQUEST['users'];
 			/** This action is documented in wp-admin/network/site-themes.php */
-			$referer = apply_filters( 'handle_network_bulk_actions-' . get_current_screen()->id, $referer, $action, $userids, $id );
+			$referer = apply_filters( 'handle_network_bulk_actions-' . get_current_screen()->id, $referer, $action, $userids, $id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 			$update  = $action;
 			break;
 	}
@@ -197,7 +197,7 @@ if ( isset( $_GET['action'] ) && 'update-site' == $_GET['action'] ) {
 
 add_screen_option( 'per_page' );
 
-/* translators: %s: site name */
+/* translators: %s: Site title. */
 $title = sprintf( __( 'Edit Site: %s' ), esc_html( $details->blogname ) );
 
 $parent_file  = 'sites.php';
@@ -300,7 +300,7 @@ if ( current_user_can( 'promote_users' ) && apply_filters( 'show_network_site_us
 <h2 id="add-existing-user"><?php _e( 'Add Existing User' ); ?></h2>
 <form action="site-users.php?action=adduser" id="adduser" method="post">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $id ); ?>" />
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 		<tr>
 			<th scope="row"><label for="newuser"><?php _e( 'Username' ); ?></label></th>
 			<td><input type="text" class="regular-text wp-suggest-user" name="newuser" id="newuser" /></td>
@@ -334,7 +334,7 @@ if ( current_user_can( 'create_users' ) && apply_filters( 'show_network_site_use
 <h2 id="add-new-user"><?php _e( 'Add New User' ); ?></h2>
 <form action="<?php echo network_admin_url( 'site-users.php?action=newuser' ); ?>" id="newuser" method="post">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $id ); ?>" />
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 		<tr>
 			<th scope="row"><label for="user_username"><?php _e( 'Username' ); ?></label></th>
 			<td><input type="text" class="regular-text" name="user[username]" id="user_username" /></td>
@@ -354,7 +354,7 @@ if ( current_user_can( 'create_users' ) && apply_filters( 'show_network_site_use
 			</select></td>
 		</tr>
 		<tr class="form-field">
-			<td colspan="2"><?php _e( 'A password reset link will be sent to the user via email.' ); ?></td>
+			<td colspan="2" class="td-full"><?php _e( 'A password reset link will be sent to the user via email.' ); ?></td>
 		</tr>
 	</table>
 	<?php wp_nonce_field( 'add-user', '_wpnonce_add-new-user' ); ?>
