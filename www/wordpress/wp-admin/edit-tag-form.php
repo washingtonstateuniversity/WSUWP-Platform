@@ -45,7 +45,7 @@ if ( 'category' == $taxonomy ) {
 }
 
 /**
- * Use with caution, see https://codex.wordpress.org/Function_Reference/wp_reset_vars
+ * Use with caution, see https://developer.wordpress.org/reference/functions/wp_reset_vars/
  */
 wp_reset_vars( array( 'wp_http_referer' ) );
 
@@ -127,7 +127,7 @@ if ( isset( $tag->name ) ) {
 	$tag_name_value = esc_attr( $tag->name );
 }
 ?>
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 		<tr class="form-field form-required term-name-wrap">
 			<th scope="row"><label for="name"><?php _ex( 'Name', 'term name' ); ?></label></th>
 			<td><input name="name" id="name" type="text" value="<?php echo $tag_name_value; ?>" size="40" aria-required="true" />

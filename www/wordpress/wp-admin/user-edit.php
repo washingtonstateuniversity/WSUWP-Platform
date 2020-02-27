@@ -30,7 +30,7 @@ wp_enqueue_script( 'user-profile' );
 if ( IS_PROFILE_PAGE ) {
 	$title = __( 'Profile' );
 } else {
-	/* translators: %s: user's display name */
+	/* translators: %s: User's display name. */
 	$title = __( 'Edit User %s' );
 }
 
@@ -64,7 +64,7 @@ get_current_screen()->add_help_tab(
 
 get_current_screen()->set_help_sidebar(
 	'<p><strong>' . __( 'For more information:' ) . '</strong></p>' .
-	'<p>' . __( '<a href="https://codex.wordpress.org/Users_Your_Profile_Screen">Documentation on User Profiles</a>' ) . '</p>' .
+	'<p>' . __( '<a href="https://wordpress.org/support/article/users-your-profile-screen/">Documentation on User Profiles</a>' ) . '</p>' .
 	'<p>' . __( '<a href="https://wordpress.org/support/">Support</a>' ) . '</p>'
 );
 
@@ -255,11 +255,15 @@ switch ( $action ) {
 
 <h2><?php _e( 'Personal Options' ); ?></h2>
 
-<table class="form-table">
+<table class="form-table" role="presentation">
 		<?php if ( ! ( IS_PROFILE_PAGE && ! $user_can_edit ) ) : ?>
 	<tr class="user-rich-editing-wrap">
 		<th scope="row"><?php _e( 'Visual Editor' ); ?></th>
-		<td><label for="rich_editing"><input name="rich_editing" type="checkbox" id="rich_editing" value="false" <?php checked( 'false', $profileuser->rich_editing ); ?> /> <?php _e( 'Disable the visual editor when writing' ); ?></label></td>
+		<td>
+			<label for="rich_editing"><input name="rich_editing" type="checkbox" id="rich_editing" value="false" <?php checked( 'false', $profileuser->rich_editing ); ?> />
+				<?php _e( 'Disable the visual editor when writing' ); ?>
+			</label>
+		</td>
 	</tr>
 		<?php endif; ?>
 		<?php
@@ -274,18 +278,22 @@ switch ( $action ) {
 		user_can( $profileuser, 'edit_themes' )
 		);
 		?>
+
 		<?php if ( $show_syntax_highlighting_preference ) : ?>
 	<tr class="user-syntax-highlighting-wrap">
 		<th scope="row"><?php _e( 'Syntax Highlighting' ); ?></th>
 		<td>
-			<label for="syntax_highlighting"><input name="syntax_highlighting" type="checkbox" id="syntax_highlighting" value="false" <?php checked( 'false', $profileuser->syntax_highlighting ); ?> /> <?php _e( 'Disable syntax highlighting when editing code' ); ?></label>
+			<label for="syntax_highlighting"><input name="syntax_highlighting" type="checkbox" id="syntax_highlighting" value="false" <?php checked( 'false', $profileuser->syntax_highlighting ); ?> />
+				<?php _e( 'Disable syntax highlighting when editing code' ); ?>
+			</label>
 		</td>
 	</tr>
-<?php endif; ?>
+		<?php endif; ?>
+
 		<?php if ( count( $_wp_admin_css_colors ) > 1 && has_action( 'admin_color_scheme_picker' ) ) : ?>
-<tr class="user-admin-color-wrap">
-<th scope="row"><?php _e( 'Admin Color Scheme' ); ?></th>
-<td>
+	<tr class="user-admin-color-wrap">
+		<th scope="row"><?php _e( 'Admin Color Scheme' ); ?></th>
+		<td>
 			<?php
 			/**
 			 * Fires in the 'Admin Color Scheme' section of the user editing screen.
@@ -300,36 +308,44 @@ switch ( $action ) {
 			 */
 			do_action( 'admin_color_scheme_picker', $user_id );
 			?>
-</td>
-</tr>
+		</td>
+	</tr>
 			<?php
 endif; // $_wp_admin_css_colors
 		if ( ! ( IS_PROFILE_PAGE && ! $user_can_edit ) ) :
 			?>
-<tr class="user-comment-shortcuts-wrap">
-<th scope="row"><?php _e( 'Keyboard Shortcuts' ); ?></th>
-<td><label for="comment_shortcuts"><input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php checked( 'true', $profileuser->comment_shortcuts ); ?> /> <?php _e( 'Enable keyboard shortcuts for comment moderation.' ); ?></label> <?php _e( '<a href="https://codex.wordpress.org/Keyboard_Shortcuts" target="_blank">More information</a>' ); ?></td>
-</tr>
+	<tr class="user-comment-shortcuts-wrap">
+		<th scope="row"><?php _e( 'Keyboard Shortcuts' ); ?></th>
+		<td>
+			<label for="comment_shortcuts">
+				<input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php checked( 'true', $profileuser->comment_shortcuts ); ?> />
+				<?php _e( 'Enable keyboard shortcuts for comment moderation.' ); ?>
+			</label>
+			<?php _e( '<a href="https://wordpress.org/support/article/keyboard-shortcuts/" target="_blank">More information</a>' ); ?>
+		</td>
+	</tr>
 		<?php endif; ?>
-<tr class="show-admin-bar user-admin-bar-front-wrap">
-<th scope="row"><?php _e( 'Toolbar' ); ?></th>
-<td>
-<label for="admin_bar_front">
-<input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1"<?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />
-		<?php _e( 'Show Toolbar when viewing site' ); ?></label><br />
-</td>
-</tr>
+
+	<tr class="show-admin-bar user-admin-bar-front-wrap">
+		<th scope="row"><?php _e( 'Toolbar' ); ?></th>
+		<td>
+			<label for="admin_bar_front">
+				<input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1"<?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />
+				<?php _e( 'Show Toolbar when viewing site' ); ?>
+			</label><br />
+		</td>
+	</tr>
 
 		<?php
 		$languages = get_available_languages();
 		if ( $languages ) :
 			?>
-<tr class="user-language-wrap">
-	<th scope="row">
-			<?php /* translators: The user language selection field label */ ?>
-		<label for="locale"><?php _e( 'Language' ); ?></label>
-	</th>
-	<td>
+	<tr class="user-language-wrap">
+		<th scope="row">
+			<?php /* translators: The user language selection field label. */ ?>
+			<label for="locale"><?php _e( 'Language' ); ?><span class="dashicons dashicons-translation" aria-hidden="true"></span></label>
+		</th>
+		<td>
 			<?php
 				$user_locale = $profileuser->locale;
 
@@ -350,8 +366,8 @@ endif; // $_wp_admin_css_colors
 				)
 			);
 			?>
-	</td>
-</tr>
+		</td>
+	</tr>
 			<?php
 endif;
 		?>
@@ -385,7 +401,7 @@ endif;
 
 <h2><?php _e( 'Name' ); ?></h2>
 
-<table class="form-table">
+<table class="form-table" role="presentation">
 	<tr class="user-user-login-wrap">
 		<th><label for="user_login"><?php _e( 'Username' ); ?></label></th>
 		<td><input type="text" name="user_login" id="user_login" value="<?php echo esc_attr( $profileuser->user_login ); ?>" disabled="disabled" class="regular-text" /> <span class="description"><?php _e( 'Usernames cannot be changed.' ); ?></span></td>
@@ -417,7 +433,7 @@ endif; //!IS_PROFILE_PAGE
 			?>
 <tr class="user-super-admin-wrap"><th><?php _e( 'Super Admin' ); ?></th>
 <td>
-			<?php if ( $profileuser->user_email != get_site_option( 'admin_email' ) || ! is_super_admin( $profileuser->ID ) ) : ?>
+			<?php if ( 0 !== strcasecmp( $profileuser->user_email, get_site_option( 'admin_email' ) ) || ! is_super_admin( $profileuser->ID ) ) : ?>
 <p><label><input type="checkbox" id="super_admin" name="super_admin"<?php checked( is_super_admin( $profileuser->ID ) ); ?> /> <?php _e( 'Grant this user super admin privileges for the Network.' ); ?></label></p>
 <?php else : ?>
 <p><?php _e( 'Super admin privileges cannot be removed because this user has the network admin email.' ); ?></p>
@@ -482,7 +498,7 @@ endif; //!IS_PROFILE_PAGE
 
 	<h2><?php _e( 'Contact Info' ); ?></h2>
 
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 	<tr class="user-email-wrap">
 		<th><label for="email"><?php _e( 'Email' ); ?> <span class="description"><?php _e( '(required)' ); ?></span></label></th>
 		<td><input type="email" name="email" id="email" aria-describedby="email-description" value="<?php echo esc_attr( $profileuser->user_email ); ?>" class="regular-text ltr" />
@@ -502,7 +518,7 @@ endif; //!IS_PROFILE_PAGE
 		<p>
 			<?php
 			printf(
-				/* translators: %s: new email */
+				/* translators: %s: New email. */
 				__( 'There is a pending change of your email to %s.' ),
 				'<code>' . esc_html( $new_email['newemail'] ) . '</code>'
 			);
@@ -551,7 +567,7 @@ endif; //!IS_PROFILE_PAGE
 
 	<h2><?php IS_PROFILE_PAGE ? _e( 'About Yourself' ) : _e( 'About the user' ); ?></h2>
 
-<table class="form-table">
+<table class="form-table" role="presentation">
 <tr class="user-description-wrap">
 	<th><label for="description"><?php _e( 'Biographical Info' ); ?></label></th>
 	<td><textarea name="description" id="description" rows="5" cols="30"><?php echo $profileuser->description; // textarea_escaped ?></textarea>
@@ -566,9 +582,9 @@ endif; //!IS_PROFILE_PAGE
 		<p class="description">
 			<?php
 			if ( IS_PROFILE_PAGE ) {
-				/* translators: %s: Gravatar URL */
 				$description = sprintf(
-					__( 'You can change your profile picture on <a href="%s">Gravatar</a>.' ),
+					/* translators: %s: Gravatar URL. */
+					__( '<a href="%s">You can change your profile picture on Gravatar</a>.' ),
 					__( 'https://en.gravatar.com/' )
 				);
 			} else {
@@ -602,12 +618,13 @@ endif; //!IS_PROFILE_PAGE
 		 * @param bool    $show        Whether to show the password fields. Default true.
 		 * @param WP_User $profileuser User object for the current user to edit.
 		 */
-		if ( $show_password_fields = apply_filters( 'show_password_fields', true, $profileuser ) ) :
+		$show_password_fields = apply_filters( 'show_password_fields', true, $profileuser );
+		if ( $show_password_fields ) :
 			?>
 	</table>
 
 	<h2><?php _e( 'Account Management' ); ?></h2>
-<table class="form-table">
+<table class="form-table" role="presentation">
 <tr id="password" class="user-pass1-wrap">
 	<th><label for="pass1"><?php _e( 'New Password' ); ?></label></th>
 	<td>
@@ -676,7 +693,7 @@ endif; //!IS_PROFILE_PAGE
 			<p><button type="button" class="button" id="destroy-sessions"><?php _e( 'Log Out Everywhere' ); ?></button></p>
 			<p class="description">
 				<?php
-				/* translators: %s: user's display name */
+				/* translators: %s: User's display name. */
 				printf( __( 'Log %s out of all locations.' ), $profileuser->display_name );
 				?>
 			</p>
@@ -728,7 +745,7 @@ endif; //!IS_PROFILE_PAGE
 		) :
 			?>
 	<h2><?php _e( 'Additional Capabilities' ); ?></h2>
-<table class="form-table">
+<table class="form-table" role="presentation">
 <tr class="user-capabilities-wrap">
 	<th scope="row"><?php _e( 'Capabilities' ); ?></th>
 	<td>
@@ -739,7 +756,13 @@ endif; //!IS_PROFILE_PAGE
 					if ( '' != $output ) {
 						$output .= ', ';
 					}
-					$output .= $value ? $cap : sprintf( __( 'Denied: %s' ), $cap );
+
+					if ( $value ) {
+						$output .= $cap;
+					} else {
+						/* translators: %s: Capability name. */
+						$output .= sprintf( __( 'Denied: %s' ), $cap );
+					}
 				}
 			}
 			echo $output;

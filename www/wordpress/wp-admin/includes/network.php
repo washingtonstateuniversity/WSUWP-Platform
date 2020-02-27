@@ -82,11 +82,13 @@ function allow_subdirectory_install() {
  * @return string Base domain.
  */
 function get_clean_basedomain() {
-	if ( $existing_domain = network_domain_check() ) {
+	$existing_domain = network_domain_check();
+	if ( $existing_domain ) {
 		return $existing_domain;
 	}
 	$domain = preg_replace( '|https?://|', '', get_option( 'siteurl' ) );
-	if ( $slash = strpos( $domain, '/' ) ) {
+	$slash  = strpos( $domain, '/' );
+	if ( $slash ) {
 		$domain = substr( $domain, 0, $slash );
 	}
 	return $domain;
@@ -121,7 +123,7 @@ function network_step1( $errors = false ) {
 	$active_plugins = get_option( 'active_plugins' );
 	if ( ! empty( $active_plugins ) ) {
 		echo '<div class="updated"><p><strong>' . __( 'Warning:' ) . '</strong> ' . sprintf(
-			/* translators: %s: Plugins screen URL */
+			/* translators: %s: URL to Plugins screen. */
 			__( 'Please <a href="%s">deactivate your plugins</a> before enabling the Network feature.' ),
 			admin_url( 'plugins.php?plugin_status=active' )
 		) . '</p></div>';
@@ -136,7 +138,7 @@ function network_step1( $errors = false ) {
 	if ( ( false !== $has_ports && ! in_array( $has_ports, array( ':80', ':443' ) ) ) ) {
 		echo '<div class="error"><p><strong>' . __( 'ERROR:' ) . '</strong> ' . __( 'You cannot install a network of sites with your server address.' ) . '</p></div>';
 		echo '<p>' . sprintf(
-			/* translators: %s: port number */
+			/* translators: %s: Port number. */
 			__( 'You cannot use port numbers such as %s.' ),
 			'<code>' . $has_ports . '</code>'
 		) . '</p>';
@@ -163,7 +165,7 @@ function network_step1( $errors = false ) {
 	if ( ! empty( $_POST['sitename'] ) && ! in_array( 'empty_sitename', $error_codes ) ) {
 		$site_name = $_POST['sitename'];
 	} else {
-		/* translators: %s: Default network name */
+		/* translators: %s: Default network title. */
 		$site_name = sprintf( __( '%s Sites' ), get_option( 'blogname' ) );
 	}
 
@@ -185,18 +187,19 @@ function network_step1( $errors = false ) {
 		$subdomain_install = true;
 	} else {
 		$subdomain_install = false;
-		if ( $got_mod_rewrite = got_mod_rewrite() ) { // dangerous assumptions
+		$got_mod_rewrite   = got_mod_rewrite();
+		if ( $got_mod_rewrite ) { // dangerous assumptions
 			echo '<div class="updated inline"><p><strong>' . __( 'Note:' ) . '</strong> ';
-			/* translators: %s: mod_rewrite */
 			printf(
+				/* translators: %s: mod_rewrite */
 				__( 'Please make sure the Apache %s module is installed as it will be used at the end of this installation.' ),
 				'<code>mod_rewrite</code>'
 			);
 			echo '</p>';
 		} elseif ( $is_apache ) {
 			echo '<div class="error inline"><p><strong>' . __( 'Warning:' ) . '</strong> ';
-			/* translators: %s: mod_rewrite */
 			printf(
+				/* translators: %s: mod_rewrite */
 				__( 'It looks like the Apache %s module is not installed.' ),
 				'<code>mod_rewrite</code>'
 			);
@@ -205,8 +208,8 @@ function network_step1( $errors = false ) {
 
 		if ( $got_mod_rewrite || $is_apache ) { // Protect against mod_rewrite mimicry (but ! Apache)
 			echo '<p>';
-			/* translators: 1: mod_rewrite, 2: mod_rewrite documentation URL, 3: Google search for mod_rewrite */
 			printf(
+				/* translators: 1: mod_rewrite, 2: mod_rewrite documentation URL, 3: Google search for mod_rewrite. */
 				__( 'If %1$s is disabled, ask your administrator to enable that module, or look at the <a href="%2$s">Apache documentation</a> or <a href="%3$s">elsewhere</a> for help setting it up.' ),
 				'<code>mod_rewrite</code>',
 				'https://httpd.apache.org/docs/mod/mod_rewrite.html',
@@ -223,13 +226,13 @@ function network_step1( $errors = false ) {
 			<strong><?php _e( 'You cannot change this later.' ); ?></strong></p>
 		<p><?php _e( 'You will need a wildcard DNS record if you are going to use the virtual host (sub-domain) functionality.' ); ?></p>
 		<?php // @todo: Link to an MS readme? ?>
-		<table class="form-table">
+		<table class="form-table" role="presentation">
 			<tr>
 				<th><label><input type="radio" name="subdomain_install" value="1"<?php checked( $subdomain_install ); ?> /> <?php _e( 'Sub-domains' ); ?></label></th>
 				<td>
 				<?php
 				printf(
-					/* translators: 1: hostname */
+					/* translators: 1: Host name. */
 					_x( 'like <code>site1.%1$s</code> and <code>site2.%1$s</code>', 'subdomain examples' ),
 					$hostname
 				);
@@ -241,7 +244,7 @@ function network_step1( $errors = false ) {
 				<td>
 				<?php
 				printf(
-					/* translators: 1: hostname */
+					/* translators: 1: Host name. */
 					_x( 'like <code>%1$s/site1</code> and <code>%1$s/site2</code>', 'subdirectory examples' ),
 					$hostname
 				);
@@ -257,14 +260,14 @@ function network_step1( $errors = false ) {
 		echo '<div class="error inline"><p><strong>' . __( 'Warning:' ) . '</strong> ' . __( 'Subdirectory networks may not be fully compatible with custom wp-content directories.' ) . '</p></div>';
 	}
 
-		$is_www = ( 0 === strpos( $hostname, 'www.' ) );
+	$is_www = ( 0 === strpos( $hostname, 'www.' ) );
 	if ( $is_www ) :
 		?>
 		<h3><?php esc_html_e( 'Server Address' ); ?></h3>
 		<p>
 		<?php
 		printf(
-			/* translators: 1: site url, 2: host name, 3: www */
+			/* translators: 1: Site URL, 2: Host name, 3: www. */
 			__( 'We recommend you change your siteurl to %1$s before enabling the network feature. It will still be possible to visit your site using the %3$s prefix with an address like %2$s but any links will not have the %3$s prefix.' ),
 			'<code>' . substr( $hostname, 4 ) . '</code>',
 			'<code>' . $hostname . '</code>',
@@ -272,13 +275,13 @@ function network_step1( $errors = false ) {
 		);
 		?>
 		</p>
-		<table class="form-table">
+		<table class="form-table" role="presentation">
 			<tr>
 			<th scope='row'><?php esc_html_e( 'Server Address' ); ?></th>
 			<td>
 				<?php
 					printf(
-						/* translators: %s: host name */
+						/* translators: %s: Host name. */
 						__( 'The internet address of your network will be %s.' ),
 						'<code>' . $hostname . '</code>'
 					);
@@ -289,7 +292,7 @@ function network_step1( $errors = false ) {
 		<?php endif; ?>
 
 		<h3><?php esc_html_e( 'Network Details' ); ?></h3>
-		<table class="form-table">
+		<table class="form-table" role="presentation">
 		<?php if ( 'localhost' == $hostname ) : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Sub-directory Installation' ); ?></th>
@@ -338,7 +341,7 @@ function network_step1( $errors = false ) {
 				<td>
 					<?php
 					printf(
-						/* translators: %s: host name */
+						/* translators: %s: Host name. */
 						__( 'The internet address of your network will be %s.' ),
 						'<code>' . $hostname . '</code>'
 					);
@@ -347,18 +350,18 @@ function network_step1( $errors = false ) {
 			</tr>
 		<?php endif; ?>
 			<tr>
-				<th scope='row'><?php esc_html_e( 'Network Title' ); ?></th>
+				<th scope='row'><label for="sitename"><?php esc_html_e( 'Network Title' ); ?></label></th>
 				<td>
-					<input name='sitename' type='text' size='45' value='<?php echo esc_attr( $site_name ); ?>' />
+					<input name='sitename' id='sitename' type='text' size='45' value='<?php echo esc_attr( $site_name ); ?>' />
 					<p class="description">
 						<?php _e( 'What would you like to call your network?' ); ?>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th scope='row'><?php esc_html_e( 'Network Admin Email' ); ?></th>
+				<th scope='row'><label for="email"><?php esc_html_e( 'Network Admin Email' ); ?></label></th>
 				<td>
-					<input name='email' type='text' size='45' value='<?php echo esc_attr( $admin_email ); ?>' />
+					<input name='email' id='email' type='text' size='45' value='<?php echo esc_attr( $admin_email ); ?>' />
 					<p class="description">
 						<?php _e( 'Your email address.' ); ?>
 					</p>
@@ -462,24 +465,24 @@ function network_step2( $errors = false ) {
 		<?php
 	}
 	?>
-		<ol>
-			<li><p>
-			<?php
-			printf(
-				/* translators: 1: wp-config.php, 2: location of wp-config file, 3: translated version of "That's all, stop editing! Happy publishing." */
-				__( 'Add the following to your %1$s file in %2$s <strong>above</strong> the line reading %3$s:' ),
-				'<code>wp-config.php</code>',
-				'<code>' . $location_of_wp_config . '</code>',
-				/*
-				 * translators: This string should only be translated if wp-config-sample.php is localized.
-				 * You can check the localized release package or
-				 * https://i18n.svn.wordpress.org/<locale code>/branches/<wp version>/dist/wp-config-sample.php
-				 */
-				'<code>/* ' . __( 'That&#8217;s all, stop editing! Happy publishing.' ) . ' */</code>'
-			);
-			?>
-			</p>
-				<textarea class="code" readonly="readonly" cols="100" rows="7">
+	<ol>
+		<li><p>
+		<?php
+		printf(
+			/* translators: 1: wp-config.php, 2: Location of wp-config file, 3: Translated version of "That's all, stop editing! Happy publishing." */
+			__( 'Add the following to your %1$s file in %2$s <strong>above</strong> the line reading %3$s:' ),
+			'<code>wp-config.php</code>',
+			'<code>' . $location_of_wp_config . '</code>',
+			/*
+			 * translators: This string should only be translated if wp-config-sample.php is localized.
+			 * You can check the localized release package or
+			 * https://i18n.svn.wordpress.org/<locale code>/branches/<wp version>/dist/wp-config-sample.php
+			 */
+			'<code>/* ' . __( 'That&#8217;s all, stop editing! Happy publishing.' ) . ' */</code>'
+		);
+		?>
+		</p>
+		<textarea class="code" readonly="readonly" cols="100" rows="7">
 define('MULTISITE', true);
 define('SUBDOMAIN_INSTALL', <?php echo $subdomain_install ? 'true' : 'false'; ?>);
 define('DOMAIN_CURRENT_SITE', '<?php echo $hostname; ?>');
@@ -487,61 +490,61 @@ define('PATH_CURRENT_SITE', '<?php echo $base; ?>');
 define('SITE_ID_CURRENT_SITE', 1);
 define('BLOG_ID_CURRENT_SITE', 1);
 </textarea>
-	<?php
-	$keys_salts = array(
-		'AUTH_KEY'         => '',
-		'SECURE_AUTH_KEY'  => '',
-		'LOGGED_IN_KEY'    => '',
-		'NONCE_KEY'        => '',
-		'AUTH_SALT'        => '',
-		'SECURE_AUTH_SALT' => '',
-		'LOGGED_IN_SALT'   => '',
-		'NONCE_SALT'       => '',
-	);
-	foreach ( $keys_salts as $c => $v ) {
-		if ( defined( $c ) ) {
-			unset( $keys_salts[ $c ] );
+		<?php
+		$keys_salts = array(
+			'AUTH_KEY'         => '',
+			'SECURE_AUTH_KEY'  => '',
+			'LOGGED_IN_KEY'    => '',
+			'NONCE_KEY'        => '',
+			'AUTH_SALT'        => '',
+			'SECURE_AUTH_SALT' => '',
+			'LOGGED_IN_SALT'   => '',
+			'NONCE_SALT'       => '',
+		);
+		foreach ( $keys_salts as $c => $v ) {
+			if ( defined( $c ) ) {
+				unset( $keys_salts[ $c ] );
+			}
 		}
-	}
 
-	if ( ! empty( $keys_salts ) ) {
-		$keys_salts_str = '';
-		$from_api       = wp_remote_get( 'https://api.wordpress.org/secret-key/1.1/salt/' );
-		if ( is_wp_error( $from_api ) ) {
-			foreach ( $keys_salts as $c => $v ) {
-				$keys_salts_str .= "\ndefine( '$c', '" . wp_generate_password( 64, true, true ) . "' );";
+		if ( ! empty( $keys_salts ) ) {
+			$keys_salts_str = '';
+			$from_api       = wp_remote_get( 'https://api.wordpress.org/secret-key/1.1/salt/' );
+			if ( is_wp_error( $from_api ) ) {
+				foreach ( $keys_salts as $c => $v ) {
+					$keys_salts_str .= "\ndefine( '$c', '" . wp_generate_password( 64, true, true ) . "' );";
+				}
+			} else {
+				$from_api = explode( "\n", wp_remote_retrieve_body( $from_api ) );
+				foreach ( $keys_salts as $c => $v ) {
+					$keys_salts_str .= "\ndefine( '$c', '" . substr( array_shift( $from_api ), 28, 64 ) . "' );";
+				}
 			}
-		} else {
-			$from_api = explode( "\n", wp_remote_retrieve_body( $from_api ) );
-			foreach ( $keys_salts as $c => $v ) {
-				$keys_salts_str .= "\ndefine( '$c', '" . substr( array_shift( $from_api ), 28, 64 ) . "' );";
+			$num_keys_salts = count( $keys_salts );
+			?>
+		<p>
+			<?php
+			if ( 1 == $num_keys_salts ) {
+				printf(
+					/* translators: %s: wp-config.php */
+					__( 'This unique authentication key is also missing from your %s file.' ),
+					'<code>wp-config.php</code>'
+				);
+			} else {
+				printf(
+					/* translators: %s: wp-config.php */
+					__( 'These unique authentication keys are also missing from your %s file.' ),
+					'<code>wp-config.php</code>'
+				);
 			}
-		}
-		$num_keys_salts = count( $keys_salts );
-		?>
-<p>
-		<?php
-		if ( 1 == $num_keys_salts ) {
-			printf(
-				/* translators: %s: wp-config.php */
-				__( 'This unique authentication key is also missing from your %s file.' ),
-				'<code>wp-config.php</code>'
-			);
-		} else {
-			printf(
-				/* translators: %s: wp-config.php */
-				__( 'These unique authentication keys are also missing from your %s file.' ),
-				'<code>wp-config.php</code>'
-			);
+			?>
+			<?php _e( 'To make your installation more secure, you should also add:' ); ?>
+		</p>
+		<textarea class="code" readonly="readonly" cols="100" rows="<?php echo $num_keys_salts; ?>"><?php echo esc_textarea( $keys_salts_str ); ?></textarea>
+			<?php
 		}
 		?>
-		<?php _e( 'To make your installation more secure, you should also add:' ); ?>
-	</p>
-	<textarea class="code" readonly="readonly" cols="100" rows="<?php echo $num_keys_salts; ?>"><?php echo esc_textarea( $keys_salts_str ); ?></textarea>
-		<?php
-	}
-	?>
-</li>
+		</li>
 	<?php
 	if ( iis7_supports_permalinks() ) :
 		// IIS doesn't support RewriteBase, all your RewriteBase are belong to us
@@ -598,7 +601,7 @@ define('BLOG_ID_CURRENT_SITE', 1);
 
 			echo '<li><p>';
 			printf(
-				/* translators: 1: a filename like .htaccess, 2: a file path */
+				/* translators: 1: File name (.htaccess or web.config), 2: File path. */
 				__( 'Add the following to your %1$s file in %2$s, <strong>replacing</strong> other WordPress rules:' ),
 				'<code>web.config</code>',
 				'<code>' . $home_path . '</code>'
@@ -608,9 +611,9 @@ define('BLOG_ID_CURRENT_SITE', 1);
 			echo '<p><strong>' . __( 'Warning:' ) . ' ' . __( 'Subdirectory networks may not be fully compatible with custom wp-content directories.' ) . '</strong></p>';
 		}
 		?>
-	<textarea class="code" readonly="readonly" cols="100" rows="20"><?php echo esc_textarea( $web_config_file ); ?>
-		</textarea></li>
-		</ol>
+		<textarea class="code" readonly="readonly" cols="100" rows="20"><?php echo esc_textarea( $web_config_file ); ?></textarea>
+		</li>
+	</ol>
 
 		<?php
 	else : // end iis7_supports_permalinks(). construct an htaccess file instead:
@@ -640,7 +643,7 @@ EOF;
 
 		echo '<li><p>';
 		printf(
-			/* translators: 1: a filename like .htaccess, 2: a file path */
+			/* translators: 1: File name (.htaccess or web.config), 2: File path. */
 			__( 'Add the following to your %1$s file in %2$s, <strong>replacing</strong> other WordPress rules:' ),
 			'<code>.htaccess</code>',
 			'<code>' . $home_path . '</code>'
@@ -650,9 +653,9 @@ EOF;
 			echo '<p><strong>' . __( 'Warning:' ) . ' ' . __( 'Subdirectory networks may not be fully compatible with custom wp-content directories.' ) . '</strong></p>';
 		}
 		?>
-		<textarea class="code" readonly="readonly" cols="100" rows="<?php echo substr_count( $htaccess_file, "\n" ) + 1; ?>">
-		<?php echo esc_textarea( $htaccess_file ); ?></textarea></li>
-		</ol>
+		<textarea class="code" readonly="readonly" cols="100" rows="<?php echo substr_count( $htaccess_file, "\n" ) + 1; ?>"><?php echo esc_textarea( $htaccess_file ); ?></textarea>
+		</li>
+	</ol>
 
 		<?php
 	endif; // end IIS/Apache code branches.

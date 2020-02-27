@@ -79,7 +79,7 @@ if ( isset( $_GET['update'] ) ) {
 	}
 }
 
-/* translators: %s: site name */
+/* translators: %s: Site title. */
 $title = sprintf( __( 'Edit Site: %s' ), esc_html( $details->blogname ) );
 
 $parent_file  = 'sites.php';
@@ -111,7 +111,7 @@ if ( ! empty( $messages ) ) {
 <form method="post" action="site-settings.php?action=update-site">
 	<?php wp_nonce_field( 'edit-site' ); ?>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $id ); ?>" />
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 		<?php
 		$blog_prefix = $wpdb->get_blog_prefix( $id );
 		$sql         = "SELECT * FROM {$blog_prefix}options
