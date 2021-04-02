@@ -15,7 +15,7 @@
 		tmplAppPassRow = wp.template( 'application-password-row' ),
 		userId = $( '#user_id' ).val();
 
-	$newAppPassButton.on( 'click', function( e ) {
+	$newAppPassButton.click( function( e ) {
 		e.preventDefault();
 
 		if ( $newAppPassButton.prop( 'aria-disabled' ) ) {
@@ -25,7 +25,7 @@
 		var name = $newAppPassField.val();
 
 		if ( 0 === name.length ) {
-			$newAppPassField.trigger( 'focus' );
+			$newAppPassField.focus();
 			return;
 		}
 
@@ -57,10 +57,10 @@
 			$newAppPassButton.prop( 'disabled', false );
 
 			$newAppPassForm.after( tmplNewAppPass( {
-				name: response.name,
+				name: name,
 				password: response.password
 			} ) );
-			$( '.new-application-password-notice' ).trigger( 'focus' );
+			$( '.new-application-password-notice' ).focus();
 
 			$appPassTbody.prepend( tmplAppPassRow( response ) );
 
@@ -105,7 +105,7 @@
 				}
 				$tr.remove();
 
-				addNotice( wp.i18n.__( 'Application password revoked.' ), 'success' ).trigger( 'focus' );
+				addNotice( wp.i18n.__( 'Application password revoked.' ), 'success' ).focus();
 			}
 		} ).fail( handleErrorResponse );
 	} );
@@ -133,7 +133,7 @@
 				$appPassSection.children( '.new-application-password' ).remove();
 				$appPassTwrapper.hide();
 
-				addNotice( wp.i18n.__( 'All application passwords revoked.' ), 'success' ).trigger( 'focus' );
+				addNotice( wp.i18n.__( 'All application passwords revoked.' ), 'success' ).focus();
 			}
 		} ).fail( handleErrorResponse );
 	} );
@@ -145,7 +145,7 @@
 		$el.fadeTo( 100, 0, function () {
 			$el.slideUp( 100, function () {
 				$el.remove();
-				$newAppPassField.trigger( 'focus' );
+				$newAppPassField.focus();
 			} );
 		} );
 	} );

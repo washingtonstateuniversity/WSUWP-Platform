@@ -160,14 +160,17 @@ wp.svgPainter = ( function( $, window, document, undefined ) {
 					painter.paintElement( $element, 'base' );
 
 					// Set hover callbacks.
-					$menuitem.on( 'mouseenter', function() {
-						painter.paintElement( $element, 'focus' );
-					} ).on( 'mouseleave', function() {
-						// Match the delay from hoverIntent.
-						window.setTimeout( function() {
-							painter.paintElement( $element, 'base' );
-						}, 100 );
-					} );
+					$menuitem.hover(
+						function() {
+							painter.paintElement( $element, 'focus' );
+						},
+						function() {
+							// Match the delay from hoverIntent.
+							window.setTimeout( function() {
+								painter.paintElement( $element, 'base' );
+							}, 100 );
+						}
+					);
 				}
 			});
 		},

@@ -46,7 +46,7 @@
 			$( '#find-posts' ).show();
 
 			// Close the dialog when the escape key is pressed.
-			$('#find-posts-input').trigger( 'focus' ).on( 'keyup', function( event ){
+			$('#find-posts-input').focus().keyup( function( event ){
 				if ( event.which == 27 ) {
 					findPosts.close();
 				}
@@ -158,13 +158,13 @@
 		}
 
 		// Prevents form submission if no post has been selected.
-		$( '#find-posts-submit' ).on( 'click', function( event ) {
+		$( '#find-posts-submit' ).click( function( event ) {
 			if ( ! $( '#find-posts-response input[type="radio"]:checked' ).length )
 				event.preventDefault();
 		});
 
 		// Submits the search query when hitting the enter key in the search input.
-		$( '#find-posts .find-box-search :input' ).on( 'keypress', function( event ) {
+		$( '#find-posts .find-box-search :input' ).keypress( function( event ) {
 			if ( 13 == event.which ) {
 				findPosts.send();
 				return false;
@@ -172,18 +172,19 @@
 		});
 
 		// Binds the click event to the search button.
-		$( '#find-posts-search' ).on( 'click', findPosts.send );
+		$( '#find-posts-search' ).click( findPosts.send );
 
 		// Binds the close dialog click event.
-		$( '#find-posts-close' ).on( 'click', findPosts.close );
+		$( '#find-posts-close' ).click( findPosts.close );
 
 		// Binds the bulk action events to the submit buttons.
-		$( '#doaction' ).on( 'click', function( event ) {
+		$( '#doaction, #doaction2' ).click( function( event ) {
 
 			/*
-			 * Handle the bulk action based on its value.
+			 * Retrieves all select elements for bulk actions that have a name starting with `action`
+			 * and handle its action based on its value.
 			 */
-			$( 'select[name="action"]' ).each( function() {
+			$( 'select[name^="action"]' ).each( function() {
 				var optionValue = $( this ).val();
 
 				if ( 'attach' === optionValue ) {

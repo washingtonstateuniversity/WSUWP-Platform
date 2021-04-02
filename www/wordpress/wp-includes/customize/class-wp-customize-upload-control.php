@@ -15,31 +15,10 @@
  * @see WP_Customize_Media_Control
  */
 class WP_Customize_Upload_Control extends WP_Customize_Media_Control {
-	/**
-	 * Control type.
-	 *
-	 * @since 3.4.0
-	 * @var string
-	 */
-	public $type = 'upload';
-
-	/**
-	 * Media control mime type.
-	 *
-	 * @since 4.1.0
-	 * @var string
-	 */
-	public $mime_type = '';
-
-	/**
-	 * Button labels.
-	 *
-	 * @since 4.1.0
-	 * @var array
-	 */
+	public $type          = 'upload';
+	public $mime_type     = '';
 	public $button_labels = array();
-
-	public $removed = '';         // Unused.
+	public $removed       = '';   // Unused.
 	public $context;              // Unused.
 	public $extensions = array(); // Unused.
 

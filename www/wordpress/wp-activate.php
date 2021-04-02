@@ -114,8 +114,7 @@ function wpmu_activate_stylesheet() {
 	<?php
 }
 add_action( 'wp_head', 'wpmu_activate_stylesheet' );
-add_action( 'wp_head', 'wp_strict_cross_origin_referrer' );
-add_filter( 'wp_robots', 'wp_robots_sensitive_page' );
+add_action( 'wp_head', 'wp_sensitive_page_meta' );
 
 get_header( 'wp-activate' );
 

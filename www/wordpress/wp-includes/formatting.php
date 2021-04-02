@@ -1537,7 +1537,7 @@ function utf8_uri_encode( $utf8_string, $length = 0 ) {
  * | U+1EF9   | ỹ     | y           | Latin small letter y with tilde                       |
  *
  * German (`de_DE`), German formal (`de_DE_formal`), German (Switzerland) formal (`de_CH`),
- * German (Switzerland) informal (`de_CH_informal`), and German (Austria) (`de_AT`) locales:
+ * and German (Switzerland) informal (`de_CH_informal`) locales:
  *
  * |   Code   | Glyph | Replacement |               Description               |
  * | -------- | ----- | ----------- | --------------------------------------- |
@@ -1577,7 +1577,6 @@ function utf8_uri_encode( $utf8_string, $length = 0 ) {
  * @since 4.6.0 Added locale support for `de_CH`, `de_CH_informal`, and `ca`.
  * @since 4.7.0 Added locale support for `sr_RS`.
  * @since 4.8.0 Added locale support for `bs_BA`.
- * @since 5.7.0 Added locale support for `de_AT`.
  *
  * @param string $string Text that might have accent characters
  * @return string Filtered string with replaced "nice" characters.
@@ -1920,7 +1919,7 @@ function remove_accents( $string ) {
 		// Used for locale-specific rules.
 		$locale = get_locale();
 
-		if ( in_array( $locale, array( 'de_DE', 'de_DE_formal', 'de_CH', 'de_CH_informal', 'de_AT' ), true ) ) {
+		if ( in_array( $locale, array( 'de_DE', 'de_DE_formal', 'de_CH', 'de_CH_informal' ), true ) ) {
 			$chars['Ä'] = 'Ae';
 			$chars['ä'] = 'ae';
 			$chars['Ö'] = 'Oe';
@@ -2035,7 +2034,14 @@ function sanitize_file_name( $filename ) {
 
 	// Return if only one extension.
 	if ( count( $parts ) <= 2 ) {
-		/** This filter is documented in wp-includes/formatting.php */
+		/**
+		 * Filters a sanitized filename string.
+		 *
+		 * @since 2.8.0
+		 *
+		 * @param string $filename     Sanitized filename.
+		 * @param string $filename_raw The filename prior to sanitization.
+		 */
 		return apply_filters( 'sanitize_file_name', $filename, $filename_raw );
 	}
 
@@ -2068,14 +2074,7 @@ function sanitize_file_name( $filename ) {
 
 	$filename .= '.' . $extension;
 
-	/**
-	 * Filters a sanitized filename string.
-	 *
-	 * @since 2.8.0
-	 *
-	 * @param string $filename     Sanitized filename.
-	 * @param string $filename_raw The filename prior to sanitization.
-	 */
+	/** This filter is documented in wp-includes/formatting.php */
 	return apply_filters( 'sanitize_file_name', $filename, $filename_raw );
 }
 
@@ -3586,7 +3585,7 @@ function iso8601_timezone_to_offset( $timezone ) {
  *
  * @param string $date_string Date and time in ISO 8601 format {@link https://en.wikipedia.org/wiki/ISO_8601}.
  * @param string $timezone    Optional. If set to 'gmt' returns the result in UTC. Default 'user'.
- * @return string|false The date and time in MySQL DateTime format - Y-m-d H:i:s, or false on failure.
+ * @return string|bool The date and time in MySQL DateTime format - Y-m-d H:i:s, or false on failure.
  */
 function iso8601_to_datetime( $date_string, $timezone = 'user' ) {
 	$timezone    = strtolower( $timezone );
@@ -5515,7 +5514,7 @@ function sanitize_trackback_urls( $to_ping ) {
 }
 
 /**
- * Adds slashes to a string or recursively adds slashes to strings within an array.
+ * Add slashes to a string or array of strings, in a recursive manner.
  *
  * This should be used when preparing data for core API that expects slashed data.
  * This should not be used to escape data going directly into an SQL query.
@@ -5523,8 +5522,8 @@ function sanitize_trackback_urls( $to_ping ) {
  * @since 3.6.0
  * @since 5.5.0 Non-string values are left untouched.
  *
- * @param string|array $value String or array of data to slash.
- * @return string|array Slashed $value.
+ * @param string|string[] $value String or array of strings to slash.
+ * @return string|string[] Slashed $value.
  */
 function wp_slash( $value ) {
 	if ( is_array( $value ) ) {
@@ -5539,15 +5538,15 @@ function wp_slash( $value ) {
 }
 
 /**
- * Removes slashes from a string or recursively removes slashes from strings within an array.
+ * Remove slashes from a string or array of strings.
  *
  * This should be used to remove slashes from data passed to core API that
  * expects data to be unslashed.
  *
  * @since 3.6.0
  *
- * @param string|array $value String or array of data to unslash.
- * @return string|array Unslashed $value.
+ * @param string|string[] $value String or array of strings to unslash.
+ * @return string|string[] Unslashed $value
  */
 function wp_unslash( $value ) {
 	return stripslashes_deep( $value );

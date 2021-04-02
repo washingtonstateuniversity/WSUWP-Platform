@@ -1,5 +1,4 @@
 {
-	"apiVersion": 2,
 	"name": "core/gallery",
 	"category": "media",
 	"attributes": {
@@ -79,7 +78,5 @@
 	"supports": {
 		"anchor": true,
 		"align": true
-	},
-	"editorStyle": "wp-block-gallery-editor",
-	"style": "wp-block-gallery"
+	}
 }

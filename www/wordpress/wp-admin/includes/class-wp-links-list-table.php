@@ -13,7 +13,7 @@
  * @since 3.1.0
  * @access private
  *
- * @see WP_List_Table
+ * @see WP_List_Tsble
  */
 class WP_Links_List_Table extends WP_List_Table {
 
@@ -114,7 +114,7 @@ class WP_Links_List_Table extends WP_List_Table {
 				'orderby'         => 'name',
 			);
 
-			echo '<label class="screen-reader-text" for="cat_id">' . get_taxonomy( 'link_category' )->labels->filter_by_item . '</label>';
+			echo '<label class="screen-reader-text" for="cat_id">' . __( 'Filter by category' ) . '</label>';
 
 			wp_dropdown_categories( $dropdown_options );
 

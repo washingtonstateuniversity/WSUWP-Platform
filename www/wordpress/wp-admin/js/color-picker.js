@@ -67,7 +67,7 @@
 				 * @return {void}
 				 */
 				change: function( event, ui ) {
-					if ( typeof self.options.change === 'function' ) {
+					if ( $.isFunction( self.options.change ) ) {
 						self.options.change.call( this, event, ui );
 					}
 				},
@@ -189,7 +189,7 @@
 				change: function( event, ui ) {
 					self.toggler.css( { backgroundColor: ui.color.toString() } );
 
-					if ( typeof self.options.change === 'function' ) {
+					if ( $.isFunction( self.options.change ) ) {
 						self.options.change.call( this, event, ui );
 					}
 				}
@@ -232,7 +232,7 @@
 			 *
 			 * @since 3.5.0
 			 */
-			self.toggler.on( 'click', function(){
+			self.toggler.click( function(){
 				if ( self.toggler.hasClass( 'wp-picker-open' ) ) {
 					self.close();
 				} else {
@@ -250,14 +250,14 @@
 			 *
 			 * @return {void}
 			 */
-			self.element.on( 'change', function( event ) {
+			self.element.change( function( event ) {
 				var me = $( this ),
 					val = me.val();
 
 				if ( val === '' || val === '#' ) {
 					self.toggler.css( 'backgroundColor', '' );
 					// Fire clear callback if we have one.
-					if ( typeof self.options.clear === 'function' ) {
+					if ( $.isFunction( self.options.clear ) ) {
 						self.options.clear.call( this, event );
 					}
 				}
@@ -272,7 +272,7 @@
 			 *
 			 * @return {void}
 			 */
-			self.button.on( 'click', function( event ) {
+			self.button.click( function( event ) {
 				var me = $( this );
 				if ( me.hasClass( 'wp-picker-clear' ) ) {
 					self.element.val( '' );

@@ -37,7 +37,5 @@
 		"lineHeight": true,
 		"__experimentalSelector": "p",
 		"__unstablePasteTextInline": true
-	},
-	"editorStyle": "wp-block-paragraph-editor",
-	"style": "wp-block-paragraph"
+	}
 }

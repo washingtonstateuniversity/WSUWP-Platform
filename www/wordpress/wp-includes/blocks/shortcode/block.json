@@ -12,6 +12,5 @@
 		"className": false,
 		"customClassName": false,
 		"html": false
-	},
-	"editorStyle": "wp-block-shortcode-editor"
+	}
 }

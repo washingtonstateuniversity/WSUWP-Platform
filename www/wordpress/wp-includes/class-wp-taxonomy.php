@@ -38,7 +38,7 @@ final class WP_Taxonomy {
 	 * @see get_taxonomy_labels()
 	 *
 	 * @since 4.7.0
-	 * @var stdClass
+	 * @var object
 	 */
 	public $labels;
 
@@ -152,7 +152,7 @@ final class WP_Taxonomy {
 	 * Capabilities for this taxonomy.
 	 *
 	 * @since 4.7.0
-	 * @var stdClass
+	 * @var object
 	 */
 	public $cap;
 
@@ -210,16 +210,6 @@ final class WP_Taxonomy {
 	public $rest_controller_class;
 
 	/**
-	 * The controller instance for this taxonomy's REST API endpoints.
-	 *
-	 * Lazily computed. Should be accessed using {@see WP_Taxonomy::get_rest_controller()}.
-	 *
-	 * @since 5.5.0
-	 * @var WP_REST_Controller $rest_controller
-	 */
-	public $rest_controller;
-
-	/**
 	 * The default term name for this taxonomy. If you pass an array you have
 	 * to set 'name' and optionally 'slug' and 'description'.
 	 *
@@ -229,22 +219,14 @@ final class WP_Taxonomy {
 	public $default_term;
 
 	/**
-	 * Whether terms in this taxonomy should be sorted in the order they are provided to `wp_set_object_terms()`.
+	 * The controller instance for this taxonomy's REST API endpoints.
 	 *
-	 * Use this in combination with `'orderby' => 'term_order'` when fetching terms.
+	 * Lazily computed. Should be accessed using {@see WP_Taxonomy::get_rest_controller()}.
 	 *
-	 * @since 2.5.0
-	 * @var bool|null
+	 * @since 5.5.0
+	 * @var WP_REST_Controller $rest_controller
 	 */
-	public $sort = null;
-
-	/**
-	 * Array of arguments to automatically use inside `wp_get_object_terms()` for this taxonomy.
-	 *
-	 * @since 2.6.0
-	 * @var array|null
-	 */
-	public $args = null;
+	public $rest_controller;
 
 	/**
 	 * Whether it is a built-in taxonomy.
@@ -256,8 +238,6 @@ final class WP_Taxonomy {
 
 	/**
 	 * Constructor.
-	 *
-	 * See the register_taxonomy() function for accepted arguments for `$args`.
 	 *
 	 * @since 4.7.0
 	 *
@@ -277,8 +257,6 @@ final class WP_Taxonomy {
 	/**
 	 * Sets taxonomy properties.
 	 *
-	 * See the register_taxonomy() function for accepted arguments for `$args`.
-	 *
 	 * @since 4.7.0
 	 *
 	 * @param array|string $object_type Name of the object type for the taxonomy object.
@@ -293,7 +271,6 @@ final class WP_Taxonomy {
 		 * @since 4.4.0
 		 *
 		 * @param array    $args        Array of arguments for registering a taxonomy.
-		 *                              See the register_taxonomy() function for accepted arguments.
 		 * @param string   $taxonomy    Taxonomy key.
 		 * @param string[] $object_type Array of names of object types for the taxonomy.
 		 */
@@ -321,8 +298,6 @@ final class WP_Taxonomy {
 			'rest_base'             => false,
 			'rest_controller_class' => false,
 			'default_term'          => null,
-			'sort'                  => null,
-			'args'                  => null,
 			'_builtin'              => false,
 		);
 

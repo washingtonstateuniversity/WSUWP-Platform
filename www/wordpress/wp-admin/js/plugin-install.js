@@ -50,7 +50,7 @@ jQuery( document ).ready( function( $ ) {
 		});
 	};
 
-	$( window ).on( 'resize', function() {
+	$( window ).resize( function() {
 		tb_position();
 	});
 
@@ -75,7 +75,7 @@ jQuery( document ).ready( function( $ ) {
 		.on( 'thickbox:removed', function() {
 			// Set focus back to the element that opened the modal dialog.
 			// Note: IE 8 would need this wrapped in a fake setTimeout `0`.
-			$focusedBefore.trigger( 'focus' );
+			$focusedBefore.focus();
 		});
 
 	function iframeLoaded() {
@@ -88,7 +88,7 @@ jQuery( document ).ready( function( $ ) {
 		handleTabbables();
 
 		// Set initial focus on the "Close" button.
-		$firstTabbable.trigger( 'focus' );
+		$firstTabbable.focus();
 
 		/*
 		 * When the "Install" button is disabled (e.g. the Plugin is already installed)
@@ -141,10 +141,10 @@ jQuery( document ).ready( function( $ ) {
 
 		if ( $lastTabbable[0] === event.target && ! event.shiftKey ) {
 			event.preventDefault();
-			$firstTabbable.trigger( 'focus' );
+			$firstTabbable.focus();
 		} else if ( $firstTabbable[0] === event.target && event.shiftKey ) {
 			event.preventDefault();
-			$lastTabbable.trigger( 'focus' );
+			$lastTabbable.focus();
 		}
 	}
 
@@ -185,7 +185,7 @@ jQuery( document ).ready( function( $ ) {
 	});
 
 	/* Plugin install related JS */
-	$( '#plugin-information-tabs a' ).on( 'click', function( event ) {
+	$( '#plugin-information-tabs a' ).click( function( event ) {
 		var tab = $( this ).attr( 'name' );
 		event.preventDefault();
 

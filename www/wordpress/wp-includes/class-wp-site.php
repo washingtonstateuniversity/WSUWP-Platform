@@ -27,8 +27,6 @@ final class WP_Site {
 	/**
 	 * Site ID.
 	 *
-	 * Named "blog" vs. "site" for legacy reasons.
-	 *
 	 * A numeric string, for compatibility reasons.
 	 *
 	 * @since 4.5.0
@@ -66,7 +64,7 @@ final class WP_Site {
 	public $site_id = '0';
 
 	/**
-	 * The date and time on which the site was created or registered.
+	 * The date on which the site was created or registered.
 	 *
 	 * @since 4.5.0
 	 * @var string Date in MySQL's datetime format.

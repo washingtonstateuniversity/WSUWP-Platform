@@ -82,26 +82,19 @@ this["wp"] = this["wp"] || {}; this["wp"]["dataControls"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 423);
+/******/ 	return __webpack_require__(__webpack_require__.s = 444);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 35:
-/***/ (function(module, exports) {
-
-(function() { module.exports = window["wp"]["deprecated"]; }());
-
-/***/ }),
-
 /***/ 4:
 /***/ (function(module, exports) {
 
-(function() { module.exports = window["wp"]["data"]; }());
+(function() { module.exports = this["wp"]["data"]; }());
 
 /***/ }),
 
-/***/ 423:
+/***/ 444:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -110,19 +103,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "select", function() { return select; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "syncSelect", function() { return syncSelect; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatch", function() { return dispatch; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__unstableAwaitPromise", function() { return __unstableAwaitPromise; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "controls", function() { return controls; });
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(50);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(47);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_deprecated__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(35);
-/* harmony import */ var _wordpress_deprecated__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_deprecated__WEBPACK_IMPORTED_MODULE_2__);
 /**
  * WordPress dependencies
  */
 
-
+ // TODO: mark the deprecated controls after all Gutenberg usages are removed
+// import deprecated from '@wordpress/deprecated';
 
 /**
  * Dispatches a control action for triggering an api fetch call.
@@ -158,9 +149,9 @@ function apiFetch(request) {
  */
 
 function select() {
-  _wordpress_deprecated__WEBPACK_IMPORTED_MODULE_2___default()('`select` control in `@wordpress/data-controls`', {
-    alternative: 'built-in `resolveSelect` control in `@wordpress/data`'
-  });
+  // deprecated( '`select` control in `@wordpress/data-controls`', {
+  // 	alternative: 'built-in `resolveSelect` control in `@wordpress/data`',
+  // } );
   return _wordpress_data__WEBPACK_IMPORTED_MODULE_1__["controls"].resolveSelect.apply(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__["controls"], arguments);
 }
 /**
@@ -171,9 +162,9 @@ function select() {
  */
 
 function syncSelect() {
-  _wordpress_deprecated__WEBPACK_IMPORTED_MODULE_2___default()('`syncSelect` control in `@wordpress/data-controls`', {
-    alternative: 'built-in `select` control in `@wordpress/data`'
-  });
+  // deprecated( '`syncSelect` control in `@wordpress/data-controls`', {
+  // 	alternative: 'built-in `select` control in `@wordpress/data`',
+  // } );
   return _wordpress_data__WEBPACK_IMPORTED_MODULE_1__["controls"].select.apply(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__["controls"], arguments);
 }
 /**
@@ -184,42 +175,15 @@ function syncSelect() {
  */
 
 function dispatch() {
-  _wordpress_deprecated__WEBPACK_IMPORTED_MODULE_2___default()('`dispatch` control in `@wordpress/data-controls`', {
-    alternative: 'built-in `dispatch` control in `@wordpress/data`'
-  });
+  // deprecated( '`dispatch` control in `@wordpress/data-controls`', {
+  // 	alternative: 'built-in `dispatch` control in `@wordpress/data`',
+  // } );
   return _wordpress_data__WEBPACK_IMPORTED_MODULE_1__["controls"].dispatch.apply(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__["controls"], arguments);
 }
-/**
- * Dispatches a control action for awaiting on a promise to be resolved.
- *
- * @param {Object} promise Promise to wait for.
- *
- * @example
- * ```js
- * import { __unstableAwaitPromise } from '@wordpress/data-controls';
- *
- * // Action generator using apiFetch
- * export function* myAction() {
- * 	const promise = getItemsAsync();
- * 	const items = yield __unstableAwaitPromise( promise );
- * 	// do something with the items.
- * }
- * ```
- *
- * @return {Object} The control descriptor.
- */
-
-var __unstableAwaitPromise = function __unstableAwaitPromise(promise) {
-  return {
-    type: 'AWAIT_PROMISE',
-    promise: promise
-  };
-};
 /**
  * The default export is what you use to register the controls with your custom
  * store.
  *
- * @param paths
  * @example
  * ```js
  * // WordPress dependencies
@@ -233,24 +197,21 @@ var __unstableAwaitPromise = function __unstableAwaitPromise(promise) {
  * import * as resolvers from './resolvers';
  *
  * registerStore( 'my-custom-store', {
- * reducer,
- * controls,
- * actions,
- * selectors,
- * resolvers,
+ * 	reducer,
+ * 	controls,
+ * 	actions,
+ * 	selectors,
+ * 	resolvers,
  * } );
  * ```
+ *
  * @return {Object} An object for registering the default controls with the
- * store.
+ *                  store.
  */
 
 var controls = {
-  AWAIT_PROMISE: function AWAIT_PROMISE(_ref) {
-    var promise = _ref.promise;
-    return promise;
-  },
-  API_FETCH: function API_FETCH(_ref2) {
-    var request = _ref2.request;
+  API_FETCH: function API_FETCH(_ref) {
+    var request = _ref.request;
     return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()(request);
   }
 };
@@ -258,10 +219,10 @@ var controls = {
 
 /***/ }),
 
-/***/ 50:
+/***/ 47:
 /***/ (function(module, exports) {
 
-(function() { module.exports = window["wp"]["apiFetch"]; }());
+(function() { module.exports = this["wp"]["apiFetch"]; }());
 
 /***/ })
 

@@ -10,7 +10,5 @@
 	},
 	"supports": {
 		"anchor": true
-	},
-	"editorStyle": "wp-block-spacer-editor",
-	"style": "wp-block-spacer"
+	}
 }

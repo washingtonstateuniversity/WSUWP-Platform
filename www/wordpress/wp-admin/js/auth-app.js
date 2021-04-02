@@ -15,7 +15,7 @@
 			rejectUrl: authApp.reject
 		};
 
-	$approveBtn.on( 'click', function( e ) {
+	$approveBtn.click( function( e ) {
 		var name = $appNameField.val(),
 			appId = $( 'input[name="app_id"]', $form ).val();
 
@@ -26,7 +26,7 @@
 		}
 
 		if ( 0 === name.length ) {
-			$appNameField.trigger( 'focus' );
+			$appNameField.focus();
 			return;
 		}
 
@@ -98,11 +98,11 @@
 					.append( '<p>' + wp.i18n.__( 'Be sure to save this in a safe location. You will not be able to retrieve it.' ) + '</p>' );
 
 				// We're using .text() to write the variables to avoid any chance of XSS.
-				$( 'strong', $notice ).text( response.name );
+				$( 'strong', $notice ).text( name );
 				$( 'input', $notice ).val( response.password );
 
 				$form.replaceWith( $notice );
-				$notice.trigger( 'focus' );
+				$notice.focus();
 			}
 		} ).fail( function( jqXHR, textStatus, errorThrown ) {
 			var errorMessage = errorThrown,
@@ -140,7 +140,7 @@
 		} );
 	} );
 
-	$rejectBtn.on( 'click', function( e ) {
+	$rejectBtn.click( function( e ) {
 		e.preventDefault();
 
 		/**

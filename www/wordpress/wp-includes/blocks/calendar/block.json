@@ -12,6 +12,5 @@
 	},
 	"supports": {
 		"align": true
-	},
-	"style": "wp-block-calendar"
+	}
 }

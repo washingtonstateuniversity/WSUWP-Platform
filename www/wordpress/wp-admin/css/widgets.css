@@ -16,7 +16,7 @@
 .widget-top {
 	font-size: 13px;
 	font-weight: 600;
-	background: #f6f7f7;
+	background: #f7f7f7;
 }
 
 .widget-top .widget-action {
@@ -37,6 +37,7 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-webkit-user-select: none;
+	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 }
@@ -54,12 +55,12 @@
 .in-widget-title,
 #widgets-right a.widget-control-edit,
 #available-widgets .widget-description {
-	color: #646970;
+	color: #666;
 }
 
 .deleting .widget-title,
 .deleting .widget-top .widget-action .toggle-indicator:before {
-	color: #a7aaad;
+	color: #a0a5aa;
 }
 
 /* Media Widgets */
@@ -91,7 +92,7 @@
 
 .media-widget-control .attachment-media-view .button-add-media,
 .media-widget-control .placeholder {
-	border: 1px dashed #c3c4c7;
+	border: 1px dashed #b4b9be;
 	box-sizing: border-box;
 	cursor: pointer;
 	line-height: 1.6;
@@ -103,19 +104,19 @@
 
 .media-widget-control .attachment-media-view .button-add-media {
 	cursor: pointer;
-	background-color: #f0f0f1;
-	color: #2c3338;
+	background-color: #edeff0;
+	color: #32373c;
 }
 
 .media-widget-control .attachment-media-view .button-add-media:hover {
-	background-color: #fff;
+	background-color: #fbfbfc;
 }
 
 .media-widget-control .attachment-media-view .button-add-media:focus {
-	background-color: #fff;
+	background-color: #fbfbfc;
 	border-style: solid;
-	border-color: #4f94d4;
-	box-shadow: 0 0 3px rgba(34, 113, 177, 0.8);
+	border-color: #5b9dd9;
+	box-shadow: 0 0 3px rgba( 0, 115, 170, .8 );
 	/* Only visible in Windows High Contrast mode */
 	outline: 2px solid transparent;
 	outline-offset: -2px;
@@ -138,7 +139,7 @@
 .media-widget-control .media-widget-preview img {
 	max-width: 100%;
 	vertical-align: middle;
-	background-image: linear-gradient(45deg, #c3c4c7 25%, transparent 25%, transparent 75%, #c3c4c7 75%, #c3c4c7), linear-gradient(45deg, #c3c4c7 25%, transparent 25%, transparent 75%, #c3c4c7 75%, #c3c4c7);
+	background-image: linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4), linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4);
 	background-position: 0 0, 10px 10px;
 	background-size: 20px 20px;
 }
@@ -168,7 +169,7 @@
 	display: inline-block;
 	min-height: 132px;
 	width: 100%;
-	background: #000;
+	background: black;
 }
 
 .media-widget-video-link .dashicons {
@@ -176,7 +177,7 @@
 	position: relative;
 	width: 100%;
 	top: -90px;
-	color: #fff;
+	color: white;
 	text-decoration: none;
 }
 
@@ -186,7 +187,7 @@
 
 .media-frame #embed-url-field.invalid,
 .media-widget-image-link > .link:invalid {
-	border: 1px solid #d63638;
+	border: 1px solid #dc3232;
 }
 
 .media-widget-image-link {
@@ -206,7 +207,7 @@
 }
 
 .media-widget-preview .placeholder {
-	background: #f0f0f1;
+	background: #f1f1f1;
 }
 
 .media-widget-gallery-preview .gallery-item {
@@ -258,7 +259,7 @@
 .media-widget-gallery-preview .gallery-icon-placeholder-text {
 	font-weight: 600;
 	font-size: 2em;
-	color: #fff;
+	color: white;
 }
 
 
@@ -272,7 +273,7 @@
 }
 
 .widget-placeholder {
-	border: 1px dashed #c3c4c7;
+	border: 1px dashed #b4b9be;
 	margin: 0 auto 10px;
 	height: 45px;
 	width: 100%;
@@ -338,8 +339,8 @@
 
 .sidebar-name .handlediv:focus .toggle-indicator:before {
 	box-shadow:
-		0 0 0 1px #4f94d4,
-		0 0 2px 1px rgba(79, 148, 212, 0.8);
+		0 0 0 1px #5b9dd9,
+		0 0 2px 1px rgba(30, 140, 190, 0.8);
 }
 
 .sidebar-name h2,
@@ -354,12 +355,12 @@
 	padding: 0 0 15px;
 	margin: 0;
 	font-style: normal;
-	color: #787c82;
+	color: #72777c;
 }
 
 .widget-holder .description,
 .inactive-sidebar .description {
-	color: #50575e;
+	color: #555d66;
 }
 
 #widgets-right .widgets-holder-wrap .description {
@@ -512,7 +513,7 @@ div#widgets-right .closed .widgets-sortables {
 
 /* Dragging a widget over a closed sidebar */
 #widgets-right .widgets-holder-wrap.widget-hover {
-	border-color: #787c82;
+	border-color: #72777c;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -534,7 +535,7 @@ div#widgets-right .closed .widgets-sortables {
 
 .widgets_access #widgets-left .widget .widget-top:hover,
 .widgets_access #widgets-right .widget .widget-top:hover {
-	border-color: #dcdcde;
+	border-color: #ddd;
 }
 
 #available-widgets .widget-control-edit .edit,
@@ -548,24 +549,25 @@ div#widgets-right .closed .widgets-sortables {
 
 .widget-control-edit {
 	display: block;
-	color: #646970;
-	background: #f0f0f1;
+	color: #666;
+	background: #EEE;
 	padding: 0 15px;
 	line-height: 3.30769230;
-	border-left: 1px solid #dcdcde;
+	border-left: 1px solid #DDD;
 }
 
 #widgets-left .widget-control-edit:hover,
 #widgets-right .widget-control-edit:hover {
 	color: #fff;
-	background: #3c434a;
+	background: #444;
 	border-left: 0;
-	outline: 1px solid #3c434a;
+	outline: 1px solid #444;
 }
 
 .widgets-holder-wrap .sidebar-name,
 .widgets-holder-wrap .sidebar-description {
 	-webkit-user-select: none;
+	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 }
@@ -616,11 +618,11 @@ div#widgets-right .closed .widgets-sortables {
 	padding-left: 15px;
 	font-size: 12px;
 	line-height: 1;
-	color: #000;
+	color: black;
 }
 
 .js #removing-widget {
-	color: #72aee6;
+	color: #00a0d2;
 }
 
 .widget-control-noform,
@@ -672,7 +674,7 @@ div#widgets-right .closed .widgets-sortables {
 #available-widgets .widget-top:hover,
 div#widgets-right .widget-top:hover,
 #widgets-left .widget-top:hover {
-	border-color: #8c8f94;
+	border-color: #999;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -688,11 +690,11 @@ div#widgets-right .widget-top:hover,
 }
 
 .widgets-chooser ul {
-	border: 1px solid #c3c4c7;
+	border: 1px solid #ccc;
 }
 
 .widgets-chooser li {
-	border-bottom: 1px solid #c3c4c7;
+	border-bottom: 1px solid #ccc;
 	background: #fff;
 	margin: 0;
 	position: relative;
@@ -721,7 +723,7 @@ div#widgets-right .widget-top:hover,
 }
 
 .widgets-chooser .widgets-chooser-selected .widgets-chooser-button {
-	background: #2271b1;
+	background: #0073aa;
 	color: #fff;
 }
 
@@ -773,7 +775,7 @@ div#widgets-right .widget-top:hover,
 }
 
 .custom-html-widget-fields > p > .CodeMirror {
-	border: 1px solid #dcdcde;
+	border: 1px solid #e5e5e5;
 }
 .custom-html-widget-fields code {
 	padding-top: 1px;

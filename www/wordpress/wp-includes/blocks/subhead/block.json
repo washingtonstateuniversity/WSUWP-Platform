@@ -15,7 +15,5 @@
 	"supports": {
 		"inserter": false,
 		"multiple": false
-	},
-	"editorStyle": "wp-block-subhead-editor",
-	"style": "wp-block-subhead"
+	}
 }

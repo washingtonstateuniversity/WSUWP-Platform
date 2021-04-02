@@ -271,7 +271,7 @@ wpList = {
 			target:  list.get( 0 )
 		}, settings || {} );
 
-		if ( typeof settings.confirm === 'function' ) {
+		if ( $.isFunction( settings.confirm ) ) {
 			$element = $( '#' + settings.element );
 
 			if ( 'add' !== action ) {
@@ -337,13 +337,13 @@ wpList = {
 		}, wpAjax.unserialize( data[4] || '' ) ) );
 
 		formValues = $( '#' + settings.element + ' :input' ).not( '[name="_ajax_nonce"], [name="_wpnonce"], [name="action"]' );
-		formData   = typeof formValues.fieldSerialize === 'function' ? formValues.fieldSerialize() : formValues.serialize();
+		formData   = $.isFunction( formValues.fieldSerialize ) ? formValues.fieldSerialize() : formValues.serialize();
 
 		if ( formData ) {
 			settings.data += '&' + formData;
 		}
 
-		if ( typeof settings.addBefore === 'function' ) {
+		if ( $.isFunction( settings.addBefore ) ) {
 			settings = settings.addBefore( settings );
 
 			if ( ! settings ) {
@@ -381,7 +381,7 @@ wpList = {
 		};
 
 		settings.complete = function( jqXHR, status ) {
-			if ( typeof settings.addAfter === 'function' ) {
+			if ( $.isFunction( settings.addAfter ) ) {
 				settings.addAfter( returnedResponse, $.extend( {
 					xml:    jqXHR,
 					status: status,
@@ -427,7 +427,7 @@ wpList = {
 			id:          settings.element.split( '-' ).pop()
 		}, wpAjax.unserialize( data[4] || '' ) );
 
-		if ( typeof settings.delBefore === 'function' ) {
+		if ( $.isFunction( settings.delBefore ) ) {
 			settings = settings.delBefore( settings, list );
 
 			if ( ! settings ) {
@@ -466,7 +466,7 @@ wpList = {
 		};
 
 		settings.complete = function( jqXHR, status ) {
-			if ( typeof settings.delAfter === 'function' ) {
+			if ( $.isFunction( settings.delAfter ) ) {
 				$eventTarget.queue( function() {
 					settings.delAfter( returnedResponse, $.extend( {
 						xml:    jqXHR,
@@ -522,7 +522,7 @@ wpList = {
 			dimClass:    settings.dimClass
 		}, wpAjax.unserialize( data[6] || '' ) );
 
-		if ( typeof settings.dimBefore === 'function' ) {
+		if ( $.isFunction( settings.dimBefore ) ) {
 			settings = settings.dimBefore( settings );
 
 			if ( ! settings ) {
@@ -591,7 +591,7 @@ wpList = {
 		};
 
 		settings.complete = function( jqXHR, status ) {
-			if ( typeof settings.dimAfter === 'function' ) {
+			if ( $.isFunction( settings.dimAfter ) ) {
 				$eventTarget.queue( function() {
 					settings.dimAfter( returnedResponse, $.extend( {
 						xml:    jqXHR,

@@ -147,7 +147,6 @@ $font_sizes         = current( (array) get_theme_support( 'editor-font-sizes' ) 
 $gradient_presets   = current( (array) get_theme_support( 'editor-gradient-presets' ) );
 $custom_line_height = get_theme_support( 'custom-line-height' );
 $custom_units       = get_theme_support( 'custom-units' );
-$custom_spacing     = get_theme_support( 'custom-spacing' );
 
 /**
  * Filters the allowed block types for the editor, defaulting to true (all
@@ -186,15 +185,15 @@ if ( ! $max_upload_size ) {
 $styles = array(
 	array(
 		'css' => file_get_contents(
-			is_rtl()
-				? ABSPATH . WPINC . '/css/dist/editor/editor-styles-rtl.css'
-				: ABSPATH . WPINC . '/css/dist/editor/editor-styles.css'
+			ABSPATH . WPINC . '/css/dist/editor/editor-styles.css'
 		),
 	),
 );
 
-$styles[] = array(
-	'css' => 'body { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif }',
+/* translators: Use this to specify the CSS font family for the default font. */
+$locale_font_family = esc_html_x( 'Noto Serif', 'CSS Font Family for Editor Font' );
+$styles[]           = array(
+	'css' => "body { font-family: '$locale_font_family' }",
 );
 
 if ( $editor_styles && current_theme_supports( 'editor-styles' ) ) {
@@ -217,17 +216,6 @@ if ( $editor_styles && current_theme_supports( 'editor-styles' ) ) {
 		}
 	}
 }
-
-// Default editor styles.
-$default_editor_styles = array(
-	array(
-		'css' => file_get_contents(
-			is_rtl()
-				? ABSPATH . WPINC . '/css/dist/editor/editor-styles-rtl.css'
-				: ABSPATH . WPINC . '/css/dist/editor/editor-styles.css'
-		),
-	),
-);
 
 // Image sizes.
 
@@ -321,7 +309,6 @@ $editor_settings = array(
 	'maxUploadFileSize'                    => $max_upload_size,
 	'allowedMimeTypes'                     => get_allowed_mime_types(),
 	'styles'                               => $styles,
-	'defaultEditorStyles'                  => $default_editor_styles,
 	'imageSizes'                           => $available_image_sizes,
 	'imageDimensions'                      => $image_dimensions,
 	'richEditingEnabled'                   => user_can_richedit(),
@@ -339,7 +326,6 @@ $editor_settings = array(
 	'enableCustomFields'                   => (bool) get_user_meta( get_current_user_id(), 'enable_custom_fields', true ),
 	'enableCustomLineHeight'               => $custom_line_height,
 	'enableCustomUnits'                    => $custom_units,
-	'enableCustomSpacing'                  => $custom_spacing,
 );
 
 $autosave = wp_get_post_autosave( $post_ID );

@@ -15,20 +15,7 @@
  * @see WP_Customize_Upload_Control
  */
 class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
-	/**
-	 * Control type.
-	 *
-	 * @since 3.4.0
-	 * @var string
-	 */
-	public $type = 'image';
-
-	/**
-	 * Media control mime type.
-	 *
-	 * @since 4.1.0
-	 * @var string
-	 */
+	public $type      = 'image';
 	public $mime_type = 'image';
 
 	/**

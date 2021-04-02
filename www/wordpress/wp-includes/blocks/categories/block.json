@@ -19,7 +19,5 @@
 	"supports": {
 		"align": true,
 		"html": false
-	},
-	"editorStyle": "wp-block-categories-editor",
-	"style": "wp-block-categories"
+	}
 }

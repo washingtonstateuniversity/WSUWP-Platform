@@ -98,7 +98,7 @@ jQuery(document).ready(function($) {
 	 *
 	 * @return {boolean} Always returns false to cancel the default event handling.
 	 */
-	$('#submit').on( 'click', function(){
+	$('#submit').click(function(){
 		var form = $(this).parents('form');
 
 		if ( ! validateForm( form ) )

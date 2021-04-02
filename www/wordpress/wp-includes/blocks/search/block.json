@@ -35,7 +35,5 @@
 	"supports": {
 		"align": [ "left", "center", "right" ],
 		"html": false
-	},
-	"editorStyle": "wp-block-search-editor",
-	"style": "wp-block-search"
+	}
 }

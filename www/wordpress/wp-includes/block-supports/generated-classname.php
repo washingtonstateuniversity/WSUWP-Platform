@@ -8,8 +8,6 @@
 /**
  * Get the generated classname from a given block name.
  *
- * @since 5.6.0
- *
  * @access private
  *
  * @param  string $block_name Block Name.
@@ -27,8 +25,6 @@ function wp_get_block_default_classname( $block_name ) {
 	/**
 	 * Filters the default block className for server rendered blocks.
 	 *
-	 * @since 5.6.0
-	 *
 	 * @param string     $class_name The current applied classname.
 	 * @param string     $block_name The block name.
 	 */
@@ -39,8 +35,6 @@ function wp_get_block_default_classname( $block_name ) {
 
 /**
  * Add the generated classnames to the output.
- *
- * @since 5.6.0
  *
  * @access private
  *
