@@ -18,7 +18,7 @@ Once VVV is installed, copy the `vvv-config.yml` file to `vvv-custom.yml` and ad
 wsuwp:
   repo: https://github.com/washingtonstateuniversity/wsuwp-platform.git
   hosts:
-    - wp.wsu.test
+    - wsuwp.test
 ```
 
 Once this is part of your `vvv-custom.yml` file, run `vagrant provision` or `vagrant provision --provision-with=site-wsuwp` to get started.
